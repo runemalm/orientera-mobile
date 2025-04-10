@@ -31,7 +31,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
         onBack={handleBack} 
       />
       
-      <main className="flex-grow mobile-page">
+      <main className="flex-grow mobile-page mobile-container">
         {children}
       </main>
       
