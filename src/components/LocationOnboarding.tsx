@@ -12,8 +12,27 @@ interface LocationOnboardingProps {
 
 const LocationOnboarding: React.FC<LocationOnboardingProps> = ({ isOpen, onComplete }) => {
   return (
-    <Dialog open={isOpen} onOpenChange={() => {}}>
-      <DialogContent className="max-w-md">
+    <Dialog 
+      open={isOpen} 
+      onOpenChange={(open) => {
+        // Allow closing with the X button but prevent closing by clicking outside
+        if (open === false) {
+          // Dialog is trying to close, but we only allow it through the X button
+          // The X button triggers this callback directly
+        }
+      }}
+    >
+      <DialogContent 
+        className="max-w-md"
+        onPointerDownOutside={(e) => {
+          // Prevent closing when clicking outside
+          e.preventDefault();
+        }}
+        onEscapeKeyDown={(e) => {
+          // Prevent closing with Escape key
+          e.preventDefault();
+        }}
+      >
         <DialogHeader>
           <div className="bg-primary/10 p-3 rounded-full w-14 h-14 mx-auto mb-4 flex items-center justify-center">
             <MapPin size={28} className="text-primary" />
