@@ -1,4 +1,3 @@
-
 import { Competition, CompetitionDetail, CompetitionType, CompetitionDiscipline, OrienteeringDistrict } from "../types";
 
 export const mockCompetitions: Competition[] = [
@@ -51,6 +50,23 @@ export const mockCompetitions: Competition[] = [
     coordinates: {
       latitude: 59.3349,
       longitude: 18.0603
+    }
+  },
+  // Added new competition for XXL Ungdomsserie och Motionsorientering
+  {
+    id: "comp-4",
+    name: "XXL Ungdomsserie och Motionsorientering",
+    date: "2025-04-09", // April 9, 2025
+    location: "Lessebo",
+    distance: 2.7,
+    club: "Lessebo OK",
+    description: "Medeldistans för ungdomar och motionärer i lättframkomlig terräng.",
+    discipline: "Medel",
+    competitionType: "Närtävling",
+    district: "Smålands OF",
+    coordinates: {
+      latitude: 56.7512,
+      longitude: 15.2722
     }
   },
   {
@@ -176,8 +192,35 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
     contact: "eroberts@mountainexplorers.com",
     isRegistered: true
   },
+  // Added new competition detail for XXL Ungdomsserie och Motionsorientering
+  "comp-4": {
+    ...mockCompetitions[3],
+    files: [
+      {
+        id: "file-14",
+        name: "Inbjudan.pdf",
+        type: "invitation",
+        url: "#",
+        uploadDate: "2025-03-20"
+      },
+      {
+        id: "file-15",
+        name: "PM.pdf",
+        type: "pm",
+        url: "#",
+        uploadDate: "2025-04-07"
+      }
+    ],
+    registrationDeadline: "2025-04-07",
+    startTime: "17:30",
+    organizer: "Maria Svensson",
+    contact: "info@lessebook.se",
+    website: "https://www.lessebook.se/xxlungdom2025",
+    liveloxLink: "https://www.livelox.com/Events/Show/54321", // Added Livelox link
+    isRegistered: false
+  },
   "comp-5": {
-    ...mockCompetitions[2],
+    ...mockCompetitions[4],
     files: [
       {
         id: "file-8",
@@ -209,7 +252,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
     isRegistered: false
   },
   "comp-6": {
-    ...mockCompetitions[3],
+    ...mockCompetitions[5],
     files: [
       {
         id: "file-11",
@@ -227,7 +270,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
     isRegistered: false
   },
   "comp-7": {
-    ...mockCompetitions[4],
+    ...mockCompetitions[6],
     files: [
       {
         id: "file-12",
