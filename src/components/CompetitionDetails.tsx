@@ -46,7 +46,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
       setIsSubmitting(false);
       toast({
         title: "Du är nu på väntelistan",
-        description: "Vi kommer att meddela dig när anmälan öppnar i appen.",
+        description: "Vi kommer att meddela dig när anmälan via appen blir tillgänglig.",
       });
     }, 1000);
   };
@@ -145,7 +145,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
                 <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
                 <path d="M13.73 21a2 2 0 0 1-3.46 0" />
               </svg>
-              <span>Du är på väntelistan för anmälan</span>
+              <span>Du är på väntelistan för anmälan via appen</span>
             </div>
           </div>
         ) : (
@@ -185,7 +185,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
                   <form onSubmit={handleWaitlistSubmit} className="space-y-4">
                     <div>
                       <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                        Ställ dig på väntelistan
+                        Vill du få en notifiering när anmälan via appen blir tillgänglig?
                       </label>
                       <input
                         type="email"
@@ -205,7 +205,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
                       className="w-full"
                       disabled={isSubmitting}
                     >
-                      {isSubmitting ? "Skickar..." : "Ställ mig på väntelistan"}
+                      {isSubmitting ? "Skickar..." : "Meddela mig när anmälan öppnar"}
                     </Button>
                   </form>
                 ) : (
@@ -215,7 +215,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
                         <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
                         <path d="M13.73 21a2 2 0 0 1-3.46 0" />
                       </svg>
-                      <span>Du är på väntelistan</span>
+                      <span>Du kommer att bli meddelad när anmälan öppnar</span>
                     </div>
                   </div>
                 )}
