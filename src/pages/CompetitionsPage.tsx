@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
@@ -10,7 +9,7 @@ import LocationInputForm from '../components/LocationInputForm';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Competition } from '../types';
-import { format, addDays, startOfWeek, isSameDay } from 'date-fns';
+import { format, addDays, startOfWeek, isSameDay, isSameMonth } from 'date-fns';
 
 // Define interface for processed competition data
 interface CompetitionWithDistance extends Omit<Competition, 'distance'> {
@@ -26,6 +25,11 @@ interface CompetitionsByWeek {
 interface DayCompetitions {
   date: Date;
   competitions: CompetitionWithDistance[];
+}
+
+interface MonthGroup {
+  month: Date;
+  weeks: CompetitionsByWeek[];
 }
 
 const CompetitionsPage: React.FC = () => {
@@ -146,12 +150,41 @@ const CompetitionsPage: React.FC = () => {
     return format(date, 'EEEE, d MMM'); // e.g. "Monday, 15 Apr"
   };
 
+  const formatMonthHeader = (date: Date): string => {
+    return format(date, 'MMMM yyyy'); // e.g. "April 2025"
+  };
+
   const getWeekNumber = (date: Date): number => {
     const d = new Date(date);
     d.setHours(0, 0, 0, 0);
     d.setDate(d.getDate() + 3 - (d.getDay() + 6) % 7);
     const week1 = new Date(d.getFullYear(), 0, 4);
     return 1 + Math.round(((d.getTime() - week1.getTime()) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
+  };
+
+  const groupWeeksByMonth = (weeks: CompetitionsByWeek[]): MonthGroup[] => {
+    const monthGroups: MonthGroup[] = [];
+    
+    weeks.forEach(week => {
+      const monthDate = new Date(week.weekStart);
+      const monthKey = `${monthDate.getFullYear()}-${monthDate.getMonth()}`;
+      
+      const existingMonthGroup = monthGroups.find(group => 
+        group.month.getFullYear() === monthDate.getFullYear() && 
+        group.month.getMonth() === monthDate.getMonth()
+      );
+      
+      if (existingMonthGroup) {
+        existingMonthGroup.weeks.push(week);
+      } else {
+        monthGroups.push({
+          month: monthDate,
+          weeks: [week]
+        });
+      }
+    });
+    
+    return monthGroups.sort((a, b) => a.month.getTime() - b.month.getTime());
   };
 
   const renderContent = () => {
@@ -233,6 +266,7 @@ const CompetitionsPage: React.FC = () => {
       : userLocation.city;
     
     const competitionsByWeek = groupCompetitionsByWeek();
+    const monthGroups = groupWeeksByMonth(competitionsByWeek);
     
     return (
       <>
@@ -257,29 +291,37 @@ const CompetitionsPage: React.FC = () => {
           </div>
         </div>
         
-        {competitionsByWeek.length > 0 ? (
-          <div className="space-y-4">
-            {competitionsByWeek.map((weekGroup, weekIndex) => (
-              <div key={weekIndex} className="space-y-2">
-                <div className="sticky top-0 bg-gray-50 px-3 py-2 rounded-md font-medium text-sm text-gray-600">
-                  {formatWeekHeader(weekGroup.weekStart)}
+        {monthGroups.length > 0 ? (
+          <div className="space-y-6">
+            {monthGroups.map((monthGroup, monthIndex) => (
+              <div key={monthIndex} className="space-y-4">
+                <div className="sticky top-0 z-10 bg-primary/10 px-4 py-3 rounded-lg font-semibold text-primary capitalize">
+                  {formatMonthHeader(monthGroup.month)}
                 </div>
                 
-                {organizeCompetitionsByDay(weekGroup).map((dayGroup, dayIndex) => (
-                  <div key={dayIndex} className="mb-2">
-                    <div className="text-sm font-medium text-gray-500 px-3 py-1">
-                      {formatDayHeader(dayGroup.date)}
+                {monthGroup.weeks.map((weekGroup, weekIndex) => (
+                  <div key={weekIndex} className="space-y-2">
+                    <div className="sticky top-12 z-5 bg-gray-50 px-3 py-2 rounded-md font-medium text-sm text-gray-600">
+                      {formatWeekHeader(weekGroup.weekStart)}
                     </div>
                     
-                    {dayGroup.competitions.length > 0 ? (
-                      dayGroup.competitions.map(competition => (
-                        <CompetitionCard key={competition.id} competition={competition} />
-                      ))
-                    ) : (
-                      <div className="bg-white/50 rounded-lg border border-gray-100 p-3 text-sm text-gray-400">
-                        Inga tävlingar
+                    {organizeCompetitionsByDay(weekGroup).map((dayGroup, dayIndex) => (
+                      <div key={dayIndex} className="mb-2">
+                        <div className="text-sm font-medium text-gray-500 px-3 py-1">
+                          {formatDayHeader(dayGroup.date)}
+                        </div>
+                        
+                        {dayGroup.competitions.length > 0 ? (
+                          dayGroup.competitions.map(competition => (
+                            <CompetitionCard key={competition.id} competition={competition} />
+                          ))
+                        ) : (
+                          <div className="bg-white/50 rounded-lg border border-gray-100 p-3 text-sm text-gray-400">
+                            Inga tävlingar
+                          </div>
+                        )}
                       </div>
-                    )}
+                    ))}
                   </div>
                 ))}
               </div>
