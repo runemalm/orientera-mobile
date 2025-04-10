@@ -65,15 +65,6 @@ const LandingPage: React.FC = () => {
             description="Resultat och sträcktider"
           />
         </div>
-        
-        {/* Mobile app note */}
-        <div className="mt-8 flex items-center justify-center text-sm text-gray-500">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
-            <rect width="7" height="12" x="8.5" y="6" rx="1" />
-            <path d="M12 18v.01" />
-          </svg>
-          <span>Endast tillgänglig som mobilapp</span>
-        </div>
       </main>
     </div>
   );
