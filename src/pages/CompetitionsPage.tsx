@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
@@ -7,7 +6,6 @@ import { MapPin, RefreshCw, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 import LocationInputForm from '../components/LocationInputForm';
-import LocationOnboarding from '../components/LocationOnboarding';
 import { useUserLocation } from '../hooks/useUserLocation';
 
 const CompetitionsPage: React.FC = () => {
@@ -50,95 +48,84 @@ const CompetitionsPage: React.FC = () => {
       );
     }
 
-    if (userLocation) {
-      // Get a shortened display name if the full name is too long
-      const displayName = userLocation.city.length > 25 
-        ? userLocation.city.split(',')[0]
-        : userLocation.city;
-      
+    if (!userLocation) {
       return (
-        <>
-          <div className="bg-gradient-to-br from-forest-light/30 to-forest-light/10 rounded-xl p-4 shadow-sm mb-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="bg-primary/10 p-2 rounded-full">
-                  <MapPin size={18} className="text-primary" />
-                </div>
-                <div>
-                  <span className="font-medium text-sm line-clamp-1">{displayName}</span>
-                </div>
+        <div className="space-y-6 py-6">
+          <div className="bg-gradient-to-br from-forest-light/30 to-forest-light/10 rounded-xl p-5 shadow-sm">
+            <div className="flex flex-col items-center">
+              <div className="bg-primary/10 p-3 rounded-full w-14 h-14 mb-4 flex items-center justify-center">
+                <MapPin size={28} className="text-primary" />
               </div>
-              <Button variant="outline" size="sm" onClick={() => setShowLocationDrawer(true)}>
-                Byt plats
-              </Button>
+              <h2 className="text-lg font-medium mb-2 text-forest-dark text-center">Välkommen!</h2>
+              <p className="text-gray-600 mb-4 text-center">
+                Ange din plats för att hitta orienteringstävlingar nära dig.
+              </p>
+              
+              <div className="w-full">
+                <LocationInputForm 
+                  onLocationSelected={handleUpdateLocation}
+                />
+              </div>
+              
+              <div className="text-center text-sm text-gray-500 mt-4">
+                <p>Din position sparas på din enhet för framtida besök.</p>
+              </div>
             </div>
           </div>
-          
-          {mockCompetitions.length > 0 ? (
-            mockCompetitions.map(competition => (
-              <CompetitionCard 
-                key={competition.id} 
-                competition={{
-                  ...competition,
-                  distance: calculateDistance(
-                    userLocation.latitude,
-                    userLocation.longitude,
-                    competition.coordinates.latitude,
-                    competition.coordinates.longitude
-                  )
-                }} 
-              />
-            ))
-          ) : (
-            <div className="text-center py-8">
-              <div className="text-gray-400 mb-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mx-auto">
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="m15 9-6 6" />
-                  <path d="m9 9 6 6" />
-                </svg>
-              </div>
-              <p className="text-gray-500">Inga tävlingar hittades</p>
-            </div>
-          )}
-        </>
+        </div>
       );
     }
     
+    const displayName = userLocation.city.length > 25 
+      ? userLocation.city.split(',')[0]
+      : userLocation.city;
+    
     return (
-      <div className="space-y-6 py-6">
-        <div className="bg-gradient-to-br from-forest-light/30 to-forest-light/10 rounded-xl p-5 shadow-sm">
-          <div className="flex items-start gap-4">
-            <div className="bg-primary/10 p-3 rounded-full">
-              <MapPin size={24} className="text-primary" />
+      <>
+        <div className="bg-gradient-to-br from-forest-light/30 to-forest-light/10 rounded-xl p-4 shadow-sm mb-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="bg-primary/10 p-2 rounded-full">
+                <MapPin size={18} className="text-primary" />
+              </div>
+              <div>
+                <span className="font-medium text-sm line-clamp-1">{displayName}</span>
+              </div>
             </div>
-            <div className="flex-1">
-              <h2 className="text-lg font-medium mb-2 text-forest-dark">Hitta tävlingar nära dig</h2>
-              <p className="text-gray-600 mb-4">
-                Ange din plats för att se tävlingar i ditt område.
-              </p>
-              <Button 
-                onClick={() => setShowLocationDrawer(true)}
-                className="w-full sm:w-auto flex items-center justify-center gap-2"
-                size="sm"
-              >
-                <MapPin size={16} />
-                Ange plats
-              </Button>
-            </div>
+            <Button variant="outline" size="sm" onClick={() => setShowLocationDrawer(true)}>
+              Byt plats
+            </Button>
           </div>
         </div>
-
-        <div className="mt-4">
-          <h2 className="text-lg font-medium mb-4 text-gray-700">Populära tävlingar</h2>
-          {mockCompetitions.slice(0, 3).map(competition => (
-            <CompetitionCard key={competition.id} competition={competition} />
-          ))}
-          <div className="text-center mt-4">
-            <span className="text-sm text-gray-500">Ange din plats för att se fler tävlingar nära dig</span>
+        
+        {mockCompetitions.length > 0 ? (
+          mockCompetitions.map(competition => (
+            <CompetitionCard 
+              key={competition.id} 
+              competition={{
+                ...competition,
+                distance: calculateDistance(
+                  userLocation.latitude,
+                  userLocation.longitude,
+                  competition.coordinates.latitude,
+                  competition.coordinates.longitude
+                )
+              }} 
+            />
+          ))
+        ) : (
+          <div className="text-center py-8">
+            <div className="text-gray-400 mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mx-auto">
+                <circle cx="12" cy="12" r="10" />
+                <path d="m15 9-6 6" />
+                <path d="m9 9 6 6" />
+              </svg>
+            </div>
+            <p className="text-gray-500">Inga tävlingar hittades</p>
           </div>
-        </div>
-      </div>
+        )}
+      </>
     );
   };
 
@@ -149,11 +136,6 @@ const CompetitionsPage: React.FC = () => {
           {renderContent()}
         </div>
       </MobileLayout>
-      
-      <LocationOnboarding 
-        isOpen={isFirstVisit && !userLocation} 
-        onComplete={handleUpdateLocation}
-      />
       
       <Drawer open={showLocationDrawer} onOpenChange={setShowLocationDrawer}>
         <DrawerContent>
@@ -204,7 +186,6 @@ const CompetitionsPage: React.FC = () => {
   );
 };
 
-// Helper function to calculate distance between coordinates in kilometers
 const calculateDistance = (
   lat1: number,
   lon1: number,

@@ -1,4 +1,5 @@
 
+// This file is kept but unused since we're replacing the dialog with inline location selection
 import React from 'react';
 import { MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -14,7 +15,6 @@ const LocationOnboarding: React.FC<LocationOnboardingProps> = ({ isOpen, onCompl
   return (
     <Dialog 
       open={isOpen}
-      // Remove the onOpenChange handler completely to allow the X button to work
     >
       <DialogContent 
         className="max-w-md"
