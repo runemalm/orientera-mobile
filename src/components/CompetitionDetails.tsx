@@ -1,11 +1,12 @@
 
 import React, { useState } from 'react';
 import { CompetitionDetail } from '../types';
-import { Calendar, Clock, MapPin, User, Globe, Award, ExternalLink } from 'lucide-react';
+import { Calendar, Clock, MapPin, User, Globe, Award, ExternalLink, Info } from 'lucide-react';
 import FileItem from './FileItem';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { Button } from './ui/button';
 import { Alert, AlertDescription } from './ui/alert';
+import { useToast } from '@/hooks/use-toast';
 
 interface CompetitionDetailsProps {
   competition: CompetitionDetail;
@@ -17,6 +18,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
   onSignUpComplete 
 }) => {
   const [isRegistered, setIsRegistered] = useState(competition.isRegistered || false);
+  const { toast } = useToast();
   
   // Format date to be more readable using Swedish format
   const formattedDate = new Date(competition.date).toLocaleDateString('sv-SE', {
@@ -29,6 +31,14 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
   const handleSignUpComplete = () => {
     setIsRegistered(true);
     onSignUpComplete();
+  };
+
+  const handleEventorClick = () => {
+    toast({
+      title: "Information om anmälan",
+      description: "Om du har anmält dig via Eventor kan det ta upp till 24 timmar innan din anmälan syns i appen.",
+      duration: 5000,
+    });
   };
   
   return (
@@ -129,9 +139,14 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="flex items-center text-primary hover:underline font-medium"
+                    onClick={handleEventorClick}
                   >
                     Anmäl dig på Eventor <ExternalLink size={14} className="ml-1" />
                   </a>
+                  <div className="flex items-center mt-2 text-sm text-amber-600">
+                    <Info size={14} className="mr-1" />
+                    <span>Det kan ta upp till 24 timmar innan din anmälan från Eventor syns här.</span>
+                  </div>
                 </div>
               </div>
             </AlertDescription>

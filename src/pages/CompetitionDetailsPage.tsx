@@ -5,6 +5,7 @@ import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionDetails from '../components/CompetitionDetails';
 import { mockCompetitionDetails } from '../utils/mockData';
 import { CompetitionDetail } from '../types';
+import { Toaster } from '@/components/ui/toaster';
 
 const CompetitionDetailsPage: React.FC = () => {
   const { competitionId } = useParams<{ competitionId: string }>();
@@ -39,6 +40,7 @@ const CompetitionDetailsPage: React.FC = () => {
         <div className="flex justify-center items-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
         </div>
+        <Toaster />
       </MobileLayout>
     );
   }
@@ -57,6 +59,7 @@ const CompetitionDetailsPage: React.FC = () => {
           <h2 className="text-xl font-bold">Tävlingen hittades inte</h2>
           <p className="text-gray-500 mt-2">Tävlingen du söker existerar inte</p>
         </div>
+        <Toaster />
       </MobileLayout>
     );
   }
@@ -67,6 +70,7 @@ const CompetitionDetailsPage: React.FC = () => {
         competition={competition} 
         onSignUpComplete={handleSignUpComplete} 
       />
+      <Toaster />
     </MobileLayout>
   );
 };
