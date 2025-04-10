@@ -55,7 +55,6 @@ const CompetitionsPage: React.FC = () => {
       setShowResetDrawer(true);
       setTapCount(0);
     } else {
-      // Reset after 2 seconds if not reached 3 taps
       setTimeout(() => {
         setTapCount(0);
       }, 2000);
@@ -64,10 +63,9 @@ const CompetitionsPage: React.FC = () => {
 
   const processCompetitionWithDistance = (competition: typeof mockCompetitions[0]): CompetitionWithDistance => {
     if (!userLocation) {
-      // If no location, return competition with a default distance
       return {
         ...competition,
-        distance: 0 // Set a default distance value
+        distance: 0
       };
     }
     
@@ -119,7 +117,6 @@ const CompetitionsPage: React.FC = () => {
   const organizeCompetitionsByDay = (weekGroup: CompetitionsByWeek): DayCompetitions[] => {
     const days: DayCompetitions[] = [];
     
-    // Create an entry for each day of the week
     for (let i = 0; i < 7; i++) {
       const currentDate = addDays(weekGroup.weekStart, i);
       days.push({
@@ -128,7 +125,6 @@ const CompetitionsPage: React.FC = () => {
       });
     }
     
-    // Add competitions to their respective days
     weekGroup.competitions.forEach(competition => {
       const competitionDate = new Date(competition.date);
       
@@ -147,11 +143,15 @@ const CompetitionsPage: React.FC = () => {
   };
 
   const formatDayHeader = (date: Date): string => {
-    return format(date, 'EEEE, d MMM'); // e.g. "Monday, 15 Apr"
+    return format(date, 'EEEE, d MMM');
   };
 
   const formatMonthHeader = (date: Date): string => {
-    return format(date, 'MMMM yyyy'); // e.g. "April 2025"
+    return format(date, 'MMMM yyyy');
+  };
+
+  const formatDayOfMonth = (date: Date): string => {
+    return format(date, 'd');
   };
 
   const getWeekNumber = (date: Date): number => {
@@ -313,11 +313,23 @@ const CompetitionsPage: React.FC = () => {
                         
                         {dayGroup.competitions.length > 0 ? (
                           dayGroup.competitions.map(competition => (
-                            <CompetitionCard key={competition.id} competition={competition} />
+                            <div key={competition.id} className="flex items-start">
+                              <div className="bg-primary/10 rounded-full w-8 h-8 flex items-center justify-center mr-2 mt-3 text-primary font-semibold">
+                                {formatDayOfMonth(dayGroup.date)}
+                              </div>
+                              <div className="flex-1">
+                                <CompetitionCard competition={competition} />
+                              </div>
+                            </div>
                           ))
                         ) : (
-                          <div className="bg-white/50 rounded-lg border border-gray-100 p-3 text-sm text-gray-400">
-                            Inga tävlingar
+                          <div className="flex items-start">
+                            <div className="bg-gray-100 rounded-full w-8 h-8 flex items-center justify-center mr-2 text-gray-500 font-semibold">
+                              {formatDayOfMonth(dayGroup.date)}
+                            </div>
+                            <div className="flex-1 bg-white/50 rounded-lg border border-gray-100 p-3 text-sm text-gray-400">
+                              Inga tävlingar
+                            </div>
                           </div>
                         )}
                       </div>
@@ -406,7 +418,7 @@ const calculateDistance = (
   lat2: number,
   lon2: number
 ): number => {
-  const R = 6371; // Radius of the Earth in km
+  const R = 6371;
   const dLat = (lat2 - lat1) * Math.PI / 180;
   const dLon = (lon2 - lon1) * Math.PI / 180;
   const a =
@@ -414,7 +426,7 @@ const calculateDistance = (
     Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const distance = R * c;
-  return Math.round(distance * 10) / 10; // Round to 1 decimal place
+  return Math.round(distance * 10) / 10;
 };
 
 export default CompetitionsPage;
