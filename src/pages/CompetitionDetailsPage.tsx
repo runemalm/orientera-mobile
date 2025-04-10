@@ -16,7 +16,14 @@ const CompetitionDetailsPage: React.FC = () => {
     // Simulate API fetch with timeout
     const timer = setTimeout(() => {
       if (competitionId && mockCompetitionDetails[competitionId]) {
-        setCompetition(mockCompetitionDetails[competitionId]);
+        const competitionData = mockCompetitionDetails[competitionId];
+        
+        // Add sample Livelox link to some competitions
+        if (competitionId === 'comp-1' || competitionId === 'comp-3') {
+          competitionData.liveloxLink = `https://www.livelox.com/Events/${competitionId === 'comp-1' ? '12345' : '67890'}`;
+        }
+        
+        setCompetition(competitionData);
       }
       setLoading(false);
     }, 500);

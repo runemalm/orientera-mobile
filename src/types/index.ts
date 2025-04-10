@@ -35,6 +35,7 @@ export interface CompetitionDetail extends Competition {
   organizer: string;
   contact: string;
   website?: string;
+  liveloxLink?: string; // Added Livelox link field
   isRegistered?: boolean;
   isWaitlisted?: boolean;
 }

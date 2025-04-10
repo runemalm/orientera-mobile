@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { CompetitionDetail } from '../types';
-import { Calendar, Clock, MapPin, User, Globe, Award, Navigation, FileText, Info, Tag } from 'lucide-react';
+import { Calendar, Clock, MapPin, User, Globe, Award, Navigation, FileText, Info, Tag, Map } from 'lucide-react';
 import FileItem from './FileItem';
 import { formatDistrictName } from '../utils/formatters';
 
@@ -102,6 +102,20 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
               >
                 <Globe size={18} className="shrink-0" />
                 <span>Besök tävlingswebbplats</span>
+              </a>
+            </li>
+          )}
+          
+          {competition.liveloxLink && (
+            <li className="p-3">
+              <a 
+                href={competition.liveloxLink} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 text-blue-600 hover:underline"
+              >
+                <Map size={18} className="shrink-0" />
+                <span>Visa på Livelox</span>
               </a>
             </li>
           )}
