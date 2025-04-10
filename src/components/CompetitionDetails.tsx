@@ -18,9 +18,6 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
   onSignUpComplete 
 }) => {
   const [isRegistered, setIsRegistered] = useState(competition.isRegistered || false);
-  const [isWaitlisted, setIsWaitlisted] = useState(competition.isWaitlisted || false);
-  const [email, setEmail] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   
   // Format date to be more readable using Swedish format
@@ -34,21 +31,6 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
   const handleSignUpComplete = () => {
     setIsRegistered(true);
     onSignUpComplete();
-  };
-  
-  const handleWaitlistSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    // Simulate API call with timeout
-    setTimeout(() => {
-      setIsWaitlisted(true);
-      setIsSubmitting(false);
-      toast({
-        title: "Du är nu på väntelistan",
-        description: "Vi kommer att meddela dig när anmälan via appen blir tillgänglig.",
-      });
-    }, 1000);
   };
   
   return (
@@ -138,16 +120,6 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
               <span>Du är anmäld till denna tävling</span>
             </div>
           </div>
-        ) : isWaitlisted ? (
-          <div className="bg-yellow-50 border border-yellow-200 rounded-md p-3 text-yellow-800">
-            <div className="flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-bell mr-2">
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-              </svg>
-              <span>Du är på väntelistan för anmälan via appen</span>
-            </div>
-          </div>
         ) : (
           <Dialog>
             <DialogTrigger asChild>
@@ -159,14 +131,14 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
               <DialogHeader>
                 <DialogTitle>Anmälan inte tillgänglig ännu</DialogTitle>
                 <DialogDescription>
-                  Anmälan via appen är inte tillgänglig ännu. Under tiden kan du anmäla dig via Eventor eller ställa dig på vår väntelista.
+                  Anmälan via appen är inte tillgänglig ännu. Du kan anmäla dig via Eventor istället.
                 </DialogDescription>
               </DialogHeader>
-              <div className="py-4 space-y-4">
+              <div className="py-4">
                 <Alert>
                   <AlertDescription>
                     <div className="flex flex-col space-y-2">
-                      <p>Du kan anmäla dig till tävlingen via Eventor tills vidare.</p>
+                      <p>Du kan anmäla dig till tävlingen via Eventor.</p>
                       <div>
                         <a 
                           href="https://eventor.orientering.se" 
@@ -180,45 +152,6 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
                     </div>
                   </AlertDescription>
                 </Alert>
-                
-                {!isWaitlisted ? (
-                  <form onSubmit={handleWaitlistSubmit} className="space-y-4">
-                    <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                        Vill du få en notifiering när anmälan via appen blir tillgänglig?
-                      </label>
-                      <input
-                        type="email"
-                        id="email"
-                        placeholder="Din e-post"
-                        className="w-full border border-gray-300 rounded-md p-2"
-                        required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                      />
-                      <p className="text-xs text-gray-500 mt-1">
-                        Vi meddelar dig när anmälan via appen blir tillgänglig
-                      </p>
-                    </div>
-                    <Button
-                      type="submit"
-                      className="w-full"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? "Skickar..." : "Meddela mig när anmälan öppnar"}
-                    </Button>
-                  </form>
-                ) : (
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-md p-3 text-yellow-800">
-                    <div className="flex items-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-bell mr-2">
-                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                        <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-                      </svg>
-                      <span>Du kommer att bli meddelad när anmälan öppnar</span>
-                    </div>
-                  </div>
-                )}
               </div>
             </DialogContent>
           </Dialog>

@@ -39,16 +39,6 @@ const CompetitionDetailsPage: React.FC = () => {
       });
     }
   };
-  
-  const handleWaitlistComplete = () => {
-    // Update local data to reflect waitlist status
-    if (competition) {
-      setCompetition({
-        ...competition,
-        isWaitlisted: true
-      });
-    }
-  };
 
   if (loading) {
     return (
