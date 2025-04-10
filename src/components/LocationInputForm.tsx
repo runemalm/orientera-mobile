@@ -50,8 +50,37 @@ const LocationInputForm: React.FC<LocationInputFormProps> = ({ onLocationSelecte
       }
 
       const result = data[0];
+      
+      // Create a more readable location name from the address components
+      const address = result.address;
+      let locationName = '';
+      
+      if (address.road) {
+        locationName += address.road;
+        if (address.house_number) {
+          locationName += ' ' + address.house_number;
+        }
+      } else if (result.name) {
+        locationName = result.name;
+      }
+      
+      // Add city information
+      if (address.city || address.town || address.village) {
+        const cityName = address.city || address.town || address.village;
+        if (locationName) {
+          locationName += ', ' + cityName;
+        } else {
+          locationName = cityName;
+        }
+      }
+      
+      // If we couldn't build a nice name, fallback to the display_name
+      if (!locationName) {
+        locationName = result.display_name;
+      }
+      
       onLocationSelected({
-        city: result.display_name, // Use the full display_name instead of splitting
+        city: locationName,
         latitude: parseFloat(result.lat),
         longitude: parseFloat(result.lon),
       });
