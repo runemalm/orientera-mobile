@@ -1,44 +1,21 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
 import { mockCompetitions } from '../utils/mockData';
-import { Search, MapPin } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 
 const CompetitionsPage: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  
-  const filteredCompetitions = mockCompetitions.filter(comp => 
-    comp.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    comp.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    comp.club.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
   return (
     <MobileLayout title="Tävlingar i närheten">
-      <div className="mb-4">
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search size={18} className="text-gray-400" />
-          </div>
-          <input
-            type="text"
-            placeholder="Sök tävlingar..."
-            className="pl-10 w-full p-3 bg-white border border-gray-200 rounded-lg"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-      </div>
-      
       <div className="flex items-center mb-4">
         <MapPin size={16} className="text-primary mr-1" />
         <span className="text-sm text-gray-600">Visar tävlingar nära din position</span>
       </div>
       
       <div>
-        {filteredCompetitions.length > 0 ? (
-          filteredCompetitions.map(competition => (
+        {mockCompetitions.length > 0 ? (
+          mockCompetitions.map(competition => (
             <CompetitionCard key={competition.id} competition={competition} />
           ))
         ) : (
