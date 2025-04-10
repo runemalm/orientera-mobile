@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Compass, FileText, UserPlus, MapPin, List, Clock, Smartphone, Award } from 'lucide-react';
+import { Compass, FileText, MapPin, List, Calendar, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
@@ -26,11 +26,11 @@ const LandingPage: React.FC = () => {
       <main className="flex-grow flex flex-col items-center justify-center p-6 text-center">
         <div className="max-w-md mx-auto">
           <h1 className="text-4xl font-bold mb-3">
-            <span className="whitespace-nowrap">Din moderna app</span>{' '}
-            <span className="whitespace-nowrap">för orientering</span>
+            <span className="whitespace-nowrap">Hitta orienterings­tävlingar</span>{' '}
+            <span className="whitespace-nowrap">enkelt</span>
           </h1>
           <p className="text-gray-600 mb-8">
-            Upptäck, planera och håll koll på orienterings­tävlingar på ett nytt och enklare sätt. Allt i din mobiltelefon.
+            Upptäck kommande orienterings­tävlingar och få tillgång till all väsentlig information samlad på ett ställe.
           </p>
           
           <Button 
@@ -42,17 +42,17 @@ const LandingPage: React.FC = () => {
           </Button>
         </div>
         
-        {/* Features section - enhanced with more orienteering-specific features */}
-        <div className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-4 w-full max-w-3xl">
+        {/* Features section - focused on existing functionality */}
+        <div className="mt-12 grid grid-cols-2 sm:grid-cols-3 gap-4 w-full max-w-2xl">
           <FeatureCard 
             icon={<MapPin className="text-primary" />}
-            title="Hitta nära"
-            description="Upptäck tävlingar nära dig"
+            title="Hitta tävlingar"
+            description="Se tävlingar nära dig"
           />
           <FeatureCard 
-            icon={<Clock className="text-primary" />}
-            title="Alltid aktuellt"
-            description="Senaste uppdateringarna"
+            icon={<Calendar className="text-primary" />}
+            title="Datum & tid"
+            description="Tydlig översikt av kommande tävlingar"
           />
           <FeatureCard 
             icon={<FileText className="text-primary" />}
@@ -61,37 +61,27 @@ const LandingPage: React.FC = () => {
           />
           <FeatureCard 
             icon={<List className="text-primary" />}
-            title="Resultat"
-            description="Följ resultat direkt"
-          />
-          <FeatureCard 
-            icon={<Smartphone className="text-primary" />}
-            title="Mobilanpassad"
-            description="Optimerad för smartphones"
-          />
-          <FeatureCard 
-            icon={<Award className="text-primary" />}
-            title="Tävlingshistorik"
-            description="Se dina tidigare resultat"
+            title="Tävlingsinfo"
+            description="Detaljerad information"
           />
           <FeatureCard 
             icon={<Compass className="text-primary" />}
-            title="Navigering"
-            description="Hitta till TC enkelt"
+            title="Plats"
+            description="Se var tävlingen hålls"
           />
           <FeatureCard 
-            icon={<UserPlus className="text-primary" />}
-            title="Personligt"
-            description="Anpassat för dig"
+            icon={<Info className="text-primary" />}
+            title="Anmälan"
+            description="Länk till Eventor"
           />
         </div>
 
         {/* App description */}
         <div className="mt-12 max-w-md text-center">
-          <h2 className="text-2xl font-semibold mb-3">Framtidens orienteringsapp</h2>
+          <h2 className="text-2xl font-semibold mb-3">Allt på ett ställe</h2>
           <p className="text-gray-600">
-            Orientera.com är skapad med fokus på användarvänlighet och snabbhet. 
-            Få en bättre orienteringsupplevelse med modern teknik i en enkel app.
+            Slipp leta på olika hemsidor efter information om tävlingar. 
+            Orientera.com samlar allt du behöver veta på ett ställe.
           </p>
         </div>
       </main>
