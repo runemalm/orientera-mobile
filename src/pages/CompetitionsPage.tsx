@@ -1,10 +1,11 @@
+
 import React, { useState, useEffect } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
 import { mockCompetitions } from '../utils/mockData';
 import { MapPin, AlertTriangle, RefreshCw, Settings, MapPinOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
@@ -141,6 +142,9 @@ const CompetitionsPage: React.FC = () => {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Aktivera platsinformation</DialogTitle>
+            <DialogDescription className="text-sm text-muted-foreground">
+              För att visa tävlingar nära dig behöver vi din plats.
+            </DialogDescription>
           </DialogHeader>
           <div className="py-4">
             <div className="text-center mb-4">
