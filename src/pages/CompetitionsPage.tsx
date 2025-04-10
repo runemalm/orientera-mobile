@@ -304,8 +304,8 @@ const CompetitionsPage: React.FC = () => {
                       <div key={dayIndex} className="mb-2">
                         {dayGroup.competitions.length > 0 ? (
                           dayGroup.competitions.map(competition => (
-                            <div key={competition.id} className="flex items-start">
-                              <div className="bg-primary/10 rounded-full w-8 h-8 flex items-center justify-center mr-2 mt-3 text-primary font-semibold">
+                            <div key={competition.id} className="flex items-center">
+                              <div className="bg-primary/10 rounded-full w-8 h-8 flex items-center justify-center mr-2 text-primary font-semibold">
                                 {formatDayOfMonth(dayGroup.date)}
                               </div>
                               <div className="flex-1">
@@ -314,7 +314,7 @@ const CompetitionsPage: React.FC = () => {
                             </div>
                           ))
                         ) : (
-                          <div className="flex items-start">
+                          <div className="flex items-center">
                             <div className="bg-gray-100 rounded-full w-8 h-8 flex items-center justify-center mr-2 text-gray-500 font-semibold">
                               {formatDayOfMonth(dayGroup.date)}
                             </div>
