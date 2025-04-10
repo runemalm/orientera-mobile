@@ -217,21 +217,21 @@ const CompetitionsPage: React.FC = () => {
             </div>
           )
         ) : (
-          <div className="text-center">
-            <Card className="border-none shadow-md overflow-hidden mb-4">
+          <div className="flex flex-col items-center justify-center h-[70vh] px-4">
+            <Card className="border shadow-sm overflow-hidden mb-6 w-full max-w-sm">
               <div className="flex flex-col items-center justify-center p-8 text-center">
                 <div className="bg-amber-50 p-4 rounded-full mb-4">
                   <MapPin size={36} className="text-amber-500" />
                 </div>
                 <h2 className="text-xl font-semibold mb-2">Hitta tävlingar nära dig</h2>
-                <p className="text-gray-600 mb-6 max-w-xs">
+                <p className="text-gray-600 mb-6">
                   För att visa tävlingar i närheten behöver appen tillgång till din position.
                 </p>
               </div>
             </Card>
             <Button 
               onClick={() => setShowPermissionDialog(true)}
-              className="flex items-center gap-2 mx-auto pointer-events-auto"
+              className="flex items-center gap-2 pointer-events-auto"
               size="lg"
             >
               <MapPin size={16} />
