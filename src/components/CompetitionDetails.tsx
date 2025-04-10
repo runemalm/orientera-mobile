@@ -1,11 +1,9 @@
 
 import React from 'react';
 import { CompetitionDetail } from '../types';
-import { Calendar, Clock, MapPin, User, Globe, Award, Navigation } from 'lucide-react';
+import { Calendar, Clock, MapPin, User, Globe, Award, Navigation, FileText, Info, Tag } from 'lucide-react';
 import FileItem from './FileItem';
 import { formatDistrictName } from '../utils/formatters';
-import { Card, CardHeader, CardContent } from './ui/card';
-import { Badge } from './ui/badge';
 
 interface CompetitionDetailsProps {
   competition: CompetitionDetail;
@@ -21,114 +19,122 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
     month: 'long',
     year: 'numeric'
   });
+
+  // Format registration deadline
+  const registrationDate = new Date(competition.registrationDeadline).toLocaleDateString('sv-SE', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
   
   return (
-    <div className="space-y-5">
-      {/* Main info card */}
-      <Card className="border-none shadow-md">
-        <CardHeader className="pb-2">
-          <h2 className="text-2xl font-bold">{competition.name}</h2>
-          <p className="text-sm text-gray-500">{competition.club}</p>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {/* Date and time */}
-          <div className="flex items-center gap-2 text-gray-700">
-            <Calendar size={18} className="text-forest" />
-            <span>{formattedDate}</span>
-          </div>
-          <div className="flex items-center gap-2 text-gray-700">
-            <Clock size={18} className="text-forest" />
-            <span>Starttid: {competition.startTime}</span>
-          </div>
+    <div className="space-y-2">
+      {/* Competition header */}
+      <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+        <h2 className="text-xl font-bold">{competition.name}</h2>
+        <p className="text-sm text-gray-500">{competition.club}</p>
+      </div>
+      
+      {/* Main info list */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+        <ul className="divide-y divide-gray-100">
+          <li className="p-3 flex items-center gap-3">
+            <Calendar size={18} className="text-forest shrink-0" />
+            <div>
+              <span className="text-sm font-medium text-gray-700">Datum</span>
+              <p className="text-gray-600">{formattedDate}</p>
+            </div>
+          </li>
           
-          {/* Location */}
-          <div className="flex items-center gap-2 text-gray-700">
-            <MapPin size={18} className="text-gray-600" />
-            <span>{competition.location}</span>
-            <span className="ml-auto flex items-center gap-1 text-gray-600">
+          <li className="p-3 flex items-center gap-3">
+            <Clock size={18} className="text-forest shrink-0" />
+            <div>
+              <span className="text-sm font-medium text-gray-700">Starttid</span>
+              <p className="text-gray-600">{competition.startTime}</p>
+            </div>
+          </li>
+          
+          <li className="p-3 flex items-center gap-3">
+            <MapPin size={18} className="text-location shrink-0" />
+            <div className="flex-1">
+              <span className="text-sm font-medium text-gray-700">Plats</span>
+              <p className="text-gray-600">{competition.location}</p>
+            </div>
+            <span className="flex items-center gap-1 text-gray-500">
               <Navigation size={16} />
               <span>{competition.distance} km</span>
             </span>
-          </div>
+          </li>
           
-          {/* Competition type and district */}
-          <div className="flex flex-wrap items-center gap-2 pt-2">
-            <Badge variant="outline" className="bg-forest-light/10 text-forest-dark">
-              {competition.competitionType}
-            </Badge>
-            <Badge variant="outline" className="bg-forest-light/10 text-forest-dark">
-              {competition.district}
-            </Badge>
-          </div>
+          <li className="p-3 flex items-center gap-3">
+            <Tag size={18} className="text-forest shrink-0" />
+            <div>
+              <span className="text-sm font-medium text-gray-700">Disciplin</span>
+              <p className="text-gray-600">{competition.discipline}</p>
+            </div>
+          </li>
           
-          {/* Website link */}
+          <li className="p-3 flex items-center gap-3">
+            <Award size={18} className="text-forest shrink-0" />
+            <div>
+              <span className="text-sm font-medium text-gray-700">Tävlingstyp</span>
+              <p className="text-gray-600">
+                {competition.competitionType} • {competition.district}
+              </p>
+            </div>
+          </li>
+          
+          <li className="p-3 flex items-center gap-3">
+            <Calendar size={18} className="text-red-500 shrink-0" />
+            <div>
+              <span className="text-sm font-medium text-gray-700">Anmälningsstopp</span>
+              <p className="text-gray-600">{registrationDate}</p>
+            </div>
+          </li>
+          
           {competition.website && (
-            <div className="pt-1">
+            <li className="p-3">
               <a 
                 href={competition.website} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-primary hover:underline"
+                className="flex items-center gap-3 text-primary hover:underline"
               >
-                <Globe size={16} />
+                <Globe size={18} className="shrink-0" />
                 <span>Besök tävlingswebbplats</span>
               </a>
-            </div>
+            </li>
           )}
-        </CardContent>
-      </Card>
-      
-      {/* Discipline */}
-      <Card className="border-none shadow-sm">
-        <CardHeader className="pb-1">
-          <h3 className="font-semibold text-gray-700">Disciplin</h3>
-        </CardHeader>
-        <CardContent>
-          <Badge className="bg-forest text-white">
-            {competition.discipline}
-          </Badge>
-        </CardContent>
-      </Card>
+        </ul>
+      </div>
       
       {/* Description */}
-      <Card className="border-none shadow-sm">
-        <CardHeader className="pb-1">
+      <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-3">
+        <div className="flex items-center gap-2 mb-2">
+          <Info size={18} className="text-forest" />
           <h3 className="font-semibold text-gray-700">Beskrivning</h3>
-        </CardHeader>
-        <CardContent>
-          <p className="text-gray-600">{competition.description}</p>
-        </CardContent>
-      </Card>
+        </div>
+        <p className="text-gray-600 pl-6">{competition.description}</p>
+      </div>
       
       {/* Documents */}
-      <Card className="border-none shadow-sm">
-        <CardHeader className="pb-1">
+      <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-3">
+        <div className="flex items-center gap-2 mb-2">
+          <FileText size={18} className="text-forest" />
           <h3 className="font-semibold text-gray-700">Dokument</h3>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            {competition.files.length > 0 ? (
-              competition.files.map((file) => (
+        </div>
+        <div className="pl-6">
+          {competition.files.length > 0 ? (
+            <div className="space-y-2">
+              {competition.files.map((file) => (
                 <FileItem key={file.id} file={file} />
-              ))
-            ) : (
-              <p className="text-gray-500">Inga dokument tillgängliga ännu</p>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-      
-      {/* Registration deadline section */}
-      <Card className="border-none shadow-md bg-forest-light/10 mt-6">
-        <CardContent className="p-4">
-          <div className="flex flex-col">
-            <h3 className="font-semibold mb-1">Anmälan</h3>
-            <p className="text-sm text-gray-600">
-              Anmälningsstopp: {new Date(competition.registrationDeadline).toLocaleDateString('sv-SE')}
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500">Inga dokument tillgängliga ännu</p>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
