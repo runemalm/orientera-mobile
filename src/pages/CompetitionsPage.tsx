@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
@@ -27,7 +26,6 @@ const CompetitionsPage: React.FC = () => {
         return;
       }
       
-      // Check if we can access the location
       const permissionStatus = await navigator.permissions.query({ name: 'geolocation' });
       
       if (permissionStatus.state === 'granted') {
@@ -36,11 +34,9 @@ const CompetitionsPage: React.FC = () => {
         setLocationStatus('denied');
         setShowPermissionDialog(true);
       } else {
-        // In prompt state, let's show our dialog
         setShowPermissionDialog(true);
       }
       
-      // Listen for changes to the permission state
       permissionStatus.addEventListener('change', () => {
         setLocationStatus(permissionStatus.state as 'granted' | 'denied' | 'prompt');
         if (permissionStatus.state === 'granted') {
@@ -77,12 +73,11 @@ const CompetitionsPage: React.FC = () => {
     }
   };
   
-  // Handle long press on the location status section to open reset drawer
   const handleLongPress = () => {
     setLongPressTimer(
       setTimeout(() => {
         setShowResetDrawer(true);
-      }, 2000) // 2 seconds long press
+      }, 10000) // 10 seconds long press
     );
   };
   
@@ -95,10 +90,8 @@ const CompetitionsPage: React.FC = () => {
   
   const resetLocationPermissions = async () => {
     try {
-      // For browsers that support it, we can revoke permissions
       const permissions = await navigator.permissions.query({ name: 'geolocation' });
       
-      // We can't programmatically revoke permissions, but we can guide the user
       setLocationStatus('prompt');
       setShowResetDrawer(false);
       
@@ -107,7 +100,6 @@ const CompetitionsPage: React.FC = () => {
         description: "Du måste gå till webbläsarens/telefonens inställningar för att återställa platsåtkomst fullständigt.",
       });
       
-      // Force a new request
       setShowPermissionDialog(true);
     } catch (error) {
       console.error("Error resetting location permissions:", error);
