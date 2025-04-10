@@ -3,10 +3,11 @@ import React, { useState, useEffect } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
 import { mockCompetitions } from '../utils/mockData';
-import { MapPin, AlertTriangle, RefreshCw } from 'lucide-react';
+import { MapPin, AlertTriangle, RefreshCw, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
+import { Card } from '@/components/ui/card';
 
 const CompetitionsPage: React.FC = () => {
   const [locationStatus, setLocationStatus] = useState<'prompt' | 'granted' | 'denied'>('prompt');
@@ -209,20 +210,25 @@ const CompetitionsPage: React.FC = () => {
             </div>
           )
         ) : (
-          <div className="text-center py-8">
-            <div className="text-gray-400 mb-2">
-              <AlertTriangle size={48} className="mx-auto" />
+          <Card className="border-none shadow-md overflow-hidden">
+            <div className="flex flex-col items-center justify-center p-8 text-center">
+              <div className="bg-amber-50 p-4 rounded-full mb-4">
+                <MapPin size={36} className="text-amber-500" />
+              </div>
+              <h2 className="text-xl font-semibold mb-2">Hitta tävlingar nära dig</h2>
+              <p className="text-gray-600 mb-6 max-w-xs">
+                För att visa tävlingar i närheten behöver appen tillgång till din position.
+              </p>
+              <Button 
+                onClick={() => setShowPermissionDialog(true)}
+                className="flex items-center gap-2"
+                size="lg"
+              >
+                <Settings size={16} />
+                Aktivera plats
+              </Button>
             </div>
-            <p className="text-gray-700 font-medium">Platsinformation krävs</p>
-            <p className="text-gray-500 mt-1">Du måste aktivera platsinformation för att se tävlingar i närheten</p>
-            <Button 
-              onClick={() => setShowPermissionDialog(true)} 
-              variant="outline"
-              className="mt-4"
-            >
-              Aktivera plats
-            </Button>
-          </div>
+          </Card>
         )}
       </div>
     </MobileLayout>
