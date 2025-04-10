@@ -11,10 +11,10 @@ interface CompetitionCardProps {
 const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition }) => {
   const navigate = useNavigate();
   
-  // Format date to be more readable
-  const formattedDate = new Date(competition.date).toLocaleDateString('en-US', {
-    month: 'short',
+  // Format date to be more readable - using Swedish format
+  const formattedDate = new Date(competition.date).toLocaleDateString('sv-SE', {
     day: 'numeric',
+    month: 'short',
     year: 'numeric'
   });
   
@@ -36,7 +36,7 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition }) => {
         <div className="flex items-center text-gray-600 text-sm mb-3">
           <MapPin size={16} className="mr-1" />
           <span>{competition.location}</span>
-          <span className="ml-auto text-primary font-medium">{competition.distance} km away</span>
+          <span className="ml-auto text-primary font-medium">{competition.distance} km bort</span>
         </div>
         <div className="flex gap-2 mt-2">
           {competition.disciplines.map((discipline, index) => (
@@ -53,7 +53,7 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition }) => {
         <div className="flex items-center justify-between">
           <span className="text-sm text-gray-600">{competition.club}</span>
           <button className="bg-primary text-white text-sm font-medium py-1 px-3 rounded">
-            View Details
+            Visa detaljer
           </button>
         </div>
       </div>

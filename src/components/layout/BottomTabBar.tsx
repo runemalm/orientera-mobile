@@ -13,13 +13,13 @@ const BottomTabBar: React.FC = () => {
     {
       name: 'competitions',
       icon: <MapPin size={24} />,
-      label: 'Events',
+      label: 'Tävlingar',
       path: '/'
     },
     {
       name: 'profile',
       icon: <User size={24} />,
-      label: 'Profile',
+      label: 'Profil',
       path: '/profile'
     }
   ];

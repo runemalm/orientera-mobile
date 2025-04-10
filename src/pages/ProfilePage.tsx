@@ -13,7 +13,7 @@ const ProfilePage: React.FC = () => {
   };
 
   return (
-    <MobileLayout title="Profile">
+    <MobileLayout title="Profil">
       <div className="space-y-6">
         {/* Profile header */}
         <div className="bg-white rounded-lg shadow-sm p-6 flex items-center">
@@ -34,29 +34,29 @@ const ProfilePage: React.FC = () => {
           <div className="bg-white rounded-lg shadow-sm p-4">
             <div className="flex items-center text-secondary mb-2">
               <Calendar size={20} className="mr-2" />
-              <span className="font-semibold">Registered</span>
+              <span className="font-semibold">Anmäld</span>
             </div>
             <p className="text-2xl font-bold">{userData.registeredCompetitions}</p>
-            <p className="text-sm text-gray-500">Upcoming events</p>
+            <p className="text-sm text-gray-500">Kommande tävlingar</p>
           </div>
           <div className="bg-white rounded-lg shadow-sm p-4">
             <div className="flex items-center text-primary mb-2">
               <Award size={20} className="mr-2" />
-              <span className="font-semibold">Completed</span>
+              <span className="font-semibold">Genomförda</span>
             </div>
             <p className="text-2xl font-bold">{userData.completedCompetitions}</p>
-            <p className="text-sm text-gray-500">Past competitions</p>
+            <p className="text-sm text-gray-500">Tidigare tävlingar</p>
           </div>
         </div>
         
         {/* Placeholder for future features */}
         <div className="bg-white rounded-lg shadow-sm p-4">
-          <h3 className="font-semibold mb-3">My Competitions</h3>
+          <h3 className="font-semibold mb-3">Mina tävlingar</h3>
           <div className="border border-dashed border-gray-300 rounded-md p-6 flex flex-col items-center justify-center">
             <Calendar size={32} className="text-gray-400 mb-2" />
-            <p className="text-gray-500 text-center">You have no upcoming competitions</p>
+            <p className="text-gray-500 text-center">Du har inga kommande tävlingar</p>
             <button className="mt-4 bg-primary text-white py-2 px-4 rounded">
-              Find Competitions
+              Hitta tävlingar
             </button>
           </div>
         </div>

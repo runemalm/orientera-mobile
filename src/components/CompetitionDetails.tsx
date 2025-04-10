@@ -17,11 +17,11 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
 }) => {
   const [isRegistered, setIsRegistered] = useState(competition.isRegistered || false);
   
-  // Format date to be more readable
-  const formattedDate = new Date(competition.date).toLocaleDateString('en-US', {
+  // Format date to be more readable using Swedish format
+  const formattedDate = new Date(competition.date).toLocaleDateString('sv-SE', {
     weekday: 'long',
-    month: 'long',
     day: 'numeric',
+    month: 'long',
     year: 'numeric'
   });
 
@@ -41,7 +41,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
         </div>
         <div className="flex items-center text-gray-600 mb-2">
           <Clock size={16} className="mr-2" />
-          <span>Start time: {competition.startTime}</span>
+          <span>Starttid: {competition.startTime}</span>
         </div>
         <div className="flex items-center text-gray-600 mb-2">
           <MapPin size={16} className="mr-2" />
@@ -49,7 +49,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
         </div>
         <div className="flex items-center text-gray-600">
           <User size={16} className="mr-2" />
-          <span>Organized by: {competition.club}</span>
+          <span>Arrangör: {competition.club}</span>
         </div>
         {competition.website && (
           <div className="flex items-center text-gray-600 mt-2">
@@ -60,7 +60,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
               rel="noopener noreferrer"
               className="text-primary underline"
             >
-              Visit website
+              Besök webbplats
             </a>
           </div>
         )}
@@ -68,7 +68,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
       
       {/* Disciplines */}
       <div>
-        <h3 className="font-semibold text-gray-700 mb-2">Disciplines</h3>
+        <h3 className="font-semibold text-gray-700 mb-2">Discipliner</h3>
         <div className="flex flex-wrap gap-2">
           {competition.disciplines.map((discipline, index) => (
             <span 
@@ -83,29 +83,29 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
       
       {/* Description */}
       <div>
-        <h3 className="font-semibold text-gray-700 mb-2">Description</h3>
+        <h3 className="font-semibold text-gray-700 mb-2">Beskrivning</h3>
         <p className="text-gray-600">{competition.description}</p>
       </div>
       
       {/* Files */}
       <div>
-        <h3 className="font-semibold text-gray-700 mb-2">Files</h3>
+        <h3 className="font-semibold text-gray-700 mb-2">Dokument</h3>
         <div className="space-y-2">
           {competition.files.length > 0 ? (
             competition.files.map((file) => (
               <FileItem key={file.id} file={file} />
             ))
           ) : (
-            <p className="text-gray-500">No files available yet</p>
+            <p className="text-gray-500">Inga dokument tillgängliga ännu</p>
           )}
         </div>
       </div>
       
       {/* Registration section */}
       <div className="bg-white p-4 rounded-lg shadow-sm">
-        <h3 className="font-semibold mb-2">Registration</h3>
+        <h3 className="font-semibold mb-2">Anmälan</h3>
         <p className="text-gray-600 mb-4">
-          Registration deadline: {new Date(competition.registrationDeadline).toLocaleDateString()}
+          Anmälningsdeadline: {new Date(competition.registrationDeadline).toLocaleDateString('sv-SE')}
         </p>
         
         {isRegistered ? (
@@ -115,19 +115,19 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                 <polyline points="22 4 12 14.01 9 11.01" />
               </svg>
-              <span>You are registered for this competition</span>
+              <span>Du är anmäld till denna tävling</span>
             </div>
           </div>
         ) : (
           <Dialog>
             <DialogTrigger asChild>
               <button className="w-full bg-primary hover:bg-forest-dark text-white py-2 px-4 rounded transition-colors">
-                Sign up for competition
+                Anmäl dig till tävlingen
               </button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
-                <DialogTitle>Register for {competition.name}</DialogTitle>
+                <DialogTitle>Anmäl dig till {competition.name}</DialogTitle>
               </DialogHeader>
               <div className="py-4">
                 <SignUpForm 

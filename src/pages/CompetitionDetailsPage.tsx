@@ -37,7 +37,7 @@ const CompetitionDetailsPage: React.FC = () => {
 
   if (loading) {
     return (
-      <MobileLayout title="Loading..." showBackButton>
+      <MobileLayout title="Laddar..." showBackButton>
         <div className="flex justify-center items-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
         </div>
@@ -47,7 +47,7 @@ const CompetitionDetailsPage: React.FC = () => {
 
   if (!competition) {
     return (
-      <MobileLayout title="Not Found" showBackButton>
+      <MobileLayout title="Hittades inte" showBackButton>
         <div className="flex flex-col items-center justify-center h-64">
           <div className="text-red-500 mb-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -56,15 +56,15 @@ const CompetitionDetailsPage: React.FC = () => {
               <line x1="12" y1="16" x2="12.01" y2="16" />
             </svg>
           </div>
-          <h2 className="text-xl font-bold">Competition not found</h2>
-          <p className="text-gray-500 mt-2">The competition you're looking for doesn't exist</p>
+          <h2 className="text-xl font-bold">Tävlingen hittades inte</h2>
+          <p className="text-gray-500 mt-2">Tävlingen du söker existerar inte</p>
         </div>
       </MobileLayout>
     );
   }
 
   return (
-    <MobileLayout title="Competition Details" showBackButton>
+    <MobileLayout title="Tävlingsdetaljer" showBackButton>
       <CompetitionDetails 
         competition={competition} 
         onSignUpComplete={handleSignUpComplete}

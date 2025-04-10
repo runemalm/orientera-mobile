@@ -8,6 +8,18 @@ interface FileItemProps {
 }
 
 const FileItem: React.FC<FileItemProps> = ({ file }) => {
+  // Translate file types to Swedish
+  const getFileTypeName = (type: string) => {
+    switch (type) {
+      case 'results': return 'resultat';
+      case 'startlist': return 'startlista';
+      case 'splits': return 'sträcktider';
+      case 'invitation': return 'inbjudan';
+      case 'pm': return 'pm';
+      default: return 'dokument';
+    }
+  };
+
   const getFileIcon = () => {
     switch (file.type) {
       case 'results':
@@ -31,7 +43,7 @@ const FileItem: React.FC<FileItemProps> = ({ file }) => {
         <div className="mr-3">{getFileIcon()}</div>
         <div className="flex-grow">
           <div className="font-medium">{file.name}</div>
-          <div className="text-xs text-gray-500 capitalize">{file.type} • {new Date(file.uploadDate).toLocaleDateString()}</div>
+          <div className="text-xs text-gray-500 capitalize">{getFileTypeName(file.type)} • {new Date(file.uploadDate).toLocaleDateString('sv-SE')}</div>
         </div>
         <div className="text-primary">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-download">

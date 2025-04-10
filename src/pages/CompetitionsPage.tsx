@@ -15,7 +15,7 @@ const CompetitionsPage: React.FC = () => {
   );
 
   return (
-    <MobileLayout title="Nearby Competitions">
+    <MobileLayout title="Tävlingar i närheten">
       <div className="mb-4">
         <div className="relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -23,7 +23,7 @@ const CompetitionsPage: React.FC = () => {
           </div>
           <input
             type="text"
-            placeholder="Search competitions..."
+            placeholder="Sök tävlingar..."
             className="pl-10 w-full p-3 bg-white border border-gray-200 rounded-lg"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -33,7 +33,7 @@ const CompetitionsPage: React.FC = () => {
       
       <div className="flex items-center mb-4">
         <MapPin size={16} className="text-primary mr-1" />
-        <span className="text-sm text-gray-600">Showing competitions near your location</span>
+        <span className="text-sm text-gray-600">Visar tävlingar nära din position</span>
       </div>
       
       <div>
@@ -50,7 +50,7 @@ const CompetitionsPage: React.FC = () => {
                 <path d="m9 9 6 6" />
               </svg>
             </div>
-            <p className="text-gray-500">No competitions found</p>
+            <p className="text-gray-500">Inga tävlingar hittades</p>
           </div>
         )}
       </div>
