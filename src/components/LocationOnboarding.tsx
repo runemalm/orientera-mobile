@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { MapPin, ArrowRight } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import LocationInputForm from './LocationInputForm';
@@ -13,14 +13,8 @@ interface LocationOnboardingProps {
 const LocationOnboarding: React.FC<LocationOnboardingProps> = ({ isOpen, onComplete }) => {
   return (
     <Dialog 
-      open={isOpen} 
-      onOpenChange={(open) => {
-        // Allow closing with the X button but prevent closing by clicking outside
-        if (open === false) {
-          // Dialog is trying to close, but we only allow it through the X button
-          // The X button triggers this callback directly
-        }
-      }}
+      open={isOpen}
+      // Remove the onOpenChange handler completely to allow the X button to work
     >
       <DialogContent 
         className="max-w-md"
