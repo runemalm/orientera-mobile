@@ -26,11 +26,11 @@ const LandingPage: React.FC = () => {
       <main className="flex-grow flex flex-col items-center justify-center p-6 text-center">
         <div className="max-w-md mx-auto">
           <h1 className="text-3xl font-bold mb-3">
-            <span className="whitespace-nowrap">Hitta och anmäl dig till</span>{' '}
-            <span className="whitespace-nowrap">orienterings­tävlingar</span>
+            <span className="whitespace-nowrap">Hitta orienterings­tävlingar</span>{' '}
+            <span className="whitespace-nowrap">nära dig</span>
           </h1>
           <p className="text-gray-600 mb-8">
-            Med Orientera.com kommer du enkelt åt all tävlingsinformation och kan anmäla dig med bara några få klick.
+            Med Orientera.com kan du enkelt hitta och anmäla dig till orienterings­tävlingar i hela landet.
           </p>
           
           <Button 
@@ -46,13 +46,13 @@ const LandingPage: React.FC = () => {
         <div className="mt-16 w-full max-w-md bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-xl font-bold mb-3 text-primary">Varför vi skapade Orientera.com</h2>
           <p className="text-gray-700 mb-4">
-            Som passionerade orienterare ville vi skapa ett enklare sätt att anmäla sig till 
-            och få information om orienterings­tävlingar runt om i landet.
+            Som passionerade orienterare ville vi göra det ännu enklare att upptäcka och delta i 
+            orienterings­tävlingar runt om i landet.
           </p>
           <p className="text-gray-700">
-            Orientera.com gör det enkelt att snabbt komma åt all relevant tävlingsinformation, 
-            från banor och klasser till starttider och resultat. Vår användarvänliga plattform 
-            förenklar hela processen från att hitta en tävling till att anmäla sig.
+            Orientera.com fokuserar på användarvänlighet och tillgänglighet, med målet att göra 
+            orienterings­sporten mer åtkomlig för alla – från nybörjare till erfarna löpare. 
+            Vi kombinerar den omfattande tävlingsinformationen med en modern digital upplevelse.
           </p>
         </div>
         
@@ -60,23 +60,23 @@ const LandingPage: React.FC = () => {
         <div className="mt-12 grid grid-cols-2 gap-4 w-full max-w-md">
           <FeatureCard 
             icon={<MapPin className="text-primary" />}
-            title="Hitta tävlingar"
-            description="Baserat på din position"
+            title="Hitta nära"
+            description="Tävlingar baserat på din position"
           />
           <FeatureCard 
             icon={<Calendar className="text-primary" />}
-            title="All information"
-            description="Starttider, banor, PM m.m."
+            title="Planera"
+            description="Se kommande tävlingar"
           />
           <FeatureCard 
             icon={<Flag className="text-primary" />}
-            title="Enkel anmälan"
-            description="Klicka och anmäl"
+            title="Anmäl dig"
+            description="Snabb och enkel anmälan"
           />
           <FeatureCard 
             icon={<Award className="text-primary" />}
             title="Resultat"
-            description="Direkt i appen"
+            description="Se dina tävlingsresultat"
           />
         </div>
       </main>
