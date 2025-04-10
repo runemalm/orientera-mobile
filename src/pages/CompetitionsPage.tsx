@@ -3,9 +3,8 @@ import React, { useState, useEffect } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
 import { mockCompetitions } from '../utils/mockData';
-import { MapPin, AlertTriangle, RefreshCw, Settings, MapPinOff, Loader2 } from 'lucide-react';
+import { MapPin, RefreshCw, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
@@ -13,7 +12,6 @@ import { useNavigate } from 'react-router-dom';
 
 const CompetitionsPage: React.FC = () => {
   const [locationStatus, setLocationStatus] = useState<'checking' | 'prompt' | 'granted' | 'denied'>('checking');
-  const [showPermissionDialog, setShowPermissionDialog] = useState(false);
   const [showResetDrawer, setShowResetDrawer] = useState(false);
   const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
   const [tapCount, setTapCount] = useState(0);
@@ -44,18 +42,6 @@ const CompetitionsPage: React.FC = () => {
     }
   }, [tapCount]);
 
-  // Automatically show permission dialog if status is "prompt" after initial check
-  useEffect(() => {
-    if (initialCheckDone && locationStatus === 'prompt') {
-      // Short delay to avoid immediate popup which can be jarring
-      const timer = setTimeout(() => {
-        setShowPermissionDialog(true);
-      }, 500);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [initialCheckDone, locationStatus]);
-
   const checkLocationPermission = async () => {
     try {
       if (!navigator.geolocation) {
@@ -78,9 +64,6 @@ const CompetitionsPage: React.FC = () => {
       
       permissionStatus.addEventListener('change', () => {
         setLocationStatus(permissionStatus.state as 'granted' | 'denied' | 'prompt');
-        if (permissionStatus.state === 'granted') {
-          setShowPermissionDialog(false);
-        }
       });
     } catch (error) {
       console.error("Error checking location permission:", error);
@@ -94,7 +77,6 @@ const CompetitionsPage: React.FC = () => {
       navigator.geolocation.getCurrentPosition(
         () => {
           setLocationStatus('granted');
-          setShowPermissionDialog(false);
         },
         (error) => {
           console.error("Error getting location:", error);
@@ -125,7 +107,6 @@ const CompetitionsPage: React.FC = () => {
       
       setLocationStatus('prompt');
       setShowResetDrawer(false);
-      setShowPermissionDialog(true);
     } catch (error) {
       console.error("Error resetting location permissions:", error);
     }
@@ -208,7 +189,7 @@ const CompetitionsPage: React.FC = () => {
           </CardContent>
           <CardFooter className="flex flex-col gap-3 p-6 pt-0">
             <Button 
-              onClick={() => setShowPermissionDialog(true)}
+              onClick={requestLocationPermission}
               className="w-full flex items-center justify-center gap-2"
               size="lg"
             >
@@ -232,37 +213,6 @@ const CompetitionsPage: React.FC = () => {
   return (
     <MobileLayout title="Tävlingar i närheten">
       {renderContent()}
-      
-      <Dialog open={showPermissionDialog} onOpenChange={setShowPermissionDialog}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Aktivera platsinformation</DialogTitle>
-            <DialogDescription className="text-sm text-muted-foreground">
-              För att visa tävlingar nära dig behöver vi din plats.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="py-4">
-            <div className="text-center mb-4">
-              <MapPin size={48} className="text-primary mx-auto mb-2" />
-              <p className="text-gray-700 mb-4">
-                För att visa tävlingar i din närhet behöver vi tillgång till din plats. Detta hjälper oss att hitta de tävlingar som är närmast dig.
-              </p>
-            </div>
-            <Button 
-              onClick={requestLocationPermission} 
-              className="w-full"
-            >
-              Tillåt platsinformation
-            </Button>
-            <button 
-              className="w-full text-gray-500 mt-2 text-sm underline"
-              onClick={() => setShowPermissionDialog(false)}
-            >
-              Inte nu
-            </button>
-          </div>
-        </DialogContent>
-      </Dialog>
       
       <Drawer open={showResetDrawer} onOpenChange={setShowResetDrawer}>
         <DrawerContent>
