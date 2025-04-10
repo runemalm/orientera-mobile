@@ -3,12 +3,13 @@ import React, { useState, useEffect } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
 import { mockCompetitions } from '../utils/mockData';
-import { MapPin, AlertTriangle, RefreshCw, Settings, MapPinOff } from 'lucide-react';
+import { MapPin, AlertTriangle, RefreshCw, Settings, MapPinOff, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { useNavigate } from 'react-router-dom';
 
 const CompetitionsPage: React.FC = () => {
   const [locationStatus, setLocationStatus] = useState<'checking' | 'prompt' | 'granted' | 'denied'>('checking');
@@ -17,6 +18,7 @@ const CompetitionsPage: React.FC = () => {
   const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
   const [tapCount, setTapCount] = useState(0);
   const [initialCheckDone, setInitialCheckDone] = useState(false);
+  const navigate = useNavigate();
 
   // Check location permission on mount
   useEffect(() => {
@@ -45,7 +47,12 @@ const CompetitionsPage: React.FC = () => {
   // Automatically show permission dialog if status is "prompt" after initial check
   useEffect(() => {
     if (initialCheckDone && locationStatus === 'prompt') {
-      setShowPermissionDialog(true);
+      // Short delay to avoid immediate popup which can be jarring
+      const timer = setTimeout(() => {
+        setShowPermissionDialog(true);
+      }, 500);
+      
+      return () => clearTimeout(timer);
     }
   }, [initialCheckDone, locationStatus]);
 
@@ -128,12 +135,17 @@ const CompetitionsPage: React.FC = () => {
     setTapCount(prevCount => prevCount + 1);
   };
 
+  const handleReturnToLanding = () => {
+    navigate('/');
+  };
+
   // Content based on location permission status
   const renderContent = () => {
     if (!initialCheckDone) {
       return (
-        <div className="flex justify-center items-center h-[70vh]">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        <div className="flex flex-col justify-center items-center h-[70vh]">
+          <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
+          <p className="text-gray-600">Kontrollerar platsbehörigheter...</p>
         </div>
       );
     }
@@ -181,26 +193,38 @@ const CompetitionsPage: React.FC = () => {
     
     // For 'prompt' or 'denied' statuses
     return (
-      <div className="flex flex-col items-center justify-center h-[70vh] px-4">
-        <Card className="border shadow-sm overflow-hidden mb-6 w-full max-w-sm">
-          <div className="flex flex-col items-center justify-center p-8 text-center">
-            <div className="bg-amber-50 p-4 rounded-full mb-4">
-              <MapPin size={36} className="text-amber-500" />
+      <div className="flex flex-col items-center justify-center h-[70vh] px-4 space-y-6">
+        <Card className="border shadow-sm w-full max-w-sm">
+          <CardContent className="p-6">
+            <div className="flex flex-col items-center justify-center text-center">
+              <div className="bg-amber-50 p-4 rounded-full mb-4">
+                <MapPin size={36} className="text-amber-500" />
+              </div>
+              <h2 className="text-xl font-semibold mb-2">Hitta tävlingar nära dig</h2>
+              <p className="text-gray-600 mb-6">
+                För att visa tävlingar i närheten behöver appen tillgång till din position.
+              </p>
             </div>
-            <h2 className="text-xl font-semibold mb-2">Hitta tävlingar nära dig</h2>
-            <p className="text-gray-600 mb-6">
-              För att visa tävlingar i närheten behöver appen tillgång till din position.
-            </p>
-          </div>
+          </CardContent>
+          <CardFooter className="flex flex-col gap-3 p-6 pt-0">
+            <Button 
+              onClick={() => setShowPermissionDialog(true)}
+              className="w-full flex items-center justify-center gap-2"
+              size="lg"
+            >
+              <MapPin size={16} />
+              Aktivera plats
+            </Button>
+            
+            <Button
+              variant="ghost"
+              onClick={handleReturnToLanding}
+              className="w-full text-gray-500"
+            >
+              Tillbaka till startsidan
+            </Button>
+          </CardFooter>
         </Card>
-        <Button 
-          onClick={() => setShowPermissionDialog(true)}
-          className="flex items-center gap-2 pointer-events-auto"
-          size="lg"
-        >
-          <MapPin size={16} />
-          Aktivera plats
-        </Button>
       </div>
     );
   };

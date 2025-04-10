@@ -9,6 +9,7 @@ import CompetitionsPage from "./pages/CompetitionsPage";
 import CompetitionDetailsPage from "./pages/CompetitionDetailsPage";
 import NotFound from "./pages/NotFound";
 import InfoPage from "./pages/InfoPage";
+import Index from "./pages/Index";
 
 const queryClient = new QueryClient();
 
@@ -109,6 +110,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/index" element={<Index />} />
           <Route path="/landing" element={<LandingPage />} />
           <Route path="/competitions" element={<CompetitionsPage />} />
           <Route path="/info" element={<InfoPage />} />
