@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
@@ -76,6 +77,7 @@ const CompetitionsPage: React.FC = () => {
       );
     }
     
+    // Display formatted location name (may already include street if available from API)
     const displayName = userLocation.city.length > 25 
       ? userLocation.city.split(',')[0]
       : userLocation.city;

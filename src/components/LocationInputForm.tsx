@@ -55,19 +55,9 @@ const LocationInputForm: React.FC<LocationInputFormProps> = ({ onLocationSelecte
       const address = result.address;
       let locationName = '';
       
-      // Check if this is a city/town/village
-      if (address.city || address.town || address.village) {
-        const cityName = address.city || address.town || address.village;
-        const county = address.county;
-        
-        // Format as "city, county" if county exists
-        if (county) {
-          locationName = `${cityName}, ${county}`;
-        } else {
-          locationName = cityName;
-        }
-      } else if (address.road) {
-        // If it's a street address, format it normally
+      // Check if there's a road (street) in the address
+      if (address.road) {
+        // If it's a street address, format it with street and number
         locationName += address.road;
         if (address.house_number) {
           locationName += ' ' + address.house_number;
@@ -77,6 +67,18 @@ const LocationInputForm: React.FC<LocationInputFormProps> = ({ onLocationSelecte
         if (address.city || address.town || address.village) {
           const cityName = address.city || address.town || address.village;
           locationName += ', ' + cityName;
+        }
+      }
+      // If no road but city/town/village exists
+      else if (address.city || address.town || address.village) {
+        const cityName = address.city || address.town || address.village;
+        const county = address.county;
+        
+        // Format as "city, county" if county exists
+        if (county) {
+          locationName = `${cityName}, ${county}`;
+        } else {
+          locationName = cityName;
         }
       } else if (result.name) {
         locationName = result.name;
