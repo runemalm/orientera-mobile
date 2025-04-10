@@ -116,17 +116,17 @@ const CompetitionsPage: React.FC = () => {
 
   return (
     <MobileLayout title="Tävlingar i närheten">
-      <div 
-        className="mb-4"
-        onTouchStart={handleLongPress}
-        onTouchEnd={handlePressEnd}
-        onTouchCancel={handlePressEnd}
-        onMouseDown={handleLongPress}
-        onMouseUp={handlePressEnd}
-        onMouseLeave={handlePressEnd}
-        onClick={locationStatus === 'granted' ? handleTap : undefined}
-      >
-        {locationStatus === 'granted' ? (
+      {locationStatus === 'granted' && (
+        <div 
+          className="mb-4"
+          onTouchStart={handleLongPress}
+          onTouchEnd={handlePressEnd}
+          onTouchCancel={handlePressEnd}
+          onMouseDown={handleLongPress}
+          onMouseUp={handlePressEnd}
+          onMouseLeave={handlePressEnd}
+          onClick={handleTap}
+        >
           <Alert className="bg-green-50 border-green-200 cursor-pointer">
             <MapPin className="h-5 w-5 text-green-600" />
             <AlertTitle className="text-green-800">Platsspårning aktiv</AlertTitle>
@@ -134,37 +134,8 @@ const CompetitionsPage: React.FC = () => {
               Vi visar tävlingar nära din nuvarande position.
             </AlertDescription>
           </Alert>
-        ) : (
-          <Card className="overflow-hidden border-none shadow-md">
-            <div className="bg-amber-50 p-4">
-              <div className="flex items-center">
-                <div className="bg-amber-100 rounded-full p-3 mr-3">
-                  <MapPinOff size={24} className="text-amber-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-amber-900">Hitta tävlingar nära dig</h3>
-                  <p className="text-amber-700 text-sm">Aktivera plats för bättre resultat</p>
-                </div>
-              </div>
-            </div>
-            <CardContent className="p-4 bg-white">
-              <p className="text-gray-600 text-sm">
-                För att visa de mest relevanta tävlingarna behöver vi veta var du är. Din platsdata delas inte med tredje part.
-              </p>
-            </CardContent>
-            <CardFooter className="bg-white p-4 pt-0">
-              <Button 
-                onClick={() => setShowPermissionDialog(true)} 
-                variant="secondary"
-                className="w-full bg-amber-500 hover:bg-amber-600 text-white"
-              >
-                <MapPin className="mr-1" size={16} />
-                Aktivera platsinformation
-              </Button>
-            </CardFooter>
-          </Card>
-        )}
-      </div>
+        </div>
+      )}
       
       <Dialog open={showPermissionDialog} onOpenChange={setShowPermissionDialog}>
         <DialogContent className="sm:max-w-md">
