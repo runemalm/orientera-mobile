@@ -55,23 +55,31 @@ const LocationInputForm: React.FC<LocationInputFormProps> = ({ onLocationSelecte
       const address = result.address;
       let locationName = '';
       
-      if (address.road) {
+      // Check if this is a city/town/village
+      if (address.city || address.town || address.village) {
+        const cityName = address.city || address.town || address.village;
+        const county = address.county;
+        
+        // Format as "city, county" if county exists
+        if (county) {
+          locationName = `${cityName}, ${county}`;
+        } else {
+          locationName = cityName;
+        }
+      } else if (address.road) {
+        // If it's a street address, format it normally
         locationName += address.road;
         if (address.house_number) {
           locationName += ' ' + address.house_number;
         }
+        
+        // Add city information
+        if (address.city || address.town || address.village) {
+          const cityName = address.city || address.town || address.village;
+          locationName += ', ' + cityName;
+        }
       } else if (result.name) {
         locationName = result.name;
-      }
-      
-      // Add city information
-      if (address.city || address.town || address.village) {
-        const cityName = address.city || address.town || address.village;
-        if (locationName) {
-          locationName += ', ' + cityName;
-        } else {
-          locationName = cityName;
-        }
       }
       
       // If we couldn't build a nice name, fallback to the display_name
