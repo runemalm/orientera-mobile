@@ -6,7 +6,6 @@ import { mockCompetitions } from '../utils/mockData';
 import { MapPin, RefreshCw, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { useNavigate } from 'react-router-dom';
 
@@ -168,32 +167,42 @@ const CompetitionsPage: React.FC = () => {
       );
     }
     
-    // For 'prompt' or 'denied' statuses
+    // For 'prompt' or 'denied' statuses - redesigned from a block to a more integrated design
     return (
-      <div className="flex flex-col items-center justify-center h-[70vh] px-4 space-y-6">
-        <Card className="border shadow-sm w-full max-w-sm">
-          <CardContent className="p-6">
-            <div className="flex flex-col items-center justify-center text-center">
-              <div className="bg-amber-50 p-4 rounded-full mb-4">
-                <MapPin size={36} className="text-amber-500" />
-              </div>
-              <h2 className="text-xl font-semibold mb-2">Hitta tävlingar nära dig</h2>
-              <p className="text-gray-600 mb-6">
-                För att visa tävlingar i närheten behöver appen tillgång till din position.
-              </p>
+      <div className="space-y-6 py-6">
+        {/* Location permission banner */}
+        <div className="bg-gradient-to-br from-forest-light/30 to-forest-light/10 rounded-xl p-5 shadow-sm">
+          <div className="flex items-start gap-4">
+            <div className="bg-primary/10 p-3 rounded-full">
+              <MapPin size={24} className="text-primary" />
             </div>
-          </CardContent>
-          <CardFooter className="flex flex-col gap-3 p-6 pt-0">
-            <Button 
-              onClick={requestLocationPermission}
-              className="w-full flex items-center justify-center gap-2"
-              size="lg"
-            >
-              <MapPin size={16} />
-              Aktivera plats
-            </Button>
-          </CardFooter>
-        </Card>
+            <div className="flex-1">
+              <h2 className="text-lg font-medium mb-2 text-forest-dark">Visa tävlingar nära dig</h2>
+              <p className="text-gray-600 mb-4">
+                Aktivera platsinformation för att se tävlingar i ditt område.
+              </p>
+              <Button 
+                onClick={requestLocationPermission}
+                className="w-full sm:w-auto flex items-center justify-center gap-2"
+                size="sm"
+              >
+                <MapPin size={16} />
+                Aktivera plats
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Static competitions list */}
+        <div className="mt-4">
+          <h2 className="text-lg font-medium mb-4 text-gray-700">Populära tävlingar</h2>
+          {mockCompetitions.slice(0, 3).map(competition => (
+            <CompetitionCard key={competition.id} competition={competition} />
+          ))}
+          <div className="text-center mt-4">
+            <span className="text-sm text-gray-500">Aktivera plats för att se fler tävlingar nära dig</span>
+          </div>
+        </div>
       </div>
     );
   };
