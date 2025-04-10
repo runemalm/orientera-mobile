@@ -1,7 +1,7 @@
 
 import React from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
-import { Info, Globe, Medal, Mail, MapPin } from 'lucide-react';
+import { Info, Globe, Medal, Mail, MapPin, User } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
