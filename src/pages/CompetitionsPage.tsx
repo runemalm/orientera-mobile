@@ -11,9 +11,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Competition } from '../types';
 import { format, addDays, startOfWeek, isSameDay, isSameMonth } from 'date-fns';
 
-// Define interface for processed competition data
 interface CompetitionWithDistance extends Omit<Competition, 'distance'> {
-  distance: number; // Make distance required to match Competition interface
+  distance: number;
 }
 
 interface CompetitionsByWeek {
@@ -140,10 +139,6 @@ const CompetitionsPage: React.FC = () => {
   const formatWeekHeader = (start: Date): string => {
     const weekNumber = getWeekNumber(start);
     return `Vecka ${weekNumber}`;
-  };
-
-  const formatDayHeader = (date: Date): string => {
-    return format(date, 'EEEE, d MMM');
   };
 
   const formatMonthHeader = (date: Date): string => {
@@ -307,10 +302,6 @@ const CompetitionsPage: React.FC = () => {
                     
                     {organizeCompetitionsByDay(weekGroup).map((dayGroup, dayIndex) => (
                       <div key={dayIndex} className="mb-2">
-                        <div className="text-sm font-medium text-gray-500 px-3 py-1">
-                          {formatDayHeader(dayGroup.date)}
-                        </div>
-                        
                         {dayGroup.competitions.length > 0 ? (
                           dayGroup.competitions.map(competition => (
                             <div key={competition.id} className="flex items-start">
