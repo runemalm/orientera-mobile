@@ -3,11 +3,11 @@ import React from 'react';
 import { CompetitionDetail } from '../types';
 import { Calendar, Clock, MapPin, User, Globe, Award, Navigation } from 'lucide-react';
 import FileItem from './FileItem';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { Button } from './ui/button';
-import { Alert, AlertDescription } from './ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { formatDistrictName } from '../utils/formatters';
+import { Card, CardHeader, CardContent } from './ui/card';
+import { Badge } from './ui/badge';
 
 interface CompetitionDetailsProps {
   competition: CompetitionDetail;
@@ -28,87 +28,137 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
     year: 'numeric'
   });
   
+  const handleSignUp = () => {
+    toast({
+      title: "Anmälan registrerad",
+      description: "Du är nu anmäld till tävlingen",
+    });
+    onSignUpComplete();
+  };
+  
   return (
-    <div className="space-y-6">
-      {/* Header info */}
-      <div className="bg-white p-4 rounded-lg shadow-sm">
-        <h2 className="text-xl font-bold mb-2">{competition.name}</h2>
-        <div className="flex items-center text-gray-600 mb-2">
-          <Calendar size={16} className="mr-2" />
-          <span>{formattedDate}</span>
-        </div>
-        <div className="flex items-center text-gray-600 mb-2">
-          <Clock size={16} className="mr-2" />
-          <span>Starttid: {competition.startTime}</span>
-        </div>
-        <div className="flex items-center text-gray-600 mb-2">
-          <MapPin size={16} className="mr-2 text-gray-600" />
-          <span>{competition.location}</span>
-        </div>
-        <div className="flex items-center text-gray-600 mb-2">
-          <Navigation size={16} className="mr-2 text-gray-600" />
-          <span>{competition.distance} km bort</span>
-        </div>
-        <div className="flex items-center text-gray-600 mb-2">
-          <Award size={16} className="mr-2" />
-          <span>{competition.competitionType} | {formatDistrictName(competition.district)}</span>
-        </div>
-        <div className="flex items-center text-gray-600">
-          <User size={16} className="mr-2" />
-          <span>Arrangör: {competition.club}</span>
-        </div>
-        {competition.website && (
-          <div className="flex items-center text-gray-600 mt-2">
-            <Globe size={16} className="mr-2" />
-            <a 
-              href={competition.website} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-primary underline"
-            >
-              Besök webbplats
-            </a>
+    <div className="space-y-5">
+      {/* Main info card */}
+      <Card className="border-none shadow-md">
+        <CardHeader className="pb-2">
+          <h2 className="text-2xl font-bold">{competition.name}</h2>
+          <p className="text-sm text-gray-500">{competition.club}</p>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {/* Date and time */}
+          <div className="flex items-center gap-2 text-gray-700">
+            <Calendar size={18} className="text-forest" />
+            <span>{formattedDate}</span>
           </div>
-        )}
-      </div>
+          <div className="flex items-center gap-2 text-gray-700">
+            <Clock size={18} className="text-forest" />
+            <span>Starttid: {competition.startTime}</span>
+          </div>
+          
+          {/* Location */}
+          <div className="flex items-center gap-2 text-gray-700">
+            <MapPin size={18} className="text-gray-600" />
+            <span>{competition.location}</span>
+            <span className="ml-auto flex items-center gap-1 text-gray-600">
+              <Navigation size={16} />
+              <span>{competition.distance} km</span>
+            </span>
+          </div>
+          
+          {/* Competition type and district */}
+          <div className="flex flex-wrap items-center gap-2 pt-2">
+            <Badge variant="outline" className="bg-forest-light/10 text-forest-dark">
+              {competition.competitionType}
+            </Badge>
+            <Badge variant="outline" className="bg-forest-light/10 text-forest-dark">
+              {formatDistrictName(competition.district)}
+            </Badge>
+          </div>
+          
+          {/* Website link */}
+          {competition.website && (
+            <div className="pt-1">
+              <a 
+                href={competition.website} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-primary hover:underline"
+              >
+                <Globe size={16} />
+                <span>Besök tävlingswebbplats</span>
+              </a>
+            </div>
+          )}
+        </CardContent>
+      </Card>
       
       {/* Discipline */}
-      <div>
-        <h3 className="font-semibold text-gray-700 mb-2">Disciplin</h3>
-        <div className="flex flex-wrap gap-2">
-          <span className="bg-forest-light/20 text-forest-dark px-3 py-1 rounded-full text-sm">
+      <Card className="border-none shadow-sm">
+        <CardHeader className="pb-1">
+          <h3 className="font-semibold text-gray-700">Disciplin</h3>
+        </CardHeader>
+        <CardContent>
+          <Badge className="bg-forest text-white">
             {competition.discipline}
-          </span>
-        </div>
-      </div>
+          </Badge>
+        </CardContent>
+      </Card>
       
       {/* Description */}
-      <div>
-        <h3 className="font-semibold text-gray-700 mb-2">Beskrivning</h3>
-        <p className="text-gray-600">{competition.description}</p>
-      </div>
+      <Card className="border-none shadow-sm">
+        <CardHeader className="pb-1">
+          <h3 className="font-semibold text-gray-700">Beskrivning</h3>
+        </CardHeader>
+        <CardContent>
+          <p className="text-gray-600">{competition.description}</p>
+        </CardContent>
+      </Card>
       
-      {/* Files */}
-      <div>
-        <h3 className="font-semibold text-gray-700 mb-2">Dokument</h3>
-        <div className="space-y-2">
-          {competition.files.length > 0 ? (
-            competition.files.map((file) => (
-              <FileItem key={file.id} file={file} />
-            ))
-          ) : (
-            <p className="text-gray-500">Inga dokument tillgängliga ännu</p>
-          )}
-        </div>
-      </div>
+      {/* Documents */}
+      <Card className="border-none shadow-sm">
+        <CardHeader className="pb-1">
+          <h3 className="font-semibold text-gray-700">Dokument</h3>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            {competition.files.length > 0 ? (
+              competition.files.map((file) => (
+                <FileItem key={file.id} file={file} />
+              ))
+            ) : (
+              <p className="text-gray-500">Inga dokument tillgängliga ännu</p>
+            )}
+          </div>
+        </CardContent>
+      </Card>
       
-      {/* Registration deadline section - simplified without registration status */}
-      <div className="bg-white p-4 rounded-lg shadow-sm">
-        <h3 className="font-semibold mb-2">Anmälan</h3>
-        <p className="text-gray-600">
-          Anmälningsdeadline: {new Date(competition.registrationDeadline).toLocaleDateString('sv-SE')}
-        </p>
-      </div>
+      {/* Registration section */}
+      <Card className="border-none shadow-md bg-forest-light/10 mt-6">
+        <CardContent className="p-4">
+          <div className="flex flex-col">
+            <div className="flex justify-between items-center">
+              <div>
+                <h3 className="font-semibold mb-1">Anmälan</h3>
+                <p className="text-sm text-gray-600">
+                  Anmälningsdeadline: {new Date(competition.registrationDeadline).toLocaleDateString('sv-SE')}
+                </p>
+              </div>
+              {!competition.isRegistered ? (
+                <Button 
+                  onClick={handleSignUp}
+                  className="bg-forest hover:bg-forest-dark"
+                >
+                  Anmäl dig
+                </Button>
+              ) : (
+                <Badge variant="outline" className="bg-forest-light/20 text-forest-dark px-3 py-1">
+                  Du är anmäld
+                </Badge>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

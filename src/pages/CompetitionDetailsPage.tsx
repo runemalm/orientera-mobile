@@ -65,8 +65,8 @@ const CompetitionDetailsPage: React.FC = () => {
   }
 
   return (
-    <MobileLayout title="Tävlingsdetaljer" showBackButton>
-      <div className="mt-4">
+    <MobileLayout title={competition.name} showBackButton>
+      <div className="pb-4">
         <CompetitionDetails 
           competition={competition} 
           onSignUpComplete={handleSignUpComplete} 
