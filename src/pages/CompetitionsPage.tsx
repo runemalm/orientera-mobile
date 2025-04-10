@@ -129,24 +129,7 @@ const CompetitionsPage: React.FC = () => {
     if (locationStatus === 'granted') {
       return (
         <>
-          <div 
-            className="mb-4"
-            onTouchStart={handleLongPress}
-            onTouchEnd={handlePressEnd}
-            onTouchCancel={handlePressEnd}
-            onMouseDown={handleLongPress}
-            onMouseUp={handlePressEnd}
-            onMouseLeave={handlePressEnd}
-            onClick={handleTap}
-          >
-            <Alert className="bg-green-50 border-green-200">
-              <MapPin className="h-5 w-5 text-green-600" />
-              <AlertTitle className="text-green-800">Platsspårning aktiv</AlertTitle>
-              <AlertDescription className="text-green-700 text-sm">
-                Vi visar tävlingar nära din nuvarande position.
-              </AlertDescription>
-            </Alert>
-          </div>
+          {/* Removed the "Platsspårning aktiv" notification box */}
           {mockCompetitions.length > 0 ? (
             mockCompetitions.map(competition => (
               <CompetitionCard key={competition.id} competition={competition} />
