@@ -5,7 +5,7 @@ import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionDetails from '../components/CompetitionDetails';
 import { mockCompetitionDetails } from '../utils/mockData';
 import { CompetitionDetail } from '../types';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/components/ui/use-toast';
 
 const CompetitionDetailsPage: React.FC = () => {
   const { competitionId } = useParams<{ competitionId: string }>();
@@ -26,11 +26,11 @@ const CompetitionDetailsPage: React.FC = () => {
   }, [competitionId]);
 
   const handleSignUpComplete = () => {
-    // Update local data to reflect waitlist status
+    // Update local data to reflect registration
     if (competition) {
       setCompetition({
         ...competition,
-        isWaitlisted: true
+        isRegistered: true
       });
     }
   };
