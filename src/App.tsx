@@ -18,9 +18,10 @@ const queryClient = new QueryClient();
 const KeyboardShortcutHandler = () => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
-  const [touchStartY, setTouchStartY] = useState(0);
   const [touchCount, setTouchCount] = useState(0);
   const [lastTouchTime, setLastTouchTime] = useState(0);
+  const [clickCount, setClickCount] = useState(0);
+  const [lastClickTime, setLastClickTime] = useState(0);
   
   useEffect(() => {
     // Keyboard shortcut for desktop
@@ -58,18 +59,48 @@ const KeyboardShortcutHandler = () => {
       }
     };
     
+    // Mouse click handler for desktop web - triple click in top right corner
+    const handleMouseClick = (event: MouseEvent) => {
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+      
+      // Check if click is in top right corner (top 10%, right 20% of screen)
+      if (event.clientX > screenWidth * 0.8 && event.clientY < screenHeight * 0.1) {
+        const currentTime = new Date().getTime();
+        
+        // Reset count if it's been more than 1.5 seconds since last click
+        if (currentTime - lastClickTime > 1500) {
+          setClickCount(1);
+        } else {
+          setClickCount(prev => prev + 1);
+        }
+        
+        setLastClickTime(currentTime);
+        
+        // Navigate to landing page after 3 quick clicks
+        if (clickCount === 2) {
+          navigate('/landing');
+          setClickCount(0);
+        }
+      }
+    };
+    
     window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('click', handleMouseClick);
+    
     if (isMobile) {
       window.addEventListener('touchstart', handleTouchStart);
     }
     
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('click', handleMouseClick);
+      
       if (isMobile) {
         window.removeEventListener('touchstart', handleTouchStart);
       }
     };
-  }, [navigate, isMobile, touchCount, lastTouchTime]);
+  }, [navigate, isMobile, touchCount, lastTouchTime, clickCount, lastClickTime]);
   
   return null;
 };
