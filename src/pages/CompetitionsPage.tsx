@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
@@ -8,11 +9,12 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } f
 import LocationInputForm from '../components/LocationInputForm';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Competition } from '../types';
+import { format, addDays, isSameDay, subWeeks } from 'date-fns';
 
-interface CompetitionsByWeek {
-  weekStart: Date;
-  weekEnd: Date;
-  competitions: Array<ReturnType<typeof processCompetitionWithDistance>>;
+interface CompetitionsByDay {
+  date: Date;
+  competitions: Array<Competition & { distance?: number }>;
 }
 
 const CompetitionsPage: React.FC = () => {
@@ -59,61 +61,57 @@ const CompetitionsPage: React.FC = () => {
     };
   };
 
-  const groupCompetitionsByWeek = (): CompetitionsByWeek[] => {
-    if (!userLocation || mockCompetitions.length === 0) return [];
+  const generateDayGroupsFromLastWeek = (): CompetitionsByDay[] => {
+    if (!userLocation) return [];
     
     const processedCompetitions = mockCompetitions.map(processCompetitionWithDistance);
-    const groupedByWeek: CompetitionsByWeek[] = [];
     
-    processedCompetitions.forEach(competition => {
-      const competitionDate = new Date(competition.date);
-      const weekStart = new Date(competitionDate);
-      weekStart.setDate(competitionDate.getDate() - competitionDate.getDay() + (competitionDate.getDay() === 0 ? -6 : 1));
-      weekStart.setHours(0, 0, 0, 0);
-      
-      const weekEnd = new Date(weekStart);
-      weekEnd.setDate(weekStart.getDate() + 6);
-      weekEnd.setHours(23, 59, 59, 999);
-      
-      const existingWeekGroup = groupedByWeek.find(group => {
-        return group.weekStart.getTime() === weekStart.getTime();
+    // Start from 1 week before today
+    const startDate = subWeeks(new Date(), 1);
+    // Clear time portion
+    startDate.setHours(0, 0, 0, 0);
+    
+    // Create array for 3 weeks (21 days)
+    const days: CompetitionsByDay[] = [];
+    
+    for (let i = 0; i < 21; i++) {
+      const currentDate = addDays(startDate, i);
+      days.push({
+        date: currentDate,
+        competitions: processedCompetitions.filter(competition => {
+          const competitionDate = new Date(competition.date);
+          return isSameDay(competitionDate, currentDate);
+        })
       });
-      
-      if (existingWeekGroup) {
-        existingWeekGroup.competitions.push(competition);
-      } else {
-        groupedByWeek.push({
-          weekStart,
-          weekEnd,
-          competitions: [competition]
-        });
-      }
-    });
+    }
     
-    return groupedByWeek.sort((a, b) => a.weekStart.getTime() - b.weekStart.getTime());
+    return days;
   };
 
-  const formatWeekDateRange = (start: Date, end: Date): string => {
-    const weekNumber = getWeekNumber(start);
+  const formatDayHeader = (date: Date): string => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
     
-    const formatDay = (date: Date) => {
-      return date.getDate();
-    };
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
     
-    const formatMonth = (date: Date) => {
-      return date.toLocaleDateString('sv-SE', { month: 'short' });
-    };
-    
-    const startDay = formatDay(start);
-    const endDay = formatDay(end);
-    const startMonth = formatMonth(start);
-    const endMonth = formatMonth(end);
-    
-    if (startMonth === endMonth) {
-      return `Vecka ${weekNumber} (${startDay} - ${endDay} ${startMonth})`;
+    if (isSameDay(date, today)) {
+      return `Idag, ${format(date, 'd MMM')}`;
+    } else if (isSameDay(date, tomorrow)) {
+      return `Imorgon, ${format(date, 'd MMM')}`;
     } else {
-      return `Vecka ${weekNumber} (${startDay} ${startMonth} - ${endDay} ${endMonth})`;
+      return format(date, 'EEEE, d MMM');
     }
+  };
+
+  const isFirstDayOfWeek = (date: Date): boolean => {
+    // In Sweden Monday is the first day of the week
+    return date.getDay() === 1; // Monday
+  };
+
+  const formatWeekHeader = (date: Date): string => {
+    const weekNumber = getWeekNumber(date);
+    return `Vecka ${weekNumber}`;
   };
 
   const getWeekNumber = (date: Date): number => {
@@ -202,7 +200,8 @@ const CompetitionsPage: React.FC = () => {
       ? userLocation.city.split(',')[0]
       : userLocation.city;
     
-    const competitionsByWeek = groupCompetitionsByWeek();
+    const dayGroups = generateDayGroupsFromLastWeek();
+    let currentWeek: number | null = null;
     
     return (
       <>
@@ -227,18 +226,41 @@ const CompetitionsPage: React.FC = () => {
           </div>
         </div>
         
-        {competitionsByWeek.length > 0 ? (
-          <div className="space-y-4">
-            {competitionsByWeek.map((weekGroup, index) => (
-              <div key={index} className="space-y-2">
-                <div className="sticky top-0 bg-gray-50 px-3 py-2 rounded-md font-medium text-sm text-gray-600">
-                  {formatWeekDateRange(weekGroup.weekStart, weekGroup.weekEnd)}
-                </div>
-                {weekGroup.competitions.map(competition => (
-                  <CompetitionCard key={competition.id} competition={competition} />
-                ))}
-              </div>
-            ))}
+        {dayGroups.length > 0 ? (
+          <div className="space-y-3">
+            {dayGroups.map((dayGroup, index) => {
+              // Check if this day is the first day of a new week
+              const weekNumber = getWeekNumber(dayGroup.date);
+              const showWeekHeader = currentWeek !== weekNumber;
+              
+              if (showWeekHeader) {
+                currentWeek = weekNumber;
+              }
+              
+              return (
+                <React.Fragment key={dayGroup.date.toISOString()}>
+                  {showWeekHeader && (
+                    <div className="sticky top-0 bg-gray-50 px-3 py-2 rounded-md font-medium text-sm text-gray-600 z-10">
+                      {formatWeekHeader(dayGroup.date)}
+                    </div>
+                  )}
+                  
+                  <div className="pl-3 border-l-2 border-gray-200 ml-2">
+                    <div className="font-medium text-sm text-gray-500 mb-2">
+                      {formatDayHeader(dayGroup.date)}
+                    </div>
+                    
+                    {dayGroup.competitions.length > 0 ? (
+                      dayGroup.competitions.map(competition => (
+                        <CompetitionCard key={competition.id} competition={competition} />
+                      ))
+                    ) : (
+                      <div className="text-gray-400 text-sm italic ml-3 mb-2">Inga tävlingar denna dag</div>
+                    )}
+                  </div>
+                </React.Fragment>
+              );
+            })}
           </div>
         ) : (
           <div className="text-center py-8">
@@ -331,3 +353,4 @@ const calculateDistance = (
 };
 
 export default CompetitionsPage;
+
