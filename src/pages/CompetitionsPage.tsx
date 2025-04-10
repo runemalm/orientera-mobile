@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
@@ -10,10 +11,15 @@ import { useUserLocation } from '../hooks/useUserLocation';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Competition } from '../types';
 
+// Define the return type of processCompetitionWithDistance
+interface CompetitionWithDistance extends Competition {
+  distance?: number;
+}
+
 interface CompetitionsByWeek {
   weekStart: Date;
   weekEnd: Date;
-  competitions: Array<ReturnType<typeof processCompetitionWithDistance>>;
+  competitions: CompetitionWithDistance[];
 }
 
 const CompetitionsPage: React.FC = () => {
@@ -46,7 +52,7 @@ const CompetitionsPage: React.FC = () => {
     }
   };
 
-  const processCompetitionWithDistance = (competition: typeof mockCompetitions[0]) => {
+  const processCompetitionWithDistance = (competition: typeof mockCompetitions[0]): CompetitionWithDistance => {
     if (!userLocation) return competition;
     
     return {
