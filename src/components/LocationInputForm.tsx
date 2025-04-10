@@ -109,7 +109,7 @@ const LocationInputForm: React.FC<LocationInputFormProps> = ({ onLocationSelecte
         <Input
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Ange ort, t.ex. Stockholm"
+          placeholder="T.ex. Stockholm, Göteborg, Örebro"
           className="flex-1 focus-visible:ring-location"
           onKeyPress={(e) => {
             if (e.key === 'Enter') {
@@ -135,10 +135,6 @@ const LocationInputForm: React.FC<LocationInputFormProps> = ({ onLocationSelecte
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
-
-      <div className="text-sm text-gray-500">
-        <p>Ange en ort för att hitta närliggande orienteringstävlingar.</p>
-      </div>
 
       {onCancel && (
         <Button variant="outline" onClick={onCancel} className="w-full mt-2">

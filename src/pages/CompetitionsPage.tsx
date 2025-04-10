@@ -3,11 +3,12 @@ import React, { useState } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
 import { mockCompetitions } from '../utils/mockData';
-import { MapPin, RefreshCw, Loader2 } from 'lucide-react';
+import { MapPin, RefreshCw, Loader2, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 import LocationInputForm from '../components/LocationInputForm';
 import { useUserLocation } from '../hooks/useUserLocation';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
 const CompetitionsPage: React.FC = () => {
   const [showLocationDrawer, setShowLocationDrawer] = useState(false);
@@ -52,23 +53,60 @@ const CompetitionsPage: React.FC = () => {
     if (!userLocation) {
       return (
         <div className="space-y-6 py-6">
-          <div className="bg-gradient-to-br from-location-light/30 to-location-light/10 rounded-xl p-5 shadow-sm">
+          <div className="bg-white rounded-xl p-5 shadow-sm">
             <div className="flex flex-col items-center">
               <div className="bg-location/10 p-3 rounded-full w-14 h-14 mb-4 flex items-center justify-center">
                 <MapPin size={28} className="text-location" />
               </div>
-              <h2 className="text-lg font-medium mb-2 text-location-dark text-center">Välkommen!</h2>
-              <p className="text-gray-600 mb-4 text-center">
-                Ange din plats för att hitta orienteringstävlingar nära dig.
+              <h2 className="text-xl font-medium mb-2 text-center">Hitta tävlingar nära dig</h2>
+              <p className="text-gray-600 mb-6 text-center">
+                För att visa tävlingar nära dig behöver vi veta din plats.
               </p>
               
-              <div className="w-full">
-                <LocationInputForm 
-                  onLocationSelected={handleUpdateLocation}
-                />
-              </div>
+              <Tabs defaultValue="search" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 mb-4">
+                  <TabsTrigger value="search">Sök plats</TabsTrigger>
+                  <TabsTrigger value="examples">Populära platser</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="search" className="space-y-4">
+                  <div className="p-4 border border-gray-100 rounded-lg bg-gray-50">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Search className="h-5 w-5 text-location" />
+                      <span className="font-medium">Skriv in din plats</span>
+                    </div>
+                    
+                    <LocationInputForm 
+                      onLocationSelected={handleUpdateLocation}
+                    />
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="examples">
+                  <div className="grid gap-2">
+                    {['Stockholm', 'Göteborg', 'Malmö', 'Uppsala', 'Linköping', 'Örebro'].map((city) => (
+                      <Button 
+                        key={city}
+                        variant="outline" 
+                        className="justify-start h-auto py-3 px-4 w-full text-left"
+                        onClick={() => {
+                          // Mock location selection for example cities
+                          handleUpdateLocation({
+                            city: city,
+                            latitude: 0,
+                            longitude: 0
+                          });
+                        }}
+                      >
+                        <MapPin className="h-4 w-4 mr-2 text-location" />
+                        <span>{city}</span>
+                      </Button>
+                    ))}
+                  </div>
+                </TabsContent>
+              </Tabs>
               
-              <div className="text-center text-sm text-gray-500 mt-4">
+              <div className="text-center text-xs text-gray-500 mt-6">
                 <p>Din position sparas på din enhet för framtida besök.</p>
               </div>
             </div>
