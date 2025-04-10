@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Compass, FileText, MapPin, List, Calendar, Smartphone, ArrowRight, RefreshCw } from 'lucide-react';
@@ -116,7 +117,7 @@ interface FeatureCardProps {
 
 const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description, onTap }) => (
   <Card 
-    className="hover:scale-105 transition-duration-200"
+    className="border border-gray-100 bg-white/80 shadow-sm cursor-default"
     onClick={() => onTap?.(title)}
   >
     <CardContent className="flex flex-col items-center text-center p-4">
