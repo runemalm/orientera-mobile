@@ -44,7 +44,11 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition }) => {
               key={index}
               className="bg-forest-light/20 text-forest-dark px-2 py-1 rounded-full text-xs"
             >
-              {discipline.replace('-', ' ')}
+              {discipline.replace('-', ' ').replace('middle-distance', 'medeldistans')
+                .replace('sprint', 'sprint')
+                .replace('long-distance', 'långdistans')
+                .replace('night', 'natt')
+                .replace('relay', 'stafett')}
             </span>
           ))}
         </div>
