@@ -3,8 +3,9 @@ import React, { useState } from 'react';
 import { CompetitionDetail } from '../types';
 import { Calendar, Clock, MapPin, User, Globe, Award } from 'lucide-react';
 import FileItem from './FileItem';
-import SignUpForm from './SignUpForm';
+import WaitlistForm from './WaitlistForm';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useToast } from '@/hooks/use-toast';
 
 interface CompetitionDetailsProps {
   competition: CompetitionDetail;
@@ -15,7 +16,8 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
   competition, 
   onSignUpComplete 
 }) => {
-  const [isRegistered, setIsRegistered] = useState(competition.isRegistered || false);
+  const [isWaitlisted, setIsWaitlisted] = useState(competition.isWaitlisted || false);
+  const { toast } = useToast();
   
   // Format date to be more readable using Swedish format
   const formattedDate = new Date(competition.date).toLocaleDateString('sv-SE', {
@@ -25,8 +27,9 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
     year: 'numeric'
   });
 
-  const handleSignUpComplete = () => {
-    setIsRegistered(true);
+  const handleWaitlistComplete = () => {
+    setIsWaitlisted(true);
+    // We can still call onSignUpComplete to update the parent component's state if needed
     onSignUpComplete();
   };
   
@@ -107,31 +110,46 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
           Anmälningsdeadline: {new Date(competition.registrationDeadline).toLocaleDateString('sv-SE')}
         </p>
         
-        {isRegistered ? (
+        <div className="bg-amber-50 border border-amber-200 rounded-md p-3 text-amber-800 mb-4">
+          <div className="flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+              <line x1="12" y1="9" x2="12" y2="13"></line>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            <span>Anmälan är inte öppen ännu</span>
+          </div>
+        </div>
+        
+        {isWaitlisted ? (
           <div className="bg-green-50 border border-green-200 rounded-md p-3 text-green-800">
             <div className="flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-check-circle mr-2">
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                 <polyline points="22 4 12 14.01 9 11.01" />
               </svg>
-              <span>Du är anmäld till denna tävling</span>
+              <span>Du är på väntelistan - vi meddelar dig när anmälan öppnar</span>
             </div>
           </div>
         ) : (
           <Dialog>
             <DialogTrigger asChild>
               <button className="w-full bg-primary hover:bg-forest-dark text-white py-2 px-4 rounded transition-colors">
-                Anmäl dig till tävlingen
+                Ställ dig på väntelistan
               </button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
-                <DialogTitle>Anmäl dig till {competition.name}</DialogTitle>
+                <DialogTitle>Väntelista för {competition.name}</DialogTitle>
               </DialogHeader>
               <div className="py-4">
-                <SignUpForm 
+                <p className="text-gray-600 mb-4">
+                  Anmälan är inte öppen ännu. Fyll i dina uppgifter för att ställa dig på väntelistan. 
+                  Vi meddelar dig när det är möjligt att anmäla sig.
+                </p>
+                <WaitlistForm 
                   competitionId={competition.id} 
-                  onSignUpComplete={handleSignUpComplete} 
+                  onComplete={handleWaitlistComplete} 
                 />
               </div>
             </DialogContent>

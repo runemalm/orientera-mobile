@@ -36,6 +36,7 @@ export interface CompetitionDetail extends Competition {
   contact: string;
   website?: string;
   isRegistered?: boolean;
+  isWaitlisted?: boolean;
 }
 
 export interface CompetitionFile {
