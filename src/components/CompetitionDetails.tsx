@@ -132,7 +132,6 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
           <Alert>
             <AlertDescription>
               <div className="flex flex-col space-y-2">
-                <p>Anmälan via appen är inte tillgänglig ännu. Du kan anmäla dig via Eventor istället.</p>
                 <div>
                   <a 
                     href="https://eventor.orientering.se" 
