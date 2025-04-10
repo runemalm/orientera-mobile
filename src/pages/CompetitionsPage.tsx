@@ -69,7 +69,7 @@ const CompetitionsPage: React.FC = () => {
     setLongPressTimer(
       setTimeout(() => {
         setShowResetDrawer(true);
-      }, 10000) // 10 seconds long press
+      }, 5000) // Changed from 10000 (10 seconds) to 5000 (5 seconds)
     );
   };
   
