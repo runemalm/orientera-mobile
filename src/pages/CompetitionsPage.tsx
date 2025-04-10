@@ -52,12 +52,12 @@ const CompetitionsPage: React.FC = () => {
     if (!userLocation) {
       return (
         <div className="space-y-6 py-6">
-          <div className="bg-gradient-to-br from-gray-100 to-gray-50 rounded-xl p-5 shadow-sm">
+          <div className="bg-gradient-to-br from-location-light/30 to-location-light/10 rounded-xl p-5 shadow-sm">
             <div className="flex flex-col items-center">
-              <div className="bg-gray-200 p-3 rounded-full w-14 h-14 mb-4 flex items-center justify-center">
-                <MapPin size={28} className="text-gray-600" />
+              <div className="bg-location/10 p-3 rounded-full w-14 h-14 mb-4 flex items-center justify-center">
+                <MapPin size={28} className="text-location" />
               </div>
-              <h2 className="text-lg font-medium mb-2 text-gray-800 text-center">Välkommen!</h2>
+              <h2 className="text-lg font-medium mb-2 text-location-dark text-center">Välkommen!</h2>
               <p className="text-gray-600 mb-4 text-center">
                 Ange din plats för att hitta orienteringstävlingar nära dig.
               </p>
