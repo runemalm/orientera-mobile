@@ -47,4 +47,4 @@ export interface CompetitionFile {
   uploadDate: string;
 }
 
-export type TabName = 'competitions' | 'profile' | 'info';
+export type TabName = 'competitions' | 'info';
