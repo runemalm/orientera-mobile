@@ -115,7 +115,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
                 className="flex items-center gap-3 text-blue-600 hover:underline"
               >
                 <Map size={18} className="shrink-0" />
-                <span>Visa kartor, banor och rutter i Livelox</span>
+                <span>Karta, banor och rutter i Livelox</span>
               </a>
             </li>
           )}
