@@ -7,7 +7,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { Button } from './ui/button';
 import { Alert, AlertDescription } from './ui/alert';
 import { useToast } from '@/hooks/use-toast';
-import { Card, CardContent } from './ui/card';
 
 interface CompetitionDetailsProps {
   competition: CompetitionDetail;
@@ -91,27 +90,6 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
           </div>
         )}
       </div>
-      
-      {/* Eventor Registration Card */}
-      <Card className="bg-white">
-        <CardContent className="p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="font-semibold text-gray-800">Anmälan via Eventor</h3>
-              <p className="text-sm text-gray-600 mt-1">Anmälan till tävlingen görs via Eventor tills vidare</p>
-            </div>
-            <a 
-              href="https://eventor.orientering.se" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-primary hover:text-forest-dark flex items-center"
-            >
-              <ExternalLink size={16} className="mr-1" />
-              <span>Gå till Eventor</span>
-            </a>
-          </div>
-        </CardContent>
-      </Card>
       
       {/* Discipline */}
       <div>
