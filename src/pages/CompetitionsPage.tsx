@@ -10,6 +10,7 @@ import LocationInputForm from '../components/LocationInputForm';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Competition } from '../types';
+import { format, addDays, startOfWeek, isSameDay } from 'date-fns';
 
 // Define interface for processed competition data
 interface CompetitionWithDistance extends Omit<Competition, 'distance'> {
@@ -19,6 +20,11 @@ interface CompetitionWithDistance extends Omit<Competition, 'distance'> {
 interface CompetitionsByWeek {
   weekStart: Date;
   weekEnd: Date;
+  competitions: CompetitionWithDistance[];
+}
+
+interface DayCompetitions {
+  date: Date;
   competitions: CompetitionWithDistance[];
 }
 
@@ -106,27 +112,38 @@ const CompetitionsPage: React.FC = () => {
     return groupedByWeek.sort((a, b) => a.weekStart.getTime() - b.weekStart.getTime());
   };
 
-  const formatWeekDateRange = (start: Date, end: Date): string => {
-    const weekNumber = getWeekNumber(start);
+  const organizeCompetitionsByDay = (weekGroup: CompetitionsByWeek): DayCompetitions[] => {
+    const days: DayCompetitions[] = [];
     
-    const formatDay = (date: Date) => {
-      return date.getDate();
-    };
-    
-    const formatMonth = (date: Date) => {
-      return date.toLocaleDateString('sv-SE', { month: 'short' });
-    };
-    
-    const startDay = formatDay(start);
-    const endDay = formatDay(end);
-    const startMonth = formatMonth(start);
-    const endMonth = formatMonth(end);
-    
-    if (startMonth === endMonth) {
-      return `Vecka ${weekNumber} (${startDay} - ${endDay} ${startMonth})`;
-    } else {
-      return `Vecka ${weekNumber} (${startDay} ${startMonth} - ${endDay} ${endMonth})`;
+    // Create an entry for each day of the week
+    for (let i = 0; i < 7; i++) {
+      const currentDate = addDays(weekGroup.weekStart, i);
+      days.push({
+        date: currentDate,
+        competitions: []
+      });
     }
+    
+    // Add competitions to their respective days
+    weekGroup.competitions.forEach(competition => {
+      const competitionDate = new Date(competition.date);
+      
+      const dayEntry = days.find(day => isSameDay(day.date, competitionDate));
+      if (dayEntry) {
+        dayEntry.competitions.push(competition);
+      }
+    });
+    
+    return days;
+  };
+
+  const formatWeekHeader = (start: Date): string => {
+    const weekNumber = getWeekNumber(start);
+    return `Vecka ${weekNumber}`;
+  };
+
+  const formatDayHeader = (date: Date): string => {
+    return format(date, 'EEEE, d MMM'); // e.g. "Monday, 15 Apr"
   };
 
   const getWeekNumber = (date: Date): number => {
@@ -242,13 +259,28 @@ const CompetitionsPage: React.FC = () => {
         
         {competitionsByWeek.length > 0 ? (
           <div className="space-y-4">
-            {competitionsByWeek.map((weekGroup, index) => (
-              <div key={index} className="space-y-2">
+            {competitionsByWeek.map((weekGroup, weekIndex) => (
+              <div key={weekIndex} className="space-y-2">
                 <div className="sticky top-0 bg-gray-50 px-3 py-2 rounded-md font-medium text-sm text-gray-600">
-                  {formatWeekDateRange(weekGroup.weekStart, weekGroup.weekEnd)}
+                  {formatWeekHeader(weekGroup.weekStart)}
                 </div>
-                {weekGroup.competitions.map(competition => (
-                  <CompetitionCard key={competition.id} competition={competition} />
+                
+                {organizeCompetitionsByDay(weekGroup).map((dayGroup, dayIndex) => (
+                  <div key={dayIndex} className="mb-2">
+                    <div className="text-sm font-medium text-gray-500 px-3 py-1">
+                      {formatDayHeader(dayGroup.date)}
+                    </div>
+                    
+                    {dayGroup.competitions.length > 0 ? (
+                      dayGroup.competitions.map(competition => (
+                        <CompetitionCard key={competition.id} competition={competition} />
+                      ))
+                    ) : (
+                      <div className="bg-white/50 rounded-lg border border-gray-100 p-3 text-sm text-gray-400">
+                        Inga tävlingar
+                      </div>
+                    )}
+                  </div>
                 ))}
               </div>
             ))}
