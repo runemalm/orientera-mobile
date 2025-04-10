@@ -14,7 +14,7 @@ const BottomTabBar: React.FC = () => {
       name: 'competitions',
       icon: <MapPin size={24} />,
       label: 'Tävlingar',
-      path: '/'
+      path: '/competitions'
     },
     {
       name: 'info',
@@ -40,7 +40,8 @@ const BottomTabBar: React.FC = () => {
         <button
           key={tab.name}
           className={`flex flex-col items-center justify-center w-full h-full ${
-            currentPath === tab.path
+            (currentPath === tab.path || 
+             (tab.path === '/competitions' && currentPath === '/')) // Consider "/" as competitions too
               ? 'text-primary font-medium'
               : 'text-gray-500'
           }`}
