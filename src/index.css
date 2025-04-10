@@ -110,10 +110,15 @@
   
   .top-nav {
     @apply fixed top-0 left-0 right-0 h-16 z-50 bg-white shadow-sm;
+    /* Add support for iOS notch areas */
+    padding-top: env(safe-area-inset-top, 0px);
   }
   
   .bottom-tabs {
-    @apply fixed bottom-0 left-0 right-0 h-16 z-50 bg-white shadow-lg border-t;
+    @apply fixed bottom-0 left-0 right-0 z-50 bg-white shadow-lg border-t;
+    /* Add support for iOS home indicator area */
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    height: calc(4rem + env(safe-area-inset-bottom, 0px));
   }
   
   .location-badge {

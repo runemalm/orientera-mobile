@@ -31,7 +31,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
         onBack={handleBack} 
       />
       
-      <main className="flex-grow mobile-page mobile-container">
+      <main className={`flex-grow mobile-container ${hideBottomTabs ? 'pb-6' : 'pb-[calc(5rem+env(safe-area-inset-bottom,0px))]'}`}>
         {children}
       </main>
       
