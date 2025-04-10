@@ -231,10 +231,10 @@ const CompetitionsPage: React.FC = () => {
             </Card>
             <Button 
               onClick={() => setShowPermissionDialog(true)}
-              className="flex items-center gap-2 mx-auto"
+              className="flex items-center gap-2 mx-auto pointer-events-auto"
               size="lg"
             >
-              <Settings size={16} />
+              <MapPin size={16} />
               Aktivera plats
             </Button>
           </div>
