@@ -3,11 +3,12 @@ import React, { useState, useEffect } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
 import { mockCompetitions } from '../utils/mockData';
-import { MapPin, AlertTriangle, RefreshCw, Settings } from 'lucide-react';
+import { MapPin, AlertTriangle, RefreshCw, Settings, MapPinOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 
 const CompetitionsPage: React.FC = () => {
   const [locationStatus, setLocationStatus] = useState<'prompt' | 'granted' | 'denied'>('prompt');
@@ -95,7 +96,7 @@ const CompetitionsPage: React.FC = () => {
   return (
     <MobileLayout title="Tävlingar i närheten">
       <div 
-        className="bg-white rounded-lg p-3 mb-4 shadow-sm border border-gray-100"
+        className="mb-4"
         onTouchStart={handleLongPress}
         onTouchEnd={handlePressEnd}
         onTouchCancel={handlePressEnd}
@@ -103,35 +104,44 @@ const CompetitionsPage: React.FC = () => {
         onMouseUp={handlePressEnd}
         onMouseLeave={handlePressEnd}
       >
-        <div className="flex items-center">
-          <div className={`rounded-full p-2 mr-3 ${locationStatus === 'granted' ? 'bg-primary/10' : 'bg-amber-100'}`}>
-            {locationStatus === 'granted' ? (
-              <MapPin size={18} className="text-primary" />
-            ) : (
-              <AlertTriangle size={18} className="text-amber-500" />
-            )}
-          </div>
-          <div>
-            {locationStatus === 'granted' ? (
-              <>
-                <p className="text-sm font-medium text-gray-800">Visar tävlingar nära dig</p>
-                <p className="text-xs text-gray-500">Baserat på din nuvarande position</p>
-              </>
-            ) : (
-              <>
-                <p className="text-sm font-medium text-gray-800">Platsinformation saknas</p>
-                <p className="text-xs text-gray-500">
-                  <button 
-                    onClick={() => setShowPermissionDialog(true)} 
-                    className="text-primary underline"
-                  >
-                    Aktivera platsinformation
-                  </button> för att visa tävlingar nära dig
-                </p>
-              </>
-            )}
-          </div>
-        </div>
+        {locationStatus === 'granted' ? (
+          <Alert className="bg-green-50 border-green-200">
+            <MapPin className="h-5 w-5 text-green-600" />
+            <AlertTitle className="text-green-800">Platsspårning aktiv</AlertTitle>
+            <AlertDescription className="text-green-700 text-sm">
+              Vi visar tävlingar nära din nuvarande position.
+            </AlertDescription>
+          </Alert>
+        ) : (
+          <Card className="overflow-hidden border-none shadow-md">
+            <div className="bg-amber-50 p-4">
+              <div className="flex items-center">
+                <div className="bg-amber-100 rounded-full p-3 mr-3">
+                  <MapPinOff size={24} className="text-amber-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-amber-900">Hitta tävlingar nära dig</h3>
+                  <p className="text-amber-700 text-sm">Aktivera plats för bättre resultat</p>
+                </div>
+              </div>
+            </div>
+            <CardContent className="p-4 bg-white">
+              <p className="text-gray-600 text-sm">
+                För att visa de mest relevanta tävlingarna behöver vi veta var du är. Din platsdata delas inte med tredje part.
+              </p>
+            </CardContent>
+            <CardFooter className="bg-white p-4 pt-0">
+              <Button 
+                onClick={() => setShowPermissionDialog(true)} 
+                variant="secondary"
+                className="w-full bg-amber-500 hover:bg-amber-600 text-white"
+              >
+                <MapPin className="mr-1" size={16} />
+                Aktivera platsinformation
+              </Button>
+            </CardFooter>
+          </Card>
+        )}
       </div>
       
       <Dialog open={showPermissionDialog} onOpenChange={setShowPermissionDialog}>
