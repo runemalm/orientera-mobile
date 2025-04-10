@@ -18,7 +18,7 @@ const LandingPage: React.FC = () => {
       <header className="flex items-center justify-between p-4 bg-white shadow-sm">
         <div className="flex items-center gap-2">
           <Compass size={24} className="text-primary" />
-          <h1 className="text-lg font-semibold">Orientera.com</h1>
+          <h1 className="text-lg font-semibold">orientera.com</h1>
         </div>
       </header>
       
@@ -30,7 +30,7 @@ const LandingPage: React.FC = () => {
             <span className="whitespace-nowrap">nära dig</span>
           </h1>
           <p className="text-gray-600 mb-8">
-            Med Orientera.com kan du enkelt hitta och anmäla dig till orienterings­tävlingar i hela landet.
+            Med orientera.com kan du enkelt hitta och anmäla dig till orienterings­tävlingar i hela landet.
           </p>
           
           <Button 
