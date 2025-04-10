@@ -1,5 +1,5 @@
 
-import { Competition, CompetitionDetail } from "../types";
+import { Competition, CompetitionDetail, CompetitionType, CompetitionDiscipline, OrienteeringDistrict } from "../types";
 
 export const mockCompetitions: Competition[] = [
   {
@@ -9,8 +9,10 @@ export const mockCompetitions: Competition[] = [
     location: "Northside Forest Park",
     distance: 2.4,
     club: "Northside Orienteers",
-    description: "Mid-distance orienteering in varied forest terrain with good runnability.",
-    disciplines: ["middle-distance"],
+    description: "Medeldistans i varierad skogsterräng med god löpbarhet.",
+    disciplines: ["Medel"],
+    competitionType: "Nationell tävling",
+    district: "Stockholms OF",
     coordinates: {
       latitude: 59.3293,
       longitude: 18.0686
@@ -23,8 +25,10 @@ export const mockCompetitions: Competition[] = [
     location: "Downtown Eastside",
     distance: 3.8,
     club: "Urban Navigators",
-    description: "Fast-paced sprint orienteering through urban environment with complex route choices.",
-    disciplines: ["sprint"],
+    description: "Snabb sprintorientering i stadsmiljö med komplexa vägval.",
+    disciplines: ["Sprint"],
+    competitionType: "Värdetävling",
+    district: "Göteborgs OF",
     coordinates: {
       latitude: 59.3325,
       longitude: 18.0649
@@ -37,8 +41,10 @@ export const mockCompetitions: Competition[] = [
     location: "Highland National Park",
     distance: 5.6,
     club: "Mountain Explorers",
-    description: "Challenging long-distance event in hilly terrain with technical sections.",
-    disciplines: ["long-distance"],
+    description: "Utmanande långdistansorientering i kuperad terräng med tekniska inslag.",
+    disciplines: ["Lång"],
+    competitionType: "Nationell tävling",
+    district: "Dalarnas OF",
     coordinates: {
       latitude: 59.3349,
       longitude: 18.0603
@@ -51,8 +57,10 @@ export const mockCompetitions: Competition[] = [
     location: "Westwood Forest",
     distance: 4.2,
     club: "Night Runners Club",
-    description: "Exciting night orienteering with headlamps required. Technical forest navigation.",
-    disciplines: ["night", "middle-distance"],
+    description: "Spännande nattorientering med pannlampa. Teknisk skogsorientering.",
+    disciplines: ["Natt", "Medel"],
+    competitionType: "Distrikttävling",
+    district: "Upplands OF",
     coordinates: {
       latitude: 59.3219,
       longitude: 18.0720
@@ -65,8 +73,10 @@ export const mockCompetitions: Competition[] = [
     location: "Eastside Community Park",
     distance: 1.8,
     club: "Regional Orienteering Association",
-    description: "Team relay competition with three legs of varying difficulty.",
-    disciplines: ["relay"],
+    description: "Lagstafett med tre sträckor av varierande svårighetsgrad.",
+    disciplines: ["Stafett"],
+    competitionType: "Närtävling",
+    district: "Smålands OF",
     coordinates: {
       latitude: 59.3400,
       longitude: 18.0700

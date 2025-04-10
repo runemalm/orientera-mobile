@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { CompetitionDetail } from '../types';
-import { Calendar, Clock, MapPin, User, Globe } from 'lucide-react';
+import { Calendar, Clock, MapPin, User, Globe, Award } from 'lucide-react';
 import FileItem from './FileItem';
 import SignUpForm from './SignUpForm';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -47,6 +47,10 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
           <MapPin size={16} className="mr-2" />
           <span>{competition.location}</span>
         </div>
+        <div className="flex items-center text-gray-600 mb-2">
+          <Award size={16} className="mr-2" />
+          <span>{competition.competitionType} | {competition.district}</span>
+        </div>
         <div className="flex items-center text-gray-600">
           <User size={16} className="mr-2" />
           <span>Arrangör: {competition.club}</span>
@@ -75,7 +79,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
               key={index}
               className="bg-forest-light/20 text-forest-dark px-3 py-1 rounded-full text-sm"
             >
-              {discipline.replace('-', ' ')}
+              {discipline}
             </span>
           ))}
         </div>

@@ -1,4 +1,16 @@
 
+export type CompetitionType = "Värdetävling" | "Nationell tävling" | "Distrikttävling" | "Närtävling" | "Veckans bana";
+
+export type CompetitionDiscipline = "Sprint" | "Medel" | "Lång" | "Natt" | "Stafett" | "Ultralång";
+
+export type OrienteeringDistrict = 
+  "Blekinge OF" | "Bohusläns OF" | "Dalarnas OF" | "Gotlands OF" | 
+  "Gästriklands OF" | "Göteborgs OF" | "Hallands OF" | "Hälsinglands OF" | 
+  "Jämtland-Härjedalens OF" | "Medelpads OF" | "Norrbottens OF" | "Skånes OF" | 
+  "Smålands OF" | "Stockholms OF" | "Södermanlands OF" | "Upplands OF" | 
+  "Värmlands OF" | "Västerbottens OF" | "Västergötlands OF" | "Västmanlands OF" | 
+  "Ångermanlands OF" | "Örebro Läns OF" | "Östergötlands OF";
+
 export interface Competition {
   id: string;
   name: string;
@@ -7,7 +19,9 @@ export interface Competition {
   distance: number; // Distance in km from user's location
   club: string;
   description: string;
-  disciplines: string[];
+  disciplines: CompetitionDiscipline[];
+  competitionType: CompetitionType;
+  district: OrienteeringDistrict;
   coordinates: {
     latitude: number;
     longitude: number;
