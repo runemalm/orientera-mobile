@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import ProfilePage from "./pages/ProfilePage";
 import CompetitionDetailsPage from "./pages/CompetitionDetailsPage";
 import NotFound from "./pages/NotFound";
+import InfoPage from "./pages/InfoPage";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const App = () => (
           <Route path="/" element={<LandingPage />} />
           <Route path="/competitions" element={<Index />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/info" element={<InfoPage />} />
           <Route path="/competition/:competitionId" element={<CompetitionDetailsPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

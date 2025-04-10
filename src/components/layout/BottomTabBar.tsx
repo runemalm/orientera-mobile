@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { MapPin, User } from 'lucide-react';
+import { MapPin, User, Info } from 'lucide-react';
 import { TabName } from '../../types';
 
 const BottomTabBar: React.FC = () => {
@@ -15,6 +15,12 @@ const BottomTabBar: React.FC = () => {
       icon: <MapPin size={24} />,
       label: 'Tävlingar',
       path: '/'
+    },
+    {
+      name: 'info',
+      icon: <Info size={24} />,
+      label: 'Info',
+      path: '/info'
     },
     {
       name: 'profile',
