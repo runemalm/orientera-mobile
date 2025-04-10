@@ -7,7 +7,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { Button } from './ui/button';
 import { Alert, AlertDescription } from './ui/alert';
 import { useToast } from '@/hooks/use-toast';
-import { formatDistrictName } from '../utils/formatters';
 
 interface CompetitionDetailsProps {
   competition: CompetitionDetail;
@@ -51,7 +50,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
         </div>
         <div className="flex items-center text-gray-600 mb-2">
           <Award size={16} className="mr-2" />
-          <span>{competition.competitionType} | {formatDistrictName(competition.district)}</span>
+          <span>{competition.competitionType} | {competition.district}</span>
         </div>
         <div className="flex items-center text-gray-600">
           <User size={16} className="mr-2" />

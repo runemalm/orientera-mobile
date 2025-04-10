@@ -3,7 +3,6 @@ import React from 'react';
 import { Competition } from '../types';
 import { Calendar, MapPin, Award } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { formatDistrictName } from '../utils/formatters';
 
 interface CompetitionCardProps {
   competition: Competition;
