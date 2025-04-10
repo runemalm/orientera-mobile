@@ -24,16 +24,6 @@ const CompetitionDetailsPage: React.FC = () => {
     return () => clearTimeout(timer);
   }, [competitionId]);
 
-  const handleSignUpComplete = () => {
-    // We still update the state in the background but don't display it to the user
-    if (competition) {
-      setCompetition({
-        ...competition,
-        isRegistered: true
-      });
-    }
-  };
-
   if (loading) {
     return (
       <MobileLayout title="Laddar..." showBackButton>
@@ -67,10 +57,7 @@ const CompetitionDetailsPage: React.FC = () => {
   return (
     <MobileLayout title={competition.name} showBackButton>
       <div className="pb-4">
-        <CompetitionDetails 
-          competition={competition} 
-          onSignUpComplete={handleSignUpComplete} 
-        />
+        <CompetitionDetails competition={competition} />
       </div>
       <Toaster />
     </MobileLayout>

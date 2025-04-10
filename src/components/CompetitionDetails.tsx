@@ -3,23 +3,17 @@ import React from 'react';
 import { CompetitionDetail } from '../types';
 import { Calendar, Clock, MapPin, User, Globe, Award, Navigation } from 'lucide-react';
 import FileItem from './FileItem';
-import { Button } from './ui/button';
-import { useToast } from '@/hooks/use-toast';
 import { formatDistrictName } from '../utils/formatters';
 import { Card, CardHeader, CardContent } from './ui/card';
 import { Badge } from './ui/badge';
 
 interface CompetitionDetailsProps {
   competition: CompetitionDetail;
-  onSignUpComplete: () => void;
 }
 
 const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ 
-  competition, 
-  onSignUpComplete 
+  competition
 }) => {
-  const { toast } = useToast();
-  
   // Format date to be more readable using Swedish format
   const formattedDate = new Date(competition.date).toLocaleDateString('sv-SE', {
     weekday: 'long',
@@ -27,14 +21,6 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
     month: 'long',
     year: 'numeric'
   });
-  
-  const handleSignUp = () => {
-    toast({
-      title: "Anmälan registrerad",
-      description: "Du är nu anmäld till tävlingen",
-    });
-    onSignUpComplete();
-  };
   
   return (
     <div className="space-y-5">
@@ -132,24 +118,14 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
         </CardContent>
       </Card>
       
-      {/* Registration section */}
+      {/* Registration deadline section */}
       <Card className="border-none shadow-md bg-forest-light/10 mt-6">
         <CardContent className="p-4">
           <div className="flex flex-col">
-            <div className="flex justify-between items-center">
-              <div>
-                <h3 className="font-semibold mb-1">Anmälan</h3>
-                <p className="text-sm text-gray-600">
-                  Anmälningsdeadline: {new Date(competition.registrationDeadline).toLocaleDateString('sv-SE')}
-                </p>
-              </div>
-              <Button 
-                onClick={handleSignUp}
-                className="bg-forest hover:bg-forest-dark"
-              >
-                Anmäl dig
-              </Button>
-            </div>
+            <h3 className="font-semibold mb-1">Anmälan</h3>
+            <p className="text-sm text-gray-600">
+              Anmälningsstopp: {new Date(competition.registrationDeadline).toLocaleDateString('sv-SE')}
+            </p>
           </div>
         </CardContent>
       </Card>
