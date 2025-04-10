@@ -43,7 +43,7 @@ const InfoPage: React.FC = () => {
 
   return (
     <MobileLayout title="Om">
-      <div className="p-4 space-y-8 pb-20">
+      <div className="p-4 space-y-8 pb-4">
         <div className="space-y-6">
           <div className="flex items-center space-x-3">
             <div className="bg-primary/10 p-2 rounded-full">
@@ -200,9 +200,9 @@ const InfoPage: React.FC = () => {
           </Form>
         </div>
         
-        <div className="h-px w-full bg-gradient-to-r from-transparent via-gray-300 to-transparent my-8"></div>
+        <div className="h-px w-full bg-gradient-to-r from-transparent via-gray-300 to-transparent my-6"></div>
         
-        <div className="text-center text-sm text-gray-500 pb-4">
+        <div className="text-center text-sm text-gray-500">
           <p>Version 1.0.0</p>
           <p>© 2025 Alla rättigheter förbehållna</p>
         </div>
