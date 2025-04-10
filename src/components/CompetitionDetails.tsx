@@ -143,18 +143,12 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
                   Anmälningsdeadline: {new Date(competition.registrationDeadline).toLocaleDateString('sv-SE')}
                 </p>
               </div>
-              {!competition.isRegistered ? (
-                <Button 
-                  onClick={handleSignUp}
-                  className="bg-forest hover:bg-forest-dark"
-                >
-                  Anmäl dig
-                </Button>
-              ) : (
-                <Badge variant="outline" className="bg-forest-light/20 text-forest-dark px-3 py-1">
-                  Du är anmäld
-                </Badge>
-              )}
+              <Button 
+                onClick={handleSignUp}
+                className="bg-forest hover:bg-forest-dark"
+              >
+                Anmäl dig
+              </Button>
             </div>
           </div>
         </CardContent>

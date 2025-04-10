@@ -25,7 +25,7 @@ const CompetitionDetailsPage: React.FC = () => {
   }, [competitionId]);
 
   const handleSignUpComplete = () => {
-    // Update local data to reflect registration
+    // We still update the state in the background but don't display it to the user
     if (competition) {
       setCompetition({
         ...competition,
