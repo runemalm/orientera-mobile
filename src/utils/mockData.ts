@@ -18,6 +18,23 @@ export const mockCompetitions: Competition[] = [
       longitude: 16.4332
     }
   },
+  // Added new competition for SOK Viljan
+  {
+    id: "comp-2",
+    name: "Veteran-OL, SOK Viljan",
+    date: "2025-04-02", // April 2, 2025
+    location: "Vimmerby",
+    distance: 3.8,
+    club: "SOK Viljan",
+    description: "Nationell långdistans för veteraner i varierande skogsterräng.",
+    discipline: "Lång",
+    competitionType: "Nationell tävling",
+    district: "Smålands OF",
+    coordinates: {
+      latitude: 57.6655,
+      longitude: 15.8568
+    }
+  },
   // Keeping only competitions from Smålands OF or Blekinge OF
   {
     id: "comp-3",
@@ -113,9 +130,36 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
     liveloxLink: "https://www.livelox.com/Events/Show/12345", // Added Livelox link
     isRegistered: false
   },
+  // Added new competition detail for SOK Viljan
+  "comp-2": {
+    ...mockCompetitions[1],
+    files: [
+      {
+        id: "file-3",
+        name: "Inbjudan.pdf",
+        type: "invitation",
+        url: "#",
+        uploadDate: "2025-03-15"
+      },
+      {
+        id: "file-4",
+        name: "PM.pdf",
+        type: "pm",
+        url: "#",
+        uploadDate: "2025-03-30"
+      }
+    ],
+    registrationDeadline: "2025-03-29",
+    startTime: "09:30",
+    organizer: "Eva Lindström",
+    contact: "info@sokviljan.se",
+    website: "https://www.sokviljan.se/veteranol2025",
+    liveloxLink: "https://www.livelox.com/Events/Show/67890", // Added Livelox link
+    isRegistered: false
+  },
   // Keeping only details for competitions from Smålands OF or Blekinge OF
   "comp-3": {
-    ...mockCompetitions[1],
+    ...mockCompetitions[2],
     files: [
       {
         id: "file-5",
