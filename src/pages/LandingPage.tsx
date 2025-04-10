@@ -33,7 +33,7 @@ const LandingPage: React.FC = () => {
           <Button 
             size="lg" 
             onClick={handleFindCompetitions} 
-            className="w-full py-6 text-lg shadow-lg animate-pulse"
+            className="w-full py-6 text-lg shadow-lg"
           >
             Hitta tävlingar
           </Button>
