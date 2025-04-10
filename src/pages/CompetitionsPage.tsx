@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
@@ -9,6 +8,12 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } f
 import LocationInputForm from '../components/LocationInputForm';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+
+interface CompetitionsByWeek {
+  weekStart: Date;
+  weekEnd: Date;
+  competitions: Array<ReturnType<typeof processCompetitionWithDistance>>;
+}
 
 const CompetitionsPage: React.FC = () => {
   const [showLocationDrawer, setShowLocationDrawer] = useState(false);
@@ -38,6 +43,85 @@ const CompetitionsPage: React.FC = () => {
         setTapCount(0);
       }, 2000);
     }
+  };
+
+  const processCompetitionWithDistance = (competition: typeof mockCompetitions[0]) => {
+    if (!userLocation) return competition;
+    
+    return {
+      ...competition,
+      distance: calculateDistance(
+        userLocation.latitude,
+        userLocation.longitude,
+        competition.coordinates.latitude,
+        competition.coordinates.longitude
+      )
+    };
+  };
+
+  const groupCompetitionsByWeek = (): CompetitionsByWeek[] => {
+    if (!userLocation || mockCompetitions.length === 0) return [];
+    
+    const processedCompetitions = mockCompetitions.map(processCompetitionWithDistance);
+    const groupedByWeek: CompetitionsByWeek[] = [];
+    
+    processedCompetitions.forEach(competition => {
+      const competitionDate = new Date(competition.date);
+      const weekStart = new Date(competitionDate);
+      weekStart.setDate(competitionDate.getDate() - competitionDate.getDay() + (competitionDate.getDay() === 0 ? -6 : 1));
+      weekStart.setHours(0, 0, 0, 0);
+      
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekStart.getDate() + 6);
+      weekEnd.setHours(23, 59, 59, 999);
+      
+      const existingWeekGroup = groupedByWeek.find(group => {
+        return group.weekStart.getTime() === weekStart.getTime();
+      });
+      
+      if (existingWeekGroup) {
+        existingWeekGroup.competitions.push(competition);
+      } else {
+        groupedByWeek.push({
+          weekStart,
+          weekEnd,
+          competitions: [competition]
+        });
+      }
+    });
+    
+    return groupedByWeek.sort((a, b) => a.weekStart.getTime() - b.weekStart.getTime());
+  };
+
+  const formatWeekDateRange = (start: Date, end: Date): string => {
+    const weekNumber = getWeekNumber(start);
+    
+    const formatDay = (date: Date) => {
+      return date.getDate();
+    };
+    
+    const formatMonth = (date: Date) => {
+      return date.toLocaleDateString('sv-SE', { month: 'short' });
+    };
+    
+    const startDay = formatDay(start);
+    const endDay = formatDay(end);
+    const startMonth = formatMonth(start);
+    const endMonth = formatMonth(end);
+    
+    if (startMonth === endMonth) {
+      return `Vecka ${weekNumber} (${startDay} - ${endDay} ${startMonth})`;
+    } else {
+      return `Vecka ${weekNumber} (${startDay} ${startMonth} - ${endDay} ${endMonth})`;
+    }
+  };
+
+  const getWeekNumber = (date: Date): number => {
+    const d = new Date(date);
+    d.setHours(0, 0, 0, 0);
+    d.setDate(d.getDate() + 3 - (d.getDay() + 6) % 7);
+    const week1 = new Date(d.getFullYear(), 0, 4);
+    return 1 + Math.round(((d.getTime() - week1.getTime()) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
   };
 
   const renderContent = () => {
@@ -90,7 +174,6 @@ const CompetitionsPage: React.FC = () => {
                         variant="outline" 
                         className="justify-start h-auto py-3 px-4 w-full text-left"
                         onClick={() => {
-                          // Mock location selection for example cities
                           handleUpdateLocation({
                             city: city,
                             latitude: 0,
@@ -115,10 +198,11 @@ const CompetitionsPage: React.FC = () => {
       );
     }
     
-    // Display formatted location name (may already include street if available from API)
     const displayName = userLocation.city.length > 25 
       ? userLocation.city.split(',')[0]
       : userLocation.city;
+    
+    const competitionsByWeek = groupCompetitionsByWeek();
     
     return (
       <>
@@ -143,21 +227,19 @@ const CompetitionsPage: React.FC = () => {
           </div>
         </div>
         
-        {mockCompetitions.length > 0 ? (
-          mockCompetitions.map(competition => (
-            <CompetitionCard 
-              key={competition.id} 
-              competition={{
-                ...competition,
-                distance: calculateDistance(
-                  userLocation.latitude,
-                  userLocation.longitude,
-                  competition.coordinates.latitude,
-                  competition.coordinates.longitude
-                )
-              }} 
-            />
-          ))
+        {competitionsByWeek.length > 0 ? (
+          <div className="space-y-4">
+            {competitionsByWeek.map((weekGroup, index) => (
+              <div key={index} className="space-y-2">
+                <div className="sticky top-0 bg-gray-50 px-3 py-2 rounded-md font-medium text-sm text-gray-600">
+                  {formatWeekDateRange(weekGroup.weekStart, weekGroup.weekEnd)}
+                </div>
+                {weekGroup.competitions.map(competition => (
+                  <CompetitionCard key={competition.id} competition={competition} />
+                ))}
+              </div>
+            ))}
+          </div>
         ) : (
           <div className="text-center py-8">
             <div className="text-gray-400 mb-2">
