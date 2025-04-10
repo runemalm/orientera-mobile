@@ -1,10 +1,11 @@
+
 import { Competition, CompetitionDetail, CompetitionType, CompetitionDiscipline, OrienteeringDistrict } from "../types";
 
 export const mockCompetitions: Competition[] = [
   // Added new competition for Ålems OK
   {
     id: "comp-1",
-    name: "Ålems OK Vårtävling",
+    name: "Ålems OK",
     date: "2025-04-06", // April 6, 2025
     location: "Ålem",
     distance: 4.3,
