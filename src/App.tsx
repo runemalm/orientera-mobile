@@ -108,7 +108,7 @@ const App = () => (
     <TooltipProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<CompetitionsPage />} />
+          <Route path="/" element={<LandingPage />} />
           <Route path="/landing" element={<LandingPage />} />
           <Route path="/competitions" element={<CompetitionsPage />} />
           <Route path="/info" element={<InfoPage />} />

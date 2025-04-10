@@ -1,11 +1,10 @@
 
 import React from 'react';
-import CompetitionsPage from './CompetitionsPage';
+import { Navigate } from 'react-router-dom';
 
 const Index = () => {
-  // This component now serves as a wrapper for the CompetitionsPage
-  // at the /competitions route
-  return <CompetitionsPage />;
+  // Redirect to the landing page
+  return <Navigate to="/" replace />;
 };
 
 export default Index;
