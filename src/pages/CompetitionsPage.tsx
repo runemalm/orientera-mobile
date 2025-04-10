@@ -116,10 +116,6 @@ const CompetitionsPage: React.FC = () => {
     setTapCount(prevCount => prevCount + 1);
   };
 
-  const handleReturnToLanding = () => {
-    navigate('/');
-  };
-
   // Content based on location permission status
   const renderContent = () => {
     if (!initialCheckDone) {
@@ -195,14 +191,6 @@ const CompetitionsPage: React.FC = () => {
             >
               <MapPin size={16} />
               Aktivera plats
-            </Button>
-            
-            <Button
-              variant="ghost"
-              onClick={handleReturnToLanding}
-              className="w-full text-gray-500"
-            >
-              Tillbaka till startsidan
             </Button>
           </CardFooter>
         </Card>
