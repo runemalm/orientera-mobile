@@ -137,20 +137,37 @@ const CompetitionsPage: React.FC = () => {
       </Dialog>
       
       <div>
-        {mockCompetitions.length > 0 ? (
-          mockCompetitions.map(competition => (
-            <CompetitionCard key={competition.id} competition={competition} />
-          ))
+        {locationStatus === 'granted' ? (
+          mockCompetitions.length > 0 ? (
+            mockCompetitions.map(competition => (
+              <CompetitionCard key={competition.id} competition={competition} />
+            ))
+          ) : (
+            <div className="text-center py-8">
+              <div className="text-gray-400 mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mx-auto">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="m15 9-6 6" />
+                  <path d="m9 9 6 6" />
+                </svg>
+              </div>
+              <p className="text-gray-500">Inga tävlingar hittades</p>
+            </div>
+          )
         ) : (
           <div className="text-center py-8">
             <div className="text-gray-400 mb-2">
-              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mx-auto">
-                <circle cx="12" cy="12" r="10" />
-                <path d="m15 9-6 6" />
-                <path d="m9 9 6 6" />
-              </svg>
+              <AlertTriangle size={48} className="mx-auto" />
             </div>
-            <p className="text-gray-500">Inga tävlingar hittades</p>
+            <p className="text-gray-700 font-medium">Platsinformation krävs</p>
+            <p className="text-gray-500 mt-1">Du måste aktivera platsinformation för att se tävlingar i närheten</p>
+            <Button 
+              onClick={() => setShowPermissionDialog(true)} 
+              variant="outline"
+              className="mt-4"
+            >
+              Aktivera plats
+            </Button>
           </div>
         )}
       </div>
