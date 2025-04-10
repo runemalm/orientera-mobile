@@ -33,8 +33,8 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
     const target = e.currentTarget;
     const rect = target.getBoundingClientRect();
     
-    // Check if tap is in the lower right corner (bottom 20%, right 20% of the area)
-    if (e.clientY > rect.top + rect.height * 0.8 && e.clientX > rect.left + rect.width * 0.8) {
+    // Check if tap is in the upper right corner (top 20%, right 20% of the area)
+    if (e.clientY < rect.top + rect.height * 0.2 && e.clientX > rect.left + rect.width * 0.8) {
       const currentTime = Date.now();
       
       // Reset count if it's been more than 2 seconds since last tap
