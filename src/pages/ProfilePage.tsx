@@ -2,6 +2,7 @@
 import React from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { User, MapPin, Award, Calendar } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const ProfilePage: React.FC = () => {
   // Mock user data
@@ -10,6 +11,12 @@ const ProfilePage: React.FC = () => {
     club: "Northside Orienteers",
     registeredCompetitions: 3,
     completedCompetitions: 8
+  };
+  
+  const navigate = useNavigate();
+  
+  const goToCompetitions = () => {
+    navigate('/');
   };
 
   return (
@@ -55,7 +62,10 @@ const ProfilePage: React.FC = () => {
           <div className="border border-dashed border-gray-300 rounded-md p-6 flex flex-col items-center justify-center">
             <Calendar size={32} className="text-gray-400 mb-2" />
             <p className="text-gray-500 text-center">Du har inga kommande tävlingar</p>
-            <button className="mt-4 bg-primary text-white py-2 px-4 rounded">
+            <button 
+              className="mt-4 bg-primary text-white py-2 px-4 rounded"
+              onClick={goToCompetitions}
+            >
               Hitta tävlingar
             </button>
           </div>
