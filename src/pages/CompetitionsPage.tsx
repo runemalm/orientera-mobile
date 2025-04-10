@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
@@ -17,12 +16,10 @@ const CompetitionsPage: React.FC = () => {
   const [initialCheckDone, setInitialCheckDone] = useState(false);
   const navigate = useNavigate();
 
-  // Check location permission on mount
   useEffect(() => {
     checkLocationPermission();
   }, []);
 
-  // Handle tap count reset
   useEffect(() => {
     if (tapCount > 0) {
       const resetTimer = setTimeout(() => {
@@ -33,7 +30,6 @@ const CompetitionsPage: React.FC = () => {
     }
   }, [tapCount]);
 
-  // Handle tap count trigger for reset drawer
   useEffect(() => {
     if (tapCount >= 3) {
       setShowResetDrawer(true);
@@ -115,7 +111,6 @@ const CompetitionsPage: React.FC = () => {
     setTapCount(prevCount => prevCount + 1);
   };
 
-  // Content based on location permission status
   const renderContent = () => {
     if (!initialCheckDone) {
       return (
@@ -129,7 +124,6 @@ const CompetitionsPage: React.FC = () => {
     if (locationStatus === 'granted') {
       return (
         <>
-          {/* Removed the "Platsspårning aktiv" notification box */}
           {mockCompetitions.length > 0 ? (
             mockCompetitions.map(competition => (
               <CompetitionCard key={competition.id} competition={competition} />
@@ -150,10 +144,8 @@ const CompetitionsPage: React.FC = () => {
       );
     }
     
-    // For 'prompt' or 'denied' statuses - redesigned from a block to a more integrated design
     return (
       <div className="space-y-6 py-6">
-        {/* Location permission banner */}
         <div className="bg-gradient-to-br from-forest-light/30 to-forest-light/10 rounded-xl p-5 shadow-sm">
           <div className="flex items-start gap-4">
             <div className="bg-primary/10 p-3 rounded-full">
@@ -176,7 +168,6 @@ const CompetitionsPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Static competitions list */}
         <div className="mt-4">
           <h2 className="text-lg font-medium mb-4 text-gray-700">Populära tävlingar</h2>
           {mockCompetitions.slice(0, 3).map(competition => (
@@ -192,7 +183,9 @@ const CompetitionsPage: React.FC = () => {
 
   return (
     <MobileLayout title="Tävlingar i närheten">
-      {renderContent()}
+      <div className="mt-4">
+        {renderContent()}
+      </div>
       
       <Drawer open={showResetDrawer} onOpenChange={setShowResetDrawer}>
         <DrawerContent>
