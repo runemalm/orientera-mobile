@@ -11,7 +11,7 @@ export const mockCompetitions: Competition[] = [
     distance: 5.6,
     club: "Målilla OK",
     description: "Utmanande långdistansorientering i kuperad terräng med tekniska inslag.",
-    disciplines: ["Lång"],
+    discipline: "Lång", // Changed to single discipline
     competitionType: "Närtävling",
     district: "Smålands OF",
     coordinates: {
@@ -27,7 +27,7 @@ export const mockCompetitions: Competition[] = [
     distance: 1.8,
     club: "OK Orion",
     description: "Lagstafett med tre sträckor av varierande svårighetsgrad.",
-    disciplines: ["Lång", "Stafett"],
+    discipline: "Lång", // Changed to single discipline
     competitionType: "Närtävling",
     district: "Smålands OF",
     coordinates: {
@@ -43,7 +43,7 @@ export const mockCompetitions: Competition[] = [
     distance: 3.2,
     club: "Lessebo OK",
     description: "Teknisk orientering i detaljrik terräng, perfekt för veteraner.",
-    disciplines: ["Lång", "Medel"],
+    discipline: "Lång", // Changed to single discipline
     competitionType: "Närtävling",
     district: "Smålands OF",
     coordinates: {
@@ -59,7 +59,7 @@ export const mockCompetitions: Competition[] = [
     distance: 2.9,
     club: "Torsås OK",
     description: "Vänlig terräng med blandskog och öppna gläntor.",
-    disciplines: ["Lång", "Sprint"],
+    discipline: "Lång", // Changed to single discipline
     competitionType: "Närtävling",
     district: "Smålands OF",
     coordinates: {

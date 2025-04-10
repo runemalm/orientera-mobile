@@ -1,3 +1,4 @@
+
 export type CompetitionType = "Värdetävling" | "Nationell tävling" | "Distrikttävling" | "Närtävling" | "Veckans bana" | "Klubbtävling";
 
 export type CompetitionDiscipline = "Sprint" | "Medel" | "Lång" | "Natt" | "Stafett" | "Ultralång";
@@ -18,7 +19,7 @@ export interface Competition {
   distance: number; // Distance in km from user's location
   club: string;
   description: string;
-  disciplines: CompetitionDiscipline[];
+  discipline: CompetitionDiscipline; // Changed from disciplines array to single discipline
   competitionType: CompetitionType;
   district: OrienteeringDistrict;
   coordinates: {

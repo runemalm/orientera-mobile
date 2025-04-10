@@ -70,18 +70,13 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
         )}
       </div>
       
-      {/* Disciplines */}
+      {/* Discipline */}
       <div>
-        <h3 className="font-semibold text-gray-700 mb-2">Discipliner</h3>
+        <h3 className="font-semibold text-gray-700 mb-2">Disciplin</h3>
         <div className="flex flex-wrap gap-2">
-          {competition.disciplines.map((discipline, index) => (
-            <span 
-              key={index}
-              className="bg-forest-light/20 text-forest-dark px-3 py-1 rounded-full text-sm"
-            >
-              {discipline}
-            </span>
-          ))}
+          <span className="bg-forest-light/20 text-forest-dark px-3 py-1 rounded-full text-sm">
+            {competition.discipline}
+          </span>
         </div>
       </div>
       
