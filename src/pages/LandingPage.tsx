@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Flag, Calendar, Award } from 'lucide-react';
+import { Compass, Flag, Calendar, Award } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
@@ -17,7 +17,7 @@ const LandingPage: React.FC = () => {
       {/* Header */}
       <header className="flex items-center justify-between p-4 bg-white shadow-sm">
         <div className="flex items-center gap-2">
-          <MapPin size={24} className="text-primary" />
+          <Compass size={24} className="text-primary" />
           <h1 className="text-lg font-semibold">Orientera.com</h1>
         </div>
       </header>

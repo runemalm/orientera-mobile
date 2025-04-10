@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { MapPin } from 'lucide-react';
+import { Compass } from 'lucide-react';
 
 interface TopNavBarProps {
   title: string;
@@ -23,7 +23,7 @@ const TopNavBar: React.FC<TopNavBarProps> = ({ title, showBackButton = false, on
           </button>
         ) : (
           <div className="w-8 h-8 flex items-center justify-center text-primary">
-            <MapPin size={24} />
+            <Compass size={24} />
           </div>
         )}
         <h1 className="text-lg font-semibold">{title || "Orientera.com"}</h1>
