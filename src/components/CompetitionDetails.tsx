@@ -57,7 +57,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
               {competition.competitionType}
             </Badge>
             <Badge variant="outline" className="bg-forest-light/10 text-forest-dark">
-              {formatDistrictName(competition.district)}
+              {competition.district}
             </Badge>
           </div>
           
