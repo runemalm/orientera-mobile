@@ -121,40 +121,32 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
             </div>
           </div>
         ) : (
-          <Dialog>
-            <DialogTrigger asChild>
-              <button className="w-full bg-primary hover:bg-forest-dark text-white py-2 px-4 rounded transition-colors">
-                Anmäl dig till tävlingen
-              </button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
-              <DialogHeader>
-                <DialogTitle>Anmälan inte tillgänglig ännu</DialogTitle>
-                <DialogDescription>
-                  Anmälan via appen är inte tillgänglig ännu. Du kan anmäla dig via Eventor istället.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="py-4">
-                <Alert>
-                  <AlertDescription>
-                    <div className="flex flex-col space-y-2">
-                      <p>Du kan anmäla dig till tävlingen via Eventor.</p>
-                      <div>
-                        <a 
-                          href="https://eventor.orientering.se" 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="flex items-center text-primary hover:underline font-medium"
-                        >
-                          Anmäl dig på Eventor <ExternalLink size={14} className="ml-1" />
-                        </a>
-                      </div>
-                    </div>
-                  </AlertDescription>
-                </Alert>
-              </div>
-            </DialogContent>
-          </Dialog>
+          <div className="space-y-4">
+            <Alert>
+              <AlertDescription>
+                <div className="flex flex-col space-y-2">
+                  <p>Anmälan via appen är inte tillgänglig ännu. Du kan anmäla dig via Eventor istället.</p>
+                  <div>
+                    <a 
+                      href="https://eventor.orientering.se" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center text-primary hover:underline font-medium"
+                    >
+                      Anmäl dig på Eventor <ExternalLink size={14} className="ml-1" />
+                    </a>
+                  </div>
+                </div>
+              </AlertDescription>
+            </Alert>
+            <Button 
+              variant="outline" 
+              className="w-full"
+              onClick={handleSignUpComplete}
+            >
+              Markera som anmäld
+            </Button>
+          </div>
         )}
       </div>
     </div>
@@ -162,3 +154,4 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
 };
 
 export default CompetitionDetails;
+
