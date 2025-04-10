@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
@@ -15,10 +14,28 @@ const CompetitionsPage: React.FC = () => {
   const [showPermissionDialog, setShowPermissionDialog] = useState(false);
   const [showResetDrawer, setShowResetDrawer] = useState(false);
   const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
+  const [tapCount, setTapCount] = useState(0);
 
   useEffect(() => {
     checkLocationPermission();
   }, []);
+
+  useEffect(() => {
+    if (tapCount > 0) {
+      const resetTimer = setTimeout(() => {
+        setTapCount(0);
+      }, 2000);
+      
+      return () => clearTimeout(resetTimer);
+    }
+  }, [tapCount]);
+
+  useEffect(() => {
+    if (tapCount >= 5) {
+      setShowResetDrawer(true);
+      setTapCount(0);
+    }
+  }, [tapCount]);
 
   const checkLocationPermission = async () => {
     try {
@@ -70,7 +87,7 @@ const CompetitionsPage: React.FC = () => {
     setLongPressTimer(
       setTimeout(() => {
         setShowResetDrawer(true);
-      }, 5000) // Changed from 10000 (10 seconds) to 5000 (5 seconds)
+      }, 5000)
     );
   };
   
@@ -93,6 +110,10 @@ const CompetitionsPage: React.FC = () => {
     }
   };
 
+  const handleTap = () => {
+    setTapCount(prevCount => prevCount + 1);
+  };
+
   return (
     <MobileLayout title="Tävlingar i närheten">
       <div 
@@ -103,9 +124,10 @@ const CompetitionsPage: React.FC = () => {
         onMouseDown={handleLongPress}
         onMouseUp={handlePressEnd}
         onMouseLeave={handlePressEnd}
+        onClick={locationStatus === 'granted' ? handleTap : undefined}
       >
         {locationStatus === 'granted' ? (
-          <Alert className="bg-green-50 border-green-200">
+          <Alert className="bg-green-50 border-green-200 cursor-pointer">
             <MapPin className="h-5 w-5 text-green-600" />
             <AlertTitle className="text-green-800">Platsspårning aktiv</AlertTitle>
             <AlertDescription className="text-green-700 text-sm">
