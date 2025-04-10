@@ -8,9 +8,16 @@ import { MapPin } from 'lucide-react';
 const CompetitionsPage: React.FC = () => {
   return (
     <MobileLayout title="Tävlingar i närheten">
-      <div className="flex items-center mb-4">
-        <MapPin size={16} className="text-primary mr-1" />
-        <span className="text-sm text-gray-600">Visar tävlingar nära din position</span>
+      <div className="bg-white rounded-lg p-3 mb-4 shadow-sm border border-gray-100">
+        <div className="flex items-center">
+          <div className="bg-primary/10 rounded-full p-2 mr-3">
+            <MapPin size={18} className="text-primary" />
+          </div>
+          <div>
+            <p className="text-sm font-medium text-gray-800">Visar tävlingar nära dig</p>
+            <p className="text-xs text-gray-500">Baserat på din nuvarande position</p>
+          </div>
+        </div>
       </div>
       
       <div>
