@@ -46,12 +46,13 @@ const LandingPage: React.FC = () => {
         <div className="mt-16 w-full max-w-md bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-xl font-bold mb-3 text-primary">Varför vi skapade Orientera.com</h2>
           <p className="text-gray-700 mb-4">
-            Som passionerade orienterare upplevde vi svårigheter med att hitta och anmäla oss till tävlingar. 
-            Informationen var utspridd på olika hemsidor och svår att navigera.
+            Som passionerade orienterare ville vi göra det ännu enklare att upptäcka och delta i 
+            orienterings­tävlingar runt om i landet.
           </p>
           <p className="text-gray-700">
-            Orientera.com föddes ur behovet av en enkel, samlad plattform där alla orienterare 
-            snabbt kan hitta relevanta tävlingar och enkelt anmäla sig - oavsett var i landet de befinner sig.
+            Orientera.com fokuserar på användarvänlighet och tillgänglighet, med målet att göra 
+            orienterings­sporten mer åtkomlig för alla – från nybörjare till erfarna löpare. 
+            Vi kombinerar den omfattande tävlingsinformationen med en modern digital upplevelse.
           </p>
         </div>
         
