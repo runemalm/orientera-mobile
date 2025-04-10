@@ -41,12 +41,12 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
           <Clock size={16} className="mr-2" />
           <span>Starttid: {competition.startTime}</span>
         </div>
-        <div className="flex items-center text-location-dark mb-2">
-          <MapPin size={16} className="mr-2 text-location" />
+        <div className="flex items-center text-gray-600 mb-2">
+          <MapPin size={16} className="mr-2 text-gray-600" />
           <span>{competition.location}</span>
         </div>
-        <div className="flex items-center text-location-dark mb-2">
-          <Navigation size={16} className="mr-2 text-location" />
+        <div className="flex items-center text-gray-600 mb-2">
+          <Navigation size={16} className="mr-2 text-gray-600" />
           <span>{competition.distance} km bort</span>
         </div>
         <div className="flex items-center text-gray-600 mb-2">

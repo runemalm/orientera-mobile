@@ -36,8 +36,8 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition }) => {
             <span>{formattedDate}</span>
           </div>
           <div className="flex items-center">
-            <MapPin size={14} className="mr-1 text-location" />
-            <span className="text-location-dark">{competition.location}</span>
+            <MapPin size={14} className="mr-1 text-gray-600" />
+            <span className="text-gray-700">{competition.location}</span>
           </div>
           <div className="flex items-center">
             <Award size={14} className="mr-1" />
