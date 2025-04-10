@@ -131,11 +131,11 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
         <p className="text-gray-600 pl-6">{competition.description}</p>
       </div>
       
-      {/* Documents */}
+      {/* Documents & Links */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-3">
         <div className="flex items-center gap-2 mb-2">
           <FileText size={18} className="text-forest" />
-          <h3 className="font-semibold text-gray-700">Dokument</h3>
+          <h3 className="font-semibold text-gray-700">Dokument & Länkar</h3>
         </div>
         <div className="pl-6">
           {competition.files.length > 0 ? (
