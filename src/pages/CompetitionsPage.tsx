@@ -11,9 +11,9 @@ import { useUserLocation } from '../hooks/useUserLocation';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Competition } from '../types';
 
-// Define the return type of processCompetitionWithDistance
-interface CompetitionWithDistance extends Competition {
-  distance?: number;
+// Define interface for processed competition data
+interface CompetitionWithDistance extends Omit<Competition, 'distance'> {
+  distance: number; // Make distance required to match Competition interface
 }
 
 interface CompetitionsByWeek {
@@ -53,7 +53,13 @@ const CompetitionsPage: React.FC = () => {
   };
 
   const processCompetitionWithDistance = (competition: typeof mockCompetitions[0]): CompetitionWithDistance => {
-    if (!userLocation) return competition;
+    if (!userLocation) {
+      // If no location, return competition with a default distance
+      return {
+        ...competition,
+        distance: 0 // Set a default distance value
+      };
+    }
     
     return {
       ...competition,
