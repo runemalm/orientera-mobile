@@ -32,7 +32,7 @@ const CompetitionsPage: React.FC = () => {
   }, [tapCount]);
 
   useEffect(() => {
-    if (tapCount >= 5) {
+    if (tapCount >= 3) { // Changed from 5 to 3
       setShowResetDrawer(true);
       setTapCount(0);
     }
