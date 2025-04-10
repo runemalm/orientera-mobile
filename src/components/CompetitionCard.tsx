@@ -40,7 +40,7 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition }) => {
         </div>
         <div className="flex items-center text-gray-600 text-sm mb-3">
           <Award size={16} className="mr-1" />
-          <span>{competition.competitionType} | {competition.district}</span>
+          <span>{competition.competitionType}</span>
         </div>
         <div className="flex flex-wrap gap-2 mt-2">
           {competition.disciplines.map((discipline, index) => (
