@@ -6,7 +6,7 @@ export const mockCompetitions: Competition[] = [
     id: "comp-1",
     name: "Veteran-OL",
     date: "2025-04-20",
-    location: "Northside Forest Park",
+    location: "Stångebroskogen",
     distance: 2.4,
     club: "SOK Viljan",
     description: "Medeldistans i varierad skogsterräng med god löpbarhet.",
@@ -22,7 +22,7 @@ export const mockCompetitions: Competition[] = [
     id: "comp-2",
     name: "Veteran-OL",
     date: "2025-04-25",
-    location: "Downtown Eastside",
+    location: "Svartbäcksmåla",
     distance: 3.8,
     club: "Nybro OK",
     description: "Snabb sprintorientering i stadsmiljö med komplexa vägval.",
@@ -38,7 +38,7 @@ export const mockCompetitions: Competition[] = [
     id: "comp-3",
     name: "Veteran-OL",
     date: "2025-05-02",
-    location: "Highland National Park",
+    location: "Björkholmen",
     distance: 5.6,
     club: "Målilla OK",
     description: "Utmanande långdistansorientering i kuperad terräng med tekniska inslag.",
@@ -54,7 +54,7 @@ export const mockCompetitions: Competition[] = [
     id: "comp-4",
     name: "Veteran-OL",
     date: "2025-05-10",
-    location: "Westwood Forest",
+    location: "Skälby",
     distance: 4.2,
     club: "Kalmar OK",
     description: "Spännande nattorientering med pannlampa. Teknisk skogsorientering.",
@@ -70,7 +70,7 @@ export const mockCompetitions: Competition[] = [
     id: "comp-5",
     name: "Veteran-OL",
     date: "2025-05-15",
-    location: "Eastside Community Park",
+    location: "Emmabodaskogen",
     distance: 1.8,
     club: "OK Orion",
     description: "Lagstafett med tre sträckor av varierande svårighetsgrad.",
@@ -80,6 +80,38 @@ export const mockCompetitions: Competition[] = [
     coordinates: {
       latitude: 59.3400,
       longitude: 18.0700
+    }
+  },
+  {
+    id: "comp-6",
+    name: "Veteran-OL",
+    date: "2025-05-22",
+    location: "Lessebo Skogsområde",
+    distance: 3.2,
+    club: "Lessebo OK",
+    description: "Teknisk orientering i detaljrik terräng, perfekt för veteraner.",
+    disciplines: ["Medel", "Lång"],
+    competitionType: "Klubbtävling",
+    district: "Smålands OF",
+    coordinates: {
+      latitude: 56.7512,
+      longitude: 15.2722
+    }
+  },
+  {
+    id: "comp-7",
+    name: "Veteran-OL",
+    date: "2025-05-30",
+    location: "Torsås Skogsmarker",
+    distance: 2.9,
+    club: "Torsås OK",
+    description: "Vänlig terräng med blandskog och öppna gläntor.",
+    disciplines: ["Sprint"],
+    competitionType: "Klubbtävling",
+    district: "Smålands OF",
+    coordinates: {
+      latitude: 56.4108,
+      longitude: 16.0030
     }
   }
 ];
@@ -207,6 +239,49 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
     organizer: "Regional Committee",
     contact: "info@regiono.org",
     website: "https://regiono.org/relay2025",
+    isRegistered: false
+  },
+  "comp-6": {
+    ...mockCompetitions[5],
+    files: [
+      {
+        id: "file-11",
+        name: "Inbjudan.pdf",
+        type: "invitation",
+        url: "#",
+        uploadDate: "2025-05-01"
+      }
+    ],
+    registrationDeadline: "2025-05-20",
+    startTime: "14:00",
+    organizer: "Lennart Svensson",
+    contact: "lennart@lessebook.se",
+    website: "https://lessebook.se",
+    isRegistered: false
+  },
+  "comp-7": {
+    ...mockCompetitions[6],
+    files: [
+      {
+        id: "file-12",
+        name: "Inbjudan.pdf",
+        type: "invitation",
+        url: "#",
+        uploadDate: "2025-05-10"
+      },
+      {
+        id: "file-13",
+        name: "PM.pdf",
+        type: "pm",
+        url: "#",
+        uploadDate: "2025-05-25"
+      }
+    ],
+    registrationDeadline: "2025-05-28",
+    startTime: "11:00",
+    organizer: "Karin Johansson",
+    contact: "karin@torsasok.se",
+    website: "https://torsasok.se",
     isRegistered: false
   }
 };
