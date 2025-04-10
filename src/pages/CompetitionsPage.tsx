@@ -51,6 +51,11 @@ const CompetitionsPage: React.FC = () => {
     }
 
     if (userLocation) {
+      // Get a shortened display name if the full name is too long
+      const displayName = userLocation.city.length > 25 
+        ? userLocation.city.split(',')[0]
+        : userLocation.city;
+      
       return (
         <>
           <div className="bg-gradient-to-br from-forest-light/30 to-forest-light/10 rounded-xl p-4 shadow-sm mb-4">
@@ -60,7 +65,7 @@ const CompetitionsPage: React.FC = () => {
                   <MapPin size={18} className="text-primary" />
                 </div>
                 <div>
-                  <span className="font-medium">{userLocation.city}</span>
+                  <span className="font-medium text-sm line-clamp-1">{displayName}</span>
                 </div>
               </div>
               <Button variant="outline" size="sm" onClick={() => setShowLocationDrawer(true)}>

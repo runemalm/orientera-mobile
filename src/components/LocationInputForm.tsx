@@ -51,7 +51,7 @@ const LocationInputForm: React.FC<LocationInputFormProps> = ({ onLocationSelecte
 
       const result = data[0];
       onLocationSelected({
-        city: result.display_name.split(',')[0],
+        city: result.display_name, // Use the full display_name instead of splitting
         latitude: parseFloat(result.lat),
         longitude: parseFloat(result.lon),
       });
