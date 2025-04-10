@@ -25,9 +25,9 @@ const LandingPage: React.FC = () => {
       {/* Hero section */}
       <main className="flex-grow flex flex-col items-center justify-center p-6 text-center">
         <div className="max-w-md mx-auto">
-          <h1 className="text-4xl font-bold mb-3">
-            <span className="whitespace-nowrap">Ett modernare sätt</span>{' '}
-            <span className="whitespace-nowrap">att hitta orienterings­tävlingar</span>
+          <h1 className="text-4xl font-bold mb-3 flex flex-col items-center">
+            <span className="block">Ett modernare sätt</span>
+            <span className="block">att hitta orienterings­tävlingar</span>
           </h1>
           <p className="text-gray-600 mb-8">
             Samma information som Eventor men i ett användarvänligt, modernt gränssnitt optimerat för mobilen.
