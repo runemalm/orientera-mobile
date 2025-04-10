@@ -120,7 +120,8 @@ const LocationInputForm: React.FC<LocationInputFormProps> = ({ onLocationSelecte
         <Button 
           onClick={handleSearch} 
           disabled={isSearching}
-          variant="secondary"
+          variant="outline"
+          className="bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-300"
         >
           {isSearching ? (
             <Loader2 className="h-4 w-4 animate-spin" />
@@ -141,7 +142,11 @@ const LocationInputForm: React.FC<LocationInputFormProps> = ({ onLocationSelecte
       </div>
 
       {onCancel && (
-        <Button variant="outline" onClick={onCancel} className="w-full mt-2">
+        <Button 
+          variant="outline" 
+          onClick={onCancel} 
+          className="w-full mt-2 text-gray-700 border-gray-300 hover:bg-gray-100"
+        >
           Avbryt
         </Button>
       )}
