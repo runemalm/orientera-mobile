@@ -25,7 +25,10 @@ const LandingPage: React.FC = () => {
       {/* Hero section */}
       <main className="flex-grow flex flex-col items-center justify-center p-6 text-center">
         <div className="max-w-md mx-auto">
-          <h1 className="text-3xl font-bold mb-3">Hitta orienterings­tävlingar nära dig</h1>
+          <h1 className="text-3xl font-bold mb-3">
+            <span className="whitespace-nowrap">Hitta orienterings­tävlingar</span>{' '}
+            <span className="whitespace-nowrap">nära dig</span>
+          </h1>
           <p className="text-gray-600 mb-8">
             Med Orientera.com kan du enkelt hitta och anmäla dig till orienterings­tävlingar i hela landet.
           </p>
