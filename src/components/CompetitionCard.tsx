@@ -18,7 +18,7 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition }) => {
 
   return (
     <div 
-      className="bg-white rounded-lg shadow-sm mb-2 overflow-hidden border border-gray-100 cursor-pointer" 
+      className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100 cursor-pointer" 
       onClick={handleCardClick}
     >
       <div className="p-3 flex items-center justify-between">
