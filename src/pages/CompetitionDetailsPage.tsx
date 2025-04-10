@@ -37,7 +37,7 @@ const CompetitionDetailsPage: React.FC = () => {
   if (loading) {
     return (
       <MobileLayout title="Laddar..." showBackButton>
-        <div className="flex justify-center items-center h-64">
+        <div className="flex justify-center items-center h-64 mt-4">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
         </div>
         <Toaster />
@@ -48,7 +48,7 @@ const CompetitionDetailsPage: React.FC = () => {
   if (!competition) {
     return (
       <MobileLayout title="Hittades inte" showBackButton>
-        <div className="flex flex-col items-center justify-center h-64">
+        <div className="flex flex-col items-center justify-center h-64 mt-4">
           <div className="text-red-500 mb-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="10" />
@@ -66,10 +66,12 @@ const CompetitionDetailsPage: React.FC = () => {
 
   return (
     <MobileLayout title="Tävlingsdetaljer" showBackButton>
-      <CompetitionDetails 
-        competition={competition} 
-        onSignUpComplete={handleSignUpComplete} 
-      />
+      <div className="mt-4">
+        <CompetitionDetails 
+          competition={competition} 
+          onSignUpComplete={handleSignUpComplete} 
+        />
+      </div>
       <Toaster />
     </MobileLayout>
   );
