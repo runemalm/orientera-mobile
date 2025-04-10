@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
-import { Info, Send, MessageCircle, Heart } from 'lucide-react';
+import { Info, Send, MessageCircle, Heart, Compass, MapPin } from 'lucide-react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -53,23 +53,52 @@ const InfoPage: React.FC = () => {
             
             <div className="space-y-4">
               <div className="bg-primary/10 p-4 rounded-lg">
-                <h3 className="font-semibold text-lg mb-2">Varför skapades appen?</h3>
+                <h3 className="font-semibold text-lg mb-2">Orientering i din ficka</h3>
                 <p className="text-gray-700">
-                  Denna app utvecklades för att göra det enklare för orienterare att hitta och anmäla 
-                  sig till tävlingar. Vi ville skapa en plattform som samlar all information på ett ställe 
-                  och gör orienteringssporten mer tillgänglig för både nya och erfarna utövare.
+                  Vi har skapat denna app för att modernisera hur orienterare upptäcker, 
+                  anmäler sig till, och deltar i tävlingar. I en värld där allt blir mer 
+                  digitalt ville vi ge orienteringssporten ett modernt digitalt verktyg 
+                  som är lika funktionellt som det är enkelt att använda.
                 </p>
               </div>
               
               <div className="flex items-start space-x-3 mt-4">
                 <div className="bg-primary/10 p-2 rounded-lg">
+                  <Compass className="text-primary" size={20} />
+                </div>
+                <div>
+                  <h3 className="font-medium">Vår mission</h3>
+                  <p className="text-sm text-gray-600">
+                    Att göra orientering mer tillgängligt genom en smidig, intuitiv plattform 
+                    som förenklar alla aspekter av sporten - från att hitta närmaste tävling 
+                    till att analysera dina resultat.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-3 mt-4">
+                <div className="bg-primary/10 p-2 rounded-lg">
+                  <MapPin className="text-primary" size={20} />
+                </div>
+                <div>
+                  <h3 className="font-medium">För alla orienterare</h3>
+                  <p className="text-sm text-gray-600">
+                    Oavsett om du är elitlöpare, motionär eller nybörjare, är vår app 
+                    designad för att möta dina behov med ett enkelt och rent gränssnitt 
+                    som fungerar lika bra i skogen som i vardagen.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-3 mt-4">
+                <div className="bg-primary/10 p-2 rounded-lg">
                   <Heart className="text-primary" size={20} />
                 </div>
                 <div>
-                  <h3 className="font-medium">Vår vision</h3>
+                  <h3 className="font-medium">Byggd av orienterare, för orienterare</h3>
                   <p className="text-sm text-gray-600">
-                    Vi strävar efter att göra orientering mer lättillgängligt och 
-                    öka antalet aktiva utövare genom att förenkla processen från att hitta till att delta i tävlingar.
+                    Som orienterare förstår vi sportens unika behov och utmaningar. Vi har byggt 
+                    denna app med kärlek, kunskap och förståelse för vad som faktiskt behövs i fält.
                   </p>
                 </div>
               </div>
