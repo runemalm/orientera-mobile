@@ -33,7 +33,7 @@ const BottomTabBar: React.FC = () => {
       {tabs.map((tab) => (
         <button
           key={tab.name}
-          className={`flex flex-col items-center justify-center w-full h-full ${
+          className={`flex flex-col items-center justify-center w-full py-2 ${
             (currentPath === tab.path || 
              (tab.path === '/competitions' && currentPath === '/')) // Consider "/" as competitions too
               ? 'text-primary font-medium'

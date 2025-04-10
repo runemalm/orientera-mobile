@@ -34,6 +34,12 @@
     --ring: 222.2 84% 4.9%;
 
     --radius: 0.5rem;
+    
+    /* Safe area inset variables */
+    --safe-area-inset-top: env(safe-area-inset-top, 0px);
+    --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-area-inset-left: env(safe-area-inset-left, 0px);
+    --safe-area-inset-right: env(safe-area-inset-right, 0px);
   }
 
   .dark {
@@ -110,10 +116,13 @@
   
   .top-nav {
     @apply fixed top-0 left-0 right-0 h-16 z-50 bg-white shadow-sm;
+    padding-top: var(--safe-area-inset-top);
   }
   
   .bottom-tabs {
-    @apply fixed bottom-0 left-0 right-0 h-16 z-50 bg-white shadow-lg border-t;
+    @apply fixed bottom-0 left-0 right-0 z-50 bg-white shadow-lg border-t;
+    padding-bottom: var(--safe-area-inset-bottom);
+    height: calc(4rem + var(--safe-area-inset-bottom));
   }
   
   .location-badge {
