@@ -1,132 +1,88 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
 import { mockCompetitions } from '../utils/mockData';
 import { MapPin, RefreshCw, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-import { useNavigate } from 'react-router-dom';
+import LocationInputForm from '../components/LocationInputForm';
+import LocationOnboarding from '../components/LocationOnboarding';
+import { useUserLocation } from '../hooks/useUserLocation';
 
 const CompetitionsPage: React.FC = () => {
-  const [locationStatus, setLocationStatus] = useState<'checking' | 'prompt' | 'granted' | 'denied'>('checking');
+  const [showLocationDrawer, setShowLocationDrawer] = useState(false);
   const [showResetDrawer, setShowResetDrawer] = useState(false);
-  const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
   const [tapCount, setTapCount] = useState(0);
-  const [initialCheckDone, setInitialCheckDone] = useState(false);
-  const navigate = useNavigate();
+  const { userLocation, isFirstVisit, isLoading, updateUserLocation, resetUserLocation } = useUserLocation();
 
-  useEffect(() => {
-    checkLocationPermission();
-  }, []);
-
-  useEffect(() => {
-    if (tapCount > 0) {
-      const resetTimer = setTimeout(() => {
-        setTapCount(0);
-      }, 2000);
-      
-      return () => clearTimeout(resetTimer);
-    }
-  }, [tapCount]);
-
-  useEffect(() => {
-    if (tapCount >= 3) {
-      setShowResetDrawer(true);
-      setTapCount(0);
-    }
-  }, [tapCount]);
-
-  const checkLocationPermission = async () => {
-    try {
-      if (!navigator.geolocation) {
-        setLocationStatus('denied');
-        setInitialCheckDone(true);
-        return;
-      }
-      
-      const permissionStatus = await navigator.permissions.query({ name: 'geolocation' });
-      
-      if (permissionStatus.state === 'granted') {
-        setLocationStatus('granted');
-      } else if (permissionStatus.state === 'denied') {
-        setLocationStatus('denied');
-      } else {
-        setLocationStatus('prompt');
-      }
-      
-      setInitialCheckDone(true);
-      
-      permissionStatus.addEventListener('change', () => {
-        setLocationStatus(permissionStatus.state as 'granted' | 'denied' | 'prompt');
-      });
-    } catch (error) {
-      console.error("Error checking location permission:", error);
-      setLocationStatus('denied');
-      setInitialCheckDone(true);
-    }
-  };
-
-  const requestLocationPermission = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        () => {
-          setLocationStatus('granted');
-        },
-        (error) => {
-          console.error("Error getting location:", error);
-          setLocationStatus('denied');
-        }
-      );
-    }
+  const handleUpdateLocation = (location: { city: string; latitude: number; longitude: number }) => {
+    updateUserLocation(location);
+    setShowLocationDrawer(false);
   };
   
-  const handleLongPress = () => {
-    setLongPressTimer(
-      setTimeout(() => {
-        setShowResetDrawer(true);
-      }, 5000)
-    );
-  };
-  
-  const handlePressEnd = () => {
-    if (longPressTimer) {
-      clearTimeout(longPressTimer);
-      setLongPressTimer(null);
-    }
-  };
-  
-  const resetLocationPermissions = async () => {
-    try {
-      const permissions = await navigator.permissions.query({ name: 'geolocation' });
-      
-      setLocationStatus('prompt');
-      setShowResetDrawer(false);
-    } catch (error) {
-      console.error("Error resetting location permissions:", error);
-    }
+  const handleResetLocation = () => {
+    resetUserLocation();
+    setShowResetDrawer(false);
   };
 
   const handleTap = () => {
     setTapCount(prevCount => prevCount + 1);
+    
+    if (tapCount >= 2) {
+      setShowResetDrawer(true);
+      setTapCount(0);
+    } else {
+      // Reset after 2 seconds if not reached 3 taps
+      setTimeout(() => {
+        setTapCount(0);
+      }, 2000);
+    }
   };
 
   const renderContent = () => {
-    if (!initialCheckDone) {
+    if (isLoading) {
       return (
         <div className="flex flex-col justify-center items-center h-[70vh]">
           <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
-          <p className="text-gray-600">Kontrollerar platsbehörigheter...</p>
+          <p className="text-gray-600">Laddar...</p>
         </div>
       );
     }
 
-    if (locationStatus === 'granted') {
+    if (userLocation) {
       return (
         <>
+          <div className="bg-gradient-to-br from-forest-light/30 to-forest-light/10 rounded-xl p-4 shadow-sm mb-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="bg-primary/10 p-2 rounded-full">
+                  <MapPin size={18} className="text-primary" />
+                </div>
+                <div>
+                  <span className="font-medium">{userLocation.city}</span>
+                </div>
+              </div>
+              <Button variant="outline" size="sm" onClick={() => setShowLocationDrawer(true)}>
+                Byt plats
+              </Button>
+            </div>
+          </div>
+          
           {mockCompetitions.length > 0 ? (
             mockCompetitions.map(competition => (
-              <CompetitionCard key={competition.id} competition={competition} />
+              <CompetitionCard 
+                key={competition.id} 
+                competition={{
+                  ...competition,
+                  distance: calculateDistance(
+                    userLocation.latitude,
+                    userLocation.longitude,
+                    competition.coordinates.latitude,
+                    competition.coordinates.longitude
+                  )
+                }} 
+              />
             ))
           ) : (
             <div className="text-center py-8">
@@ -152,17 +108,17 @@ const CompetitionsPage: React.FC = () => {
               <MapPin size={24} className="text-primary" />
             </div>
             <div className="flex-1">
-              <h2 className="text-lg font-medium mb-2 text-forest-dark">Visa tävlingar nära dig</h2>
+              <h2 className="text-lg font-medium mb-2 text-forest-dark">Hitta tävlingar nära dig</h2>
               <p className="text-gray-600 mb-4">
-                Aktivera platsinformation för att se tävlingar i ditt område.
+                Ange din plats för att se tävlingar i ditt område.
               </p>
               <Button 
-                onClick={requestLocationPermission}
+                onClick={() => setShowLocationDrawer(true)}
                 className="w-full sm:w-auto flex items-center justify-center gap-2"
                 size="sm"
               >
                 <MapPin size={16} />
-                Aktivera plats
+                Ange plats
               </Button>
             </div>
           </div>
@@ -174,7 +130,7 @@ const CompetitionsPage: React.FC = () => {
             <CompetitionCard key={competition.id} competition={competition} />
           ))}
           <div className="text-center mt-4">
-            <span className="text-sm text-gray-500">Aktivera plats för att se fler tävlingar nära dig</span>
+            <span className="text-sm text-gray-500">Ange din plats för att se fler tävlingar nära dig</span>
           </div>
         </div>
       </div>
@@ -182,17 +138,41 @@ const CompetitionsPage: React.FC = () => {
   };
 
   return (
-    <MobileLayout title="Tävlingar i närheten">
-      <div className="mt-4">
-        {renderContent()}
-      </div>
+    <>
+      <MobileLayout title="Tävlingar i närheten">
+        <div className="mt-4" onClick={handleTap}>
+          {renderContent()}
+        </div>
+      </MobileLayout>
+      
+      <LocationOnboarding 
+        isOpen={isFirstVisit && !userLocation} 
+        onComplete={handleUpdateLocation}
+      />
+      
+      <Drawer open={showLocationDrawer} onOpenChange={setShowLocationDrawer}>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle>Ange din plats</DrawerTitle>
+            <DrawerDescription>
+              Ange din plats för att hitta tävlingar nära dig.
+            </DrawerDescription>
+          </DrawerHeader>
+          <div className="p-4">
+            <LocationInputForm 
+              onLocationSelected={handleUpdateLocation}
+              onCancel={() => setShowLocationDrawer(false)}
+            />
+          </div>
+        </DrawerContent>
+      </Drawer>
       
       <Drawer open={showResetDrawer} onOpenChange={setShowResetDrawer}>
         <DrawerContent>
           <DrawerHeader>
-            <DrawerTitle>Återställ platsåtkomst</DrawerTitle>
+            <DrawerTitle>Återställ platsval</DrawerTitle>
             <DrawerDescription>
-              Detta kommer att återställa behörigheterna för platsåtkomst. Du kommer att behöva godkänna platsåtkomst igen.
+              Detta kommer ta bort din sparade plats. Du kommer att behöva ange din plats igen.
             </DrawerDescription>
           </DrawerHeader>
           <div className="p-4 space-y-4">
@@ -200,10 +180,10 @@ const CompetitionsPage: React.FC = () => {
               <RefreshCw size={48} className="text-primary" />
             </div>
             <Button 
-              onClick={resetLocationPermissions}
+              onClick={handleResetLocation}
               className="w-full"
             >
-              Återställ platsåtkomst
+              Återställ plats
             </Button>
             <Button 
               variant="outline"
@@ -215,8 +195,26 @@ const CompetitionsPage: React.FC = () => {
           </div>
         </DrawerContent>
       </Drawer>
-    </MobileLayout>
+    </>
   );
+};
+
+// Helper function to calculate distance between coordinates in kilometers
+const calculateDistance = (
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number
+): number => {
+  const R = 6371; // Radius of the Earth in km
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = R * c;
+  return Math.round(distance * 10) / 10; // Round to 1 decimal place
 };
 
 export default CompetitionsPage;
