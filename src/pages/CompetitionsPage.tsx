@@ -128,7 +128,7 @@ const CompetitionsPage: React.FC = () => {
           onMouseLeave={handlePressEnd}
           onClick={handleTap}
         >
-          <Alert className="bg-green-50 border-green-200 cursor-pointer">
+          <Alert className="bg-green-50 border-green-200">
             <MapPin className="h-5 w-5 text-green-600" />
             <AlertTitle className="text-green-800">Platsspårning aktiv</AlertTitle>
             <AlertDescription className="text-green-700 text-sm">
