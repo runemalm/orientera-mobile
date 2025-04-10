@@ -1,3 +1,4 @@
+
 import { Competition, CompetitionDetail, CompetitionType, CompetitionDiscipline, OrienteeringDistrict } from "../types";
 
 export const mockCompetitions: Competition[] = [
@@ -11,7 +12,7 @@ export const mockCompetitions: Competition[] = [
     club: "Målilla OK",
     description: "Utmanande långdistansorientering i kuperad terräng med tekniska inslag.",
     disciplines: ["Lång"],
-    competitionType: "Nationell tävling",
+    competitionType: "Närtävling",
     district: "Smålands OF",
     coordinates: {
       latitude: 59.3349,
@@ -43,7 +44,7 @@ export const mockCompetitions: Competition[] = [
     club: "Lessebo OK",
     description: "Teknisk orientering i detaljrik terräng, perfekt för veteraner.",
     disciplines: ["Medel", "Lång"],
-    competitionType: "Klubbtävling",
+    competitionType: "Närtävling",
     district: "Smålands OF",
     coordinates: {
       latitude: 56.7512,
@@ -59,7 +60,7 @@ export const mockCompetitions: Competition[] = [
     club: "Torsås OK",
     description: "Vänlig terräng med blandskog och öppna gläntor.",
     disciplines: ["Sprint"],
-    competitionType: "Klubbtävling",
+    competitionType: "Närtävling",
     district: "Smålands OF",
     coordinates: {
       latitude: 56.4108,
