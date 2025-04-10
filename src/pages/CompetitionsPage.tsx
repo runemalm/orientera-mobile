@@ -52,12 +52,12 @@ const CompetitionsPage: React.FC = () => {
     if (!userLocation) {
       return (
         <div className="space-y-6 py-6">
-          <div className="bg-gradient-to-br from-forest-light/30 to-forest-light/10 rounded-xl p-5 shadow-sm">
+          <div className="bg-gradient-to-br from-location-light/30 to-location-light/10 rounded-xl p-5 shadow-sm">
             <div className="flex flex-col items-center">
-              <div className="bg-primary/10 p-3 rounded-full w-14 h-14 mb-4 flex items-center justify-center">
-                <MapPin size={28} className="text-primary" />
+              <div className="bg-location/10 p-3 rounded-full w-14 h-14 mb-4 flex items-center justify-center">
+                <MapPin size={28} className="text-location" />
               </div>
-              <h2 className="text-lg font-medium mb-2 text-forest-dark text-center">Välkommen!</h2>
+              <h2 className="text-lg font-medium mb-2 text-location-dark text-center">Välkommen!</h2>
               <p className="text-gray-600 mb-4 text-center">
                 Ange din plats för att hitta orienteringstävlingar nära dig.
               </p>
@@ -84,17 +84,22 @@ const CompetitionsPage: React.FC = () => {
     
     return (
       <>
-        <div className="bg-gradient-to-br from-forest-light/30 to-forest-light/10 rounded-xl p-4 shadow-sm mb-4">
+        <div className="bg-gradient-to-br from-location-light/30 to-location-light/10 rounded-xl p-4 shadow-sm mb-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="bg-primary/10 p-2 rounded-full">
-                <MapPin size={18} className="text-primary" />
+              <div className="bg-location/10 p-2 rounded-full">
+                <MapPin size={18} className="text-location" />
               </div>
               <div>
-                <span className="font-medium text-sm line-clamp-1">{displayName}</span>
+                <span className="font-medium text-sm line-clamp-1 text-location-dark">{displayName}</span>
               </div>
             </div>
-            <Button variant="outline" size="sm" onClick={() => setShowLocationDrawer(true)}>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setShowLocationDrawer(true)}
+              className="text-location border-location/30 hover:bg-location/10"
+            >
               Byt plats
             </Button>
           </div>

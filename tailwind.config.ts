@@ -38,6 +38,11 @@ export default {
 					light: '#81C784',
 					dark: '#1B5E20'
 				},
+				location: {
+					DEFAULT: '#0EA5E9',  // Ocean blue color
+					light: '#7DD3FC',    // Lighter blue
+					dark: '#0369A1'      // Darker blue
+				},
 				destructive: {
 					DEFAULT: 'hsl(var(--destructive))',
 					foreground: 'hsl(var(--destructive-foreground))'
