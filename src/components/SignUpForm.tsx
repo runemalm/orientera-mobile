@@ -1,6 +1,5 @@
 
 import React, { useState } from 'react';
-import { useToast } from '@/components/ui/use-toast';
 
 interface SignUpFormProps {
   competitionId: string;
@@ -8,7 +7,6 @@ interface SignUpFormProps {
 }
 
 const SignUpForm: React.FC<SignUpFormProps> = ({ competitionId, onSignUpComplete }) => {
-  const { toast } = useToast();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [club, setClub] = useState('');
@@ -28,10 +26,6 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ competitionId, onSignUpComplete
     // Simulate API call
     setTimeout(() => {
       setIsSubmitting(false);
-      toast({
-        title: "Registration successful!",
-        description: "You have been registered for this competition.",
-      });
       onSignUpComplete();
     }, 1000);
   };

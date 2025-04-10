@@ -10,7 +10,6 @@ import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useForm } from "react-hook-form";
-import { toast } from "@/hooks/use-toast";
 
 interface FeedbackFormValues {
   name: string;
@@ -39,10 +38,6 @@ const InfoPage: React.FC = () => {
       setIsSubmitting(false);
       setIsSuccess(true);
       form.reset();
-      toast({
-        title: "Tack för din feedback!",
-        description: "Vi återkommer till dig så snart som möjligt.",
-      });
     }, 1500);
   };
 

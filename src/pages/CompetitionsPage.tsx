@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
@@ -5,7 +6,6 @@ import { mockCompetitions } from '../utils/mockData';
 import { MapPin, AlertTriangle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { useToast } from '@/hooks/use-toast';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 
 const CompetitionsPage: React.FC = () => {
@@ -13,7 +13,6 @@ const CompetitionsPage: React.FC = () => {
   const [showPermissionDialog, setShowPermissionDialog] = useState(false);
   const [showResetDrawer, setShowResetDrawer] = useState(false);
   const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
-  const { toast } = useToast();
 
   useEffect(() => {
     checkLocationPermission();
@@ -41,10 +40,6 @@ const CompetitionsPage: React.FC = () => {
         setLocationStatus(permissionStatus.state as 'granted' | 'denied' | 'prompt');
         if (permissionStatus.state === 'granted') {
           setShowPermissionDialog(false);
-          toast({
-            title: "Platsåtkomst aktiverad",
-            description: "Nu kan du se tävlingar nära dig",
-          });
         }
       });
     } catch (error) {
@@ -60,10 +55,6 @@ const CompetitionsPage: React.FC = () => {
         () => {
           setLocationStatus('granted');
           setShowPermissionDialog(false);
-          toast({
-            title: "Platsåtkomst aktiverad",
-            description: "Nu kan du se tävlingar nära dig",
-          });
         },
         (error) => {
           console.error("Error getting location:", error);
@@ -94,20 +85,9 @@ const CompetitionsPage: React.FC = () => {
       
       setLocationStatus('prompt');
       setShowResetDrawer(false);
-      
-      toast({
-        title: "Instruktioner för att återställa platsåtkomst",
-        description: "Du måste gå till webbläsarens/telefonens inställningar för att återställa platsåtkomst fullständigt.",
-      });
-      
       setShowPermissionDialog(true);
     } catch (error) {
       console.error("Error resetting location permissions:", error);
-      toast({
-        title: "Kunde inte återställa",
-        description: "Ett fel uppstod vid återställning av platsåtkomst.",
-        variant: "destructive"
-      });
     }
   };
 

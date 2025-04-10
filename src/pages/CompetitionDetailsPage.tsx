@@ -5,13 +5,11 @@ import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionDetails from '../components/CompetitionDetails';
 import { mockCompetitionDetails } from '../utils/mockData';
 import { CompetitionDetail } from '../types';
-import { useToast } from '@/hooks/use-toast';
 
 const CompetitionDetailsPage: React.FC = () => {
   const { competitionId } = useParams<{ competitionId: string }>();
   const [competition, setCompetition] = useState<CompetitionDetail | null>(null);
   const [loading, setLoading] = useState(true);
-  const { toast } = useToast();
 
   useEffect(() => {
     // Simulate API fetch with timeout
@@ -31,11 +29,6 @@ const CompetitionDetailsPage: React.FC = () => {
       setCompetition({
         ...competition,
         isRegistered: true
-      });
-      
-      toast({
-        title: "Anmälan registrerad",
-        description: "Du är nu anmäld till tävlingen."
       });
     }
   };

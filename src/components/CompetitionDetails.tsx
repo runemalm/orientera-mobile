@@ -6,7 +6,6 @@ import FileItem from './FileItem';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { Button } from './ui/button';
 import { Alert, AlertDescription } from './ui/alert';
-import { useToast } from '@/hooks/use-toast';
 
 interface CompetitionDetailsProps {
   competition: CompetitionDetail;
@@ -18,7 +17,6 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
   onSignUpComplete 
 }) => {
   const [isRegistered, setIsRegistered] = useState(competition.isRegistered || false);
-  const { toast } = useToast();
   
   // Format date to be more readable using Swedish format
   const formattedDate = new Date(competition.date).toLocaleDateString('sv-SE', {
@@ -154,4 +152,3 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
 };
 
 export default CompetitionDetails;
-
