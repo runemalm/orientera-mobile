@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { MapPin, ArrowRight } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import LocationInputForm from './LocationInputForm';
@@ -12,8 +12,8 @@ interface LocationOnboardingProps {
 
 const LocationOnboarding: React.FC<LocationOnboardingProps> = ({ isOpen, onComplete }) => {
   return (
-    <Dialog open={isOpen} onOpenChange={() => {}}>
-      <DialogContent className="max-w-md">
+    <Dialog open={isOpen} onOpenChange={() => {/* Prevent closing */}}>
+      <DialogContent className="max-w-md" onPointerDownOutside={(e) => e.preventDefault()} onEscapeKeyDown={(e) => e.preventDefault()}>
         <DialogHeader>
           <div className="bg-primary/10 p-3 rounded-full w-14 h-14 mx-auto mb-4 flex items-center justify-center">
             <MapPin size={28} className="text-primary" />
