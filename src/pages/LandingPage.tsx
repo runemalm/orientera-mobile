@@ -1,14 +1,12 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Compass, Flag, Calendar, Award, MapPin, Smartphone } from 'lucide-react';
+import { Compass, Flag, Calendar, Award, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { useIsMobile } from '@/hooks/use-mobile';
 
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
-  const isMobile = useIsMobile();
   
   const handleFindCompetitions = () => {
     navigate('/competitions');
@@ -42,11 +40,6 @@ const LandingPage: React.FC = () => {
           >
             Hitta tävlingar
           </Button>
-
-          <div className="mt-4 flex items-center justify-center gap-2 text-sm text-gray-500">
-            <Smartphone size={16} />
-            <p>Endast tillgänglig som mobilapp</p>
-          </div>
         </div>
         
         {/* About section - why we created this app */}
