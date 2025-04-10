@@ -1,9 +1,17 @@
 
 import React, { useState, useEffect } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
-import { User, MapPin, Award, Calendar } from 'lucide-react';
+import { User, MapPin, Award, Calendar, LogIn } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const ProfilePage: React.FC = () => {
   // Mock user data
@@ -40,38 +48,7 @@ const ProfilePage: React.FC = () => {
     return (
       <MobileLayout title="Profil">
         <div className="space-y-6">
-          {/* Profile header skeleton */}
-          <div className="bg-white rounded-lg shadow-sm p-6 flex items-center">
-            <Skeleton className="h-[64px] w-[64px] rounded-full mr-4" />
-            <div className="space-y-2 flex-1">
-              <Skeleton className="h-6 w-3/4" />
-              <Skeleton className="h-4 w-1/2" />
-            </div>
-          </div>
-          
-          {/* Stats cards skeleton */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-white rounded-lg shadow-sm p-4">
-              <Skeleton className="h-5 w-1/2 mb-2" />
-              <Skeleton className="h-8 w-[30px] mb-1" />
-              <Skeleton className="h-4 w-2/3" />
-            </div>
-            <div className="bg-white rounded-lg shadow-sm p-4">
-              <Skeleton className="h-5 w-1/2 mb-2" />
-              <Skeleton className="h-8 w-[30px] mb-1" />
-              <Skeleton className="h-4 w-2/3" />
-            </div>
-          </div>
-          
-          {/* Placeholder for future features */}
-          <div className="bg-white rounded-lg shadow-sm p-4">
-            <Skeleton className="h-5 w-1/4 mb-3" />
-            <div className="border border-dashed border-gray-300 rounded-md p-6 flex flex-col items-center justify-center">
-              <Skeleton className="h-[32px] w-[32px] rounded-full mb-2" />
-              <Skeleton className="h-4 w-3/4 mb-2" />
-              <Skeleton className="h-10 w-[140px] rounded-md mt-2" />
-            </div>
-          </div>
+          <ProfileSkeleton />
         </div>
       </MobileLayout>
     );
@@ -81,24 +58,49 @@ const ProfilePage: React.FC = () => {
   if (!isLoggedIn) {
     return (
       <MobileLayout title="Profil">
-        <div className="space-y-6 flex flex-col items-center justify-center py-12">
-          <div className="bg-primary/10 rounded-full p-6 mb-4">
-            <User size={48} className="text-primary" />
+        <div className="space-y-6">
+          <ProfileSkeleton />
+          <div className="fixed inset-0 flex items-center justify-center bg-white/80 z-10">
+            <div className="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full text-center">
+              <div className="bg-primary/10 rounded-full p-6 mb-4 mx-auto w-24 h-24 flex items-center justify-center">
+                <LogIn size={40} className="text-primary" />
+              </div>
+              <h2 className="text-xl font-semibold text-center mb-2">Logga in för att fortsätta</h2>
+              <p className="text-gray-500 text-center mb-6">
+                Du behöver logga in för att se och hantera din profil
+              </p>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button className="w-full mb-3">
+                    <LogIn size={18} />
+                    <span>Logga in</span>
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Logga in</DialogTitle>
+                  </DialogHeader>
+                  <div className="py-6">
+                    <p className="text-center text-gray-500 mb-4">
+                      Inloggningsfunktionen är under utveckling
+                    </p>
+                    <Button 
+                      onClick={() => setIsLoggedIn(true)} 
+                      className="w-full"
+                    >
+                      Test login (Tillfällig)
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+              <Button 
+                variant="outline" 
+                className="w-full"
+              >
+                Skapa konto
+              </Button>
+            </div>
           </div>
-          <h2 className="text-xl font-semibold text-center">Logga in för att se din profil</h2>
-          <p className="text-gray-500 text-center mb-4">
-            Du behöver logga in för att se och hantera dina tävlingar
-          </p>
-          <button 
-            className="bg-primary text-white py-3 px-6 rounded-md font-medium w-full max-w-xs"
-          >
-            Logga in
-          </button>
-          <button 
-            className="mt-3 text-primary font-medium"
-          >
-            Skapa konto
-          </button>
         </div>
       </MobileLayout>
     );
@@ -160,5 +162,43 @@ const ProfilePage: React.FC = () => {
     </MobileLayout>
   );
 };
+
+// Extracted skeleton component to reuse
+const ProfileSkeleton = () => (
+  <>
+    {/* Profile header skeleton */}
+    <div className="bg-white rounded-lg shadow-sm p-6 flex items-center">
+      <Skeleton className="h-[64px] w-[64px] rounded-full mr-4" />
+      <div className="space-y-2 flex-1">
+        <Skeleton className="h-6 w-3/4" />
+        <Skeleton className="h-4 w-1/2" />
+      </div>
+    </div>
+    
+    {/* Stats cards skeleton */}
+    <div className="grid grid-cols-2 gap-4">
+      <div className="bg-white rounded-lg shadow-sm p-4">
+        <Skeleton className="h-5 w-1/2 mb-2" />
+        <Skeleton className="h-8 w-[30px] mb-1" />
+        <Skeleton className="h-4 w-2/3" />
+      </div>
+      <div className="bg-white rounded-lg shadow-sm p-4">
+        <Skeleton className="h-5 w-1/2 mb-2" />
+        <Skeleton className="h-8 w-[30px] mb-1" />
+        <Skeleton className="h-4 w-2/3" />
+      </div>
+    </div>
+    
+    {/* Placeholder for future features */}
+    <div className="bg-white rounded-lg shadow-sm p-4">
+      <Skeleton className="h-5 w-1/4 mb-3" />
+      <div className="border border-dashed border-gray-300 rounded-md p-6 flex flex-col items-center justify-center">
+        <Skeleton className="h-[32px] w-[32px] rounded-full mb-2" />
+        <Skeleton className="h-4 w-3/4 mb-2" />
+        <Skeleton className="h-10 w-[140px] rounded-md mt-2" />
+      </div>
+    </div>
+  </>
+);
 
 export default ProfilePage;
