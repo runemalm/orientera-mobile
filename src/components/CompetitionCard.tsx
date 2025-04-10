@@ -24,37 +24,39 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition }) => {
 
   return (
     <div 
-      className="bg-white rounded-lg shadow-md mb-4 overflow-hidden" 
+      className="bg-white rounded-lg shadow-sm mb-3 overflow-hidden border border-gray-100" 
       onClick={handleCardClick}
     >
-      <div className="p-4">
-        <h3 className="font-bold text-lg mb-1">{competition.name}</h3>
-        <div className="flex items-center text-gray-600 text-sm mb-2">
-          <Calendar size={16} className="mr-1" />
-          <span>{formattedDate}</span>
+      <div className="p-3">
+        <h3 className="font-bold text-base mb-1">{competition.name}</h3>
+        <div className="flex flex-wrap gap-2 items-center text-xs text-gray-600">
+          <div className="flex items-center">
+            <Calendar size={14} className="mr-1" />
+            <span>{formattedDate}</span>
+          </div>
+          <div className="flex items-center">
+            <MapPin size={14} className="mr-1" />
+            <span>{competition.location}</span>
+          </div>
+          <div className="flex items-center">
+            <Award size={14} className="mr-1" />
+            <span>{competition.competitionType}</span>
+          </div>
         </div>
-        <div className="flex items-center text-gray-600 text-sm mb-2">
-          <MapPin size={16} className="mr-1" />
-          <span>{competition.location}</span>
-          <span className="ml-auto text-primary font-medium">{competition.distance} km bort</span>
-        </div>
-        <div className="flex items-center text-gray-600 text-sm mb-3">
-          <Award size={16} className="mr-1" />
-          <span>{competition.competitionType}</span>
-        </div>
-        <div className="flex flex-wrap gap-2 mt-2">
-          <span className="bg-forest-light/20 text-forest-dark px-2 py-1 rounded-full text-xs">
+        <div className="flex flex-wrap gap-1 mt-2">
+          <span className="bg-forest-light/20 text-forest-dark px-2 py-0.5 rounded-full text-xs">
             {competition.discipline}
+          </span>
+          <span className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full text-xs">
+            {competition.distance} km bort
           </span>
         </div>
       </div>
-      <div className="bg-gray-50 px-4 py-3 border-t border-gray-100">
-        <div className="flex items-center justify-between">
-          <span className="text-sm text-gray-600">{competition.club}</span>
-          <button className="bg-primary text-white text-sm font-medium py-1 px-3 rounded">
-            Visa detaljer
-          </button>
-        </div>
+      <div className="bg-gray-50 px-3 py-2 border-t border-gray-100 flex items-center justify-between">
+        <span className="text-xs text-gray-600">{competition.club}</span>
+        <button className="bg-primary text-white text-xs font-medium py-1 px-2 rounded">
+          Visa
+        </button>
       </div>
     </div>
   );
