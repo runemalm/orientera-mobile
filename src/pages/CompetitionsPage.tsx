@@ -3,14 +3,17 @@ import React, { useState, useEffect } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
 import { mockCompetitions } from '../utils/mockData';
-import { MapPin, AlertTriangle } from 'lucide-react';
+import { MapPin, AlertTriangle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 
 const CompetitionsPage: React.FC = () => {
   const [locationStatus, setLocationStatus] = useState<'prompt' | 'granted' | 'denied'>('prompt');
   const [showPermissionDialog, setShowPermissionDialog] = useState(false);
+  const [showResetDrawer, setShowResetDrawer] = useState(false);
+  const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -73,10 +76,60 @@ const CompetitionsPage: React.FC = () => {
       );
     }
   };
+  
+  // Handle long press on the location status section to open reset drawer
+  const handleLongPress = () => {
+    setLongPressTimer(
+      setTimeout(() => {
+        setShowResetDrawer(true);
+      }, 2000) // 2 seconds long press
+    );
+  };
+  
+  const handlePressEnd = () => {
+    if (longPressTimer) {
+      clearTimeout(longPressTimer);
+      setLongPressTimer(null);
+    }
+  };
+  
+  const resetLocationPermissions = async () => {
+    try {
+      // For browsers that support it, we can revoke permissions
+      const permissions = await navigator.permissions.query({ name: 'geolocation' });
+      
+      // We can't programmatically revoke permissions, but we can guide the user
+      setLocationStatus('prompt');
+      setShowResetDrawer(false);
+      
+      toast({
+        title: "Instruktioner för att återställa platsåtkomst",
+        description: "Du måste gå till webbläsarens/telefonens inställningar för att återställa platsåtkomst fullständigt.",
+      });
+      
+      // Force a new request
+      setShowPermissionDialog(true);
+    } catch (error) {
+      console.error("Error resetting location permissions:", error);
+      toast({
+        title: "Kunde inte återställa",
+        description: "Ett fel uppstod vid återställning av platsåtkomst.",
+        variant: "destructive"
+      });
+    }
+  };
 
   return (
     <MobileLayout title="Tävlingar i närheten">
-      <div className="bg-white rounded-lg p-3 mb-4 shadow-sm border border-gray-100">
+      <div 
+        className="bg-white rounded-lg p-3 mb-4 shadow-sm border border-gray-100"
+        onTouchStart={handleLongPress}
+        onTouchEnd={handlePressEnd}
+        onTouchCancel={handlePressEnd}
+        onMouseDown={handleLongPress}
+        onMouseUp={handlePressEnd}
+        onMouseLeave={handlePressEnd}
+      >
         <div className="flex items-center">
           <div className={`rounded-full p-2 mr-3 ${locationStatus === 'granted' ? 'bg-primary/10' : 'bg-amber-100'}`}>
             {locationStatus === 'granted' ? (
@@ -135,6 +188,35 @@ const CompetitionsPage: React.FC = () => {
           </div>
         </DialogContent>
       </Dialog>
+      
+      <Drawer open={showResetDrawer} onOpenChange={setShowResetDrawer}>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle>Återställ platsåtkomst</DrawerTitle>
+            <DrawerDescription>
+              Detta kommer att återställa behörigheterna för platsåtkomst. Du kommer att behöva godkänna platsåtkomst igen.
+            </DrawerDescription>
+          </DrawerHeader>
+          <div className="p-4 space-y-4">
+            <div className="flex justify-center">
+              <RefreshCw size={48} className="text-primary" />
+            </div>
+            <Button 
+              onClick={resetLocationPermissions}
+              className="w-full"
+            >
+              Återställ platsåtkomst
+            </Button>
+            <Button 
+              variant="outline"
+              onClick={() => setShowResetDrawer(false)}
+              className="w-full"
+            >
+              Avbryt
+            </Button>
+          </div>
+        </DrawerContent>
+      </Drawer>
       
       <div>
         {locationStatus === 'granted' ? (
