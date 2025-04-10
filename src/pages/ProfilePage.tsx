@@ -25,7 +25,7 @@ const ProfilePage: React.FC = () => {
     const checkAuth = setTimeout(() => {
       // This would be replaced with actual auth check
       setIsLoading(false);
-      setIsLoggedIn(true); // Set to false to see the skeleton UI
+      setIsLoggedIn(false); // Default to not logged in until we implement real auth
     }, 1500);
     
     return () => clearTimeout(checkAuth);
