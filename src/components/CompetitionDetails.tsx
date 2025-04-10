@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { CompetitionDetail } from '../types';
-import { Calendar, Clock, MapPin, User, Globe, Award } from 'lucide-react';
+import { Calendar, Clock, MapPin, User, Globe, Award, Navigation } from 'lucide-react';
 import FileItem from './FileItem';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { Button } from './ui/button';
@@ -43,6 +43,10 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
         <div className="flex items-center text-location-dark mb-2">
           <MapPin size={16} className="mr-2 text-location" />
           <span>{competition.location}</span>
+        </div>
+        <div className="flex items-center text-location-dark mb-2">
+          <Navigation size={16} className="mr-2 text-location" />
+          <span>{competition.distance} km bort</span>
         </div>
         <div className="flex items-center text-gray-600 mb-2">
           <Award size={16} className="mr-2" />
