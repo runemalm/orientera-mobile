@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Compass, FileText, MapPin, List, Calendar, Info } from 'lucide-react';
+import { Compass, FileText, MapPin, List, Calendar, Info, Smartphone, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
@@ -13,7 +13,7 @@ const LandingPage: React.FC = () => {
   };
   
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-b from-primary/5 to-white">
+    <div className="flex flex-col min-h-screen bg-gradient-to-b from-primary/10 to-white">
       {/* Header */}
       <header className="flex items-center justify-between p-4 bg-white shadow-sm">
         <div className="flex items-center gap-2">
@@ -26,19 +26,19 @@ const LandingPage: React.FC = () => {
       <main className="flex-grow flex flex-col items-center justify-center p-6 text-center">
         <div className="max-w-md mx-auto">
           <h1 className="text-4xl font-bold mb-3">
-            <span className="whitespace-nowrap">Hitta orienterings­tävlingar</span>{' '}
-            <span className="whitespace-nowrap">enkelt</span>
+            <span className="whitespace-nowrap">Modern app för</span>{' '}
+            <span className="whitespace-nowrap">orienterings­tävlingar</span>
           </h1>
           <p className="text-gray-600 mb-8">
-            Upptäck kommande orienterings­tävlingar och få tillgång till all väsentlig information samlad på ett ställe.
+            Upptäck kommande orienterings­tävlingar och få tillgång till all väsentlig information samlad på ett ställe, i en modern och användarvänlig app.
           </p>
           
           <Button 
             size="lg" 
             onClick={handleFindCompetitions} 
-            className="w-full py-6 text-lg shadow-lg hover:scale-105 transition-transform"
+            className="w-full py-6 text-lg shadow-lg hover:scale-105 transition-transform group"
           >
-            Hitta tävlingar
+            Hitta tävlingar <ArrowRight className="ml-1 group-hover:translate-x-1 transition-transform" />
           </Button>
         </div>
         
@@ -70,18 +70,18 @@ const LandingPage: React.FC = () => {
             description="Se var tävlingen hålls"
           />
           <FeatureCard 
-            icon={<Info className="text-primary" />}
-            title="Anmälan"
-            description="Länk till Eventor"
+            icon={<Smartphone className="text-primary" />}
+            title="Modern design"
+            description="Optimerad för mobilen"
           />
         </div>
 
         {/* App description */}
         <div className="mt-12 max-w-md text-center">
-          <h2 className="text-2xl font-semibold mb-3">Allt på ett ställe</h2>
+          <h2 className="text-2xl font-semibold mb-3">Modern och användarvänlig</h2>
           <p className="text-gray-600">
             Slipp leta på olika hemsidor efter information om tävlingar. 
-            Orientera.com samlar allt du behöver veta på ett ställe.
+            Orientera.com samlar allt du behöver veta på ett ställe med ett modernt gränssnitt.
           </p>
         </div>
       </main>
