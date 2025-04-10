@@ -42,6 +42,19 @@ const LandingPage: React.FC = () => {
           </Button>
         </div>
         
+        {/* About section - why we created this app */}
+        <div className="mt-16 w-full max-w-md bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-xl font-bold mb-3 text-primary">Varför vi skapade Orientera.com</h2>
+          <p className="text-gray-700 mb-4">
+            Som passionerade orienterare upplevde vi svårigheter med att hitta och anmäla oss till tävlingar. 
+            Informationen var utspridd på olika hemsidor och svår att navigera.
+          </p>
+          <p className="text-gray-700">
+            Orientera.com föddes ur behovet av en enkel, samlad plattform där alla orienterare 
+            snabbt kan hitta relevanta tävlingar och enkelt anmäla sig - oavsett var i landet de befinner sig.
+          </p>
+        </div>
+        
         {/* Features section */}
         <div className="mt-12 grid grid-cols-2 gap-4 w-full max-w-md">
           <FeatureCard 
