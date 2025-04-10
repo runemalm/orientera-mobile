@@ -116,7 +116,25 @@ export const mockCompetitions: Competition[] = [
       latitude: 56.4108,
       longitude: 16.0030
     }
-  }
+  },
+  
+  // Added new competition for Torsås OK
+  {
+    id: "comp-8",
+    name: "Veteran-OL Torsås OK",
+    date: "2025-04-16", // April 16, 2025
+    location: "Torsås",
+    distance: 3.4,
+    club: "Torsås OK",
+    description: "Långdistansorientering för veteraner i kuperad skogsterräng.",
+    discipline: "Lång",
+    competitionType: "Närtävling",
+    district: "Smålands OF",
+    coordinates: {
+      latitude: 56.4108,
+      longitude: 16.0030
+    }
+  },
 ];
 
 export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
@@ -293,5 +311,33 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
     contact: "karin@torsasok.se",
     website: "https://torsasok.se",
     isRegistered: false
-  }
+  },
+  
+  // Added new competition detail for Torsås OK Veteran-OL
+  "comp-8": {
+    ...mockCompetitions[7],
+    files: [
+      {
+        id: "file-16",
+        name: "Inbjudan.pdf",
+        type: "invitation",
+        url: "#",
+        uploadDate: "2025-03-25"
+      },
+      {
+        id: "file-17",
+        name: "PM.pdf",
+        type: "pm",
+        url: "#",
+        uploadDate: "2025-04-14"
+      }
+    ],
+    registrationDeadline: "2025-04-14",
+    startTime: "10:00",
+    organizer: "Sven Pettersson",
+    contact: "info@torsasok.se",
+    website: "https://www.torsasok.se/veteran2025",
+    liveloxLink: "https://www.livelox.com/Events/Show/78901", // Added Livelox link
+    isRegistered: false
+  },
 };
