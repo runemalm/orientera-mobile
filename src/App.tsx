@@ -22,12 +22,23 @@ const KeyboardShortcutHandler = () => {
   const [clickCount, setClickCount] = useState(0);
   const [lastClickTime, setLastClickTime] = useState(0);
   
+  const resetUserLocation = () => {
+    // Reset the user location in localStorage
+    localStorage.removeItem('userLocation');
+  };
+  
+  const navigateAndResetLocation = () => {
+    // Reset location and then navigate to landing page
+    resetUserLocation();
+    navigate('/landing');
+  };
+  
   useEffect(() => {
     // Keyboard shortcut for desktop
     const handleKeyDown = (event: KeyboardEvent) => {
       // Secret key combo: Ctrl + Alt + L (for Landing)
       if (event.ctrlKey && event.altKey && event.key === 'l') {
-        navigate('/landing');
+        navigateAndResetLocation();
       }
     };
     
@@ -52,7 +63,7 @@ const KeyboardShortcutHandler = () => {
         
         // Navigate to landing page after 3 quick taps
         if (touchCount === 2) {
-          navigate('/landing');
+          navigateAndResetLocation();
           setTouchCount(0);
         }
       }
@@ -78,7 +89,7 @@ const KeyboardShortcutHandler = () => {
         
         // Navigate to landing page after 3 quick clicks
         if (clickCount === 2) {
-          navigate('/landing');
+          navigateAndResetLocation();
           setClickCount(0);
         }
       }
