@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Compass, FileText, MapPin, List, Calendar, Info, Smartphone, ArrowRight } from 'lucide-react';
+import { Compass, FileText, MapPin, List, Calendar, Smartphone, ArrowRight, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
@@ -26,11 +26,11 @@ const LandingPage: React.FC = () => {
       <main className="flex-grow flex flex-col items-center justify-center p-6 text-center">
         <div className="max-w-md mx-auto">
           <h1 className="text-4xl font-bold mb-3">
-            <span className="whitespace-nowrap">Modern app för</span>{' '}
-            <span className="whitespace-nowrap">orienterings­tävlingar</span>
+            <span className="whitespace-nowrap">Ett modernare sätt</span>{' '}
+            <span className="whitespace-nowrap">att hitta orienterings­tävlingar</span>
           </h1>
           <p className="text-gray-600 mb-8">
-            Upptäck kommande orienterings­tävlingar och få tillgång till all väsentlig information samlad på ett ställe, i en modern och användarvänlig app.
+            Samma information som Eventor men i ett användarvänligt, modernt gränssnitt optimerat för mobilen.
           </p>
           
           <Button 
@@ -65,9 +65,9 @@ const LandingPage: React.FC = () => {
             description="Detaljerad information"
           />
           <FeatureCard 
-            icon={<Compass className="text-primary" />}
-            title="Plats"
-            description="Se var tävlingen hålls"
+            icon={<RefreshCw className="text-primary" />}
+            title="Eventor-data"
+            description="Samma info, bättre upplevelse"
           />
           <FeatureCard 
             icon={<Smartphone className="text-primary" />}
@@ -78,10 +78,10 @@ const LandingPage: React.FC = () => {
 
         {/* App description */}
         <div className="mt-12 max-w-md text-center">
-          <h2 className="text-2xl font-semibold mb-3">Modern och användarvänlig</h2>
+          <h2 className="text-2xl font-semibold mb-3">Ett modernt alternativ till Eventor</h2>
           <p className="text-gray-600">
-            Slipp leta på olika hemsidor efter information om tävlingar. 
-            Orientera.com samlar allt du behöver veta på ett ställe med ett modernt gränssnitt.
+            Vi hämtar data från Eventor men presenterar den i ett modernare och mer användarvänligt gränssnitt, 
+            optimerat för att användas på din mobil när du är ute på tävling.
           </p>
         </div>
       </main>
