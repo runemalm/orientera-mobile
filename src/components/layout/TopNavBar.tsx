@@ -26,7 +26,7 @@ const TopNavBar: React.FC<TopNavBarProps> = ({ title, showBackButton = false, on
             <MapPin size={24} />
           </div>
         )}
-        <h1 className="text-lg font-semibold">{title}</h1>
+        <h1 className="text-lg font-semibold">{title || "Orientera.com"}</h1>
       </div>
       
       {/* Menu button removed */}

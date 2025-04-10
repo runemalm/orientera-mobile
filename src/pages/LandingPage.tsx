@@ -18,7 +18,7 @@ const LandingPage: React.FC = () => {
       <header className="flex items-center justify-between p-4 bg-white shadow-sm">
         <div className="flex items-center gap-2">
           <MapPin size={24} className="text-primary" />
-          <h1 className="text-lg font-semibold">Orienteer Connect</h1>
+          <h1 className="text-lg font-semibold">Orientera.com</h1>
         </div>
       </header>
       
@@ -27,7 +27,7 @@ const LandingPage: React.FC = () => {
         <div className="max-w-md mx-auto">
           <h1 className="text-3xl font-bold mb-3">Hitta orienterings­tävlingar nära dig</h1>
           <p className="text-gray-600 mb-8">
-            Med Orienteer Connect kan du enkelt hitta och anmäla dig till orienterings­tävlingar i hela landet.
+            Med Orientera.com kan du enkelt hitta och anmäla dig till orienterings­tävlingar i hela landet.
           </p>
           
           <Button 
