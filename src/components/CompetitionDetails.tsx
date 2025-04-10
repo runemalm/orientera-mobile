@@ -1,7 +1,7 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { CompetitionDetail } from '../types';
-import { Calendar, Clock, MapPin, User, Globe, Award, ExternalLink, Info } from 'lucide-react';
+import { Calendar, Clock, MapPin, User, Globe, Award } from 'lucide-react';
 import FileItem from './FileItem';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { Button } from './ui/button';
@@ -17,7 +17,6 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
   competition, 
   onSignUpComplete 
 }) => {
-  const [isRegistered, setIsRegistered] = useState(competition.isRegistered || false);
   const { toast } = useToast();
   
   // Format date to be more readable using Swedish format
@@ -27,19 +26,6 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
     month: 'long',
     year: 'numeric'
   });
-
-  const handleSignUpComplete = () => {
-    setIsRegistered(true);
-    onSignUpComplete();
-  };
-
-  const handleEventorClick = () => {
-    toast({
-      title: "Information om anmälan",
-      description: "Om du har anmält dig via Eventor kan det ta upp till 24 timmar innan din anmälan syns i appen.",
-      duration: 5000,
-    });
-  };
   
   return (
     <div className="space-y-6">
@@ -111,46 +97,12 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
         </div>
       </div>
       
-      {/* Registration section */}
+      {/* Registration deadline section - simplified without registration status */}
       <div className="bg-white p-4 rounded-lg shadow-sm">
         <h3 className="font-semibold mb-2">Anmälan</h3>
-        <p className="text-gray-600 mb-4">
+        <p className="text-gray-600">
           Anmälningsdeadline: {new Date(competition.registrationDeadline).toLocaleDateString('sv-SE')}
         </p>
-        
-        {isRegistered ? (
-          <div className="bg-green-50 border border-green-200 rounded-md p-3 text-green-800">
-            <div className="flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-check-circle mr-2">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                <polyline points="22 4 12 14.01 9 11.01" />
-              </svg>
-              <span>Du är anmäld till denna tävling</span>
-            </div>
-          </div>
-        ) : (
-          <Alert>
-            <AlertDescription>
-              <div className="flex flex-col space-y-2">
-                <div>
-                  <a 
-                    href="https://eventor.orientering.se" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="flex items-center text-primary hover:underline font-medium"
-                    onClick={handleEventorClick}
-                  >
-                    Anmäl dig på Eventor <ExternalLink size={14} className="ml-1" />
-                  </a>
-                  <div className="flex items-center mt-2 text-sm text-amber-600">
-                    <Info size={14} className="mr-1" />
-                    <span>Det kan ta upp till 24 timmar innan din anmälan från Eventor syns här.</span>
-                  </div>
-                </div>
-              </div>
-            </AlertDescription>
-          </Alert>
-        )}
       </div>
     </div>
   );
