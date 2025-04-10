@@ -30,25 +30,23 @@ const BottomTabBar: React.FC = () => {
 
   return (
     <div className="bottom-tabs flex items-center justify-around">
-      <div className="flex items-center justify-around w-full h-16">
-        {tabs.map((tab) => (
-          <button
-            key={tab.name}
-            className={`flex flex-col items-center justify-center w-full h-full ${
-              (currentPath === tab.path || 
-               (tab.path === '/competitions' && currentPath === '/')) // Consider "/" as competitions too
-                ? 'text-primary font-medium'
-                : 'text-gray-500'
-            }`}
-            onClick={() => handleTabClick(tab.path)}
-          >
-            <div className="flex items-center justify-center">
-              {tab.icon}
-            </div>
-            <span className="text-xs mt-1">{tab.label}</span>
-          </button>
-        ))}
-      </div>
+      {tabs.map((tab) => (
+        <button
+          key={tab.name}
+          className={`flex flex-col items-center justify-center w-full h-full ${
+            (currentPath === tab.path || 
+             (tab.path === '/competitions' && currentPath === '/')) // Consider "/" as competitions too
+              ? 'text-primary font-medium'
+              : 'text-gray-500'
+          }`}
+          onClick={() => handleTabClick(tab.path)}
+        >
+          <div className="flex items-center justify-center">
+            {tab.icon}
+          </div>
+          <span className="text-xs mt-1">{tab.label}</span>
+        </button>
+      ))}
     </div>
   );
 };
