@@ -1,7 +1,23 @@
-
 import { Competition, CompetitionDetail, CompetitionType, CompetitionDiscipline, OrienteeringDistrict } from "../types";
 
 export const mockCompetitions: Competition[] = [
+  // Added new competition for Ålems OK
+  {
+    id: "comp-1",
+    name: "Ålems OK Vårtävling",
+    date: "2025-04-06", // April 6, 2025
+    location: "Ålem",
+    distance: 4.3,
+    club: "Ålems OK",
+    description: "Nationell medeldistans i teknisk terräng med inslag av öppna områden.",
+    discipline: "Medel", 
+    competitionType: "Nationell tävling",
+    district: "Smålands OF",
+    coordinates: {
+      latitude: 56.9258,
+      longitude: 16.4332
+    }
+  },
   // Keeping only competitions from Smålands OF or Blekinge OF
   {
     id: "comp-3",
@@ -70,9 +86,36 @@ export const mockCompetitions: Competition[] = [
 ];
 
 export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
+  // Added new competition detail for Ålems OK
+  "comp-1": {
+    ...mockCompetitions[0],
+    files: [
+      {
+        id: "file-1",
+        name: "Inbjudan.pdf",
+        type: "invitation",
+        url: "#",
+        uploadDate: "2025-03-01"
+      },
+      {
+        id: "file-2",
+        name: "PM.pdf",
+        type: "pm",
+        url: "#",
+        uploadDate: "2025-04-03"
+      }
+    ],
+    registrationDeadline: "2025-04-02",
+    startTime: "10:00",
+    organizer: "Anders Karlsson",
+    contact: "info@alemsok.se",
+    website: "https://www.alemsok.se/vartavling2025",
+    liveloxLink: "https://www.livelox.com/Events/Show/12345", // Added Livelox link
+    isRegistered: false
+  },
   // Keeping only details for competitions from Smålands OF or Blekinge OF
   "comp-3": {
-    ...mockCompetitions[0],
+    ...mockCompetitions[1],
     files: [
       {
         id: "file-5",
@@ -89,7 +132,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
     isRegistered: true
   },
   "comp-5": {
-    ...mockCompetitions[1],
+    ...mockCompetitions[2],
     files: [
       {
         id: "file-8",
@@ -121,7 +164,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
     isRegistered: false
   },
   "comp-6": {
-    ...mockCompetitions[2],
+    ...mockCompetitions[3],
     files: [
       {
         id: "file-11",
@@ -139,7 +182,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
     isRegistered: false
   },
   "comp-7": {
-    ...mockCompetitions[3],
+    ...mockCompetitions[4],
     files: [
       {
         id: "file-12",
