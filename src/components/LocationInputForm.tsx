@@ -110,7 +110,7 @@ const LocationInputForm: React.FC<LocationInputFormProps> = ({ onLocationSelecte
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Ange ort, t.ex. Stockholm"
-          className="flex-1 focus-visible:ring-location"
+          className="flex-1"
           onKeyPress={(e) => {
             if (e.key === 'Enter') {
               handleSearch();
@@ -120,7 +120,7 @@ const LocationInputForm: React.FC<LocationInputFormProps> = ({ onLocationSelecte
         <Button 
           onClick={handleSearch} 
           disabled={isSearching}
-          className="bg-location hover:bg-location-dark"
+          variant="secondary"
         >
           {isSearching ? (
             <Loader2 className="h-4 w-4 animate-spin" />
