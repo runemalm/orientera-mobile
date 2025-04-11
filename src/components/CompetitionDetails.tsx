@@ -4,6 +4,7 @@ import { CompetitionDetail } from '../types';
 import { Users, Map, FileText } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Separator } from '@/components/ui/separator';
+import FileItem from './FileItem';
 
 interface CompetitionDetailsProps {
   competition: CompetitionDetail;
@@ -56,22 +57,21 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
       
       {/* Simplified uniform sections */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
-        {/* Documents & Links */}
+        {/* Documents & Links - Expanded to show individual files */}
         {competition.files.length > 0 && (
-          <Link 
-            to={`/competition/${competition.id}/documents`}
-            className="flex items-center justify-between p-4 hover:bg-gray-50"
-          >
-            <div className="flex items-center gap-3">
+          <>
+            <div className="flex items-center gap-3 p-4 bg-gray-50">
               <FileText size={20} className="text-forest" />
               <span className="font-medium">Dokument & länkar</span>
             </div>
-            <div className="text-gray-400">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m9 18 6-6-6-6"/>
-              </svg>
+            <div className="divide-y divide-gray-100">
+              {competition.files.map((file) => (
+                <div key={file.id} className="px-4 py-2">
+                  <FileItem file={file} />
+                </div>
+              ))}
             </div>
-          </Link>
+          </>
         )}
         
         {competition.files.length > 0 && <Separator />}
