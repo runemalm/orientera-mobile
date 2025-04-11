@@ -15,12 +15,6 @@ interface CompetitionWithDistance extends Omit<Competition, 'distance'> {
   distance: number;
 }
 
-interface CompetitionsByWeek {
-  weekStart: Date;
-  weekEnd: Date;
-  competitions: CompetitionWithDistance[];
-}
-
 interface DayCompetitions {
   date: Date;
   competitions: CompetitionWithDistance[];
@@ -28,7 +22,7 @@ interface DayCompetitions {
 
 interface MonthGroup {
   month: Date;
-  weeks: CompetitionsByWeek[];
+  days: DayCompetitions[];
 }
 
 const CompetitionsPage: React.FC = () => {
@@ -79,105 +73,50 @@ const CompetitionsPage: React.FC = () => {
     };
   };
 
-  const groupCompetitionsByWeek = (): CompetitionsByWeek[] => {
+  const getCompetitionsFromLastWeek = (): DayCompetitions[] => {
     if (!userLocation || mockCompetitions.length === 0) return [];
     
     const processedCompetitions = mockCompetitions.map(processCompetitionWithDistance);
-    const groupedByWeek: CompetitionsByWeek[] = [];
     const today = startOfDay(new Date());
-    const currentWeekStart = startOfWeek(today, { weekStartsOn: 1 });
-    const previousWeekStart = subWeeks(currentWeekStart, 1);
     
-    const hasPreviousWeekCompetitions = processedCompetitions.some(competition => {
-      const competitionDate = startOfDay(new Date(competition.date));
-      return isAfter(competitionDate, previousWeekStart) && isBefore(competitionDate, currentWeekStart);
+    // Get Monday of the previous week
+    const mondayLastWeek = startOfWeek(subWeeks(today, 1), { weekStartsOn: 1 });
+    
+    // Filter competitions from monday last week onwards
+    const filteredCompetitions = processedCompetitions.filter(competition => {
+      const competitionDate = new Date(competition.date);
+      return isAfter(competitionDate, mondayLastWeek) || isSameDay(competitionDate, mondayLastWeek);
     });
     
-    const startWeek = hasPreviousWeekCompetitions ? previousWeekStart : currentWeekStart;
+    // Group by day
+    const competitionsByDay: DayCompetitions[] = [];
     
-    processedCompetitions.forEach(competition => {
-      const competitionDate = new Date(competition.date);
+    filteredCompetitions.forEach(competition => {
+      const competitionDate = startOfDay(new Date(competition.date));
       
-      if (isBefore(competitionDate, startWeek)) {
-        return;
-      }
+      const existingDayGroup = competitionsByDay.find(day => 
+        isSameDay(day.date, competitionDate)
+      );
       
-      const weekStart = new Date(competitionDate);
-      weekStart.setDate(competitionDate.getDate() - competitionDate.getDay() + (competitionDate.getDay() === 0 ? -6 : 1));
-      weekStart.setHours(0, 0, 0, 0);
-      
-      const weekEnd = new Date(weekStart);
-      weekEnd.setDate(weekStart.getDate() + 6);
-      weekEnd.setHours(23, 59, 59, 999);
-      
-      const existingWeekGroup = groupedByWeek.find(group => {
-        return group.weekStart.getTime() === weekStart.getTime();
-      });
-      
-      if (existingWeekGroup) {
-        existingWeekGroup.competitions.push(competition);
+      if (existingDayGroup) {
+        existingDayGroup.competitions.push(competition);
       } else {
-        groupedByWeek.push({
-          weekStart,
-          weekEnd,
+        competitionsByDay.push({
+          date: competitionDate,
           competitions: [competition]
         });
       }
     });
     
-    return groupedByWeek.sort((a, b) => a.weekStart.getTime() - b.weekStart.getTime());
+    // Sort by date
+    return competitionsByDay.sort((a, b) => a.date.getTime() - b.date.getTime());
   };
 
-  const organizeCompetitionsByDay = (weekGroup: CompetitionsByWeek): DayCompetitions[] => {
-    const days: DayCompetitions[] = [];
-    
-    for (let i = 0; i < 7; i++) {
-      const currentDate = addDays(weekGroup.weekStart, i);
-      days.push({
-        date: currentDate,
-        competitions: []
-      });
-    }
-    
-    weekGroup.competitions.forEach(competition => {
-      const competitionDate = new Date(competition.date);
-      
-      const dayEntry = days.find(day => isSameDay(day.date, competitionDate));
-      if (dayEntry) {
-        dayEntry.competitions.push(competition);
-      }
-    });
-    
-    return days;
-  };
-
-  const formatWeekHeader = (start: Date): string => {
-    const weekNumber = getWeekNumber(start);
-    return `Vecka ${weekNumber}`;
-  };
-
-  const formatMonthHeader = (date: Date): string => {
-    return format(date, 'MMMM yyyy');
-  };
-
-  const formatDayOfMonth = (date: Date): string => {
-    return format(date, 'd');
-  };
-
-  const getWeekNumber = (date: Date): number => {
-    const d = new Date(date);
-    d.setHours(0, 0, 0, 0);
-    d.setDate(d.getDate() + 3 - (d.getDay() + 6) % 7);
-    const week1 = new Date(d.getFullYear(), 0, 4);
-    return 1 + Math.round(((d.getTime() - week1.getTime()) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
-  };
-
-  const groupWeeksByMonth = (weeks: CompetitionsByWeek[]): MonthGroup[] => {
+  const groupDaysByMonth = (days: DayCompetitions[]): MonthGroup[] => {
     const monthGroups: MonthGroup[] = [];
     
-    weeks.forEach(week => {
-      const monthDate = new Date(week.weekStart);
-      const monthKey = `${monthDate.getFullYear()}-${monthDate.getMonth()}`;
+    days.forEach(day => {
+      const monthDate = new Date(day.date);
       
       const existingMonthGroup = monthGroups.find(group => 
         group.month.getFullYear() === monthDate.getFullYear() && 
@@ -185,16 +124,20 @@ const CompetitionsPage: React.FC = () => {
       );
       
       if (existingMonthGroup) {
-        existingMonthGroup.weeks.push(week);
+        existingMonthGroup.days.push(day);
       } else {
         monthGroups.push({
           month: monthDate,
-          weeks: [week]
+          days: [day]
         });
       }
     });
     
     return monthGroups.sort((a, b) => a.month.getTime() - b.month.getTime());
+  };
+
+  const formatMonthHeader = (date: Date): string => {
+    return format(date, 'MMMM yyyy');
   };
 
   const renderContent = () => {
@@ -275,8 +218,8 @@ const CompetitionsPage: React.FC = () => {
       ? userLocation.city.split(',')[0]
       : userLocation.city;
     
-    const competitionsByWeek = groupCompetitionsByWeek();
-    const monthGroups = groupWeeksByMonth(competitionsByWeek);
+    const competitionsByDay = getCompetitionsFromLastWeek();
+    const monthGroups = groupDaysByMonth(competitionsByDay);
     
     return (
       <>
@@ -309,26 +252,18 @@ const CompetitionsPage: React.FC = () => {
                   {formatMonthHeader(monthGroup.month)}
                 </div>
                 
-                {monthGroup.weeks.map((weekGroup, weekIndex) => (
-                  <div key={weekIndex} className="space-y-2">
-                    <div className="sticky top-12 z-5 bg-gray-50 px-3 py-2 rounded-md font-medium text-sm text-gray-600">
-                      {formatWeekHeader(weekGroup.weekStart)}
-                    </div>
-                    
-                    {organizeCompetitionsByDay(weekGroup).map((dayGroup, dayIndex) => (
-                      <div key={dayIndex} className="mb-3">
-                        {dayGroup.competitions.length > 0 ? (
-                          <div className="space-y-2">
-                            <div className="font-medium text-sm text-gray-500 ml-1">
-                              {format(dayGroup.date, 'EEEE, d MMMM')}
-                            </div>
-                            {dayGroup.competitions.map(competition => (
-                              <CompetitionCard key={competition.id} competition={competition} />
-                            ))}
-                          </div>
-                        ) : null}
+                {monthGroup.days.map((dayGroup, dayIndex) => (
+                  <div key={dayIndex} className="mb-3">
+                    {dayGroup.competitions.length > 0 ? (
+                      <div className="space-y-2">
+                        <div className="font-medium text-sm text-gray-500 ml-1">
+                          {format(dayGroup.date, 'EEEE, d MMMM')}
+                        </div>
+                        {dayGroup.competitions.map(competition => (
+                          <CompetitionCard key={competition.id} competition={competition} />
+                        ))}
                       </div>
-                    ))}
+                    ) : null}
                   </div>
                 ))}
               </div>
