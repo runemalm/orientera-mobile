@@ -53,12 +53,12 @@ const InfoPage: React.FC = () => {
           </div>
           
           <div className="bg-gradient-to-br from-forest-light/20 to-forest-light/5 p-6 rounded-2xl">
-            <h3 className="font-semibold text-lg mb-3">Orientering i din ficka</h3>
+            <h3 className="font-semibold text-lg mb-3">Orientering när du är på språng</h3>
             <p className="text-gray-700 leading-relaxed">
-              Vi har skapat denna app för att modernisera hur orienterare upptäcker, 
-              anmäler sig till, och deltar i tävlingar. I en värld där allt blir mer 
-              digitalt ville vi ge orienteringssporten ett modernt digitalt verktyg 
-              som är lika funktionellt som det är enkelt att använda.
+              Vi har skapat denna app för att möta orienterarens behov av snabb och enkel 
+              information i vardagen. Oavsett om du är på väg till en tävling, planerar din 
+              nästa aktivitet eller bara vill hålla dig uppdaterad - vi ger dig alla 
+              viktiga orienteringsverktyg i en modern och lättanvänd mobilapp.
             </p>
           </div>
           
@@ -68,11 +68,11 @@ const InfoPage: React.FC = () => {
                 <Compass className="text-primary" size={20} />
               </div>
               <div>
-                <h3 className="font-medium text-base mb-1">Vår mission</h3>
+                <h3 className="font-medium text-base mb-1">Vår vision</h3>
                 <p className="text-gray-600 leading-relaxed">
                   Att göra orientering mer tillgängligt genom en smidig, intuitiv plattform 
-                  som förenklar alla aspekter av sporten - från att hitta närmaste tävling 
-                  till att analysera dina resultat.
+                  som förenklar alla aspekter av sporten - när du är hemma, på språng eller 
+                  ute i terrängen.
                 </p>
               </div>
             </div>
@@ -82,11 +82,11 @@ const InfoPage: React.FC = () => {
                 <MapPin className="text-primary" size={20} />
               </div>
               <div>
-                <h3 className="font-medium text-base mb-1">För alla orienterare</h3>
+                <h3 className="font-medium text-base mb-1">För alla situationer</h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Oavsett om du är elitlöpare, motionär eller nybörjare, är vår app 
-                  designad för att möta dina behov med ett enkelt och rent gränssnitt 
-                  som fungerar lika bra i skogen som i vardagen.
+                  Appen är designad för att möta dina behov i alla situationer - vare sig du står 
+                  på en tävling, sitter på bussen, planerar din vecka eller bara vill kolla 
+                  kommande events i närheten. Ett enkelt gränssnitt som fungerar när du är på språng.
                 </p>
               </div>
             </div>
@@ -98,8 +98,9 @@ const InfoPage: React.FC = () => {
               <div>
                 <h3 className="font-medium text-base mb-1">Byggd av orienterare, för orienterare</h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Som orienterare förstår vi sportens unika behov och utmaningar. Vi har byggt 
-                  denna app med kärlek, kunskap och förståelse för vad som faktiskt behövs i fält.
+                  Som aktiva orienterare förstår vi sportens unika behov och vardagens utmaningar. 
+                  Vi har byggt denna app med fokus på enkelhet och användbarhet, så att du 
+                  alltid har tillgång till rätt information när du behöver den, var du än är.
                 </p>
               </div>
             </div>
@@ -131,8 +132,8 @@ const InfoPage: React.FC = () => {
           </div>
           
           <p className="text-gray-600 leading-relaxed">
-            Har du förslag på hur vi kan förbättra appen eller vill du rapportera ett problem? 
-            Vi uppskattar all feedback som hjälper oss att göra appen bättre.
+            Har du förslag på hur vi kan göra appen ännu mer användbar när du är på språng? 
+            Eller vill du rapportera ett problem? Vi uppskattar all feedback som hjälper oss att förbättra upplevelsen.
           </p>
           
           <Form {...form}>

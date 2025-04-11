@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Compass, MapPin, Calendar, Search, Navigation, FileText, RefreshCw, ArrowRight, Smartphone } from 'lucide-react';
+import { Compass, MapPin, Calendar, Navigation, FileText, RefreshCw, ArrowRight, Smartphone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
@@ -47,10 +47,10 @@ const LandingPage: React.FC = () => {
         <div className="max-w-md mx-auto">
           <h1 className="text-4xl font-bold mb-3 flex flex-col items-center">
             <span className="block">Orientering</span>
-            <span className="block">i fickan</span>
+            <span className="block">i farten</span>
           </h1>
           <p className="text-gray-600 mb-8">
-            Hitta tävlingar nära dig, se PM, startlistor och annan information när du är på språng - optimerat för mobilen.
+            Hitta tävlingar nära dig, se PM, startlistor och annan information var du än befinner dig - perfekt när du är på språng.
           </p>
           
           <Button 
@@ -72,7 +72,7 @@ const LandingPage: React.FC = () => {
           <FeatureCard 
             icon={<Navigation className="text-primary" />}
             title="På språng"
-            description="Perfekt att använda på tävlingsplatsen"
+            description="Enkel åtkomst var du än befinner dig"
           />
           <FeatureCard 
             icon={<Calendar className="text-primary" />}
@@ -87,7 +87,7 @@ const LandingPage: React.FC = () => {
           <FeatureCard 
             icon={<Smartphone className="text-primary" />}
             title="Mobiloptimerad"
-            description="Designad för att användas på mobilen"
+            description="Designad för att användas i farten"
           />
           <FeatureCard 
             icon={<RefreshCw className="text-primary" />}
@@ -97,10 +97,11 @@ const LandingPage: React.FC = () => {
         </div>
 
         <div className="mt-12 max-w-md text-center">
-          <h2 className="text-2xl font-semibold mb-3">Designad för orienterare på språng</h2>
+          <h2 className="text-2xl font-semibold mb-3">När du är på språng</h2>
           <p className="text-gray-600">
-            Slut på krångliga menyer och laddningstider - med denna app hittar du enkelt tävlingar i närheten och 
-            kan snabbt komma åt den information du behöver när du är på plats vid en tävling.
+            Slut på krångliga menyer och långa laddningstider - med denna app hittar du enkelt tävlingar var du än är
+            och kommer snabbt åt den information du behöver, vare sig du är på en tävling, planerar ditt deltagande hemifrån 
+            eller är på väg till nästa event.
           </p>
         </div>
       </main>
