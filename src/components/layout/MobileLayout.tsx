@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import TopNavBar from './TopNavBar';
 import BottomTabBar from './BottomTabBar';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -19,10 +19,15 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const prevPathRef = useRef<string | null>(null);
 
-  // Effect to scroll to top when location changes (page loads)
+  // Effect to scroll to top only on initial page load or when navigating to a new page
   useEffect(() => {
-    window.scrollTo(0, 0);
+    // If it's a new page (not just a parameter change on the same page)
+    if (prevPathRef.current !== location.pathname) {
+      window.scrollTo(0, 0);
+      prevPathRef.current = location.pathname;
+    }
   }, [location.pathname]);
 
   const handleBack = () => {
