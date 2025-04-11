@@ -110,8 +110,13 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
               </div>
             </li>
           )}
-          
-          {competition.liveloxLink && (
+        </ul>
+      </div>
+      
+      {/* Livelox section - Now separate from main info */}
+      {competition.liveloxLink && (
+        <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+          <ul className="divide-y divide-gray-100">
             <li className="p-3 flex items-center gap-3">
               <Map size={18} className="text-location shrink-0" />
               <div>
@@ -128,9 +133,9 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
                 </p>
               </div>
             </li>
-          )}
-        </ul>
-      </div>
+          </ul>
+        </div>
+      )}
       
       {/* Description */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-3">
