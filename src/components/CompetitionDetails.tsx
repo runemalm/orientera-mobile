@@ -57,21 +57,15 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
       
       {/* Simplified uniform sections */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
-        {/* Documents & Links - Expanded to show individual files */}
+        {/* Documents & Links - Display files without the header */}
         {competition.files.length > 0 && (
-          <>
-            <div className="flex items-center gap-3 p-4 bg-gray-50">
-              <FileText size={20} className="text-forest" />
-              <span className="font-medium">Dokument & länkar</span>
-            </div>
-            <div className="divide-y divide-gray-100">
-              {competition.files.map((file) => (
-                <div key={file.id} className="px-4 py-2">
-                  <FileItem file={file} />
-                </div>
-              ))}
-            </div>
-          </>
+          <div className="divide-y divide-gray-100">
+            {competition.files.map((file) => (
+              <div key={file.id} className="px-4 py-2">
+                <FileItem file={file} />
+              </div>
+            ))}
+          </div>
         )}
         
         {competition.files.length > 0 && <Separator />}
