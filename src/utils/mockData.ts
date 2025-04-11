@@ -154,7 +154,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
         id: "file-2",
         name: "PM.pdf",
         type: "pm",
-        url: "#",
+        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
         uploadDate: "2025-04-03"
       }
     ],
@@ -181,7 +181,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
         id: "file-4",
         name: "PM.pdf",
         type: "pm",
-        url: "#",
+        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
         uploadDate: "2025-03-30"
       }
     ],
@@ -226,7 +226,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
         id: "file-15",
         name: "PM.pdf",
         type: "pm",
-        url: "#",
+        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
         uploadDate: "2025-04-07"
       }
     ],
@@ -252,7 +252,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
         id: "file-9",
         name: "PM.pdf",
         type: "pm",
-        url: "#",
+        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
         uploadDate: "2025-05-10"
       },
       {
@@ -302,7 +302,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
         id: "file-13",
         name: "PM.pdf",
         type: "pm",
-        url: "#",
+        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
         uploadDate: "2025-05-25"
       }
     ],
@@ -329,7 +329,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
         id: "file-17",
         name: "PM.pdf",
         type: "pm",
-        url: "#",
+        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
         uploadDate: "2025-04-14"
       }
     ],
@@ -342,3 +342,4 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
     isRegistered: false
   },
 };
+
