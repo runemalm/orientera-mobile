@@ -7,6 +7,7 @@ import { useIsMobile } from "./hooks/use-mobile";
 import LandingPage from "./pages/LandingPage";
 import CompetitionsPage from "./pages/CompetitionsPage";
 import CompetitionDetailsPage from "./pages/CompetitionDetailsPage";
+import ParticipantsPage from "./pages/ParticipantsPage";
 import NotFound from "./pages/NotFound";
 import InfoPage from "./pages/InfoPage";
 import Index from "./pages/Index";
@@ -126,6 +127,7 @@ const App = () => (
           <Route path="/competitions" element={<CompetitionsPage />} />
           <Route path="/info" element={<InfoPage />} />
           <Route path="/competition/:competitionId" element={<CompetitionDetailsPage />} />
+          <Route path="/competition/:competitionId/participants" element={<ParticipantsPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <KeyboardShortcutHandler />

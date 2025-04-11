@@ -1,9 +1,10 @@
 
 import React from 'react';
 import { CompetitionDetail } from '../types';
-import { Calendar, Clock, MapPin, User, Globe, Award, Navigation, FileText, Info, Tag, Map } from 'lucide-react';
+import { Calendar, Clock, MapPin, User, Globe, Award, Navigation, FileText, Info, Tag, Map, Users } from 'lucide-react';
 import FileItem from './FileItem';
 import { formatDistrictName } from '../utils/formatters';
+import { Link } from 'react-router-dom';
 
 interface CompetitionDetailsProps {
   competition: CompetitionDetail;
@@ -140,6 +141,25 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
           ) : (
             <p className="text-gray-500">Inga dokument tillgängliga ännu</p>
           )}
+        </div>
+      </div>
+      
+      {/* Registered participants section */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+        <div className="p-3 border-b border-gray-100">
+          <div className="flex items-center gap-2">
+            <Users size={18} className="text-forest" />
+            <h3 className="font-semibold text-gray-700">Anmälda</h3>
+          </div>
+        </div>
+        <div className="p-3">
+          <Link 
+            to={`/competition/${competition.id}/participants`}
+            className="text-primary hover:underline flex items-center gap-2"
+          >
+            <Users size={16} />
+            <span>Se anmälda deltagare</span>
+          </Link>
         </div>
       </div>
       
