@@ -1,5 +1,4 @@
 
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -9,7 +8,7 @@ import CompetitionsPage from "./pages/CompetitionsPage";
 import CompetitionDetailsPage from "./pages/CompetitionDetailsPage";
 import ParticipantsPage from "./pages/ParticipantsPage";
 import StartTimesPage from "./pages/StartTimesPage";
-import DocumentsPage from "./pages/DocumentsPage"; // Add import for the new page
+import DocumentsPage from "./pages/DocumentsPage";
 import NotFound from "./pages/NotFound";
 import InfoPage from "./pages/InfoPage";
 import Index from "./pages/Index";
@@ -120,23 +119,21 @@ const KeyboardShortcutHandler = () => {
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/index" element={<Index />} />
-          <Route path="/landing" element={<LandingPage />} />
-          <Route path="/competitions" element={<CompetitionsPage />} />
-          <Route path="/info" element={<InfoPage />} />
-          <Route path="/competition/:competitionId" element={<CompetitionDetailsPage />} />
-          <Route path="/competition/:competitionId/participants" element={<ParticipantsPage />} />
-          <Route path="/competition/:competitionId/start-times" element={<StartTimesPage />} />
-          <Route path="/competition/:competitionId/documents" element={<DocumentsPage />} /> {/* Add new route */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-        <KeyboardShortcutHandler />
-      </BrowserRouter>
-    </TooltipProvider>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/index" element={<Index />} />
+        <Route path="/landing" element={<LandingPage />} />
+        <Route path="/competitions" element={<CompetitionsPage />} />
+        <Route path="/info" element={<InfoPage />} />
+        <Route path="/competition/:competitionId" element={<CompetitionDetailsPage />} />
+        <Route path="/competition/:competitionId/participants" element={<ParticipantsPage />} />
+        <Route path="/competition/:competitionId/start-times" element={<StartTimesPage />} />
+        <Route path="/competition/:competitionId/documents" element={<DocumentsPage />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+      <KeyboardShortcutHandler />
+    </BrowserRouter>
   </QueryClientProvider>
 );
 
