@@ -9,7 +9,7 @@ import LocationInputForm from '../components/LocationInputForm';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Competition } from '../types';
-import { format, addDays, startOfWeek, isSameDay, isSameMonth } from 'date-fns';
+import { format, addDays, startOfWeek, isSameDay, isSameMonth, subWeeks, isAfter, isBefore, startOfDay } from 'date-fns';
 
 interface CompetitionWithDistance extends Omit<Competition, 'distance'> {
   distance: number;
@@ -84,9 +84,24 @@ const CompetitionsPage: React.FC = () => {
     
     const processedCompetitions = mockCompetitions.map(processCompetitionWithDistance);
     const groupedByWeek: CompetitionsByWeek[] = [];
+    const today = startOfDay(new Date());
+    const currentWeekStart = startOfWeek(today, { weekStartsOn: 1 });
+    const previousWeekStart = subWeeks(currentWeekStart, 1);
+    
+    const hasPreviousWeekCompetitions = processedCompetitions.some(competition => {
+      const competitionDate = startOfDay(new Date(competition.date));
+      return isAfter(competitionDate, previousWeekStart) && isBefore(competitionDate, currentWeekStart);
+    });
+    
+    const startWeek = hasPreviousWeekCompetitions ? previousWeekStart : currentWeekStart;
     
     processedCompetitions.forEach(competition => {
       const competitionDate = new Date(competition.date);
+      
+      if (isBefore(competitionDate, startWeek)) {
+        return;
+      }
+      
       const weekStart = new Date(competitionDate);
       weekStart.setDate(competitionDate.getDate() - competitionDate.getDay() + (competitionDate.getDay() === 0 ? -6 : 1));
       weekStart.setHours(0, 0, 0, 0);
