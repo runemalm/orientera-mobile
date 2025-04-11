@@ -81,7 +81,7 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition }) => {
               {status.text}
             </Badge>
             
-            <Badge variant="outline" className="bg-location-light/20 text-location-dark px-3 py-1 gap-1 font-medium border-0">
+            <Badge variant="outline" className="bg-secondary-light/20 text-secondary-dark px-3 py-1 gap-1 font-medium border-0">
               <Navigation size={14} />
               {formatDistance(competition.distance)}
             </Badge>
@@ -98,7 +98,7 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition }) => {
             </div>
             
             <div className="flex items-center gap-1 text-sm text-gray-600">
-              <MapPin size={14} className="text-location" />
+              <MapPin size={14} className="text-secondary" />
               <span className="line-clamp-1">{competition.club}</span>
             </div>
           </div>

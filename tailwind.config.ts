@@ -31,7 +31,9 @@ export default {
 				},
 				secondary: {
 					DEFAULT: '#FF8F00',
-					foreground: '#FFFFFF'
+					foreground: '#FFFFFF',
+					light: '#FFD180',    // Light amber/orange
+					dark: '#C56000'      // Darker amber/orange
 				},
 				forest: {
 					DEFAULT: '#2E7D32',
@@ -39,9 +41,9 @@ export default {
 					dark: '#1B5E20'
 				},
 				location: {
-					DEFAULT: '#0EA5E9',  // Ocean blue color
-					light: '#7DD3FC',    // Lighter blue
-					dark: '#0369A1'      // Darker blue
+					DEFAULT: '#FF8F00',  // Changing from blue to amber/orange
+					light: '#FFD180',    // Light amber/orange
+					dark: '#C56000'      // Darker amber/orange
 				},
 				destructive: {
 					DEFAULT: 'hsl(var(--destructive))',
