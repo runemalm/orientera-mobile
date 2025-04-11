@@ -94,7 +94,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
               className="flex items-center justify-between p-4 hover:bg-gray-50"
             >
               <div className="flex items-center gap-3">
-                <Map size={20} className="text-location" />
+                <Map size={20} className="text-orange-500" />
                 <span className="font-medium">Livelox</span>
               </div>
               <div className="text-gray-400">
