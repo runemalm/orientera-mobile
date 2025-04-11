@@ -3,12 +3,12 @@ import React, { useState } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
 import { mockCompetitions } from '../utils/mockData';
-import { MapPin, RefreshCw, Loader2, Search } from 'lucide-react';
+import { MapPin, RefreshCw, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import LocationInputForm from '../components/LocationInputForm';
 import { useUserLocation } from '../hooks/useUserLocation';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { Competition } from '../types';
 import { format, addDays, startOfWeek, isSameDay, isSameMonth, subWeeks, isAfter, isBefore, startOfDay } from 'date-fns';
 
@@ -18,6 +18,7 @@ interface CompetitionWithDistance extends Omit<Competition, 'distance'> {
 
 const CompetitionsPage: React.FC = () => {
   const [showLocationDrawer, setShowLocationDrawer] = useState(false);
+  const [showLocationPopover, setShowLocationPopover] = useState(false);
   const [showResetDrawer, setShowResetDrawer] = useState(false);
   const [tapCount, setTapCount] = useState(0);
   const { userLocation, isFirstVisit, isLoading, updateUserLocation, resetUserLocation } = useUserLocation();
@@ -25,6 +26,7 @@ const CompetitionsPage: React.FC = () => {
   const handleUpdateLocation = (location: { city: string; latitude: number; longitude: number }) => {
     updateUserLocation(location);
     setShowLocationDrawer(false);
+    setShowLocationPopover(false);
   };
   
   const handleResetLocation = () => {
@@ -129,14 +131,27 @@ const CompetitionsPage: React.FC = () => {
                 <span className="font-medium text-sm line-clamp-1 text-forest-dark">{displayName}</span>
               </div>
             </div>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={() => setShowLocationDrawer(true)}
-              className="text-forest border-forest/30 hover:bg-forest/10"
-            >
-              Byt plats
-            </Button>
+            <Popover open={showLocationPopover} onOpenChange={setShowLocationPopover}>
+              <PopoverTrigger asChild>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="text-forest border-forest/30 hover:bg-forest/10"
+                  onClick={() => setShowLocationDrawer(true)}
+                >
+                  Byt plats
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 p-0">
+                <div className="p-4">
+                  <div className="font-medium mb-2">Byt plats</div>
+                  <LocationInputForm 
+                    onLocationSelected={handleUpdateLocation}
+                    onCancel={() => setShowLocationPopover(false)}
+                  />
+                </div>
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
         
@@ -170,12 +185,16 @@ const CompetitionsPage: React.FC = () => {
         </div>
       </MobileLayout>
       
-      <Drawer open={showLocationDrawer} onOpenChange={setShowLocationDrawer}>
-        <DrawerContent>
+      <Drawer 
+        open={showLocationDrawer} 
+        onOpenChange={setShowLocationDrawer}
+        modal={true}
+      >
+        <DrawerContent className="max-h-[90vh] overflow-y-auto">
           <DrawerHeader>
             <DrawerTitle>Byt plats</DrawerTitle>
           </DrawerHeader>
-          <div className="p-4">
+          <div className="p-4 pb-8">
             <LocationInputForm 
               onLocationSelected={handleUpdateLocation}
               onCancel={() => setShowLocationDrawer(false)}
@@ -184,15 +203,19 @@ const CompetitionsPage: React.FC = () => {
         </DrawerContent>
       </Drawer>
       
-      <Drawer open={showResetDrawer} onOpenChange={setShowResetDrawer}>
+      <Drawer 
+        open={showResetDrawer} 
+        onOpenChange={setShowResetDrawer}
+        modal={true}
+      >
         <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>Återställ platsval</DrawerTitle>
           </DrawerHeader>
-          <div className="p-4">
+          <div className="p-4 pb-8">
             <Button 
               onClick={handleResetLocation}
-              className="w-full mb-2"
+              className="w-full mb-2 bg-forest hover:bg-forest-dark"
             >
               Återställ plats
             </Button>
