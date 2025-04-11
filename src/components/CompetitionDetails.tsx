@@ -93,30 +93,40 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
           </li>
           
           {competition.website && (
-            <li className="p-3">
-              <a 
-                href={competition.website} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 text-primary hover:underline"
-              >
-                <Globe size={18} className="shrink-0" />
-                <span>Besök tävlingswebbplats</span>
-              </a>
+            <li className="p-3 flex items-center gap-3">
+              <Globe size={18} className="text-forest shrink-0" />
+              <div>
+                <span className="text-sm font-medium text-gray-700">Webbplats</span>
+                <p>
+                  <a 
+                    href={competition.website} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline"
+                  >
+                    Besök tävlingswebbplats
+                  </a>
+                </p>
+              </div>
             </li>
           )}
           
           {competition.liveloxLink && (
-            <li className="p-3">
-              <a 
-                href={competition.liveloxLink} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 text-blue-600 hover:underline"
-              >
-                <Map size={18} className="shrink-0" />
-                <span>Karta, banor och rutter i Livelox</span>
-              </a>
+            <li className="p-3 flex items-center gap-3">
+              <Map size={18} className="text-location shrink-0" />
+              <div>
+                <span className="text-sm font-medium text-gray-700">Livelox</span>
+                <p>
+                  <a 
+                    href={competition.liveloxLink} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline"
+                  >
+                    Karta, banor och rutter i Livelox
+                  </a>
+                </p>
+              </div>
             </li>
           )}
         </ul>
