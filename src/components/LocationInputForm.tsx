@@ -76,12 +76,62 @@ const LocationInputForm: React.FC<LocationInputFormProps> = ({ onLocationSelecte
     setIsSearching(false);
   };
 
+  // Quick select a city with predefined coordinates
+  const quickSelectCity = async (city: string) => {
+    setSearchTerm(city);
+    setIsSearching(true);
+    setError(null);
+    
+    try {
+      // Get coordinates for the selected city using Nominatim
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
+          city
+        )}&format=json&addressdetails=1&limit=1&countrycodes=se`,
+        {
+          headers: {
+            'Accept-Language': 'sv',
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Något gick fel vid sökning');
+      }
+
+      const data = await response.json();
+
+      if (data.length === 0) {
+        setError('Kunde inte hitta platsen');
+        setIsSearching(false);
+        return;
+      }
+
+      const result = data[0];
+      
+      onLocationSelected({
+        city: city,
+        latitude: parseFloat(result.lat),
+        longitude: parseFloat(result.lon),
+      });
+      
+    } catch (err) {
+      setError('Ett fel uppstod vid sökning');
+      console.error('Error searching city:', err);
+    }
+    
+    setIsSearching(false);
+  };
+
   // Handle enter key press
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       handleSearch();
     }
   };
+
+  // Popular Swedish cities
+  const popularCities = ["Stockholm", "Göteborg", "Malmö", "Uppsala", "Kalmar", "Umeå"];
 
   return (
     <div className="space-y-4">
@@ -114,16 +164,13 @@ const LocationInputForm: React.FC<LocationInputFormProps> = ({ onLocationSelecte
         </Button>
       )}
       
-      <div className="grid grid-cols-2 gap-2 mt-2">
-        {["Stockholm", "Göteborg", "Malmö"].map((city) => (
+      <div className="grid grid-cols-3 gap-2 mt-2">
+        {popularCities.map((city) => (
           <Button
             key={city}
             variant="outline"
             size="sm"
-            onClick={() => {
-              setSearchTerm(city);
-              handleSearch();
-            }}
+            onClick={() => quickSelectCity(city)}
             className="justify-center"
           >
             {city}
