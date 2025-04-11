@@ -1,8 +1,8 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import TopNavBar from './TopNavBar';
 import BottomTabBar from './BottomTabBar';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 interface MobileLayoutProps {
   children: React.ReactNode;
@@ -18,6 +18,12 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
   hideBottomTabs = false 
 }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Effect to scroll to top when location changes (page loads)
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   const handleBack = () => {
     navigate(-1);
