@@ -9,6 +9,7 @@ import CompetitionsPage from "./pages/CompetitionsPage";
 import CompetitionDetailsPage from "./pages/CompetitionDetailsPage";
 import ParticipantsPage from "./pages/ParticipantsPage";
 import StartTimesPage from "./pages/StartTimesPage";
+import DocumentsPage from "./pages/DocumentsPage"; // Add import for the new page
 import NotFound from "./pages/NotFound";
 import InfoPage from "./pages/InfoPage";
 import Index from "./pages/Index";
@@ -130,6 +131,7 @@ const App = () => (
           <Route path="/competition/:competitionId" element={<CompetitionDetailsPage />} />
           <Route path="/competition/:competitionId/participants" element={<ParticipantsPage />} />
           <Route path="/competition/:competitionId/start-times" element={<StartTimesPage />} />
+          <Route path="/competition/:competitionId/documents" element={<DocumentsPage />} /> {/* Add new route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
         <KeyboardShortcutHandler />
