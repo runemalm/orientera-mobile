@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Compass, FileText, MapPin, List, Calendar, Smartphone, ArrowRight, RefreshCw } from 'lucide-react';
+import { Compass, MapPin, Calendar, Search, Navigation, FileText, RefreshCw, ArrowRight, Smartphone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
@@ -46,11 +46,11 @@ const LandingPage: React.FC = () => {
       <main className="flex-grow flex flex-col items-center justify-center p-6 text-center">
         <div className="max-w-md mx-auto">
           <h1 className="text-4xl font-bold mb-3 flex flex-col items-center">
-            <span className="block">Ett modernare sätt</span>
-            <span className="block">att hitta orienterings­tävlingar</span>
+            <span className="block">Orientering</span>
+            <span className="block">i fickan</span>
           </h1>
           <p className="text-gray-600 mb-8">
-            Samma information som Eventor men i ett användarvänligt, modernt gränssnitt optimerat för mobilen.
+            Hitta tävlingar nära dig, se PM, startlistor och annan information när du är på språng - optimerat för mobilen.
           </p>
           
           <Button 
@@ -65,42 +65,42 @@ const LandingPage: React.FC = () => {
         <div className="mt-12 grid grid-cols-2 sm:grid-cols-3 gap-4 w-full max-w-2xl">
           <FeatureCard 
             icon={<MapPin className="text-primary" />}
-            title="Hitta tävlingar"
-            description="Se tävlingar nära dig"
+            title="Tävlingar nära dig"
+            description="Hitta orienteringstävlingar i närheten"
             onTap={handleFeatureCardTap}
           />
           <FeatureCard 
+            icon={<Navigation className="text-primary" />}
+            title="På språng"
+            description="Perfekt att använda på tävlingsplatsen"
+          />
+          <FeatureCard 
             icon={<Calendar className="text-primary" />}
-            title="Datum & tid"
-            description="Tydlig översikt av kommande tävlingar"
+            title="Kommande tävlingar"
+            description="Se när tävlingar äger rum"
           />
           <FeatureCard 
             icon={<FileText className="text-primary" />}
-            title="Dokument"
-            description="PM och startlistor samlade"
-          />
-          <FeatureCard 
-            icon={<List className="text-primary" />}
-            title="Tävlingsinfo"
-            description="Detaljerad information"
-          />
-          <FeatureCard 
-            icon={<RefreshCw className="text-primary" />}
-            title="Eventor-data"
-            description="Samma info, bättre upplevelse"
+            title="Tävlingsdokument"
+            description="PM och startlistor när du behöver dem"
           />
           <FeatureCard 
             icon={<Smartphone className="text-primary" />}
-            title="Modern design"
-            description="Optimerad för mobilen"
+            title="Mobiloptimerad"
+            description="Designad för att användas på mobilen"
+          />
+          <FeatureCard 
+            icon={<RefreshCw className="text-primary" />}
+            title="Samma data"
+            description="Eventor-data i ett bättre gränssnitt"
           />
         </div>
 
         <div className="mt-12 max-w-md text-center">
-          <h2 className="text-2xl font-semibold mb-3">Ett modernt alternativ till Eventor</h2>
+          <h2 className="text-2xl font-semibold mb-3">Designad för orienterare på språng</h2>
           <p className="text-gray-600">
-            Vi hämtar data från Eventor men presenterar den i ett modernare och mer användarvänligt gränssnitt, 
-            optimerat för att användas på din mobil när du är ute på tävling.
+            Slut på krångliga menyer och laddningstider - med denna app hittar du enkelt tävlingar i närheten och 
+            kan snabbt komma åt den information du behöver när du är på plats vid en tävling.
           </p>
         </div>
       </main>
