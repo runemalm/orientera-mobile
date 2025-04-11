@@ -9,6 +9,11 @@ const BottomTabBar: React.FC = () => {
   const location = useLocation();
   const currentPath = location.pathname;
 
+  // Check if current path is competition-related
+  const isCompetitionRelated = currentPath === '/' || 
+                             currentPath === '/competitions' || 
+                             currentPath.startsWith('/competition/');
+
   const tabs: { name: TabName; icon: React.ReactNode; label: string; path: string }[] = [
     {
       name: 'competitions',
@@ -34,8 +39,8 @@ const BottomTabBar: React.FC = () => {
         <button
           key={tab.name}
           className={`flex flex-col items-center justify-center w-full py-2 ${
-            (currentPath === tab.path || 
-             (tab.path === '/competitions' && currentPath === '/')) // Consider "/" as competitions too
+            (tab.path === '/competitions' && isCompetitionRelated) ||
+            (tab.path === currentPath)
               ? 'text-primary font-medium'
               : 'text-gray-500'
           }`}
