@@ -100,7 +100,7 @@ const CompetitionsPage: React.FC = () => {
         <div className="p-6">
           <div className="bg-white rounded-lg p-6 shadow-sm">
             <div className="text-center mb-6">
-              <MapPin size={32} className="text-secondary mx-auto mb-2" />
+              <MapPin size={32} className="text-forest mx-auto mb-2" />
               <h2 className="text-lg font-medium">Var befinner du dig?</h2>
               <p className="text-sm text-gray-500">För att visa tävlingar nära dig</p>
             </div>
@@ -119,21 +119,21 @@ const CompetitionsPage: React.FC = () => {
     
     return (
       <>
-        <div className="bg-gradient-to-br from-secondary-light/30 to-secondary-light/10 rounded-xl p-4 shadow-sm mb-4">
+        <div className="bg-gradient-to-br from-forest-light/30 to-forest-light/10 rounded-xl p-4 shadow-sm mb-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="bg-secondary/10 p-2 rounded-full">
-                <MapPin size={18} className="text-secondary" />
+              <div className="bg-forest/10 p-2 rounded-full">
+                <MapPin size={18} className="text-forest" />
               </div>
               <div>
-                <span className="font-medium text-sm line-clamp-1 text-secondary-dark">{displayName}</span>
+                <span className="font-medium text-sm line-clamp-1 text-forest-dark">{displayName}</span>
               </div>
             </div>
             <Button 
               variant="outline" 
               size="sm" 
               onClick={() => setShowLocationDrawer(true)}
-              className="text-secondary border-secondary/30 hover:bg-secondary/10"
+              className="text-forest border-forest/30 hover:bg-forest/10"
             >
               Byt plats
             </Button>
