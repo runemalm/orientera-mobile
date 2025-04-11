@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -24,7 +23,6 @@ const LocationInputForm: React.FC<LocationInputFormProps> = ({ onLocationSelecte
     setError(null);
 
     try {
-      // Using the OpenStreetMap Nominatim API
       const response = await fetch(
         `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
           searchTerm
@@ -50,13 +48,11 @@ const LocationInputForm: React.FC<LocationInputFormProps> = ({ onLocationSelecte
 
       const result = data[0];
       
-      // Create a simple location name
       let locationName = '';
       
       if (result.address.city || result.address.town || result.address.village) {
         locationName = result.address.city || result.address.town || result.address.village;
       } else if (result.display_name) {
-        // Simplify display_name to just the first part (usually the most specific location)
         locationName = result.display_name.split(',')[0];
       } else {
         locationName = searchTerm;
@@ -76,14 +72,12 @@ const LocationInputForm: React.FC<LocationInputFormProps> = ({ onLocationSelecte
     setIsSearching(false);
   };
 
-  // Quick select a city with predefined coordinates
   const quickSelectCity = async (city: string) => {
     setSearchTerm(city);
     setIsSearching(true);
     setError(null);
     
     try {
-      // Get coordinates for the selected city using Nominatim
       const response = await fetch(
         `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
           city
@@ -123,20 +117,18 @@ const LocationInputForm: React.FC<LocationInputFormProps> = ({ onLocationSelecte
     setIsSearching(false);
   };
 
-  // Handle enter key press
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       handleSearch();
     }
   };
 
-  // Popular Swedish cities
   const popularCities = ["Stockholm", "Göteborg", "Malmö", "Uppsala", "Kalmar", "Umeå"];
 
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <MapPin className="text-location flex-shrink-0" size={20} />
+        <MapPin className="text-forest flex-shrink-0" size={20} />
         <Input
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -148,7 +140,7 @@ const LocationInputForm: React.FC<LocationInputFormProps> = ({ onLocationSelecte
         <Button 
           onClick={handleSearch} 
           disabled={isSearching}
-          className="bg-location hover:bg-location-dark"
+          className="bg-forest hover:bg-forest-dark"
         >
           {isSearching ? <Loader2 className="h-4 w-4 animate-spin" /> : "Sök"}
         </Button>

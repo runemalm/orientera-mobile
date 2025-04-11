@@ -41,9 +41,9 @@ export default {
 					dark: '#1B5E20'
 				},
 				location: {
-					DEFAULT: '#FF8F00',  // Changing from blue to amber/orange
-					light: '#FFD180',    // Light amber/orange
-					dark: '#C56000'      // Darker amber/orange
+					DEFAULT: '#2E7D32',  // Changed from amber to forest green
+					light: '#81C784',    // Changed from amber light to forest light
+					dark: '#1B5E20'      // Changed from amber dark to forest dark
 				},
 				destructive: {
 					DEFAULT: 'hsl(var(--destructive))',
