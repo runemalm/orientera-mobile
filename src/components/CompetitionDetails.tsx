@@ -1,17 +1,20 @@
+
 import React from 'react';
 import { CompetitionDetail } from '../types';
-import { Calendar, Clock, MapPin, User, Globe, Award, Navigation, FileText, Info, Tag, Map, Users } from 'lucide-react';
+import { 
+  Calendar, Clock, MapPin, Globe, Award, Navigation, FileText, Info, 
+  Users, Map, Tag, Trophy, User
+} from 'lucide-react';
 import FileItem from './FileItem';
-import { formatDistrictName } from '../utils/formatters';
 import { Link } from 'react-router-dom';
+import { formatDistrictName } from '../utils/formatters';
+import CompetitionDetailSection from './CompetitionDetailSection';
 
 interface CompetitionDetailsProps {
   competition: CompetitionDetail;
 }
 
-const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ 
-  competition
-}) => {
+const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) => {
   // Format date to be more readable using Swedish format
   const formattedDate = new Date(competition.date).toLocaleDateString('sv-SE', {
     weekday: 'long',
@@ -31,182 +34,181 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
   const isCompetitionInPast = new Date(competition.date) < new Date();
   
   return (
-    <div className="space-y-2">
-      {/* Competition header */}
-      <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-        <h2 className="text-xl font-bold">{competition.name}</h2>
-        <p className="text-sm text-gray-500">{competition.club}</p>
+    <div className="space-y-4">
+      {/* Competition header - redesigned with more visual appeal */}
+      <div className="bg-primary text-white p-5 rounded-lg shadow-md relative overflow-hidden">
+        <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-primary-foreground/10"></div>
+        <div className="absolute bottom-0 right-0 w-16 h-16 rounded-full bg-primary-foreground/10"></div>
+        <h2 className="text-xl font-bold relative z-10">{competition.name}</h2>
+        <p className="text-sm text-white/80 relative z-10">{competition.club}</p>
+        <div className="mt-3 inline-block bg-white/20 px-3 py-1 rounded-full text-sm relative z-10">
+          {competition.competitionType} • {competition.discipline}
+        </div>
       </div>
       
-      {/* Main info list */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
-        <ul className="divide-y divide-gray-100">
-          <li className="p-3 flex items-center gap-3">
-            <Calendar size={18} className="text-forest shrink-0" />
-            <div>
-              <span className="text-sm font-medium text-gray-700">Datum</span>
-              <p className="text-gray-600">{formattedDate}</p>
-            </div>
-          </li>
-          
-          <li className="p-3 flex items-center gap-3">
-            <Clock size={18} className="text-forest shrink-0" />
-            <div>
-              <span className="text-sm font-medium text-gray-700">Starttid</span>
-              <p className="text-gray-600">{competition.startTime}</p>
-            </div>
-          </li>
-          
-          <li className="p-3 flex items-center gap-3">
-            <MapPin size={18} className="text-location shrink-0" />
-            <div className="flex-1">
-              <span className="text-sm font-medium text-gray-700">Plats</span>
-              <p className="text-gray-600">{competition.location}</p>
-            </div>
-            <span className="flex items-center gap-1 text-gray-500">
-              <Navigation size={16} />
-              <span>{competition.distance} km</span>
-            </span>
-          </li>
-          
-          <li className="p-3 flex items-center gap-3">
-            <Tag size={18} className="text-forest shrink-0" />
-            <div>
-              <span className="text-sm font-medium text-gray-700">Disciplin</span>
-              <p className="text-gray-600">{competition.discipline}</p>
-            </div>
-          </li>
-          
-          <li className="p-3 flex items-center gap-3">
-            <Award size={18} className="text-forest shrink-0" />
-            <div>
-              <span className="text-sm font-medium text-gray-700">Tävlingstyp</span>
-              <p className="text-gray-600">
-                {competition.competitionType} • {competition.district}
-              </p>
-            </div>
-          </li>
-          
-          <li className="p-3 flex items-center gap-3">
-            <Calendar size={18} className="text-red-500 shrink-0" />
-            <div>
-              <span className="text-sm font-medium text-gray-700">Anmälningsstopp</span>
-              <p className="text-gray-600">{registrationDate}</p>
-            </div>
-          </li>
-          
-          {competition.website && (
-            <li className="p-3 flex items-center gap-3">
-              <Globe size={18} className="text-forest shrink-0" />
-              <div>
-                <span className="text-sm font-medium text-gray-700">Webbplats</span>
-                <p>
-                  <a 
-                    href={competition.website} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-primary hover:underline"
-                  >
-                    Besök tävlingswebbplats
-                  </a>
-                </p>
-              </div>
-            </li>
-          )}
-        </ul>
+      {/* Key info panel */}
+      <div className="grid grid-cols-2 gap-3">
+        <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 flex flex-col items-center justify-center">
+          <Calendar size={22} className="text-primary mb-1" />
+          <p className="text-xs text-gray-500 uppercase">Datum</p>
+          <p className="font-semibold text-center">{new Date(competition.date).toLocaleDateString('sv-SE', {
+            day: 'numeric',
+            month: 'short'
+          })}</p>
+        </div>
+        
+        <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 flex flex-col items-center justify-center">
+          <Clock size={22} className="text-primary mb-1" />
+          <p className="text-xs text-gray-500 uppercase">Startar</p>
+          <p className="font-semibold">{competition.startTime}</p>
+        </div>
+        
+        <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 flex flex-col items-center justify-center col-span-2">
+          <div className="flex items-center gap-2">
+            <MapPin size={22} className="text-location" />
+            <p className="font-semibold">{competition.location}</p>
+          </div>
+          <p className="text-xs text-gray-500 mt-1">{competition.distance} km från dig</p>
+        </div>
       </div>
+      
+      {/* Full date and deadline section */}
+      <CompetitionDetailSection
+        icon={<Calendar size={18} className="text-forest" />}
+        title="Tidsinformation"
+      >
+        <div className="space-y-3">
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600">Datum:</span>
+            <span className="font-medium">{formattedDate}</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600">Starttid:</span>
+            <span className="font-medium">{competition.startTime}</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-red-500 flex items-center gap-1">
+              <Calendar size={16} />
+              <span>Anmälningsstopp:</span>
+            </span>
+            <span className="font-medium">{registrationDate}</span>
+          </div>
+        </div>
+      </CompetitionDetailSection>
+      
+      {/* Competition type information */}
+      <CompetitionDetailSection
+        icon={<Trophy size={18} className="text-forest" />}
+        title="Tävlingstyp"
+      >
+        <div className="space-y-3">
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600">Typ:</span>
+            <span className="font-medium">{competition.competitionType}</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600">Disciplin:</span>
+            <span className="font-medium">{competition.discipline}</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600">Distrikt:</span>
+            <span className="font-medium">{competition.district}</span>
+          </div>
+        </div>
+      </CompetitionDetailSection>
       
       {/* Description */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-3">
-        <div className="flex items-center gap-2 mb-2">
-          <Info size={18} className="text-forest" />
-          <h3 className="font-semibold text-gray-700">Beskrivning</h3>
-        </div>
-        <p className="text-gray-600 pl-6">{competition.description}</p>
-      </div>
+      <CompetitionDetailSection
+        icon={<Info size={18} className="text-forest" />}
+        title="Beskrivning"
+      >
+        <p className="text-gray-600">{competition.description}</p>
+      </CompetitionDetailSection>
       
-      {/* Documents & Links - Updated to match styling */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
-        <div className="p-3 border-b border-gray-100">
-          <div className="flex items-center gap-2">
-            <FileText size={18} className="text-forest" />
-            <h3 className="font-semibold text-gray-700">Dokument & Länkar</h3>
+      {/* Organizer */}
+      <CompetitionDetailSection
+        icon={<User size={18} className="text-forest" />}
+        title="Arrangör"
+        borderless={!competition.website}
+      >
+        <div className="text-gray-600 mb-2">{competition.club}</div>
+        
+        {competition.website && (
+          <a 
+            href={competition.website} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-primary hover:underline flex items-center gap-2 mt-2"
+          >
+            <Globe size={16} />
+            <span>Besök tävlingswebbplats</span>
+          </a>
+        )}
+      </CompetitionDetailSection>
+      
+      {/* Documents & Links */}
+      {competition.files.length > 0 && (
+        <CompetitionDetailSection
+          icon={<FileText size={18} className="text-forest" />}
+          title="Dokument & Länkar"
+        >
+          <div className="space-y-2">
+            {competition.files.map((file) => (
+              <FileItem key={file.id} file={file} />
+            ))}
           </div>
-        </div>
-        <div className="p-3">
-          {competition.files.length > 0 ? (
-            <div className="space-y-2">
-              {competition.files.map((file) => (
-                <FileItem key={file.id} file={file} />
-              ))}
-            </div>
-          ) : (
-            <p className="text-gray-500">Inga dokument tillgängliga ännu</p>
-          )}
-        </div>
-      </div>
+        </CompetitionDetailSection>
+      )}
       
       {/* Registered participants section */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
-        <div className="p-3 border-b border-gray-100">
-          <div className="flex items-center gap-2">
-            <Users size={18} className="text-forest" />
-            <h3 className="font-semibold text-gray-700">Anmälda</h3>
-          </div>
-        </div>
-        <div className="p-3">
-          <Link 
-            to={`/competition/${competition.id}/participants`}
-            className="text-primary hover:underline flex items-center gap-2"
-          >
-            <Users size={16} />
-            <span>Se anmälda deltagare</span>
-          </Link>
-        </div>
-      </div>
+      <CompetitionDetailSection
+        icon={<Users size={18} className="text-forest" />}
+        title="Anmälda"
+        borderless
+      >
+        <Link 
+          to={`/competition/${competition.id}/participants`}
+          className="text-primary hover:underline flex items-center gap-2"
+        >
+          <Users size={16} />
+          <span>Se anmälda deltagare</span>
+        </Link>
+      </CompetitionDetailSection>
       
       {/* Start Times section - only show if competition is not in the past */}
       {!isCompetitionInPast && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
-          <div className="p-3 border-b border-gray-100">
-            <div className="flex items-center gap-2">
-              <Clock size={18} className="text-forest" />
-              <h3 className="font-semibold text-gray-700">Starttider</h3>
-            </div>
-          </div>
-          <div className="p-3">
-            <Link 
-              to={`/competition/${competition.id}/start-times`}
-              className="text-primary hover:underline flex items-center gap-2"
-            >
-              <Clock size={16} />
-              <span>Se starttider</span>
-            </Link>
-          </div>
-        </div>
+        <CompetitionDetailSection
+          icon={<Clock size={18} className="text-forest" />}
+          title="Starttider"
+          borderless
+        >
+          <Link 
+            to={`/competition/${competition.id}/start-times`}
+            className="text-primary hover:underline flex items-center gap-2"
+          >
+            <Clock size={16} />
+            <span>Se starttider</span>
+          </Link>
+        </CompetitionDetailSection>
       )}
       
-      {/* Livelox section - Now last and updated to match the same layout */}
+      {/* Livelox section */}
       {competition.liveloxLink && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
-          <div className="p-3 border-b border-gray-100">
-            <div className="flex items-center gap-2">
-              <Map size={18} className="text-location" />
-              <h3 className="font-semibold text-gray-700">Livelox</h3>
-            </div>
-          </div>
-          <div className="p-3">
-            <a 
-              href={competition.liveloxLink} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-primary hover:underline flex items-center gap-2"
-            >
-              <Map size={16} />
-              <span>Karta, banor och rutter i Livelox</span>
-            </a>
-          </div>
-        </div>
+        <CompetitionDetailSection
+          icon={<Map size={18} className="text-location" />}
+          title="Livelox"
+          borderless
+        >
+          <a 
+            href={competition.liveloxLink} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-primary hover:underline flex items-center gap-2"
+          >
+            <Map size={16} />
+            <span>Karta, banor och rutter i Livelox</span>
+          </a>
+        </CompetitionDetailSection>
       )}
     </div>
   );

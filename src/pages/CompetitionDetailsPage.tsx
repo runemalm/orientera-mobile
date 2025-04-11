@@ -6,6 +6,7 @@ import CompetitionDetails from '../components/CompetitionDetails';
 import { mockCompetitionDetails } from '../utils/mockData';
 import { CompetitionDetail } from '../types';
 import { Toaster } from '@/components/ui/toaster';
+import { Trophy } from 'lucide-react';
 
 const CompetitionDetailsPage: React.FC = () => {
   const { competitionId } = useParams<{ competitionId: string }>();
@@ -34,8 +35,9 @@ const CompetitionDetailsPage: React.FC = () => {
   if (loading) {
     return (
       <MobileLayout title="Laddar..." showBackButton>
-        <div className="flex justify-center items-center h-64 mt-4">
+        <div className="flex flex-col justify-center items-center h-64 mt-4 space-y-4">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+          <p className="text-gray-500">Hämtar tävlingsinformation...</p>
         </div>
         <Toaster />
       </MobileLayout>
@@ -45,16 +47,12 @@ const CompetitionDetailsPage: React.FC = () => {
   if (!competition) {
     return (
       <MobileLayout title="Hittades inte" showBackButton>
-        <div className="flex flex-col items-center justify-center h-64 mt-4">
-          <div className="text-red-500 mb-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10" />
-              <line x1="12" y1="8" x2="12" y2="12" />
-              <line x1="12" y1="16" x2="12.01" y2="16" />
-            </svg>
+        <div className="flex flex-col items-center justify-center h-64 mt-8 px-4 text-center">
+          <div className="bg-red-100 rounded-full p-4 mb-4">
+            <Trophy size={32} className="text-red-500" />
           </div>
           <h2 className="text-xl font-bold">Tävlingen hittades inte</h2>
-          <p className="text-gray-500 mt-2">Tävlingen du söker existerar inte</p>
+          <p className="text-gray-500 mt-2">Vi kunde tyvärr inte hitta den tävling du söker.</p>
         </div>
         <Toaster />
       </MobileLayout>
