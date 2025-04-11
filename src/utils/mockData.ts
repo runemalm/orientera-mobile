@@ -1,3 +1,4 @@
+
 import { Competition, CompetitionDetail, CompetitionType, CompetitionDiscipline, OrienteeringDistrict } from "../types";
 
 export const mockCompetitions: Competition[] = [
@@ -146,7 +147,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
         id: "file-1",
         name: "Inbjudan.pdf",
         type: "invitation",
-        url: "#",
+        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
         uploadDate: "2025-03-01"
       },
       {
@@ -173,7 +174,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
         id: "file-3",
         name: "Inbjudan.pdf",
         type: "invitation",
-        url: "#",
+        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
         uploadDate: "2025-03-15"
       },
       {
@@ -200,7 +201,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
         id: "file-5",
         name: "Invitation.pdf",
         type: "invitation",
-        url: "#",
+        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
         uploadDate: "2025-04-01"
       }
     ],
@@ -218,7 +219,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
         id: "file-14",
         name: "Inbjudan.pdf",
         type: "invitation",
-        url: "#",
+        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
         uploadDate: "2025-03-20"
       },
       {
@@ -244,7 +245,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
         id: "file-8",
         name: "Invitation.pdf",
         type: "invitation",
-        url: "#",
+        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
         uploadDate: "2025-04-15"
       },
       {
@@ -258,7 +259,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
         id: "file-10",
         name: "Start List.pdf",
         type: "startlist",
-        url: "#",
+        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
         uploadDate: "2025-05-14"
       }
     ],
@@ -276,7 +277,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
         id: "file-11",
         name: "Inbjudan.pdf",
         type: "invitation",
-        url: "#",
+        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
         uploadDate: "2025-05-01"
       }
     ],
@@ -294,7 +295,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
         id: "file-12",
         name: "Inbjudan.pdf",
         type: "invitation",
-        url: "#",
+        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
         uploadDate: "2025-05-10"
       },
       {
@@ -321,7 +322,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
         id: "file-16",
         name: "Inbjudan.pdf",
         type: "invitation",
-        url: "#",
+        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
         uploadDate: "2025-03-25"
       },
       {
