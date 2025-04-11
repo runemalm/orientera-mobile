@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { CompetitionDetail } from '../types';
 import { Calendar, Clock, MapPin, User, Globe, Award, Navigation, FileText, Info, Tag, Map, Users } from 'lucide-react';
@@ -187,7 +186,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
         </div>
       )}
       
-      {/* Livelox section - Now last */}
+      {/* Livelox section - Now last and updated to match the same layout */}
       {competition.liveloxLink && (
         <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
           <div className="p-3 border-b border-gray-100">
@@ -196,24 +195,17 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
               <h3 className="font-semibold text-gray-700">Livelox</h3>
             </div>
           </div>
-          <ul className="divide-y divide-gray-100">
-            <li className="p-3 flex items-center gap-3">
-              <Map size={18} className="text-location shrink-0" />
-              <div>
-                <span className="text-sm font-medium text-gray-700">Livelox</span>
-                <p>
-                  <a 
-                    href={competition.liveloxLink} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-primary hover:underline"
-                  >
-                    Karta, banor och rutter i Livelox
-                  </a>
-                </p>
-              </div>
-            </li>
-          </ul>
+          <div className="p-3">
+            <a 
+              href={competition.liveloxLink} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-primary hover:underline flex items-center gap-2"
+            >
+              <Map size={16} />
+              <span>Karta, banor och rutter i Livelox</span>
+            </a>
+          </div>
         </div>
       )}
     </div>
