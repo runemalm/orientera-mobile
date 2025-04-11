@@ -113,36 +113,6 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
         </ul>
       </div>
       
-      {/* Livelox section - Now separate from main info */}
-      {competition.liveloxLink && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
-          <div className="p-3 border-b border-gray-100">
-            <div className="flex items-center gap-2">
-              <Map size={18} className="text-location" />
-              <h3 className="font-semibold text-gray-700">Livelox</h3>
-            </div>
-          </div>
-          <ul className="divide-y divide-gray-100">
-            <li className="p-3 flex items-center gap-3">
-              <Map size={18} className="text-location shrink-0" />
-              <div>
-                <span className="text-sm font-medium text-gray-700">Livelox</span>
-                <p>
-                  <a 
-                    href={competition.liveloxLink} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-primary hover:underline"
-                  >
-                    Karta, banor och rutter i Livelox
-                  </a>
-                </p>
-              </div>
-            </li>
-          </ul>
-        </div>
-      )}
-      
       {/* Description */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-3">
         <div className="flex items-center gap-2 mb-2">
@@ -172,6 +142,36 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
           )}
         </div>
       </div>
+      
+      {/* Livelox section - Now last */}
+      {competition.liveloxLink && (
+        <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+          <div className="p-3 border-b border-gray-100">
+            <div className="flex items-center gap-2">
+              <Map size={18} className="text-location" />
+              <h3 className="font-semibold text-gray-700">Livelox</h3>
+            </div>
+          </div>
+          <ul className="divide-y divide-gray-100">
+            <li className="p-3 flex items-center gap-3">
+              <Map size={18} className="text-location shrink-0" />
+              <div>
+                <span className="text-sm font-medium text-gray-700">Livelox</span>
+                <p>
+                  <a 
+                    href={competition.liveloxLink} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline"
+                  >
+                    Karta, banor och rutter i Livelox
+                  </a>
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      )}
     </div>
   );
 };
