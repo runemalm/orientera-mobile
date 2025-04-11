@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
@@ -13,16 +14,6 @@ import { format, addDays, startOfWeek, isSameDay, isSameMonth, subWeeks, isAfter
 
 interface CompetitionWithDistance extends Omit<Competition, 'distance'> {
   distance: number;
-}
-
-interface DayCompetitions {
-  date: Date;
-  competitions: CompetitionWithDistance[];
-}
-
-interface MonthGroup {
-  month: Date;
-  days: DayCompetitions[];
 }
 
 const CompetitionsPage: React.FC = () => {
@@ -73,7 +64,7 @@ const CompetitionsPage: React.FC = () => {
     };
   };
 
-  const getCompetitionsFromLastWeek = (): DayCompetitions[] => {
+  const getCompetitions = (): CompetitionWithDistance[] => {
     if (!userLocation || mockCompetitions.length === 0) return [];
     
     const processedCompetitions = mockCompetitions.map(processCompetitionWithDistance);
@@ -88,56 +79,10 @@ const CompetitionsPage: React.FC = () => {
       return isAfter(competitionDate, mondayLastWeek) || isSameDay(competitionDate, mondayLastWeek);
     });
     
-    // Group by day
-    const competitionsByDay: DayCompetitions[] = [];
-    
-    filteredCompetitions.forEach(competition => {
-      const competitionDate = startOfDay(new Date(competition.date));
-      
-      const existingDayGroup = competitionsByDay.find(day => 
-        isSameDay(day.date, competitionDate)
-      );
-      
-      if (existingDayGroup) {
-        existingDayGroup.competitions.push(competition);
-      } else {
-        competitionsByDay.push({
-          date: competitionDate,
-          competitions: [competition]
-        });
-      }
-    });
-    
-    // Sort by date
-    return competitionsByDay.sort((a, b) => a.date.getTime() - b.date.getTime());
-  };
-
-  const groupDaysByMonth = (days: DayCompetitions[]): MonthGroup[] => {
-    const monthGroups: MonthGroup[] = [];
-    
-    days.forEach(day => {
-      const monthDate = new Date(day.date);
-      
-      const existingMonthGroup = monthGroups.find(group => 
-        group.month.getFullYear() === monthDate.getFullYear() && 
-        group.month.getMonth() === monthDate.getMonth()
-      );
-      
-      if (existingMonthGroup) {
-        existingMonthGroup.days.push(day);
-      } else {
-        monthGroups.push({
-          month: monthDate,
-          days: [day]
-        });
-      }
-    });
-    
-    return monthGroups.sort((a, b) => a.month.getTime() - b.month.getTime());
-  };
-
-  const formatMonthHeader = (date: Date): string => {
-    return format(date, 'MMMM yyyy');
+    // Sort competitions by date
+    return filteredCompetitions.sort((a, b) => 
+      new Date(a.date).getTime() - new Date(b.date).getTime()
+    );
   };
 
   const renderContent = () => {
@@ -170,8 +115,7 @@ const CompetitionsPage: React.FC = () => {
       ? userLocation.city.split(',')[0]
       : userLocation.city;
     
-    const competitionsByDay = getCompetitionsFromLastWeek();
-    const monthGroups = groupDaysByMonth(competitionsByDay);
+    const competitions = getCompetitions();
     
     return (
       <>
@@ -196,29 +140,10 @@ const CompetitionsPage: React.FC = () => {
           </div>
         </div>
         
-        {monthGroups.length > 0 ? (
-          <div className="space-y-6">
-            {monthGroups.map((monthGroup, monthIndex) => (
-              <div key={monthIndex} className="space-y-4">
-                <div className="sticky top-0 z-10 bg-primary/10 px-4 py-3 rounded-lg font-semibold text-primary capitalize">
-                  {formatMonthHeader(monthGroup.month)}
-                </div>
-                
-                {monthGroup.days.map((dayGroup, dayIndex) => (
-                  <div key={dayIndex} className="mb-3">
-                    {dayGroup.competitions.length > 0 ? (
-                      <div className="space-y-2">
-                        <div className="font-medium text-sm text-gray-500 ml-1">
-                          {format(dayGroup.date, 'EEEE, d MMMM')}
-                        </div>
-                        {dayGroup.competitions.map(competition => (
-                          <CompetitionCard key={competition.id} competition={competition} />
-                        ))}
-                      </div>
-                    ) : null}
-                  </div>
-                ))}
-              </div>
+        {competitions.length > 0 ? (
+          <div className="space-y-3">
+            {competitions.map(competition => (
+              <CompetitionCard key={competition.id} competition={competition} />
             ))}
           </div>
         ) : (
@@ -303,3 +228,4 @@ const calculateDistance = (
 };
 
 export default CompetitionsPage;
+
