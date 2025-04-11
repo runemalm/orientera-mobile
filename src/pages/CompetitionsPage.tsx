@@ -316,28 +316,17 @@ const CompetitionsPage: React.FC = () => {
                     </div>
                     
                     {organizeCompetitionsByDay(weekGroup).map((dayGroup, dayIndex) => (
-                      <div key={dayIndex} className="mb-2">
+                      <div key={dayIndex} className="mb-3">
                         {dayGroup.competitions.length > 0 ? (
-                          dayGroup.competitions.map(competition => (
-                            <div key={competition.id} className="flex items-center">
-                              <div className="bg-primary/10 rounded-full w-8 h-8 flex items-center justify-center mr-2 text-primary font-semibold">
-                                {formatDayOfMonth(dayGroup.date)}
-                              </div>
-                              <div className="flex-1">
-                                <CompetitionCard competition={competition} />
-                              </div>
+                          <div className="space-y-2">
+                            <div className="font-medium text-sm text-gray-500 ml-1">
+                              {format(dayGroup.date, 'EEEE, d MMMM')}
                             </div>
-                          ))
-                        ) : (
-                          <div className="flex items-center">
-                            <div className="bg-gray-100 rounded-full w-8 h-8 flex items-center justify-center mr-2 text-gray-500 font-semibold">
-                              {formatDayOfMonth(dayGroup.date)}
-                            </div>
-                            <div className="flex-1 bg-white/50 rounded-lg border border-gray-100 p-3 text-sm text-gray-400">
-                              Inga tävlingar
-                            </div>
+                            {dayGroup.competitions.map(competition => (
+                              <CompetitionCard key={competition.id} competition={competition} />
+                            ))}
                           </div>
-                        )}
+                        ) : null}
                       </div>
                     ))}
                   </div>
