@@ -28,6 +28,9 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
     year: 'numeric'
   });
   
+  // Check if competition is in the past
+  const isCompetitionInPast = new Date(competition.date) < new Date();
+  
   return (
     <div className="space-y-2">
       {/* Competition header */}
@@ -162,6 +165,27 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({
           </Link>
         </div>
       </div>
+      
+      {/* Start Times section - only show if competition is not in the past */}
+      {!isCompetitionInPast && (
+        <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+          <div className="p-3 border-b border-gray-100">
+            <div className="flex items-center gap-2">
+              <Clock size={18} className="text-forest" />
+              <h3 className="font-semibold text-gray-700">Starttider</h3>
+            </div>
+          </div>
+          <div className="p-3">
+            <Link 
+              to={`/competition/${competition.id}/start-times`}
+              className="text-primary hover:underline flex items-center gap-2"
+            >
+              <Clock size={16} />
+              <span>Se starttider</span>
+            </Link>
+          </div>
+        </div>
+      )}
       
       {/* Livelox section - Now last */}
       {competition.liveloxLink && (

@@ -8,6 +8,7 @@ import LandingPage from "./pages/LandingPage";
 import CompetitionsPage from "./pages/CompetitionsPage";
 import CompetitionDetailsPage from "./pages/CompetitionDetailsPage";
 import ParticipantsPage from "./pages/ParticipantsPage";
+import StartTimesPage from "./pages/StartTimesPage";
 import NotFound from "./pages/NotFound";
 import InfoPage from "./pages/InfoPage";
 import Index from "./pages/Index";
@@ -128,6 +129,7 @@ const App = () => (
           <Route path="/info" element={<InfoPage />} />
           <Route path="/competition/:competitionId" element={<CompetitionDetailsPage />} />
           <Route path="/competition/:competitionId/participants" element={<ParticipantsPage />} />
+          <Route path="/competition/:competitionId/start-times" element={<StartTimesPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <KeyboardShortcutHandler />
