@@ -152,63 +152,15 @@ const CompetitionsPage: React.FC = () => {
 
     if (!userLocation) {
       return (
-        <div className="space-y-6 py-6">
-          <div className="bg-white rounded-xl p-5 shadow-sm">
-            <div className="flex flex-col items-center">
-              <div className="bg-location/10 p-3 rounded-full w-14 h-14 mb-4 flex items-center justify-center">
-                <MapPin size={28} className="text-location" />
-              </div>
-              <h2 className="text-xl font-medium mb-2 text-center">Hitta tävlingar nära dig</h2>
-              <p className="text-gray-600 mb-6 text-center">
-                För att visa tävlingar nära dig behöver vi veta din plats.
-              </p>
-              
-              <Tabs defaultValue="search" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 mb-4">
-                  <TabsTrigger value="search">Sök plats</TabsTrigger>
-                  <TabsTrigger value="examples">Populära platser</TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="search" className="space-y-4">
-                  <div className="p-4 border border-gray-100 rounded-lg bg-gray-50">
-                    <div className="flex items-center gap-2 mb-3">
-                      <Search className="h-5 w-5 text-location" />
-                      <span className="font-medium">Skriv in din plats</span>
-                    </div>
-                    
-                    <LocationInputForm 
-                      onLocationSelected={handleUpdateLocation}
-                    />
-                  </div>
-                </TabsContent>
-                
-                <TabsContent value="examples">
-                  <div className="grid gap-2">
-                    {['Stockholm', 'Göteborg', 'Malmö', 'Uppsala', 'Linköping', 'Örebro'].map((city) => (
-                      <Button 
-                        key={city}
-                        variant="outline" 
-                        className="justify-start h-auto py-3 px-4 w-full text-left"
-                        onClick={() => {
-                          handleUpdateLocation({
-                            city: city,
-                            latitude: 0,
-                            longitude: 0
-                          });
-                        }}
-                      >
-                        <MapPin className="h-4 w-4 mr-2 text-location" />
-                        <span>{city}</span>
-                      </Button>
-                    ))}
-                  </div>
-                </TabsContent>
-              </Tabs>
-              
-              <div className="text-center text-xs text-gray-500 mt-6">
-                <p>Din position sparas på din enhet för framtida besök.</p>
-              </div>
+        <div className="p-6">
+          <div className="bg-white rounded-lg p-6 shadow-sm">
+            <div className="text-center mb-6">
+              <MapPin size={32} className="text-location mx-auto mb-2" />
+              <h2 className="text-lg font-medium">Var befinner du dig?</h2>
+              <p className="text-sm text-gray-500">För att visa tävlingar nära dig</p>
             </div>
+            
+            <LocationInputForm onLocationSelected={handleUpdateLocation} />
           </div>
         </div>
       );
@@ -296,10 +248,7 @@ const CompetitionsPage: React.FC = () => {
       <Drawer open={showLocationDrawer} onOpenChange={setShowLocationDrawer}>
         <DrawerContent>
           <DrawerHeader>
-            <DrawerTitle>Ange din plats</DrawerTitle>
-            <DrawerDescription>
-              Ange din plats för att hitta tävlingar nära dig.
-            </DrawerDescription>
+            <DrawerTitle>Byt plats</DrawerTitle>
           </DrawerHeader>
           <div className="p-4">
             <LocationInputForm 
@@ -314,17 +263,11 @@ const CompetitionsPage: React.FC = () => {
         <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>Återställ platsval</DrawerTitle>
-            <DrawerDescription>
-              Detta kommer ta bort din sparade plats. Du kommer att behöva ange din plats igen.
-            </DrawerDescription>
           </DrawerHeader>
-          <div className="p-4 space-y-4">
-            <div className="flex justify-center">
-              <RefreshCw size={48} className="text-primary" />
-            </div>
+          <div className="p-4">
             <Button 
               onClick={handleResetLocation}
-              className="w-full"
+              className="w-full mb-2"
             >
               Återställ plats
             </Button>

@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { MapPin, Search, Loader2 } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface LocationInputFormProps {
   onLocationSelected: (location: { city: string; latitude: number; longitude: number }) => void;
@@ -44,49 +43,23 @@ const LocationInputForm: React.FC<LocationInputFormProps> = ({ onLocationSelecte
       const data = await response.json();
 
       if (data.length === 0) {
-        setError('Kunde inte hitta platsen. Försök med en annan sökning.');
+        setError('Kunde inte hitta platsen');
         setIsSearching(false);
         return;
       }
 
       const result = data[0];
       
-      // Create a more readable location name from the address components
-      const address = result.address;
+      // Create a simple location name
       let locationName = '';
       
-      // Check if there's a road (street) in the address
-      if (address.road) {
-        // If it's a street address, format it with street and number
-        locationName += address.road;
-        if (address.house_number) {
-          locationName += ' ' + address.house_number;
-        }
-        
-        // Add city information
-        if (address.city || address.town || address.village) {
-          const cityName = address.city || address.town || address.village;
-          locationName += ', ' + cityName;
-        }
-      }
-      // If no road but city/town/village exists
-      else if (address.city || address.town || address.village) {
-        const cityName = address.city || address.town || address.village;
-        const county = address.county;
-        
-        // Format as "city, county" if county exists
-        if (county) {
-          locationName = `${cityName}, ${county}`;
-        } else {
-          locationName = cityName;
-        }
-      } else if (result.name) {
-        locationName = result.name;
-      }
-      
-      // If we couldn't build a nice name, fallback to the display_name
-      if (!locationName) {
-        locationName = result.display_name;
+      if (result.address.city || result.address.town || result.address.village) {
+        locationName = result.address.city || result.address.town || result.address.village;
+      } else if (result.display_name) {
+        // Simplify display_name to just the first part (usually the most specific location)
+        locationName = result.display_name.split(',')[0];
+      } else {
+        locationName = searchTerm;
       }
       
       onLocationSelected({
@@ -96,44 +69,43 @@ const LocationInputForm: React.FC<LocationInputFormProps> = ({ onLocationSelecte
       });
       
     } catch (err) {
-      setError('Ett fel uppstod vid sökning av platsen. Försök igen.');
+      setError('Ett fel uppstod vid sökning');
       console.error('Error searching location:', err);
     }
 
     setIsSearching(false);
   };
 
+  // Handle enter key press
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
+        <MapPin className="text-location flex-shrink-0" size={20} />
         <Input
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="T.ex. Stockholm, Göteborg, Örebro"
-          className="flex-1 focus-visible:ring-location"
-          onKeyPress={(e) => {
-            if (e.key === 'Enter') {
-              handleSearch();
-            }
-          }}
+          placeholder="Skriv en plats"
+          className="flex-1"
+          onKeyDown={handleKeyPress}
+          autoFocus
         />
         <Button 
           onClick={handleSearch} 
           disabled={isSearching}
           className="bg-location hover:bg-location-dark"
         >
-          {isSearching ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Search className="h-4 w-4" />
-          )}
+          {isSearching ? <Loader2 className="h-4 w-4 animate-spin" /> : "Sök"}
         </Button>
       </div>
 
       {error && (
-        <Alert variant="destructive">
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
+        <p className="text-red-500 text-sm">{error}</p>
       )}
 
       {onCancel && (
@@ -141,6 +113,23 @@ const LocationInputForm: React.FC<LocationInputFormProps> = ({ onLocationSelecte
           Avbryt
         </Button>
       )}
+      
+      <div className="grid grid-cols-2 gap-2 mt-2">
+        {["Stockholm", "Göteborg", "Malmö"].map((city) => (
+          <Button
+            key={city}
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setSearchTerm(city);
+              handleSearch();
+            }}
+            className="justify-center"
+          >
+            {city}
+          </Button>
+        ))}
+      </div>
     </div>
   );
 };
