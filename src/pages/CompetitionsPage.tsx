@@ -9,7 +9,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import LocationInputForm from '../components/LocationInputForm';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { Competition } from '../types';
-import { format, addDays, startOfWeek, isSameDay, isSameMonth, subWeeks, isAfter, isBefore, startOfDay } from 'date-fns';
+import { format, addDays, startOfWeek, isSameDay, isSameMonth, subDays, isAfter, isBefore, startOfDay } from 'date-fns';
 
 interface CompetitionWithDistance extends Omit<Competition, 'distance'> {
   distance: number;
@@ -49,13 +49,13 @@ const CompetitionsPage: React.FC = () => {
     const processedCompetitions = mockCompetitions.map(processCompetitionWithDistance);
     const today = startOfDay(new Date());
     
-    // Get Monday of the previous week
-    const mondayLastWeek = startOfWeek(subWeeks(today, 1), { weekStartsOn: 1 });
+    // Get date from 5 days ago
+    const fiveDaysAgo = subDays(today, 5);
     
-    // Filter competitions from monday last week onwards
+    // Filter competitions from 5 days ago onwards
     const filteredCompetitions = processedCompetitions.filter(competition => {
       const competitionDate = new Date(competition.date);
-      return isAfter(competitionDate, mondayLastWeek) || isSameDay(competitionDate, mondayLastWeek);
+      return isAfter(competitionDate, fiveDaysAgo) || isSameDay(competitionDate, fiveDaysAgo);
     });
     
     // Sort competitions by date
