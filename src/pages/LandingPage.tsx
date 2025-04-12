@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Compass, MapPin, Calendar, Navigation, FileText, RefreshCw, ArrowRight, Smartphone } from 'lucide-react';
@@ -35,15 +34,15 @@ const LandingPage: React.FC = () => {
   };
   
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-b from-primary/10 to-white">
-      <header className="flex items-center justify-between p-4 bg-white shadow-sm">
+    <div className="flex flex-col min-h-screen bg-gradient-to-b from-primary/10 to-white select-none">
+      <header className="flex items-center justify-between p-4 bg-white shadow-sm user-select-none">
         <div className="flex items-center gap-2">
           <Compass size={24} className="text-primary" />
           <h1 className="text-lg font-semibold">orientera.com</h1>
         </div>
       </header>
       
-      <main className="flex-grow flex flex-col items-center justify-center p-6 text-center">
+      <main className="flex-grow flex flex-col items-center justify-center p-6 text-center user-select-none">
         <div className="max-w-md mx-auto">
           <h1 className="text-4xl font-bold mb-3 flex flex-col items-center">
             <span className="block">Orientering</span>
@@ -118,7 +117,7 @@ interface FeatureCardProps {
 
 const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description, onTap }) => (
   <Card 
-    className="border border-gray-100 bg-white/80 shadow-sm cursor-default"
+    className="border border-gray-100 bg-white/80 shadow-sm cursor-default select-none user-select-none"
     onClick={() => onTap?.(title)}
   >
     <CardContent className="flex flex-col items-center text-center p-4">
