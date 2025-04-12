@@ -18,19 +18,23 @@ const LandingPage: React.FC = () => {
     if (title === 'Tävlingar nära dig') {
       const currentTime = new Date().getTime();
       
-      // Reset count if more than 1.5 seconds between taps
+      // Check if this tap is within the time window of the previous tap
       if (currentTime - lastTapTime > 1500) {
-        setTapCount(1); // Reset to 1 (counting this tap)
+        // If not, reset counter to 1 (counting this tap)
+        setTapCount(1);
       } else {
-        setTapCount(prev => prev + 1);
+        // If yes, increment the counter
+        setTapCount(prevCount => prevCount + 1);
       }
       
+      // Update the last tap time
       setLastTapTime(currentTime);
       
-      // Only reload if exactly 5 consecutive quick taps
-      if (tapCount === 4) { // This becomes 5 with the current tap
+      // Check if we've reached exactly 5 consecutive quick taps
+      if (tapCount === 4) { // This will become 5 with the current tap
         window.location.reload();
-        setTapCount(0); // Reset after activation
+        // Reset counter after activation
+        setTimeout(() => setTapCount(0), 0);
       }
     }
   };

@@ -54,19 +54,23 @@ const KeyboardShortcutHandler = () => {
       if (touch.clientX > screenWidth * 0.8 && touch.clientY < screenHeight * 0.1) {
         const currentTime = new Date().getTime();
         
-        // Reset count if it's been more than 1.5 seconds since last touch
+        // Check if this touch is within the time window of the previous touch
         if (currentTime - lastTouchTime > 1500) {
-          setTouchCount(1); // Reset to 1 (counting this touch)
+          // If not, reset counter to 1 (counting this touch)
+          setTouchCount(1);
         } else {
-          setTouchCount(prev => prev + 1);
+          // If yes, increment the counter
+          setTouchCount(prevCount => prevCount + 1);
         }
         
+        // Update the last touch time
         setLastTouchTime(currentTime);
         
-        // Navigate to landing page after EXACTLY 3 quick taps
-        if (touchCount === 2) { // This becomes 3 with the current tap
+        // Check if we've reached exactly 3 consecutive quick touches
+        if (touchCount === 2) { // This will become 3 with the current touch
           navigateAndResetLocation();
-          setTouchCount(0); // Reset after activation
+          // Reset counter after activation
+          setTimeout(() => setTouchCount(0), 0);
         }
       }
     };
@@ -80,19 +84,23 @@ const KeyboardShortcutHandler = () => {
       if (event.clientX > screenWidth * 0.8 && event.clientY < screenHeight * 0.1) {
         const currentTime = new Date().getTime();
         
-        // Reset count if it's been more than 1.5 seconds since last click
+        // Check if this click is within the time window of the previous click
         if (currentTime - lastClickTime > 1500) {
-          setClickCount(1); // Reset to 1 (counting this click)
+          // If not, reset counter to 1 (counting this click)
+          setClickCount(1);
         } else {
-          setClickCount(prev => prev + 1);
+          // If yes, increment the counter
+          setClickCount(prevCount => prevCount + 1);
         }
         
+        // Update the last click time
         setLastClickTime(currentTime);
         
-        // Navigate to landing page after EXACTLY 3 quick clicks
-        if (clickCount === 2) { // This becomes 3 with the current click
+        // Check if we've reached exactly 3 consecutive quick clicks
+        if (clickCount === 2) { // This will become 3 with the current click
           navigateAndResetLocation();
-          setClickCount(0); // Reset after activation
+          // Reset counter after activation
+          setTimeout(() => setClickCount(0), 0);
         }
       }
     };
