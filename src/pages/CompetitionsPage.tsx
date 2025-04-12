@@ -2,23 +2,22 @@
 import React, { useState, useEffect } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
-import { mockCompetitions } from '../utils/mockData';
 import { MapPin, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import LocationInputForm from '../components/LocationInputForm';
 import { useUserLocation } from '../hooks/useUserLocation';
-import { CompetitionSummary } from '../types'; // Updated type import
-import { format, addDays, startOfWeek, isSameDay, isSameMonth, subDays, isAfter, isBefore, startOfDay } from 'date-fns';
-
-interface CompetitionWithDistance extends Omit<CompetitionSummary, 'distance'> { // Updated type
-  distance: number;
-}
+import { CompetitionSummary } from '../types';
+import { getNearbyCompetitions } from '../services/api';
+import { subDays, startOfDay, isAfter, isBefore, isSameDay } from 'date-fns';
 
 const CompetitionsPage: React.FC = () => {
   const [showLocationSheet, setShowLocationSheet] = useState(false);
-  const { userLocation, isLoading, updateUserLocation } = useUserLocation();
+  const { userLocation, isLoading: isLoadingLocation, updateUserLocation } = useUserLocation();
   const [keyboardVisible, setKeyboardVisible] = useState(false);
+  const [competitions, setCompetitions] = useState<CompetitionSummary[]>([]);
+  const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -37,50 +36,50 @@ const CompetitionsPage: React.FC = () => {
     }
   }, []);
 
+  // Fetch competitions when location is updated
+  useEffect(() => {
+    const fetchCompetitions = async () => {
+      if (!userLocation) return;
+      
+      setIsLoadingCompetitions(true);
+      setError(null);
+      
+      try {
+        const result = await getNearbyCompetitions(userLocation.latitude, userLocation.longitude);
+        
+        // Filter out old competitions (more than 5 days ago)
+        const today = startOfDay(new Date());
+        const fiveDaysAgo = subDays(today, 5);
+        
+        const filteredCompetitions = result.filter(competition => {
+          const competitionDate = new Date(competition.date);
+          return isAfter(competitionDate, fiveDaysAgo) || isSameDay(competitionDate, fiveDaysAgo);
+        });
+        
+        // Sort by date
+        const sortedCompetitions = filteredCompetitions.sort((a, b) => 
+          new Date(a.date).getTime() - new Date(b.date).getTime()
+        );
+        
+        setCompetitions(sortedCompetitions);
+      } catch (err) {
+        console.error('Error fetching competitions:', err);
+        setError('Det gick inte att hämta tävlingar. Försök igen senare.');
+      } finally {
+        setIsLoadingCompetitions(false);
+      }
+    };
+    
+    fetchCompetitions();
+  }, [userLocation]);
+
   const handleUpdateLocation = (location: { city: string; latitude: number; longitude: number }) => {
     updateUserLocation(location);
     setShowLocationSheet(false);
   };
 
-  const processCompetitionWithDistance = (competition: typeof mockCompetitions[0]): CompetitionWithDistance => {
-    if (!userLocation || competition.latitude === null || competition.longitude === null) {
-      return {
-        ...competition,
-        distance: 0
-      };
-    }
-    
-    return {
-      ...competition,
-      distance: calculateDistance(
-        userLocation.latitude,
-        userLocation.longitude,
-        competition.latitude,
-        competition.longitude
-      )
-    };
-  };
-
-  const getCompetitions = (): CompetitionWithDistance[] => {
-    if (!userLocation || mockCompetitions.length === 0) return [];
-    
-    const processedCompetitions = mockCompetitions.map(processCompetitionWithDistance);
-    const today = startOfDay(new Date());
-    
-    const fiveDaysAgo = subDays(today, 5);
-    
-    const filteredCompetitions = processedCompetitions.filter(competition => {
-      const competitionDate = new Date(competition.date);
-      return isAfter(competitionDate, fiveDaysAgo) || isSameDay(competitionDate, fiveDaysAgo);
-    });
-    
-    return filteredCompetitions.sort((a, b) => 
-      new Date(a.date).getTime() - new Date(b.date).getTime()
-    );
-  };
-
   const renderContent = () => {
-    if (isLoading) {
+    if (isLoadingLocation || isLoadingCompetitions) {
       return (
         <div className="flex flex-col justify-center items-center h-[70vh]">
           <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
@@ -109,7 +108,35 @@ const CompetitionsPage: React.FC = () => {
       ? userLocation.city.split(',')[0]
       : userLocation.city;
     
-    const competitions = getCompetitions();
+    if (error) {
+      return (
+        <div className="text-center py-8">
+          <div className="text-red-500 mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mx-auto">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12" y2="16" />
+            </svg>
+          </div>
+          <p className="text-gray-500">{error}</p>
+          <Button 
+            variant="outline" 
+            className="mt-4"
+            onClick={() => {
+              if (userLocation) {
+                setIsLoadingCompetitions(true);
+                getNearbyCompetitions(userLocation.latitude, userLocation.longitude)
+                  .then(data => setCompetitions(data))
+                  .catch(() => setError('Det gick inte att hämta tävlingar. Försök igen senare.'))
+                  .finally(() => setIsLoadingCompetitions(false));
+              }
+            }}
+          >
+            Försök igen
+          </Button>
+        </div>
+      );
+    }
     
     return (
       <>
@@ -186,23 +213,6 @@ const CompetitionsPage: React.FC = () => {
       </Sheet>
     </>
   );
-};
-
-const calculateDistance = (
-  lat1: number,
-  lon1: number,
-  lat2: number,
-  lon2: number
-): number => {
-  const R = 6371;
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  const distance = R * c;
-  return Math.round(distance * 10) / 10;
 };
 
 export default CompetitionsPage;
