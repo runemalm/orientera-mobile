@@ -1,11 +1,10 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
 import { mockCompetitions } from '../utils/mockData';
 import { MapPin, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import LocationInputForm from '../components/LocationInputForm';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { Competition } from '../types';
@@ -16,12 +15,30 @@ interface CompetitionWithDistance extends Omit<Competition, 'distance'> {
 }
 
 const CompetitionsPage: React.FC = () => {
-  const [showLocationDrawer, setShowLocationDrawer] = useState(false);
+  const [showLocationSheet, setShowLocationSheet] = useState(false);
   const { userLocation, isLoading, updateUserLocation } = useUserLocation();
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const handleVisualViewportResize = () => {
+        const newKeyboardVisible = window.visualViewport && 
+          window.visualViewport.height < window.innerHeight * 0.75;
+        setKeyboardVisible(newKeyboardVisible);
+      };
+      
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', handleVisualViewportResize);
+        return () => {
+          window.visualViewport.removeEventListener('resize', handleVisualViewportResize);
+        };
+      }
+    }
+  }, []);
 
   const handleUpdateLocation = (location: { city: string; latitude: number; longitude: number }) => {
     updateUserLocation(location);
-    setShowLocationDrawer(false);
+    setShowLocationSheet(false);
   };
 
   const processCompetitionWithDistance = (competition: typeof mockCompetitions[0]): CompetitionWithDistance => {
@@ -49,16 +66,13 @@ const CompetitionsPage: React.FC = () => {
     const processedCompetitions = mockCompetitions.map(processCompetitionWithDistance);
     const today = startOfDay(new Date());
     
-    // Get date from 5 days ago
     const fiveDaysAgo = subDays(today, 5);
     
-    // Filter competitions from 5 days ago onwards
     const filteredCompetitions = processedCompetitions.filter(competition => {
       const competitionDate = new Date(competition.date);
       return isAfter(competitionDate, fiveDaysAgo) || isSameDay(competitionDate, fiveDaysAgo);
     });
     
-    // Sort competitions by date
     return filteredCompetitions.sort((a, b) => 
       new Date(a.date).getTime() - new Date(b.date).getTime()
     );
@@ -112,7 +126,7 @@ const CompetitionsPage: React.FC = () => {
               variant="outline" 
               size="sm"
               className="text-forest border-forest/30 hover:bg-forest/10"
-              onClick={() => setShowLocationDrawer(true)}
+              onClick={() => setShowLocationSheet(true)}
             >
               Byt plats
             </Button>
@@ -149,23 +163,26 @@ const CompetitionsPage: React.FC = () => {
         </div>
       </MobileLayout>
       
-      <Drawer 
-        open={showLocationDrawer} 
-        onOpenChange={setShowLocationDrawer}
+      <Sheet 
+        open={showLocationSheet} 
+        onOpenChange={setShowLocationSheet}
         modal={true}
       >
-        <DrawerContent className="p-4 max-h-[90vh] overflow-y-auto">
-          <DrawerHeader>
-            <DrawerTitle>Byt plats</DrawerTitle>
-          </DrawerHeader>
+        <SheetContent 
+          side="bottom" 
+          className={`p-4 max-h-[90vh] overflow-y-auto z-[100] ${keyboardVisible ? 'fixed bottom-0 pb-24' : ''}`}
+        >
+          <SheetHeader>
+            <SheetTitle>Byt plats</SheetTitle>
+          </SheetHeader>
           <div className="pb-8">
             <LocationInputForm 
               onLocationSelected={handleUpdateLocation}
-              onCancel={() => setShowLocationDrawer(false)}
+              onCancel={() => setShowLocationSheet(false)}
             />
           </div>
-        </DrawerContent>
-      </Drawer>
+        </SheetContent>
+      </Sheet>
     </>
   );
 };
