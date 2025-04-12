@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { CompetitionDetail, CompetitionResource } from '../types';
+import { CompetitionDetail } from '../types';
 import { Users, Map, FileText, Car } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Separator } from '@/components/ui/separator';
@@ -18,11 +18,6 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
     month: 'long',
     year: 'numeric'
   });
-  
-  // Filter resources to only show those that should be displayed as files
-  const filesToDisplay = competition.resources?.filter(resource => 
-    resource.format === 'pdf' || resource.format === 'png'
-  ) || [];
   
   return (
     <div className="space-y-4">
@@ -49,57 +44,28 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
         
         <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 flex flex-col items-center justify-center">
           <p className="text-xs text-gray-500 uppercase">Startar</p>
-          <p className="font-semibold">{competition.startTime || 'TBD'}</p>
+          <p className="font-semibold">{competition.startTime}</p>
         </div>
         
         <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 flex flex-col items-center justify-center col-span-2">
           <div className="flex items-center gap-2">
             <p className="font-semibold">{competition.location}</p>
           </div>
-          {competition.distance !== undefined && (
-            <p className="text-xs text-gray-500 mt-1">{competition.distance} km från dig</p>
-          )}
+          <p className="text-xs text-gray-500 mt-1">{competition.distance} km från dig</p>
         </div>
       </div>
       
       {/* Simplified uniform sections */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
         {/* Documents section - show files directly */}
-        {filesToDisplay.length > 0 && (
+        {competition.files.length > 0 && (
           <>
-            {filesToDisplay.map((resource) => (
-              <FileItem 
-                key={resource.eventorId} 
-                file={{
-                  id: resource.eventorId,
-                  name: resource.name,
-                  type: resource.type,
-                  url: resource.url,
-                  uploadDate: resource.uploadDate
-                }} 
-              />
+            {competition.files.map((file) => (
+              <FileItem key={file.id} file={file} />
             ))}
             <Separator />
           </>
         )}
-        
-        {/* Link to documents page for all documents */}
-        <Link 
-          to={`/competition/${competition.id}/documents`}
-          className="flex items-center justify-between p-4 hover:bg-gray-50"
-        >
-          <div className="flex items-center gap-3">
-            <FileText size={20} className="text-forest" />
-            <span className="font-medium">Alla dokument</span>
-          </div>
-          <div className="text-gray-400">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="m9 18 6-6-6-6"/>
-            </svg>
-          </div>
-        </Link>
-        
-        <Separator />
         
         {/* Registered participants */}
         <Link 
