@@ -70,7 +70,7 @@ export enum ResourceFormat {
 
 export type TabName = 'competitions' | 'info';
 
-// Renamed Competition to CompetitionSummary
+// CompetitionSummary for list views
 export interface CompetitionSummary {
   id: string;
   name: string;
@@ -79,42 +79,49 @@ export interface CompetitionSummary {
   distance: number; // Distance in km from user's location
   club: string;
   description: string;
-  discipline: Discipline; // Changed to enum type
-  competitionType: CompetitionType; // Changed to enum type
-  district: OrienteeringDistrict; // Changed to enum type
+  discipline: Discipline;
+  competitionType: CompetitionType;
+  district: OrienteeringDistrict;
   coordinates: {
     latitude: number;
     longitude: number;
   };
 }
 
-// Updated Competition to match C# backend DTO
-export interface Competition extends Omit<CompetitionSummary, 'discipline' | 'competitionType' | 'district' | 'coordinates'> {
+// Competition class to match the backend C# model
+export interface Competition {
+  id: string;
   eventorId: string;
-  discipline: Discipline; // Changed to enum type
-  competitionType: CompetitionType; // Changed to enum type
-  district: OrienteeringDistrict; // Changed to enum type
-  branch: Branch; // Changed to enum type
+  name: string;
+  date: string;
+  location: string;
+  distance: number;
+  club: string;
+  description: string;
+  discipline: Discipline;
+  competitionType: CompetitionType;
+  district: OrienteeringDistrict;
+  branch: Branch;
   latitude?: number;
   longitude?: number;
   registrationDeadline: string;
   startTime: string;
   contact: string;
   eventorLink?: string;
-  website?: string; // Keeping for backward compatibility
-  liveloxLink?: string; 
+  website?: string;
+  liveloxLink?: string;
   isRegistered?: boolean;
   isWaitlisted?: boolean;
-  resources: Resource[]; // Already renamed from files
+  resources: Resource[];
 }
 
-// Updated Resource interface to match backend C# model
+// Resource interface matching backend C# model
 export interface Resource {
-  id: string; // Using id for client-side instead of EventorId for backward compatibility
-  eventorId?: string; // Optional to match backend
+  id: string;
+  eventorId?: string;
   name: string;
-  type: ResourceType; // Already an enum
-  format: ResourceFormat; // Already an enum
+  type: ResourceType;
+  format: ResourceFormat;
   url: string;
-  uploadDate: string; // Keeping as string for now, will need conversion for backend communication
+  uploadDate: string;
 }
