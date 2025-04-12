@@ -1,4 +1,3 @@
-
 // Enums to match backend C# models
 export enum Branch {
   FootO = 'FootO',    // Orienteringslöpning
@@ -110,10 +109,7 @@ export interface Competition {
   startTime: string;
   contact: string;
   eventorLink?: string;
-  website?: string;
   liveloxLink?: string;
-  isRegistered?: boolean;
-  isWaitlisted?: boolean;
   resources: Resource[];
 }
 
