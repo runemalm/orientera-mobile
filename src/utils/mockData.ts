@@ -1,4 +1,5 @@
-import { CompetitionSummary, Competition, ResourceType, ResourceFormat, Resource } from "../types";
+
+import { CompetitionSummary, Competition, ResourceType, ResourceFormat, Resource, Branch, CompetitionType, Discipline, OrienteeringDistrict } from "../types";
 
 export const mockCompetitions: CompetitionSummary[] = [
   {
@@ -9,9 +10,9 @@ export const mockCompetitions: CompetitionSummary[] = [
     distance: 4.3,
     club: "Ålems OK",
     description: "Nationell medeldistans i teknisk terräng med inslag av öppna områden.",
-    discipline: "Medel", 
-    competitionType: "Nationell tävling",
-    district: "Smålands OF",
+    discipline: Discipline.Middle, 
+    competitionType: CompetitionType.National,
+    district: OrienteeringDistrict.Smaland,
     coordinates: {
       latitude: 56.9258,
       longitude: 16.4332
@@ -25,9 +26,9 @@ export const mockCompetitions: CompetitionSummary[] = [
     distance: 3.8,
     club: "SOK Viljan",
     description: "Nationell långdistans för veteraner i varierande skogsterräng.",
-    discipline: "Lång",
-    competitionType: "Nationell tävling",
-    district: "Smålands OF",
+    discipline: Discipline.Long,
+    competitionType: CompetitionType.National,
+    district: OrienteeringDistrict.Smaland,
     coordinates: {
       latitude: 57.6655,
       longitude: 15.8568
@@ -41,9 +42,9 @@ export const mockCompetitions: CompetitionSummary[] = [
     distance: 5.6,
     club: "Målilla OK",
     description: "Utmanande långdistansorientering i kuperad terräng med tekniska inslag.",
-    discipline: "Lång",
-    competitionType: "Närtävling",
-    district: "Smålands OF",
+    discipline: Discipline.Long,
+    competitionType: CompetitionType.Near,
+    district: OrienteeringDistrict.Smaland,
     coordinates: {
       latitude: 59.3349,
       longitude: 18.0603
@@ -57,9 +58,9 @@ export const mockCompetitions: CompetitionSummary[] = [
     distance: 2.7,
     club: "Lessebo OK",
     description: "Medeldistans för ungdomar och motionärer i lättframkomlig terräng.",
-    discipline: "Medel",
-    competitionType: "Närtävling",
-    district: "Smålands OF",
+    discipline: Discipline.Middle,
+    competitionType: CompetitionType.Near,
+    district: OrienteeringDistrict.Smaland,
     coordinates: {
       latitude: 56.7512,
       longitude: 15.2722
@@ -73,9 +74,9 @@ export const mockCompetitions: CompetitionSummary[] = [
     distance: 1.8,
     club: "OK Orion",
     description: "Lagstafett med tre sträckor av varierande svårighetsgrad.",
-    discipline: "Lång",
-    competitionType: "Närtävling",
-    district: "Smålands OF",
+    discipline: Discipline.Long,
+    competitionType: CompetitionType.Near,
+    district: OrienteeringDistrict.Smaland,
     coordinates: {
       latitude: 59.3400,
       longitude: 18.0700
@@ -89,9 +90,9 @@ export const mockCompetitions: CompetitionSummary[] = [
     distance: 3.2,
     club: "Lessebo OK",
     description: "Teknisk orientering i detaljrik terräng, perfekt för veteraner.",
-    discipline: "Lång",
-    competitionType: "Närtävling",
-    district: "Smålands OF",
+    discipline: Discipline.Long,
+    competitionType: CompetitionType.Near,
+    district: OrienteeringDistrict.Smaland,
     coordinates: {
       latitude: 56.7512,
       longitude: 15.2722
@@ -105,9 +106,9 @@ export const mockCompetitions: CompetitionSummary[] = [
     distance: 2.9,
     club: "Torsås OK",
     description: "Vänlig terräng med blandskog och öppna gläntor.",
-    discipline: "Lång",
-    competitionType: "Närtävling",
-    district: "Smålands OF",
+    discipline: Discipline.Long,
+    competitionType: CompetitionType.Near,
+    district: OrienteeringDistrict.Smaland,
     coordinates: {
       latitude: 56.4108,
       longitude: 16.0030
@@ -121,9 +122,9 @@ export const mockCompetitions: CompetitionSummary[] = [
     distance: 3.4,
     club: "Torsås OK",
     description: "Långdistansorientering för veteraner i kuperad skogsterräng.",
-    discipline: "Lång",
-    competitionType: "Närtävling",
-    district: "Smålands OF",
+    discipline: Discipline.Long,
+    competitionType: CompetitionType.Near,
+    district: OrienteeringDistrict.Smaland,
     coordinates: {
       latitude: 56.4108,
       longitude: 16.0030
@@ -135,7 +136,7 @@ export const mockCompetitionDetails: Record<string, Competition> = {
   "comp-1": {
     ...mockCompetitions[0],
     eventorId: "108121",
-    branch: "FootO",
+    branch: Branch.FootO,
     resources: [
       {
         id: "file-1",
@@ -166,7 +167,7 @@ export const mockCompetitionDetails: Record<string, Competition> = {
   "comp-2": {
     ...mockCompetitions[1],
     eventorId: "109122",
-    branch: "FootO",
+    branch: Branch.FootO,
     resources: [
       {
         id: "file-3",
@@ -197,7 +198,7 @@ export const mockCompetitionDetails: Record<string, Competition> = {
   "comp-3": {
     ...mockCompetitions[2],
     eventorId: "109123",
-    branch: "FootO",
+    branch: Branch.FootO,
     resources: [
       {
         id: "file-5",
@@ -217,7 +218,7 @@ export const mockCompetitionDetails: Record<string, Competition> = {
   "comp-4": {
     ...mockCompetitions[3],
     eventorId: "109124",
-    branch: "FootO",
+    branch: Branch.FootO,
     resources: [
       {
         id: "file-14",
@@ -248,7 +249,7 @@ export const mockCompetitionDetails: Record<string, Competition> = {
   "comp-5": {
     ...mockCompetitions[4],
     eventorId: "109125",
-    branch: "FootO",
+    branch: Branch.FootO,
     resources: [
       {
         id: "file-8",
@@ -287,7 +288,7 @@ export const mockCompetitionDetails: Record<string, Competition> = {
   "comp-6": {
     ...mockCompetitions[5],
     eventorId: "109126",
-    branch: "FootO",
+    branch: Branch.FootO,
     resources: [
       {
         id: "file-11",
@@ -308,7 +309,7 @@ export const mockCompetitionDetails: Record<string, Competition> = {
   "comp-7": {
     ...mockCompetitions[6],
     eventorId: "109127",
-    branch: "FootO",
+    branch: Branch.FootO,
     resources: [
       {
         id: "file-12",
@@ -338,7 +339,7 @@ export const mockCompetitionDetails: Record<string, Competition> = {
   "comp-8": {
     ...mockCompetitions[7],
     eventorId: "109128",
-    branch: "FootO",
+    branch: Branch.FootO,
     resources: [
       {
         id: "file-16",

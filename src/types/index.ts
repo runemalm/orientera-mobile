@@ -79,9 +79,9 @@ export interface CompetitionSummary {
   distance: number; // Distance in km from user's location
   club: string;
   description: string;
-  discipline: string; // Changed to string to match backend
-  competitionType: string; // Changed to string to match backend
-  district: string; // Changed to string to match backend
+  discipline: Discipline; // Changed to enum type
+  competitionType: CompetitionType; // Changed to enum type
+  district: OrienteeringDistrict; // Changed to enum type
   coordinates: {
     latitude: number;
     longitude: number;
@@ -91,10 +91,10 @@ export interface CompetitionSummary {
 // Updated Competition to match C# backend DTO
 export interface Competition extends Omit<CompetitionSummary, 'discipline' | 'competitionType' | 'district' | 'coordinates'> {
   eventorId: string;
-  discipline: string;
-  competitionType: string;
-  district: string;
-  branch: string;
+  discipline: Discipline; // Changed to enum type
+  competitionType: CompetitionType; // Changed to enum type
+  district: OrienteeringDistrict; // Changed to enum type
+  branch: Branch; // Changed to enum type
   latitude?: number;
   longitude?: number;
   registrationDeadline: string;
@@ -113,8 +113,8 @@ export interface Resource {
   id: string; // Using id for client-side instead of EventorId for backward compatibility
   eventorId?: string; // Optional to match backend
   name: string;
-  type: ResourceType;
-  format: ResourceFormat;
+  type: ResourceType; // Already an enum
+  format: ResourceFormat; // Already an enum
   url: string;
   uploadDate: string; // Keeping as string for now, will need conversion for backend communication
 }
