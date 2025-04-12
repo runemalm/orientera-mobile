@@ -1,5 +1,4 @@
-
-import { CompetitionSummary, Competition, CompetitionType, CompetitionDiscipline, OrienteeringDistrict, Resource } from "../types";
+import { CompetitionSummary, Competition, ResourceType, ResourceFormat, Resource } from "../types";
 
 export const mockCompetitions: CompetitionSummary[] = [
   {
@@ -140,15 +139,19 @@ export const mockCompetitionDetails: Record<string, Competition> = {
     resources: [
       {
         id: "file-1",
+        eventorId: "doc-234",
         name: "Inbjudan.pdf",
-        type: "invitation",
+        type: ResourceType.Invitation,
+        format: ResourceFormat.Pdf,
         url: "https://eventor.orientering.se/Documents/Event/108121/0/Inbjudan",
         uploadDate: "2025-03-01"
       },
       {
         id: "file-2",
+        eventorId: "doc-235",
         name: "PM.pdf",
-        type: "pm",
+        type: ResourceType.PM,
+        format: ResourceFormat.Pdf,
         url: "https://eventor.orientering.se/Documents/Event/110144/1/PM",
         uploadDate: "2025-04-03"
       }
@@ -167,15 +170,19 @@ export const mockCompetitionDetails: Record<string, Competition> = {
     resources: [
       {
         id: "file-3",
+        eventorId: "doc-236",
         name: "Inbjudan.pdf",
-        type: "invitation",
+        type: ResourceType.Invitation,
+        format: ResourceFormat.Pdf,
         url: "https://eventor.orientering.se/Documents/Event/108121/0/Inbjudan",
         uploadDate: "2025-03-15"
       },
       {
         id: "file-4",
+        eventorId: "doc-237",
         name: "PM.pdf",
-        type: "pm",
+        type: ResourceType.PM,
+        format: ResourceFormat.Pdf,
         url: "https://eventor.orientering.se/Documents/Event/110144/1/PM",
         uploadDate: "2025-03-30"
       }
@@ -194,8 +201,10 @@ export const mockCompetitionDetails: Record<string, Competition> = {
     resources: [
       {
         id: "file-5",
+        eventorId: "doc-238",
         name: "Invitation.pdf",
-        type: "invitation",
+        type: ResourceType.Invitation,
+        format: ResourceFormat.Pdf,
         url: "https://eventor.orientering.se/Documents/Event/108121/0/Inbjudan",
         uploadDate: "2025-04-01"
       }
@@ -212,15 +221,19 @@ export const mockCompetitionDetails: Record<string, Competition> = {
     resources: [
       {
         id: "file-14",
+        eventorId: "doc-239",
         name: "Inbjudan.pdf",
-        type: "invitation",
+        type: ResourceType.Invitation,
+        format: ResourceFormat.Pdf,
         url: "https://eventor.orientering.se/Documents/Event/108121/0/Inbjudan",
         uploadDate: "2025-03-20"
       },
       {
         id: "file-15",
+        eventorId: "doc-240",
         name: "PM.pdf",
-        type: "pm",
+        type: ResourceType.PM,
+        format: ResourceFormat.Pdf,
         url: "https://eventor.orientering.se/Documents/Event/110144/1/PM",
         uploadDate: "2025-04-07"
       }
@@ -239,22 +252,28 @@ export const mockCompetitionDetails: Record<string, Competition> = {
     resources: [
       {
         id: "file-8",
+        eventorId: "doc-241",
         name: "Invitation.pdf",
-        type: "invitation",
+        type: ResourceType.Invitation,
+        format: ResourceFormat.Pdf,
         url: "https://eventor.orientering.se/Documents/Event/108121/0/Inbjudan",
         uploadDate: "2025-04-15"
       },
       {
         id: "file-9",
+        eventorId: "doc-242",
         name: "PM.pdf",
-        type: "pm",
+        type: ResourceType.PM,
+        format: ResourceFormat.Pdf,
         url: "https://eventor.orientering.se/Documents/Event/110144/1/PM",
         uploadDate: "2025-05-10"
       },
       {
         id: "file-10",
+        eventorId: "doc-243",
         name: "Start List.pdf",
-        type: "startlist",
+        type: ResourceType.StartList,
+        format: ResourceFormat.Pdf,
         url: "https://eventor.orientering.se/Events/StartList?eventId=50210&groupBy=EventClass",
         uploadDate: "2025-05-14"
       }
@@ -272,8 +291,10 @@ export const mockCompetitionDetails: Record<string, Competition> = {
     resources: [
       {
         id: "file-11",
+        eventorId: "doc-244",
         name: "Inbjudan.pdf",
-        type: "invitation",
+        type: ResourceType.Invitation,
+        format: ResourceFormat.Pdf,
         url: "https://eventor.orientering.se/Documents/Event/108121/0/Inbjudan",
         uploadDate: "2025-05-01"
       }
@@ -291,15 +312,19 @@ export const mockCompetitionDetails: Record<string, Competition> = {
     resources: [
       {
         id: "file-12",
+        eventorId: "doc-245",
         name: "Inbjudan.pdf",
-        type: "invitation",
+        type: ResourceType.Invitation,
+        format: ResourceFormat.Pdf,
         url: "https://eventor.orientering.se/Documents/Event/108121/0/Inbjudan",
         uploadDate: "2025-05-10"
       },
       {
         id: "file-13",
+        eventorId: "doc-246",
         name: "PM.pdf",
-        type: "pm",
+        type: ResourceType.PM,
+        format: ResourceFormat.Pdf,
         url: "https://eventor.orientering.se/Documents/Event/110144/1/PM",
         uploadDate: "2025-05-25"
       }
@@ -317,15 +342,19 @@ export const mockCompetitionDetails: Record<string, Competition> = {
     resources: [
       {
         id: "file-16",
+        eventorId: "doc-247",
         name: "Inbjudan.pdf",
-        type: "invitation",
+        type: ResourceType.Invitation,
+        format: ResourceFormat.Pdf,
         url: "https://eventor.orientering.se/Documents/Event/108121/0/Inbjudan",
         uploadDate: "2025-03-25"
       },
       {
         id: "file-17",
+        eventorId: "doc-248",
         name: "PM.pdf",
-        type: "pm",
+        type: ResourceType.PM,
+        format: ResourceFormat.Pdf,
         url: "https://eventor.orientering.se/Documents/Event/110144/1/PM",
         uploadDate: "2025-04-14"
       }

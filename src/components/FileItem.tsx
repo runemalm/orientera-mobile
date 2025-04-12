@@ -1,36 +1,40 @@
 
 import React from 'react';
-import { Resource } from '../types'; // Updated type import
-import { FileText, FileSpreadsheet, FileClock } from 'lucide-react';
+import { Resource, ResourceType, ResourceFormat } from '../types'; // Updated type imports
+import { FileText, FileSpreadsheet, FileClock, Link as LinkIcon } from 'lucide-react';
 
 interface FileItemProps {
-  file: Resource; // Updated type
+  file: Resource;
 }
 
 const FileItem: React.FC<FileItemProps> = ({ file }) => {
   // Translate file types to Swedish
-  const getFileTypeName = (type: string) => {
+  const getFileTypeName = (type: ResourceType) => {
     switch (type) {
-      case 'results': return 'resultat';
-      case 'startlist': return 'startlista';
-      case 'splits': return 'sträcktider';
-      case 'invitation': return 'inbjudan';
-      case 'pm': return 'pm';
+      case ResourceType.Results: return 'resultat';
+      case ResourceType.StartList: return 'startlista';
+      case ResourceType.Splits: return 'sträcktider';
+      case ResourceType.Invitation: return 'inbjudan';
+      case ResourceType.PM: return 'pm';
       default: return 'dokument';
     }
   };
 
   const getFileIcon = () => {
+    if (file.format === ResourceFormat.Link) {
+      return <LinkIcon className="text-blue-500" size={20} />;
+    }
+
     switch (file.type) {
-      case 'results':
+      case ResourceType.Results:
         return <FileSpreadsheet className="text-blue-500" size={20} />;
-      case 'startlist':
+      case ResourceType.StartList:
         return <FileText className="text-green-500" size={20} />;
-      case 'splits':
+      case ResourceType.Splits:
         return <FileSpreadsheet className="text-purple-500" size={20} />;
-      case 'invitation':
+      case ResourceType.Invitation:
         return <FileText className="text-amber-500" size={20} />;
-      case 'pm':
+      case ResourceType.PM:
         return <FileText className="text-red-500" size={20} />;
       default:
         return <FileClock className="text-gray-500" size={20} />;

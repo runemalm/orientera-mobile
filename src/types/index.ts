@@ -41,13 +41,31 @@ export interface Competition extends Omit<CompetitionSummary, 'discipline' | 'co
   resources: Resource[]; // Already renamed from files
 }
 
-// Resource interface (already renamed from CompetitionFile)
+// Updated Resource interface to match backend C# model
 export interface Resource {
-  id: string;
+  id: string; // Using id for client-side instead of EventorId for backward compatibility
+  eventorId?: string; // Optional to match backend
   name: string;
-  type: 'startlist' | 'results' | 'splits' | 'invitation' | 'pm' | 'other';
+  type: ResourceType;
+  format: ResourceFormat;
   url: string;
-  uploadDate: string;
+  uploadDate: string; // Keeping as string for now, will need conversion for backend communication
+}
+
+// Add enums for Resource Type and Format to match backend
+export enum ResourceType {
+  StartList = 'StartList',
+  Results = 'Results',
+  Splits = 'Splits',
+  Invitation = 'Invitation',
+  PM = 'PM',
+  Other = 'Other'
+}
+
+export enum ResourceFormat {
+  Link = 'Link',
+  Pdf = 'Pdf',
+  Png = 'Png'
 }
 
 export type TabName = 'competitions' | 'info';
