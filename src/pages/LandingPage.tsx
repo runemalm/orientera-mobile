@@ -17,25 +17,26 @@ const LandingPage: React.FC = () => {
   const handleFeatureCardTap = (title: string) => {
     if (title === 'Tävlingar nära dig') {
       const currentTime = new Date().getTime();
+      const timeSinceLastTap = currentTime - lastTapTime;
       
-      // Check if this tap is within the time window of the previous tap
-      if (currentTime - lastTapTime > 1500) {
-        // If not, reset counter to 1 (counting this tap)
-        setTapCount(1);
+      // If more than 1.5 seconds between taps, reset counter
+      if (timeSinceLastTap > 1500) {
+        setTapCount(1); // Start with 1 for this tap
       } else {
-        // If yes, increment the counter
-        setTapCount(prevCount => prevCount + 1);
+        // Only increment if it's a quick consecutive tap
+        setTapCount(prev => prev + 1);
       }
       
-      // Update the last tap time
-      setLastTapTime(currentTime);
-      
-      // Check if we've reached exactly 5 consecutive quick taps
-      if (tapCount === 4) { // This will become 5 with the current tap
+      // Check for activation only on exact count of 5
+      const newCount = timeSinceLastTap <= 1500 ? tapCount + 1 : 1;
+      if (newCount === 5) {
         window.location.reload();
         // Reset counter after activation
-        setTimeout(() => setTapCount(0), 0);
+        setTapCount(0);
       }
+      
+      // Always update the last tap time
+      setLastTapTime(currentTime);
     }
   };
   

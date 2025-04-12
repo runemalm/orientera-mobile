@@ -53,28 +53,33 @@ const KeyboardShortcutHandler = () => {
       // Check if touch is in top right corner (top 10%, right 20% of screen)
       if (touch.clientX > screenWidth * 0.8 && touch.clientY < screenHeight * 0.1) {
         const currentTime = new Date().getTime();
+        const timeSinceLastTouch = currentTime - lastTouchTime;
         
-        // Reset count if more than 1.5 seconds between touches
-        if (currentTime - lastTouchTime > 1500) {
-          setTouchCount(1);
+        // If more than 1.5 seconds between touches, reset counter
+        if (timeSinceLastTouch > 1500) {
+          setTouchCount(1); // Start with 1 for this touch
         } else {
-          // Increment count for consecutive touches
+          // Only increment if it's a quick consecutive touch
           setTouchCount(prev => prev + 1);
         }
         
-        // Update the last touch time
-        setLastTouchTime(currentTime);
-        
-        // Activate on exactly 3 or 5 consecutive touches
-        if (touchCount === 2 || touchCount === 4) { 
+        // Check for activation only on exact counts (3 or 5)
+        const newCount = timeSinceLastTouch <= 1500 ? touchCount + 1 : 1;
+        if (newCount === 3 || newCount === 5) {
           navigateAndResetLocation();
-          // Reset after activation
-          setTimeout(() => setTouchCount(0), 0);
+          // Reset counter after activation
+          setTouchCount(0);
         }
+        
+        // Always update the last touch time
+        setLastTouchTime(currentTime);
+      } else {
+        // Touch outside target area, reset counter
+        setTouchCount(0);
       }
     };
     
-    // Mouse click handler for desktop web - sequential clicks in top right corner
+    // Mouse click handler for desktop web
     const handleMouseClick = (event: MouseEvent) => {
       const screenWidth = window.innerWidth;
       const screenHeight = window.innerHeight;
@@ -82,24 +87,29 @@ const KeyboardShortcutHandler = () => {
       // Check if click is in top right corner (top 10%, right 20% of screen)
       if (event.clientX > screenWidth * 0.8 && event.clientY < screenHeight * 0.1) {
         const currentTime = new Date().getTime();
+        const timeSinceLastClick = currentTime - lastClickTime;
         
-        // Reset count if more than 1.5 seconds between clicks
-        if (currentTime - lastClickTime > 1500) {
-          setClickCount(1);
+        // If more than 1.5 seconds between clicks, reset counter
+        if (timeSinceLastClick > 1500) {
+          setClickCount(1); // Start with 1 for this click
         } else {
-          // Increment count for consecutive clicks
+          // Only increment if it's a quick consecutive click
           setClickCount(prev => prev + 1);
         }
         
-        // Update the last click time
-        setLastClickTime(currentTime);
-        
-        // Activate on exactly 3 or 5 consecutive clicks
-        if (clickCount === 2 || clickCount === 4) { 
+        // Check for activation only on exact counts (3 or 5)
+        const newCount = timeSinceLastClick <= 1500 ? clickCount + 1 : 1;
+        if (newCount === 3 || newCount === 5) {
           navigateAndResetLocation();
-          // Reset after activation
-          setTimeout(() => setClickCount(0), 0);
+          // Reset counter after activation
+          setClickCount(0);
         }
+        
+        // Always update the last click time
+        setLastClickTime(currentTime);
+      } else {
+        // Click outside target area, reset counter
+        setClickCount(0);
       }
     };
     
@@ -144,4 +154,3 @@ const App = () => (
 );
 
 export default App;
-
