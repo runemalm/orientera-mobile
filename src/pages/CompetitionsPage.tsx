@@ -3,12 +3,11 @@ import React, { useState } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
 import { mockCompetitions } from '../utils/mockData';
-import { MapPin, RefreshCw, Loader2 } from 'lucide-react';
+import { MapPin, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import LocationInputForm from '../components/LocationInputForm';
 import { useUserLocation } from '../hooks/useUserLocation';
-import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { Competition } from '../types';
 import { format, addDays, startOfWeek, isSameDay, isSameMonth, subWeeks, isAfter, isBefore, startOfDay } from 'date-fns';
 
@@ -18,33 +17,11 @@ interface CompetitionWithDistance extends Omit<Competition, 'distance'> {
 
 const CompetitionsPage: React.FC = () => {
   const [showLocationDrawer, setShowLocationDrawer] = useState(false);
-  const [showLocationPopover, setShowLocationPopover] = useState(false);
-  const [showResetDrawer, setShowResetDrawer] = useState(false);
-  const [tapCount, setTapCount] = useState(0);
-  const { userLocation, isFirstVisit, isLoading, updateUserLocation, resetUserLocation } = useUserLocation();
+  const { userLocation, isLoading, updateUserLocation } = useUserLocation();
 
   const handleUpdateLocation = (location: { city: string; latitude: number; longitude: number }) => {
     updateUserLocation(location);
     setShowLocationDrawer(false);
-    setShowLocationPopover(false);
-  };
-  
-  const handleResetLocation = () => {
-    resetUserLocation();
-    setShowResetDrawer(false);
-  };
-
-  const handleTap = () => {
-    setTapCount(prevCount => prevCount + 1);
-    
-    if (tapCount >= 2) {
-      setShowResetDrawer(true);
-      setTapCount(0);
-    } else {
-      setTimeout(() => {
-        setTapCount(0);
-      }, 2000);
-    }
   };
 
   const processCompetitionWithDistance = (competition: typeof mockCompetitions[0]): CompetitionWithDistance => {
@@ -131,27 +108,14 @@ const CompetitionsPage: React.FC = () => {
                 <span className="font-medium text-sm line-clamp-1 text-forest-dark">{displayName}</span>
               </div>
             </div>
-            <Popover open={showLocationPopover} onOpenChange={setShowLocationPopover}>
-              <PopoverTrigger asChild>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  className="text-forest border-forest/30 hover:bg-forest/10"
-                  onClick={() => setShowLocationDrawer(true)}
-                >
-                  Byt plats
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-80 p-0">
-                <div className="p-4">
-                  <div className="font-medium mb-2">Byt plats</div>
-                  <LocationInputForm 
-                    onLocationSelected={handleUpdateLocation}
-                    onCancel={() => setShowLocationPopover(false)}
-                  />
-                </div>
-              </PopoverContent>
-            </Popover>
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="text-forest border-forest/30 hover:bg-forest/10"
+              onClick={() => setShowLocationDrawer(true)}
+            >
+              Byt plats
+            </Button>
           </div>
         </div>
         
@@ -180,7 +144,7 @@ const CompetitionsPage: React.FC = () => {
   return (
     <>
       <MobileLayout title="Tävlingar i närheten">
-        <div className="mt-4" onClick={handleTap}>
+        <div className="mt-4">
           {renderContent()}
         </div>
       </MobileLayout>
@@ -190,42 +154,15 @@ const CompetitionsPage: React.FC = () => {
         onOpenChange={setShowLocationDrawer}
         modal={true}
       >
-        <DrawerContent className="max-h-[90vh] overflow-y-auto">
+        <DrawerContent className="p-4 max-h-[90vh] overflow-y-auto">
           <DrawerHeader>
             <DrawerTitle>Byt plats</DrawerTitle>
           </DrawerHeader>
-          <div className="p-4 pb-8">
+          <div className="pb-8">
             <LocationInputForm 
               onLocationSelected={handleUpdateLocation}
               onCancel={() => setShowLocationDrawer(false)}
             />
-          </div>
-        </DrawerContent>
-      </Drawer>
-      
-      <Drawer 
-        open={showResetDrawer} 
-        onOpenChange={setShowResetDrawer}
-        modal={true}
-      >
-        <DrawerContent>
-          <DrawerHeader>
-            <DrawerTitle>Återställ platsval</DrawerTitle>
-          </DrawerHeader>
-          <div className="p-4 pb-8">
-            <Button 
-              onClick={handleResetLocation}
-              className="w-full mb-2 bg-forest hover:bg-forest-dark"
-            >
-              Återställ plats
-            </Button>
-            <Button 
-              variant="outline"
-              onClick={() => setShowResetDrawer(false)}
-              className="w-full"
-            >
-              Avbryt
-            </Button>
           </div>
         </DrawerContent>
       </Drawer>
