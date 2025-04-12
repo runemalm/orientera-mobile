@@ -15,7 +15,7 @@ const LandingPage: React.FC = () => {
   };
 
   const handleFeatureCardTap = (title: string) => {
-    if (title === 'Hitta tävlingar') {
+    if (title === 'Tävlingar nära dig') {
       const currentTime = new Date().getTime();
       
       // Reset count if more than 1.5 seconds between taps
@@ -27,8 +27,8 @@ const LandingPage: React.FC = () => {
       
       setLastTapTime(currentTime);
       
-      // Reload page after 10 quick taps
-      if (tapCount === 9) {
+      // Reload page after 5 quick taps
+      if (tapCount === 4) {
         window.location.reload();
       }
     }
