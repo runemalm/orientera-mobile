@@ -1,12 +1,10 @@
-
 import { Competition, CompetitionDetail, CompetitionType, CompetitionDiscipline, OrienteeringDistrict } from "../types";
 
 export const mockCompetitions: Competition[] = [
-  // Added new competition for Ålems OK
   {
     id: "comp-1",
     name: "Ålems OK",
-    date: "2025-04-06", // April 6, 2025
+    date: "2025-04-06",
     location: "Ålem",
     distance: 4.3,
     club: "Ålems OK",
@@ -19,11 +17,10 @@ export const mockCompetitions: Competition[] = [
       longitude: 16.4332
     }
   },
-  // Added new competition for SOK Viljan
   {
     id: "comp-2",
     name: "Veteran-OL, SOK Viljan",
-    date: "2025-04-02", // April 2, 2025
+    date: "2025-04-02",
     location: "Vimmerby",
     distance: 3.8,
     club: "SOK Viljan",
@@ -36,7 +33,6 @@ export const mockCompetitions: Competition[] = [
       longitude: 15.8568
     }
   },
-  // Keeping only competitions from Smålands OF or Blekinge OF
   {
     id: "comp-3",
     name: "Veteran-OL",
@@ -45,7 +41,7 @@ export const mockCompetitions: Competition[] = [
     distance: 5.6,
     club: "Målilla OK",
     description: "Utmanande långdistansorientering i kuperad terräng med tekniska inslag.",
-    discipline: "Lång", // Changed to single discipline
+    discipline: "Lång",
     competitionType: "Närtävling",
     district: "Smålands OF",
     coordinates: {
@@ -53,11 +49,10 @@ export const mockCompetitions: Competition[] = [
       longitude: 18.0603
     }
   },
-  // Added new competition for XXL Ungdomsserie och Motionsorientering
   {
     id: "comp-4",
     name: "XXL Ungdomsserie och Motionsorientering",
-    date: "2025-04-09", // April 9, 2025
+    date: "2025-04-09",
     location: "Lessebo",
     distance: 2.7,
     club: "Lessebo OK",
@@ -78,7 +73,7 @@ export const mockCompetitions: Competition[] = [
     distance: 1.8,
     club: "OK Orion",
     description: "Lagstafett med tre sträckor av varierande svårighetsgrad.",
-    discipline: "Lång", // Changed to single discipline
+    discipline: "Lång",
     competitionType: "Närtävling",
     district: "Smålands OF",
     coordinates: {
@@ -94,7 +89,7 @@ export const mockCompetitions: Competition[] = [
     distance: 3.2,
     club: "Lessebo OK",
     description: "Teknisk orientering i detaljrik terräng, perfekt för veteraner.",
-    discipline: "Lång", // Changed to single discipline
+    discipline: "Lång",
     competitionType: "Närtävling",
     district: "Smålands OF",
     coordinates: {
@@ -110,7 +105,7 @@ export const mockCompetitions: Competition[] = [
     distance: 2.9,
     club: "Torsås OK",
     description: "Vänlig terräng med blandskog och öppna gläntor.",
-    discipline: "Lång", // Changed to single discipline
+    discipline: "Lång",
     competitionType: "Närtävling",
     district: "Smålands OF",
     coordinates: {
@@ -118,12 +113,10 @@ export const mockCompetitions: Competition[] = [
       longitude: 16.0030
     }
   },
-  
-  // Added new competition for Torsås OK
   {
     id: "comp-8",
     name: "Veteran-OL Torsås OK",
-    date: "2025-04-16", // April 16, 2025
+    date: "2025-04-16",
     location: "Torsås",
     distance: 3.4,
     club: "Torsås OK",
@@ -139,7 +132,6 @@ export const mockCompetitions: Competition[] = [
 ];
 
 export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
-  // Added new competition detail for Ålems OK
   "comp-1": {
     ...mockCompetitions[0],
     files: [
@@ -147,7 +139,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
         id: "file-1",
         name: "Inbjudan.pdf",
         type: "invitation",
-        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+        url: "https://eventor.orientering.se/Documents/Event/108121/0/Inbjudan",
         uploadDate: "2025-03-01"
       },
       {
@@ -163,10 +155,9 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
     organizer: "Anders Karlsson",
     contact: "info@alemsok.se",
     website: "https://www.alemsok.se/vartavling2025",
-    liveloxLink: "https://www.livelox.com/Events/Show/12345", // Added Livelox link
+    liveloxLink: "https://www.livelox.com/Events/Show/12345",
     isRegistered: false
   },
-  // Added new competition detail for SOK Viljan
   "comp-2": {
     ...mockCompetitions[1],
     files: [
@@ -174,7 +165,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
         id: "file-3",
         name: "Inbjudan.pdf",
         type: "invitation",
-        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+        url: "https://eventor.orientering.se/Documents/Event/108121/0/Inbjudan",
         uploadDate: "2025-03-15"
       },
       {
@@ -190,10 +181,9 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
     organizer: "Eva Lindström",
     contact: "info@sokviljan.se",
     website: "https://www.sokviljan.se/veteranol2025",
-    liveloxLink: "https://www.livelox.com/Events/Show/67890", // Added Livelox link
+    liveloxLink: "https://www.livelox.com/Events/Show/67890",
     isRegistered: false
   },
-  // Keeping only details for competitions from Smålands OF or Blekinge OF
   "comp-3": {
     ...mockCompetitions[2],
     files: [
@@ -201,7 +191,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
         id: "file-5",
         name: "Invitation.pdf",
         type: "invitation",
-        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+        url: "https://eventor.orientering.se/Documents/Event/108121/0/Inbjudan",
         uploadDate: "2025-04-01"
       }
     ],
@@ -211,7 +201,6 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
     contact: "eroberts@mountainexplorers.com",
     isRegistered: true
   },
-  // Added new competition detail for XXL Ungdomsserie och Motionsorientering
   "comp-4": {
     ...mockCompetitions[3],
     files: [
@@ -219,7 +208,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
         id: "file-14",
         name: "Inbjudan.pdf",
         type: "invitation",
-        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+        url: "https://eventor.orientering.se/Documents/Event/108121/0/Inbjudan",
         uploadDate: "2025-03-20"
       },
       {
@@ -235,7 +224,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
     organizer: "Maria Svensson",
     contact: "info@lessebook.se",
     website: "https://www.lessebook.se/xxlungdom2025",
-    liveloxLink: "https://www.livelox.com/Events/Show/54321", // Added Livelox link
+    liveloxLink: "https://www.livelox.com/Events/Show/54321",
     isRegistered: false
   },
   "comp-5": {
@@ -245,7 +234,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
         id: "file-8",
         name: "Invitation.pdf",
         type: "invitation",
-        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+        url: "https://eventor.orientering.se/Documents/Event/108121/0/Inbjudan",
         uploadDate: "2025-04-15"
       },
       {
@@ -277,7 +266,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
         id: "file-11",
         name: "Inbjudan.pdf",
         type: "invitation",
-        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+        url: "https://eventor.orientering.se/Documents/Event/108121/0/Inbjudan",
         uploadDate: "2025-05-01"
       }
     ],
@@ -295,7 +284,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
         id: "file-12",
         name: "Inbjudan.pdf",
         type: "invitation",
-        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+        url: "https://eventor.orientering.se/Documents/Event/108121/0/Inbjudan",
         uploadDate: "2025-05-10"
       },
       {
@@ -313,8 +302,6 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
     website: "https://torsasok.se",
     isRegistered: false
   },
-  
-  // Added new competition detail for Torsås OK Veteran-OL
   "comp-8": {
     ...mockCompetitions[7],
     files: [
@@ -322,7 +309,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
         id: "file-16",
         name: "Inbjudan.pdf",
         type: "invitation",
-        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+        url: "https://eventor.orientering.se/Documents/Event/108121/0/Inbjudan",
         uploadDate: "2025-03-25"
       },
       {
@@ -338,8 +325,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
     organizer: "Sven Pettersson",
     contact: "info@torsasok.se",
     website: "https://www.torsasok.se/veteran2025",
-    liveloxLink: "https://www.livelox.com/Events/Show/78901", // Added Livelox link
+    liveloxLink: "https://www.livelox.com/Events/Show/78901",
     isRegistered: false
   },
 };
-
