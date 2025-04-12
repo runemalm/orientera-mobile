@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import FileItem from '../components/FileItem';
 import { mockCompetitionDetails } from '../utils/mockData';
-import { CompetitionFile } from '../types';
+import { CompetitionFile, CompetitionResource } from '../types';
 import { Toaster } from '@/components/ui/toaster';
 
 const DocumentsPage: React.FC = () => {
@@ -18,7 +18,17 @@ const DocumentsPage: React.FC = () => {
     const timer = setTimeout(() => {
       if (competitionId && mockCompetitionDetails[competitionId]) {
         const competitionData = mockCompetitionDetails[competitionId];
-        setFiles(competitionData.files);
+        
+        // Convert resources to CompetitionFile format
+        const resourceFiles = competitionData.resources.map(resource => ({
+          id: resource.eventorId,
+          name: resource.name,
+          type: resource.type,
+          url: resource.url,
+          uploadDate: resource.uploadDate
+        }));
+        
+        setFiles(resourceFiles);
         setCompetitionName(competitionData.name);
       }
       setLoading(false);

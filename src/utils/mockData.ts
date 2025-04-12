@@ -1,17 +1,20 @@
-import { Competition, CompetitionDetail, CompetitionType, CompetitionDiscipline, OrienteeringDistrict } from "../types";
+
+import { Competition, CompetitionDetail, CompetitionType, CompetitionDiscipline, OrienteeringDistrict, CompetitionResource } from "../types";
 
 export const mockCompetitions: Competition[] = [
   {
     id: "comp-1",
+    eventorId: "evt-1",
     name: "Ålems OK",
     date: "2025-04-06",
     location: "Ålem",
     distance: 4.3,
     club: "Ålems OK",
     description: "Nationell medeldistans i teknisk terräng med inslag av öppna områden.",
-    discipline: "Medel", 
-    competitionType: "Nationell tävling",
-    district: "Smålands OF",
+    branch: "FootO",
+    discipline: "Middle",
+    competitionType: "National",
+    district: "SmålandsOF",
     coordinates: {
       latitude: 56.9258,
       longitude: 16.4332
@@ -19,15 +22,17 @@ export const mockCompetitions: Competition[] = [
   },
   {
     id: "comp-2",
+    eventorId: "evt-2",
     name: "Veteran-OL, SOK Viljan",
     date: "2025-04-02",
     location: "Vimmerby",
     distance: 3.8,
     club: "SOK Viljan",
     description: "Nationell långdistans för veteraner i varierande skogsterräng.",
-    discipline: "Lång",
-    competitionType: "Nationell tävling",
-    district: "Smålands OF",
+    branch: "FootO",
+    discipline: "Long",
+    competitionType: "National",
+    district: "SmålandsOF",
     coordinates: {
       latitude: 57.6655,
       longitude: 15.8568
@@ -35,15 +40,17 @@ export const mockCompetitions: Competition[] = [
   },
   {
     id: "comp-3",
+    eventorId: "evt-3",
     name: "Veteran-OL",
     date: "2025-05-02",
     location: "Björkholmen",
     distance: 5.6,
     club: "Målilla OK",
     description: "Utmanande långdistansorientering i kuperad terräng med tekniska inslag.",
-    discipline: "Lång",
-    competitionType: "Närtävling",
-    district: "Smålands OF",
+    branch: "FootO",
+    discipline: "Long",
+    competitionType: "Near",
+    district: "SmålandsOF",
     coordinates: {
       latitude: 59.3349,
       longitude: 18.0603
@@ -51,15 +58,17 @@ export const mockCompetitions: Competition[] = [
   },
   {
     id: "comp-4",
+    eventorId: "evt-4",
     name: "XXL Ungdomsserie och Motionsorientering",
     date: "2025-04-09",
     location: "Lessebo",
     distance: 2.7,
     club: "Lessebo OK",
     description: "Medeldistans för ungdomar och motionärer i lättframkomlig terräng.",
-    discipline: "Medel",
-    competitionType: "Närtävling",
-    district: "Smålands OF",
+    branch: "FootO",
+    discipline: "Middle",
+    competitionType: "Near",
+    district: "SmålandsOF",
     coordinates: {
       latitude: 56.7512,
       longitude: 15.2722
@@ -67,15 +76,17 @@ export const mockCompetitions: Competition[] = [
   },
   {
     id: "comp-5",
+    eventorId: "evt-5",
     name: "Veteran-OL",
     date: "2025-05-15",
     location: "Emmabodaskogen",
     distance: 1.8,
     club: "OK Orion",
     description: "Lagstafett med tre sträckor av varierande svårighetsgrad.",
-    discipline: "Lång",
-    competitionType: "Närtävling",
-    district: "Smålands OF",
+    branch: "FootO",
+    discipline: "Long",
+    competitionType: "Near",
+    district: "SmålandsOF",
     coordinates: {
       latitude: 59.3400,
       longitude: 18.0700
@@ -83,15 +94,17 @@ export const mockCompetitions: Competition[] = [
   },
   {
     id: "comp-6",
+    eventorId: "evt-6",
     name: "Veteran-OL",
     date: "2025-05-22",
     location: "Lessebo Skogsområde",
     distance: 3.2,
     club: "Lessebo OK",
     description: "Teknisk orientering i detaljrik terräng, perfekt för veteraner.",
-    discipline: "Lång",
-    competitionType: "Närtävling",
-    district: "Smålands OF",
+    branch: "FootO",
+    discipline: "Long",
+    competitionType: "Near",
+    district: "SmålandsOF",
     coordinates: {
       latitude: 56.7512,
       longitude: 15.2722
@@ -99,15 +112,17 @@ export const mockCompetitions: Competition[] = [
   },
   {
     id: "comp-7",
+    eventorId: "evt-7",
     name: "Veteran-OL",
     date: "2025-05-30",
     location: "Torsås Skogsmarker",
     distance: 2.9,
     club: "Torsås OK",
     description: "Vänlig terräng med blandskog och öppna gläntor.",
-    discipline: "Lång",
-    competitionType: "Närtävling",
-    district: "Smålands OF",
+    branch: "FootO",
+    discipline: "Long",
+    competitionType: "Near",
+    district: "SmålandsOF",
     coordinates: {
       latitude: 56.4108,
       longitude: 16.0030
@@ -115,15 +130,17 @@ export const mockCompetitions: Competition[] = [
   },
   {
     id: "comp-8",
+    eventorId: "evt-8",
     name: "Veteran-OL Torsås OK",
     date: "2025-04-16",
     location: "Torsås",
     distance: 3.4,
     club: "Torsås OK",
     description: "Långdistansorientering för veteraner i kuperad skogsterräng.",
-    discipline: "Lång",
-    competitionType: "Närtävling",
-    district: "Smålands OF",
+    branch: "FootO",
+    discipline: "Long",
+    competitionType: "Near",
+    district: "SmålandsOF",
     coordinates: {
       latitude: 56.4108,
       longitude: 16.0030
@@ -134,197 +151,204 @@ export const mockCompetitions: Competition[] = [
 export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
   "comp-1": {
     ...mockCompetitions[0],
-    files: [
+    resources: [
       {
-        id: "file-1",
+        eventorId: "file-1",
         name: "Inbjudan.pdf",
         type: "invitation",
+        format: "pdf",
         url: "https://eventor.orientering.se/Documents/Event/108121/0/Inbjudan",
         uploadDate: "2025-03-01"
       },
       {
-        id: "file-2",
+        eventorId: "file-2",
         name: "PM.pdf",
         type: "pm",
+        format: "pdf",
         url: "https://eventor.orientering.se/Documents/Event/110144/1/PM",
         uploadDate: "2025-04-03"
       }
     ],
     registrationDeadline: "2025-04-02",
     startTime: "10:00",
-    organizer: "Anders Karlsson",
     contact: "info@alemsok.se",
-    website: "https://www.alemsok.se/vartavling2025",
+    eventorLink: "https://eventor.orientering.se/Events/Show/123",
     liveloxLink: "https://www.livelox.com/Events/Show/12345",
     isRegistered: false
   },
   "comp-2": {
     ...mockCompetitions[1],
-    files: [
+    resources: [
       {
-        id: "file-3",
+        eventorId: "file-3",
         name: "Inbjudan.pdf",
         type: "invitation",
+        format: "pdf",
         url: "https://eventor.orientering.se/Documents/Event/108121/0/Inbjudan",
         uploadDate: "2025-03-15"
       },
       {
-        id: "file-4",
+        eventorId: "file-4",
         name: "PM.pdf",
         type: "pm",
+        format: "pdf",
         url: "https://eventor.orientering.se/Documents/Event/110144/1/PM",
         uploadDate: "2025-03-30"
       }
     ],
     registrationDeadline: "2025-03-29",
     startTime: "09:30",
-    organizer: "Eva Lindström",
     contact: "info@sokviljan.se",
-    website: "https://www.sokviljan.se/veteranol2025",
+    eventorLink: "https://eventor.orientering.se/Events/Show/456",
     liveloxLink: "https://www.livelox.com/Events/Show/67890",
     isRegistered: false
   },
   "comp-3": {
     ...mockCompetitions[2],
-    files: [
+    resources: [
       {
-        id: "file-5",
+        eventorId: "file-5",
         name: "Invitation.pdf",
         type: "invitation",
+        format: "pdf",
         url: "https://eventor.orientering.se/Documents/Event/108121/0/Inbjudan",
         uploadDate: "2025-04-01"
       }
     ],
     registrationDeadline: "2025-04-29",
     startTime: "09:00",
-    organizer: "Emma Roberts",
     contact: "eroberts@mountainexplorers.com",
     isRegistered: true
   },
   "comp-4": {
     ...mockCompetitions[3],
-    files: [
+    resources: [
       {
-        id: "file-14",
+        eventorId: "file-14",
         name: "Inbjudan.pdf",
         type: "invitation",
+        format: "pdf",
         url: "https://eventor.orientering.se/Documents/Event/108121/0/Inbjudan",
         uploadDate: "2025-03-20"
       },
       {
-        id: "file-15",
+        eventorId: "file-15",
         name: "PM.pdf",
         type: "pm",
+        format: "pdf",
         url: "https://eventor.orientering.se/Documents/Event/110144/1/PM",
         uploadDate: "2025-04-07"
       }
     ],
     registrationDeadline: "2025-04-07",
     startTime: "17:30",
-    organizer: "Maria Svensson",
     contact: "info@lessebook.se",
-    website: "https://www.lessebook.se/xxlungdom2025",
+    eventorLink: "https://eventor.orientering.se/Events/Show/789",
     liveloxLink: "https://www.livelox.com/Events/Show/54321",
     isRegistered: false
   },
   "comp-5": {
     ...mockCompetitions[4],
-    files: [
+    resources: [
       {
-        id: "file-8",
+        eventorId: "file-8",
         name: "Invitation.pdf",
         type: "invitation",
+        format: "pdf",
         url: "https://eventor.orientering.se/Documents/Event/108121/0/Inbjudan",
         uploadDate: "2025-04-15"
       },
       {
-        id: "file-9",
+        eventorId: "file-9",
         name: "PM.pdf",
         type: "pm",
+        format: "pdf",
         url: "https://eventor.orientering.se/Documents/Event/110144/1/PM",
         uploadDate: "2025-05-10"
       },
       {
-        id: "file-10",
+        eventorId: "file-10",
         name: "Start List.pdf",
         type: "startlist",
+        format: "pdf",
         url: "https://eventor.orientering.se/Events/StartList?eventId=50210&groupBy=EventClass",
         uploadDate: "2025-05-14"
       }
     ],
     registrationDeadline: "2025-05-12",
     startTime: "12:00",
-    organizer: "Regional Committee",
     contact: "info@regiono.org",
-    website: "https://regiono.org/relay2025",
+    eventorLink: "https://eventor.orientering.se/Events/Show/987",
     isRegistered: false
   },
   "comp-6": {
     ...mockCompetitions[5],
-    files: [
+    resources: [
       {
-        id: "file-11",
+        eventorId: "file-11",
         name: "Inbjudan.pdf",
         type: "invitation",
+        format: "pdf",
         url: "https://eventor.orientering.se/Documents/Event/108121/0/Inbjudan",
         uploadDate: "2025-05-01"
       }
     ],
     registrationDeadline: "2025-05-20",
     startTime: "14:00",
-    organizer: "Lennart Svensson",
     contact: "lennart@lessebook.se",
-    website: "https://lessebook.se",
+    eventorLink: "https://eventor.orientering.se/Events/Show/654",
     isRegistered: false
   },
   "comp-7": {
     ...mockCompetitions[6],
-    files: [
+    resources: [
       {
-        id: "file-12",
+        eventorId: "file-12",
         name: "Inbjudan.pdf",
         type: "invitation",
+        format: "pdf",
         url: "https://eventor.orientering.se/Documents/Event/108121/0/Inbjudan",
         uploadDate: "2025-05-10"
       },
       {
-        id: "file-13",
+        eventorId: "file-13",
         name: "PM.pdf",
         type: "pm",
+        format: "pdf",
         url: "https://eventor.orientering.se/Documents/Event/110144/1/PM",
         uploadDate: "2025-05-25"
       }
     ],
     registrationDeadline: "2025-05-28",
     startTime: "11:00",
-    organizer: "Karin Johansson",
     contact: "karin@torsasok.se",
-    website: "https://torsasok.se",
+    eventorLink: "https://eventor.orientering.se/Events/Show/321",
     isRegistered: false
   },
   "comp-8": {
     ...mockCompetitions[7],
-    files: [
+    resources: [
       {
-        id: "file-16",
+        eventorId: "file-16",
         name: "Inbjudan.pdf",
         type: "invitation",
+        format: "pdf",
         url: "https://eventor.orientering.se/Documents/Event/108121/0/Inbjudan",
         uploadDate: "2025-03-25"
       },
       {
-        id: "file-17",
+        eventorId: "file-17",
         name: "PM.pdf",
         type: "pm",
+        format: "pdf",
         url: "https://eventor.orientering.se/Documents/Event/110144/1/PM",
         uploadDate: "2025-04-14"
       }
     ],
     registrationDeadline: "2025-04-14",
     startTime: "10:00",
-    organizer: "Sven Pettersson",
     contact: "info@torsasok.se",
-    website: "https://www.torsasok.se/veteran2025",
+    eventorLink: "https://eventor.orientering.se/Events/Show/135",
     liveloxLink: "https://www.livelox.com/Events/Show/78901",
     isRegistered: false
   },

@@ -32,6 +32,15 @@ export interface Competition {
   };
 }
 
+export interface CompetitionResource {
+  eventorId: string;
+  name: string;
+  type: 'startlist' | 'results' | 'splits' | 'invitation' | 'pm' | 'other';
+  format: 'pdf' | 'png' | 'link';
+  url: string;
+  uploadDate: string;
+}
+
 export interface CompetitionDetail extends Competition {
   resources: CompetitionResource[];
   registrationDeadline?: string;
@@ -43,11 +52,11 @@ export interface CompetitionDetail extends Competition {
   isWaitlisted?: boolean;
 }
 
-export interface CompetitionResource {
-  eventorId: string;
+// Add CompetitionFile type for FileItem component
+export interface CompetitionFile {
+  id: string;
   name: string;
   type: 'startlist' | 'results' | 'splits' | 'invitation' | 'pm' | 'other';
-  format: 'pdf' | 'png' | 'link';
   url: string;
   uploadDate: string;
 }
