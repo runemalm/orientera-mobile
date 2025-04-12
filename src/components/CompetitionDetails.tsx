@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { CompetitionDetail } from '../types';
-import { Users, Map, FileText } from 'lucide-react';
+import { Users, Map, FileText, Car } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Separator } from '@/components/ui/separator';
 import FileItem from './FileItem';
@@ -75,6 +75,23 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
           <div className="flex items-center gap-3">
             <Users size={20} className="text-forest" />
             <span className="font-medium">Anmälda deltagare</span>
+          </div>
+          <div className="text-gray-400">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="m9 18 6-6-6-6"/>
+            </svg>
+          </div>
+        </Link>
+        
+        {/* Carpooling section */}
+        <Separator />
+        <Link 
+          to={`/competition/${competition.id}/carpooling`}
+          className="flex items-center justify-between p-4 hover:bg-gray-50"
+        >
+          <div className="flex items-center gap-3">
+            <Car size={20} className="text-forest" />
+            <span className="font-medium">Samåkning</span>
           </div>
           <div className="text-gray-400">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
