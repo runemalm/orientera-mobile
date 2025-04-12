@@ -56,17 +56,17 @@ const KeyboardShortcutHandler = () => {
         
         // Reset count if it's been more than 1.5 seconds since last touch
         if (currentTime - lastTouchTime > 1500) {
-          setTouchCount(1);
+          setTouchCount(1); // Reset to 1 (counting this touch)
         } else {
           setTouchCount(prev => prev + 1);
         }
         
         setLastTouchTime(currentTime);
         
-        // Navigate to landing page after 3 quick taps
-        if (touchCount === 2) {
+        // Navigate to landing page after EXACTLY 3 quick taps
+        if (touchCount === 2) { // This becomes 3 with the current tap
           navigateAndResetLocation();
-          setTouchCount(0);
+          setTouchCount(0); // Reset after activation
         }
       }
     };
@@ -82,17 +82,17 @@ const KeyboardShortcutHandler = () => {
         
         // Reset count if it's been more than 1.5 seconds since last click
         if (currentTime - lastClickTime > 1500) {
-          setClickCount(1);
+          setClickCount(1); // Reset to 1 (counting this click)
         } else {
           setClickCount(prev => prev + 1);
         }
         
         setLastClickTime(currentTime);
         
-        // Navigate to landing page after 3 quick clicks
-        if (clickCount === 2) {
+        // Navigate to landing page after EXACTLY 3 quick clicks
+        if (clickCount === 2) { // This becomes 3 with the current click
           navigateAndResetLocation();
-          setClickCount(0);
+          setClickCount(0); // Reset after activation
         }
       }
     };

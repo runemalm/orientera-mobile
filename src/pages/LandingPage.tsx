@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Compass, MapPin, Calendar, Navigation, FileText, RefreshCw, ArrowRight, Smartphone } from 'lucide-react';
@@ -19,16 +20,17 @@ const LandingPage: React.FC = () => {
       
       // Reset count if more than 1.5 seconds between taps
       if (currentTime - lastTapTime > 1500) {
-        setTapCount(1);
+        setTapCount(1); // Reset to 1 (counting this tap)
       } else {
         setTapCount(prev => prev + 1);
       }
       
       setLastTapTime(currentTime);
       
-      // Reload page after 5 quick taps
-      if (tapCount === 4) {
+      // Only reload if exactly 5 consecutive quick taps
+      if (tapCount === 4) { // This becomes 5 with the current tap
         window.location.reload();
+        setTapCount(0); // Reset after activation
       }
     }
   };
