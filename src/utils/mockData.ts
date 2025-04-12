@@ -152,8 +152,7 @@ export const mockCompetitionDetails: Record<string, Competition> = {
     ],
     registrationDeadline: "2025-04-02",
     startTime: "10:00",
-    organizer: "Anders Karlsson",
-    contact: "info@alemsok.se",
+    contact: "Anders Karlsson",
     website: "https://www.alemsok.se/vartavling2025",
     liveloxLink: "https://www.livelox.com/Events/Show/12345",
     isRegistered: false
@@ -178,8 +177,7 @@ export const mockCompetitionDetails: Record<string, Competition> = {
     ],
     registrationDeadline: "2025-03-29",
     startTime: "09:30",
-    organizer: "Eva Lindström",
-    contact: "info@sokviljan.se",
+    contact: "Eva Lindström",
     website: "https://www.sokviljan.se/veteranol2025",
     liveloxLink: "https://www.livelox.com/Events/Show/67890",
     isRegistered: false
@@ -197,8 +195,7 @@ export const mockCompetitionDetails: Record<string, Competition> = {
     ],
     registrationDeadline: "2025-04-29",
     startTime: "09:00",
-    organizer: "Emma Roberts",
-    contact: "eroberts@mountainexplorers.com",
+    contact: "Emma Roberts",
     isRegistered: true
   },
   "comp-4": {
@@ -221,8 +218,7 @@ export const mockCompetitionDetails: Record<string, Competition> = {
     ],
     registrationDeadline: "2025-04-07",
     startTime: "17:30",
-    organizer: "Maria Svensson",
-    contact: "info@lessebook.se",
+    contact: "Maria Svensson",
     website: "https://www.lessebook.se/xxlungdom2025",
     liveloxLink: "https://www.livelox.com/Events/Show/54321",
     isRegistered: false
@@ -254,8 +250,7 @@ export const mockCompetitionDetails: Record<string, Competition> = {
     ],
     registrationDeadline: "2025-05-12",
     startTime: "12:00",
-    organizer: "Regional Committee",
-    contact: "info@regiono.org",
+    contact: "Regional Committee",
     website: "https://regiono.org/relay2025",
     isRegistered: false
   },
@@ -272,8 +267,7 @@ export const mockCompetitionDetails: Record<string, Competition> = {
     ],
     registrationDeadline: "2025-05-20",
     startTime: "14:00",
-    organizer: "Lennart Svensson",
-    contact: "lennart@lessebook.se",
+    contact: "Lennart Svensson",
     website: "https://lessebook.se",
     isRegistered: false
   },
@@ -297,8 +291,7 @@ export const mockCompetitionDetails: Record<string, Competition> = {
     ],
     registrationDeadline: "2025-05-28",
     startTime: "11:00",
-    organizer: "Karin Johansson",
-    contact: "karin@torsasok.se",
+    contact: "Karin Johansson",
     website: "https://torsasok.se",
     isRegistered: false
   },
@@ -322,8 +315,7 @@ export const mockCompetitionDetails: Record<string, Competition> = {
     ],
     registrationDeadline: "2025-04-14",
     startTime: "10:00",
-    organizer: "Sven Pettersson",
-    contact: "info@torsasok.se",
+    contact: "Sven Pettersson",
     website: "https://www.torsasok.se/veteran2025",
     liveloxLink: "https://www.livelox.com/Events/Show/78901",
     isRegistered: false
