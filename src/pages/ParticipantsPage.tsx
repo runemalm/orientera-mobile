@@ -5,7 +5,7 @@ import MobileLayout from '../components/layout/MobileLayout';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Toaster } from '@/components/ui/toaster';
-import { CompetitionDetail } from '../types';
+import { Competition } from '../types';
 import { mockCompetitionDetails } from '../utils/mockData';
 
 // Define interfaces for our data
