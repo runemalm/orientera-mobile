@@ -1,15 +1,7 @@
 
-export type CompetitionType = "Värdetävling" | "Nationell tävling" | "Distrikttävling" | "Närtävling" | "Veckans bana" | "Klubbtävling";
-
-export type CompetitionDiscipline = "Sprint" | "Medel" | "Lång" | "Natt" | "Stafett" | "Ultralång";
-
-export type OrienteeringDistrict = 
-  "Blekinge OF" | "Bohusläns OF" | "Dalarnas OF" | "Gotlands OF" | 
-  "Gästriklands OF" | "Göteborgs OF" | "Hallands OF" | "Hälsinglands OF" | 
-  "Jämtland-Härjedalens OF" | "Medelpads OF" | "Norrbottens OF" | "Skånes OF" | 
-  "Smålands OF" | "Stockholms OF" | "Södermanlands OF" | "Upplands OF" | 
-  "Värmlands OF" | "Västerbottens OF" | "Västergötlands OF" | "Västmanlands OF" | 
-  "Ångermanlands OF" | "Örebro Läns OF" | "Östergötlands OF";
+export type CompetitionType = string;
+export type CompetitionDiscipline = string;
+export type OrienteeringDistrict = string;
 
 // Renamed Competition to CompetitionSummary
 export interface CompetitionSummary {
@@ -20,29 +12,36 @@ export interface CompetitionSummary {
   distance: number; // Distance in km from user's location
   club: string;
   description: string;
-  discipline: CompetitionDiscipline; // Changed from disciplines array to single discipline
-  competitionType: CompetitionType;
-  district: OrienteeringDistrict;
+  discipline: string; // Changed to string to match backend
+  competitionType: string; // Changed to string to match backend
+  district: string; // Changed to string to match backend
   coordinates: {
     latitude: number;
     longitude: number;
   };
 }
 
-// Renamed CompetitionDetail to Competition
-export interface Competition extends CompetitionSummary {
-  resources: Resource[]; // Renamed from files
+// Updated Competition to match C# backend DTO
+export interface Competition extends Omit<CompetitionSummary, 'discipline' | 'competitionType' | 'district' | 'coordinates'> {
+  eventorId: string;
+  discipline: string;
+  competitionType: string;
+  district: string;
+  branch: string;
+  latitude?: number;
+  longitude?: number;
   registrationDeadline: string;
   startTime: string;
-  organizer: string;
   contact: string;
-  website?: string;
+  eventorLink?: string;
+  website?: string; // Keeping for backward compatibility
   liveloxLink?: string; 
   isRegistered?: boolean;
   isWaitlisted?: boolean;
+  resources: Resource[]; // Already renamed from files
 }
 
-// Renamed CompetitionFile to Resource
+// Resource interface (already renamed from CompetitionFile)
 export interface Resource {
   id: string;
   name: string;

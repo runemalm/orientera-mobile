@@ -23,7 +23,7 @@ interface ParticipantClass {
 
 const ParticipantsPage: React.FC = () => {
   const { competitionId } = useParams<{ competitionId: string }>();
-  const [competition, setCompetition] = useState<CompetitionDetail | null>(null);
+  const [competition, setCompetition] = useState<Competition | null>(null);
   const [loading, setLoading] = useState(true);
   const [participantClasses, setParticipantClasses] = useState<ParticipantClass[]>([]);
 
