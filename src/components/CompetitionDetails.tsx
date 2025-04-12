@@ -5,6 +5,7 @@ import { Users, Map, FileText, Car } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Separator } from '@/components/ui/separator';
 import FileItem from './FileItem';
+import { translateDiscipline, translateCompetitionType } from '../utils/translations';
 
 interface CompetitionDetailsProps {
   competition: Competition;
@@ -28,7 +29,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
         <h2 className="text-xl font-bold relative z-10">{competition.name}</h2>
         <p className="text-sm text-white/80 relative z-10">{competition.club}</p>
         <div className="mt-3 inline-block bg-white/20 px-3 py-1 rounded-full text-sm relative z-10">
-          {competition.competitionType} • {competition.discipline}
+          {translateCompetitionType(competition.competitionType)} • {translateDiscipline(competition.discipline)}
         </div>
       </div>
       

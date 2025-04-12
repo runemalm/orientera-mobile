@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { format, differenceInDays } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { translateDiscipline, translateCompetitionType } from '../utils/translations';
 
 interface CompetitionCardProps {
   competition: CompetitionSummary;
@@ -61,33 +62,6 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition }) => {
       return `${(distance * 1000).toFixed(0)} m`;
     }
     return `${distance} km`;
-  };
-
-  // Function to translate enum values to Swedish for display
-  const getSwedishDiscipline = (discipline: string): string => {
-    switch (discipline) {
-      case 'Sprint': return 'Sprint';
-      case 'Middle': return 'Medel';
-      case 'Long': return 'Lång';
-      case 'Night': return 'Natt';
-      case 'Relay': return 'Stafett';
-      case 'UltraLong': return 'Ultralång';
-      case 'PreO': return 'PreO';
-      case 'TempO': return 'TempO';
-      default: return discipline;
-    }
-  };
-
-  const getSwedishCompetitionType = (type: string): string => {
-    switch (type) {
-      case 'Championship': return 'Mästerskap';
-      case 'National': return 'Nationell tävling';
-      case 'Regional': return 'Regional tävling';
-      case 'Near': return 'Närtävling';
-      case 'Club': return 'Klubbtävling';
-      case 'Weekly': return 'Veckotävling';
-      default: return type;
-    }
   };
 
   return (
