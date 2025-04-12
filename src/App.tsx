@@ -44,7 +44,7 @@ const KeyboardShortcutHandler = () => {
       }
     };
     
-    // Touch gesture for mobile - triple tap in top right corner
+    // Touch gesture for mobile - sequential touches in top right corner
     const handleTouchStart = (event: TouchEvent) => {
       const touch = event.touches[0];
       const screenWidth = window.innerWidth;
@@ -54,28 +54,27 @@ const KeyboardShortcutHandler = () => {
       if (touch.clientX > screenWidth * 0.8 && touch.clientY < screenHeight * 0.1) {
         const currentTime = new Date().getTime();
         
-        // Check if this touch is within the time window of the previous touch
+        // Reset count if more than 1.5 seconds between touches
         if (currentTime - lastTouchTime > 1500) {
-          // If not, reset counter to 1 (counting this touch)
           setTouchCount(1);
         } else {
-          // If yes, increment the counter
-          setTouchCount(prevCount => prevCount + 1);
+          // Increment count for consecutive touches
+          setTouchCount(prev => prev + 1);
         }
         
         // Update the last touch time
         setLastTouchTime(currentTime);
         
-        // Check if we've reached exactly 3 consecutive quick touches
-        if (touchCount === 2) { // This will become 3 with the current touch
+        // Activate on exactly 3 or 5 consecutive touches
+        if (touchCount === 2 || touchCount === 4) { 
           navigateAndResetLocation();
-          // Reset counter after activation
+          // Reset after activation
           setTimeout(() => setTouchCount(0), 0);
         }
       }
     };
     
-    // Mouse click handler for desktop web - triple click in top right corner
+    // Mouse click handler for desktop web - sequential clicks in top right corner
     const handleMouseClick = (event: MouseEvent) => {
       const screenWidth = window.innerWidth;
       const screenHeight = window.innerHeight;
@@ -84,22 +83,21 @@ const KeyboardShortcutHandler = () => {
       if (event.clientX > screenWidth * 0.8 && event.clientY < screenHeight * 0.1) {
         const currentTime = new Date().getTime();
         
-        // Check if this click is within the time window of the previous click
+        // Reset count if more than 1.5 seconds between clicks
         if (currentTime - lastClickTime > 1500) {
-          // If not, reset counter to 1 (counting this click)
           setClickCount(1);
         } else {
-          // If yes, increment the counter
-          setClickCount(prevCount => prevCount + 1);
+          // Increment count for consecutive clicks
+          setClickCount(prev => prev + 1);
         }
         
         // Update the last click time
         setLastClickTime(currentTime);
         
-        // Check if we've reached exactly 3 consecutive quick clicks
-        if (clickCount === 2) { // This will become 3 with the current click
+        // Activate on exactly 3 or 5 consecutive clicks
+        if (clickCount === 2 || clickCount === 4) { 
           navigateAndResetLocation();
-          // Reset counter after activation
+          // Reset after activation
           setTimeout(() => setClickCount(0), 0);
         }
       }
@@ -146,3 +144,4 @@ const App = () => (
 );
 
 export default App;
+
