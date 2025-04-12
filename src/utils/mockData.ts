@@ -1,3 +1,4 @@
+
 import { CompetitionSummary, Competition, CompetitionType, CompetitionDiscipline, OrienteeringDistrict, Resource } from "../types";
 
 export const mockCompetitions: CompetitionSummary[] = [
@@ -134,6 +135,8 @@ export const mockCompetitions: CompetitionSummary[] = [
 export const mockCompetitionDetails: Record<string, Competition> = {
   "comp-1": {
     ...mockCompetitions[0],
+    eventorId: "108121",
+    branch: "FootO",
     resources: [
       {
         id: "file-1",
@@ -159,6 +162,8 @@ export const mockCompetitionDetails: Record<string, Competition> = {
   },
   "comp-2": {
     ...mockCompetitions[1],
+    eventorId: "109122",
+    branch: "FootO",
     resources: [
       {
         id: "file-3",
@@ -184,6 +189,8 @@ export const mockCompetitionDetails: Record<string, Competition> = {
   },
   "comp-3": {
     ...mockCompetitions[2],
+    eventorId: "109123",
+    branch: "FootO",
     resources: [
       {
         id: "file-5",
@@ -200,6 +207,8 @@ export const mockCompetitionDetails: Record<string, Competition> = {
   },
   "comp-4": {
     ...mockCompetitions[3],
+    eventorId: "109124",
+    branch: "FootO",
     resources: [
       {
         id: "file-14",
@@ -225,6 +234,8 @@ export const mockCompetitionDetails: Record<string, Competition> = {
   },
   "comp-5": {
     ...mockCompetitions[4],
+    eventorId: "109125",
+    branch: "FootO",
     resources: [
       {
         id: "file-8",
@@ -256,6 +267,8 @@ export const mockCompetitionDetails: Record<string, Competition> = {
   },
   "comp-6": {
     ...mockCompetitions[5],
+    eventorId: "109126",
+    branch: "FootO",
     resources: [
       {
         id: "file-11",
@@ -273,6 +286,8 @@ export const mockCompetitionDetails: Record<string, Competition> = {
   },
   "comp-7": {
     ...mockCompetitions[6],
+    eventorId: "109127",
+    branch: "FootO",
     resources: [
       {
         id: "file-12",
@@ -297,6 +312,8 @@ export const mockCompetitionDetails: Record<string, Competition> = {
   },
   "comp-8": {
     ...mockCompetitions[7],
+    eventorId: "109128",
+    branch: "FootO",
     resources: [
       {
         id: "file-16",
