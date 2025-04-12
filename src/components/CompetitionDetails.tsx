@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { CompetitionDetail } from '../types';
+import { CompetitionDetail, CompetitionResource } from '../types';
 import { Users, Map, FileText, Car } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Separator } from '@/components/ui/separator';
@@ -18,6 +18,11 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
     month: 'long',
     year: 'numeric'
   });
+  
+  // Filter resources to only show those that should be displayed as files
+  const filesToDisplay = competition.resources?.filter(resource => 
+    resource.format === 'pdf' || resource.format === 'png'
+  ) || [];
   
   return (
     <div className="space-y-4">
@@ -44,24 +49,35 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
         
         <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 flex flex-col items-center justify-center">
           <p className="text-xs text-gray-500 uppercase">Startar</p>
-          <p className="font-semibold">{competition.startTime}</p>
+          <p className="font-semibold">{competition.startTime || 'TBD'}</p>
         </div>
         
         <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 flex flex-col items-center justify-center col-span-2">
           <div className="flex items-center gap-2">
             <p className="font-semibold">{competition.location}</p>
           </div>
-          <p className="text-xs text-gray-500 mt-1">{competition.distance} km från dig</p>
+          {competition.distance !== undefined && (
+            <p className="text-xs text-gray-500 mt-1">{competition.distance} km från dig</p>
+          )}
         </div>
       </div>
       
       {/* Simplified uniform sections */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
         {/* Documents section - show files directly */}
-        {competition.files.length > 0 && (
+        {filesToDisplay.length > 0 && (
           <>
-            {competition.files.map((file) => (
-              <FileItem key={file.id} file={file} />
+            {filesToDisplay.map((resource) => (
+              <FileItem 
+                key={resource.eventorId} 
+                file={{
+                  id: resource.eventorId,
+                  name: resource.name,
+                  type: resource.type as any,
+                  url: resource.url,
+                  uploadDate: resource.uploadDate
+                }} 
+              />
             ))}
             <Separator />
           </>

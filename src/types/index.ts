@@ -1,49 +1,53 @@
 
-export type CompetitionType = "Värdetävling" | "Nationell tävling" | "Distrikttävling" | "Närtävling" | "Veckans bana" | "Klubbtävling";
+export type CompetitionType = "Championship" | "National" | "Regional" | "Near" | "Club" | "Weekly";
 
-export type CompetitionDiscipline = "Sprint" | "Medel" | "Lång" | "Natt" | "Stafett" | "Ultralång";
+export type CompetitionDiscipline = "Sprint" | "Middle" | "Long" | "Night" | "Relay" | "UltraLong" | "PreO" | "TempO";
+
+export type Branch = "FootO" | "PreO" | "MTBO" | "SkiO" | "TrailO";
 
 export type OrienteeringDistrict = 
-  "Blekinge OF" | "Bohusläns OF" | "Dalarnas OF" | "Gotlands OF" | 
-  "Gästriklands OF" | "Göteborgs OF" | "Hallands OF" | "Hälsinglands OF" | 
-  "Jämtland-Härjedalens OF" | "Medelpads OF" | "Norrbottens OF" | "Skånes OF" | 
-  "Smålands OF" | "Stockholms OF" | "Södermanlands OF" | "Upplands OF" | 
-  "Värmlands OF" | "Västerbottens OF" | "Västergötlands OF" | "Västmanlands OF" | 
-  "Ångermanlands OF" | "Örebro Läns OF" | "Östergötlands OF";
+  "BlekingeOF" | "BohuslänsOF" | "DalarnasOF" | "GotlandsOF" | 
+  "GästriklandsOF" | "GöteborgsOF" | "HallandsOF" | "HälsinglandsOF" | 
+  "JämtlandHärjedalensOF" | "MedelpadsOF" | "NorrbottensOF" | "SkånesOF" | 
+  "SmålandsOF" | "StockholmsOF" | "SödermanlandsOF" | "UpplandsOF" | 
+  "VärmlandsOF" | "VästerbottensOF" | "VästergötlandsOF" | "VästmanlandsOF" | 
+  "ÅngermanlandsOF" | "ÖrebroLänsOF" | "ÖstergötlandsOF";
 
 export interface Competition {
   id: string;
+  eventorId: string;
   name: string;
   date: string;
   location: string;
-  distance: number; // Distance in km from user's location
+  distance?: number; // Distance in km from user's location, calculated client-side
   club: string;
   description: string;
-  discipline: CompetitionDiscipline; // Changed from disciplines array to single discipline
+  branch: Branch;
+  discipline: CompetitionDiscipline;
   competitionType: CompetitionType;
   district: OrienteeringDistrict;
-  coordinates: {
+  coordinates?: {
     latitude: number;
     longitude: number;
   };
 }
 
 export interface CompetitionDetail extends Competition {
-  files: CompetitionFile[];
-  registrationDeadline: string;
-  startTime: string;
-  organizer: string;
+  resources: CompetitionResource[];
+  registrationDeadline?: string;
+  startTime?: string;
   contact: string;
-  website?: string;
-  liveloxLink?: string; // Added Livelox link field
+  eventorLink?: string;
+  liveloxLink?: string;
   isRegistered?: boolean;
   isWaitlisted?: boolean;
 }
 
-export interface CompetitionFile {
-  id: string;
+export interface CompetitionResource {
+  eventorId: string;
   name: string;
   type: 'startlist' | 'results' | 'splits' | 'invitation' | 'pm' | 'other';
+  format: 'pdf' | 'png' | 'link';
   url: string;
   uploadDate: string;
 }

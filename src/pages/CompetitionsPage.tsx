@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
-import { mockCompetitions } from '../utils/mockData';
 import { MapPin, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
@@ -9,15 +8,22 @@ import LocationInputForm from '../components/LocationInputForm';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { Competition } from '../types';
 import { format, addDays, startOfWeek, isSameDay, isSameMonth, subDays, isAfter, isBefore, startOfDay } from 'date-fns';
+import { useQuery } from '@tanstack/react-query';
+import { fetchCompetitions } from '../services/competitionsService';
 
-interface CompetitionWithDistance extends Omit<Competition, 'distance'> {
+interface CompetitionWithDistance extends Competition {
   distance: number;
 }
 
 const CompetitionsPage: React.FC = () => {
   const [showLocationSheet, setShowLocationSheet] = useState(false);
-  const { userLocation, isLoading, updateUserLocation } = useUserLocation();
+  const { userLocation, isLoading: isLoadingLocation, updateUserLocation } = useUserLocation();
   const [keyboardVisible, setKeyboardVisible] = useState(false);
+
+  const { data: competitions, isLoading: isLoadingCompetitions, error } = useQuery({
+    queryKey: ['competitions'],
+    queryFn: fetchCompetitions,
+  });
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -41,8 +47,8 @@ const CompetitionsPage: React.FC = () => {
     setShowLocationSheet(false);
   };
 
-  const processCompetitionWithDistance = (competition: typeof mockCompetitions[0]): CompetitionWithDistance => {
-    if (!userLocation) {
+  const processCompetitionWithDistance = (competition: Competition): CompetitionWithDistance => {
+    if (!userLocation || !competition.coordinates) {
       return {
         ...competition,
         distance: 0
@@ -61,9 +67,9 @@ const CompetitionsPage: React.FC = () => {
   };
 
   const getCompetitions = (): CompetitionWithDistance[] => {
-    if (!userLocation || mockCompetitions.length === 0) return [];
+    if (!userLocation || !competitions || competitions.length === 0) return [];
     
-    const processedCompetitions = mockCompetitions.map(processCompetitionWithDistance);
+    const processedCompetitions = competitions.map(processCompetitionWithDistance);
     const today = startOfDay(new Date());
     
     const fiveDaysAgo = subDays(today, 5);
@@ -79,11 +85,27 @@ const CompetitionsPage: React.FC = () => {
   };
 
   const renderContent = () => {
-    if (isLoading) {
+    if (isLoadingLocation || isLoadingCompetitions) {
       return (
         <div className="flex flex-col justify-center items-center h-[70vh]">
           <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
           <p className="text-gray-600">Laddar...</p>
+        </div>
+      );
+    }
+    
+    if (error) {
+      return (
+        <div className="text-center py-8">
+          <div className="text-red-400 mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mx-auto">
+              <circle cx="12" cy="12" r="10" />
+              <path d="m15 9-6 6" />
+              <path d="m9 9 6 6" />
+            </svg>
+          </div>
+          <p className="text-gray-500">Ett fel uppstod när tävlingar hämtades</p>
+          <p className="text-sm text-gray-400">Försök igen senare</p>
         </div>
       );
     }
@@ -108,7 +130,7 @@ const CompetitionsPage: React.FC = () => {
       ? userLocation.city.split(',')[0]
       : userLocation.city;
     
-    const competitions = getCompetitions();
+    const competitionsToShow = getCompetitions();
     
     return (
       <>
@@ -133,9 +155,9 @@ const CompetitionsPage: React.FC = () => {
           </div>
         </div>
         
-        {competitions.length > 0 ? (
+        {competitionsToShow.length > 0 ? (
           <div className="space-y-3">
-            {competitions.map(competition => (
+            {competitionsToShow.map(competition => (
               <CompetitionCard key={competition.id} competition={competition} />
             ))}
           </div>
