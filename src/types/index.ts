@@ -40,7 +40,7 @@ export enum OrienteeringDistrict {
   Jonkoping = 'Jönköpings läns OF',
   Norrbotten = 'Norrbottens OF',
   Skane = 'Skånes OF',
-  Smaland = 'Smålands OF',
+  Smaland = 'SmålandsOF',  // Updated to match API format (no space)
   Stockholm = 'Stockholms OF',
   Sodermanland = 'Södermanlands OF',
   Uppland = 'Upplands OF',
@@ -82,8 +82,8 @@ export interface CompetitionSummary {
   discipline: Discipline;
   competitionType: CompetitionType;
   district: OrienteeringDistrict;
-  latitude: number;
-  longitude: number;
+  latitude: number | null; // Updated to allow null
+  longitude: number | null; // Updated to allow null
 }
 
 // Competition class to match the backend C# model
@@ -100,13 +100,13 @@ export interface Competition {
   competitionType: CompetitionType;
   district: OrienteeringDistrict;
   branch: Branch;
-  latitude: number;
-  longitude: number;
-  registrationDeadline: string;
-  startTime: string;
+  latitude: number | null; // Updated to allow null
+  longitude: number | null; // Updated to allow null
+  registrationDeadline: string | null; // Updated to allow null
+  startTime: string | null; // Updated to allow null
   contact: string;
-  eventorLink?: string;
-  liveloxLink?: string;
+  eventorLink?: string | null; // Updated to allow null
+  liveloxLink?: string | null; // Updated to allow null
   resources: Resource[];
 }
 

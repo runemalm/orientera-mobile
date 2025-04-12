@@ -44,12 +44,12 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
         
         <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 flex flex-col items-center justify-center">
           <p className="text-xs text-gray-500 uppercase">Startar</p>
-          <p className="font-semibold">{competition.startTime}</p>
+          <p className="font-semibold">{competition.startTime || 'Inte angivet'}</p>
         </div>
         
         <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 flex flex-col items-center justify-center col-span-2">
           <div className="flex items-center gap-2">
-            <p className="font-semibold">{competition.location}</p>
+            <p className="font-semibold">{competition.location || 'Plats inte angiven'}</p>
           </div>
           <p className="text-xs text-gray-500 mt-1">{competition.distance} km från dig</p>
         </div>

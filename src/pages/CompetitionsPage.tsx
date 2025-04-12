@@ -43,7 +43,7 @@ const CompetitionsPage: React.FC = () => {
   };
 
   const processCompetitionWithDistance = (competition: typeof mockCompetitions[0]): CompetitionWithDistance => {
-    if (!userLocation) {
+    if (!userLocation || competition.latitude === null || competition.longitude === null) {
       return {
         ...competition,
         distance: 0
