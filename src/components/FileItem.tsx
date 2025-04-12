@@ -1,10 +1,10 @@
 
 import React from 'react';
-import { CompetitionFile } from '../types';
+import { Resource } from '../types'; // Updated type import
 import { FileText, FileSpreadsheet, FileClock } from 'lucide-react';
 
 interface FileItemProps {
-  file: CompetitionFile;
+  file: Resource; // Updated type
 }
 
 const FileItem: React.FC<FileItemProps> = ({ file }) => {

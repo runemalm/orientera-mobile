@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
@@ -7,10 +8,10 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import LocationInputForm from '../components/LocationInputForm';
 import { useUserLocation } from '../hooks/useUserLocation';
-import { Competition } from '../types';
+import { CompetitionSummary } from '../types'; // Updated type import
 import { format, addDays, startOfWeek, isSameDay, isSameMonth, subDays, isAfter, isBefore, startOfDay } from 'date-fns';
 
-interface CompetitionWithDistance extends Omit<Competition, 'distance'> {
+interface CompetitionWithDistance extends Omit<CompetitionSummary, 'distance'> { // Updated type
   distance: number;
 }
 

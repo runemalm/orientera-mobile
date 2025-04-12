@@ -4,13 +4,13 @@ import { useParams } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionDetails from '../components/CompetitionDetails';
 import { mockCompetitionDetails } from '../utils/mockData';
-import { CompetitionDetail } from '../types';
+import { Competition } from '../types'; // Updated type import
 import { Toaster } from '@/components/ui/toaster';
 import { Trophy } from 'lucide-react';
 
 const CompetitionDetailsPage: React.FC = () => {
   const { competitionId } = useParams<{ competitionId: string }>();
-  const [competition, setCompetition] = useState<CompetitionDetail | null>(null);
+  const [competition, setCompetition] = useState<Competition | null>(null); // Updated type
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

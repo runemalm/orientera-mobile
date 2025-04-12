@@ -1,6 +1,6 @@
-import { Competition, CompetitionDetail, CompetitionType, CompetitionDiscipline, OrienteeringDistrict } from "../types";
+import { CompetitionSummary, Competition, CompetitionType, CompetitionDiscipline, OrienteeringDistrict, Resource } from "../types";
 
-export const mockCompetitions: Competition[] = [
+export const mockCompetitions: CompetitionSummary[] = [
   {
     id: "comp-1",
     name: "Ålems OK",
@@ -131,10 +131,10 @@ export const mockCompetitions: Competition[] = [
   },
 ];
 
-export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
+export const mockCompetitionDetails: Record<string, Competition> = {
   "comp-1": {
     ...mockCompetitions[0],
-    files: [
+    resources: [
       {
         id: "file-1",
         name: "Inbjudan.pdf",
@@ -160,7 +160,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
   },
   "comp-2": {
     ...mockCompetitions[1],
-    files: [
+    resources: [
       {
         id: "file-3",
         name: "Inbjudan.pdf",
@@ -186,7 +186,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
   },
   "comp-3": {
     ...mockCompetitions[2],
-    files: [
+    resources: [
       {
         id: "file-5",
         name: "Invitation.pdf",
@@ -203,7 +203,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
   },
   "comp-4": {
     ...mockCompetitions[3],
-    files: [
+    resources: [
       {
         id: "file-14",
         name: "Inbjudan.pdf",
@@ -229,7 +229,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
   },
   "comp-5": {
     ...mockCompetitions[4],
-    files: [
+    resources: [
       {
         id: "file-8",
         name: "Invitation.pdf",
@@ -261,7 +261,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
   },
   "comp-6": {
     ...mockCompetitions[5],
-    files: [
+    resources: [
       {
         id: "file-11",
         name: "Inbjudan.pdf",
@@ -279,7 +279,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
   },
   "comp-7": {
     ...mockCompetitions[6],
-    files: [
+    resources: [
       {
         id: "file-12",
         name: "Inbjudan.pdf",
@@ -304,7 +304,7 @@ export const mockCompetitionDetails: Record<string, CompetitionDetail> = {
   },
   "comp-8": {
     ...mockCompetitions[7],
-    files: [
+    resources: [
       {
         id: "file-16",
         name: "Inbjudan.pdf",

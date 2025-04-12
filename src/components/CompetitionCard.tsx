@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Competition } from '../types';
+import { CompetitionSummary } from '../types';
 import { Calendar, Clock, MapPin, Navigation } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
@@ -9,7 +8,7 @@ import { format, differenceInDays } from 'date-fns';
 import { cn } from '@/lib/utils';
 
 interface CompetitionCardProps {
-  competition: Competition;
+  competition: CompetitionSummary;
 }
 
 const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition }) => {
@@ -19,15 +18,12 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition }) => {
     navigate(`/competition/${competition.id}`);
   };
 
-  // Calculate days remaining
   const competitionDate = new Date(competition.date);
   const today = new Date();
   const daysRemaining = differenceInDays(competitionDate, today);
   
-  // Format the date
   const formattedDate = format(competitionDate, 'E d MMM');
 
-  // Determine status color and text
   const getStatusInfo = () => {
     if (daysRemaining > 7) {
       return { 
@@ -59,7 +55,6 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition }) => {
 
   const status = getStatusInfo();
 
-  // Distance formatting
   const formatDistance = (distance: number) => {
     if (distance < 1) {
       return `${(distance * 1000).toFixed(0)} m`;
@@ -74,7 +69,6 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition }) => {
     >
       <CardContent className="p-4">
         <div className="flex flex-col gap-2">
-          {/* Top row with days remaining and distance */}
           <div className="flex justify-between items-center mb-2">
             <Badge variant="outline" className={cn("px-3 py-1 gap-1 font-medium", status.color)}>
               <Clock size={14} />
@@ -87,10 +81,8 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition }) => {
             </Badge>
           </div>
           
-          {/* Competition name */}
           <h3 className="font-medium text-gray-800 text-lg">{competition.name}</h3>
           
-          {/* Date and location info */}
           <div className="flex flex-col gap-1 mt-1">
             <div className="flex items-center gap-1 text-sm text-gray-600">
               <Calendar size={14} className="text-primary" />

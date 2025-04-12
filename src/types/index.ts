@@ -11,7 +11,8 @@ export type OrienteeringDistrict =
   "Värmlands OF" | "Västerbottens OF" | "Västergötlands OF" | "Västmanlands OF" | 
   "Ångermanlands OF" | "Örebro Läns OF" | "Östergötlands OF";
 
-export interface Competition {
+// Renamed Competition to CompetitionSummary
+export interface CompetitionSummary {
   id: string;
   name: string;
   date: string;
@@ -28,19 +29,21 @@ export interface Competition {
   };
 }
 
-export interface CompetitionDetail extends Competition {
-  files: CompetitionFile[];
+// Renamed CompetitionDetail to Competition
+export interface Competition extends CompetitionSummary {
+  resources: Resource[]; // Renamed from files
   registrationDeadline: string;
   startTime: string;
   organizer: string;
   contact: string;
   website?: string;
-  liveloxLink?: string; // Added Livelox link field
+  liveloxLink?: string; 
   isRegistered?: boolean;
   isWaitlisted?: boolean;
 }
 
-export interface CompetitionFile {
+// Renamed CompetitionFile to Resource
+export interface Resource {
   id: string;
   name: string;
   type: 'startlist' | 'results' | 'splits' | 'invitation' | 'pm' | 'other';

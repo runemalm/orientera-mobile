@@ -4,12 +4,12 @@ import { useParams } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import FileItem from '../components/FileItem';
 import { mockCompetitionDetails } from '../utils/mockData';
-import { CompetitionFile } from '../types';
+import { Resource } from '../types'; // Updated type import
 import { Toaster } from '@/components/ui/toaster';
 
 const DocumentsPage: React.FC = () => {
   const { competitionId } = useParams<{ competitionId: string }>();
-  const [files, setFiles] = useState<CompetitionFile[]>([]);
+  const [files, setFiles] = useState<Resource[]>([]); // Updated type
   const [loading, setLoading] = useState(true);
   const [competitionName, setCompetitionName] = useState('');
 
@@ -18,7 +18,7 @@ const DocumentsPage: React.FC = () => {
     const timer = setTimeout(() => {
       if (competitionId && mockCompetitionDetails[competitionId]) {
         const competitionData = mockCompetitionDetails[competitionId];
-        setFiles(competitionData.files);
+        setFiles(competitionData.resources); // Updated property name
         setCompetitionName(competitionData.name);
       }
       setLoading(false);

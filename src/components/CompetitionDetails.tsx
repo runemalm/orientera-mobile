@@ -1,13 +1,13 @@
 
 import React from 'react';
-import { CompetitionDetail } from '../types';
+import { Competition } from '../types'; // Updated type import
 import { Users, Map, FileText, Car } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Separator } from '@/components/ui/separator';
 import FileItem from './FileItem';
 
 interface CompetitionDetailsProps {
-  competition: CompetitionDetail;
+  competition: Competition; // Updated type
 }
 
 const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) => {
@@ -58,10 +58,10 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
       {/* Simplified uniform sections */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
         {/* Documents section - show files directly */}
-        {competition.files.length > 0 && (
+        {competition.resources && competition.resources.length > 0 && (
           <>
-            {competition.files.map((file) => (
-              <FileItem key={file.id} file={file} />
+            {competition.resources.map((resource) => (
+              <FileItem key={resource.id} file={resource} />
             ))}
             <Separator />
           </>
