@@ -1,3 +1,4 @@
+
 // Enums to match backend C# models
 export enum Branch {
   FootO = 'FootO',    // Orienteringslöpning
@@ -69,12 +70,6 @@ export enum ResourceFormat {
 
 export type TabName = 'competitions' | 'info';
 
-// GeoCoordinate type to match backend C# model
-export interface GeoCoordinate {
-  latitude: number;
-  longitude: number;
-}
-
 // CompetitionSummary for list views
 export interface CompetitionSummary {
   id: string;
@@ -87,7 +82,8 @@ export interface CompetitionSummary {
   discipline: Discipline;
   competitionType: CompetitionType;
   district: OrienteeringDistrict;
-  coordinates: GeoCoordinate;
+  latitude: number;
+  longitude: number;
 }
 
 // Competition class to match the backend C# model
@@ -104,7 +100,8 @@ export interface Competition {
   competitionType: CompetitionType;
   district: OrienteeringDistrict;
   branch: Branch;
-  coordinates: GeoCoordinate;
+  latitude: number;
+  longitude: number;
   registrationDeadline: string;
   startTime: string;
   contact: string;

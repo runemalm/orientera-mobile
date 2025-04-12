@@ -55,8 +55,8 @@ const CompetitionsPage: React.FC = () => {
       distance: calculateDistance(
         userLocation.latitude,
         userLocation.longitude,
-        competition.coordinates.latitude,
-        competition.coordinates.longitude
+        competition.latitude,
+        competition.longitude
       )
     };
   };

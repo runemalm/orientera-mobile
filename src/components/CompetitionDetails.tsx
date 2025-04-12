@@ -1,13 +1,13 @@
 
 import React from 'react';
-import { Competition } from '../types'; // Updated type import
+import { Competition } from '../types';
 import { Users, Map, FileText, Car } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Separator } from '@/components/ui/separator';
 import FileItem from './FileItem';
 
 interface CompetitionDetailsProps {
-  competition: Competition; // Updated type
+  competition: Competition;
 }
 
 const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) => {

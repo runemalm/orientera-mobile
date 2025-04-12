@@ -1,3 +1,4 @@
+
 import { CompetitionSummary, Competition, ResourceType, ResourceFormat, Resource, Branch, CompetitionType, Discipline, OrienteeringDistrict } from "../types";
 
 export const mockCompetitions: CompetitionSummary[] = [
@@ -12,10 +13,8 @@ export const mockCompetitions: CompetitionSummary[] = [
     discipline: Discipline.Middle, 
     competitionType: CompetitionType.National,
     district: OrienteeringDistrict.Smaland,
-    coordinates: {
-      latitude: 56.9258,
-      longitude: 16.4332
-    }
+    latitude: 56.9258,
+    longitude: 16.4332
   },
   {
     id: "comp-2",
@@ -28,10 +27,8 @@ export const mockCompetitions: CompetitionSummary[] = [
     discipline: Discipline.Long,
     competitionType: CompetitionType.National,
     district: OrienteeringDistrict.Smaland,
-    coordinates: {
-      latitude: 57.6655,
-      longitude: 15.8568
-    }
+    latitude: 57.6655,
+    longitude: 15.8568
   },
   {
     id: "comp-3",
@@ -44,10 +41,8 @@ export const mockCompetitions: CompetitionSummary[] = [
     discipline: Discipline.Long,
     competitionType: CompetitionType.Near,
     district: OrienteeringDistrict.Smaland,
-    coordinates: {
-      latitude: 59.3349,
-      longitude: 18.0603
-    }
+    latitude: 59.3349,
+    longitude: 18.0603
   },
   {
     id: "comp-4",
@@ -60,10 +55,8 @@ export const mockCompetitions: CompetitionSummary[] = [
     discipline: Discipline.Middle,
     competitionType: CompetitionType.Near,
     district: OrienteeringDistrict.Smaland,
-    coordinates: {
-      latitude: 56.7512,
-      longitude: 15.2722
-    }
+    latitude: 56.7512,
+    longitude: 15.2722
   },
   {
     id: "comp-5",
@@ -76,10 +69,8 @@ export const mockCompetitions: CompetitionSummary[] = [
     discipline: Discipline.Long,
     competitionType: CompetitionType.Near,
     district: OrienteeringDistrict.Smaland,
-    coordinates: {
-      latitude: 59.3400,
-      longitude: 18.0700
-    }
+    latitude: 59.3400,
+    longitude: 18.0700
   },
   {
     id: "comp-6",
@@ -92,10 +83,8 @@ export const mockCompetitions: CompetitionSummary[] = [
     discipline: Discipline.Long,
     competitionType: CompetitionType.Near,
     district: OrienteeringDistrict.Smaland,
-    coordinates: {
-      latitude: 56.7512,
-      longitude: 15.2722
-    }
+    latitude: 56.7512,
+    longitude: 15.2722
   },
   {
     id: "comp-7",
@@ -108,10 +97,8 @@ export const mockCompetitions: CompetitionSummary[] = [
     discipline: Discipline.Long,
     competitionType: CompetitionType.Near,
     district: OrienteeringDistrict.Smaland,
-    coordinates: {
-      latitude: 56.4108,
-      longitude: 16.0030
-    }
+    latitude: 56.4108,
+    longitude: 16.0030
   },
   {
     id: "comp-8",
@@ -124,10 +111,8 @@ export const mockCompetitions: CompetitionSummary[] = [
     discipline: Discipline.Long,
     competitionType: CompetitionType.Near,
     district: OrienteeringDistrict.Smaland,
-    coordinates: {
-      latitude: 56.4108,
-      longitude: 16.0030
-    }
+    latitude: 56.4108,
+    longitude: 16.0030
   },
 ];
 
