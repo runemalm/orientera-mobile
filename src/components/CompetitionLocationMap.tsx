@@ -33,6 +33,11 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
   // Reference to the Leaflet map instance
   const mapInstanceRef = useRef<L.Map | null>(null);
   
+  const openInGoogleMaps = () => {
+    const googleMapsUrl = `https://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}`;
+    window.open(googleMapsUrl, '_blank');
+  };
+  
   // Initialize and clean up the map
   useEffect(() => {
     if (!mapRef.current) return;
@@ -63,6 +68,16 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
     
     // Add a marker at the specified coordinates
     const marker = L.marker([coordinates.lat, coordinates.lng], { icon: customMarkerIcon }).addTo(map);
+    
+    // Add a click handler to the entire map
+    map.on('click', () => {
+      openInGoogleMaps();
+    });
+    
+    // Make the marker clickable too
+    marker.on('click', () => {
+      openInGoogleMaps();
+    });
     
     // Ensure the map is centered on the marker coordinates and revalidate size
     setTimeout(() => {
@@ -98,7 +113,9 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
 
   return (
     <div 
-      className={cn("relative w-full h-48 rounded-lg overflow-hidden shadow-inner", className)}
+      className={cn("relative w-full h-48 rounded-lg overflow-hidden shadow-inner cursor-pointer", className)} 
+      onClick={openInGoogleMaps}
+      title="Click to open in Google Maps"
     >
       {/* Map container */}
       <div ref={mapRef} className="h-full w-full rounded-lg"></div>
@@ -118,6 +135,15 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
       <div className="absolute top-2 right-2 flex flex-col items-center bg-white/80 p-1 rounded-full shadow-sm z-[1000]">
         <div className="text-xs font-bold text-gray-700">N</div>
         <div className="h-4 w-[2px] bg-gray-700"></div>
+      </div>
+      
+      {/* Google Maps indicator */}
+      <div className="absolute top-2 left-2 bg-white/80 px-2 py-1 rounded-full text-xs font-medium shadow-sm z-[1000] flex items-center gap-1">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <polygon points="10 8 16 12 10 16 10 8"/>
+        </svg>
+        Open in Maps
       </div>
     </div>
   );
