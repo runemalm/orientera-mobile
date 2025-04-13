@@ -3,7 +3,6 @@ import React, { useRef, useEffect } from 'react';
 import 'leaflet/dist/leaflet.css';
 import { cn } from '@/lib/utils';
 import L from 'leaflet';
-import OrienteeringCheckpointIcon from './OrienteeringCheckpointIcon';
 
 // Fix for default marker icons in Leaflet
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -38,7 +37,7 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
   useEffect(() => {
     if (!mapRef.current) return;
     
-    // Create a map instance
+    // Create a map instance centered on the actual competition coordinates
     const map = L.map(mapRef.current, {
       center: [coordinates.lat, coordinates.lng],
       zoom: 13,
@@ -73,7 +72,7 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
       if (iconContainer) {
         iconContainer.innerHTML = `
           <div style="position: relative; width: 20px; height: 20px;">
-            <div style="position: absolute; inset: 0; border: 1px solid #666;"></div>
+            <div style="position: absolute; inset: 0; border: 2px solid #666; border-radius: 2px;"></div>
             <div style="position: absolute; inset: 0; clip-path: polygon(0 0, 100% 0, 0 100%); background-color: #FFFFFF;"></div>
             <div style="position: absolute; inset: 0; clip-path: polygon(100% 0, 0 100%, 100% 100%); background-color: #F97316;"></div>
           </div>
@@ -89,7 +88,7 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
         mapInstanceRef.current = null;
       }
     };
-  }, [coordinates, locationName]); // Re-initialize map if coordinates or locationName change
+  }, [coordinates]); // Re-initialize map if coordinates change
 
   return (
     <div 
