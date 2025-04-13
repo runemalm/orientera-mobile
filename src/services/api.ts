@@ -4,10 +4,10 @@ import { mockCompetitions, mockCompetitionDetails } from "../utils/mockData";
 
 // Configuration to determine whether to use mock data or real API
 // In production, this would be set to false
-const USE_MOCK_API = true;
+const USE_MOCK_API = false;
 
 // Base URL for the API - updated with the real API URL 
-const API_BASE_URL = 'http://api.orientera.com/api/competitions';
+const API_BASE_URL = 'https://orientera-backend.delightfulisland-78f87004.northeurope.azurecontainerapps.io/api/competitions';
 
 /**
  * Get nearby competitions based on location
