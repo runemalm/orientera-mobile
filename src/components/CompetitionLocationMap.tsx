@@ -20,13 +20,13 @@ L.Marker.prototype.options.icon = DefaultIcon;
 interface CompetitionLocationMapProps {
   locationName: string;
   className?: string;
-  coordinates?: { lat: number; lng: number };
+  coordinates: { lat: number; lng: number };
 }
 
 const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({ 
   locationName, 
   className,
-  coordinates = { lat: 59.334591, lng: 18.063240 } // Default to Stockholm
+  coordinates
 }) => {
   // Reference to the map container element
   const mapRef = useRef<HTMLDivElement>(null);
