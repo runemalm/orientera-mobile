@@ -9,7 +9,7 @@ import LocationInputForm from '../components/LocationInputForm';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { CompetitionSummary } from '../types';
 import { getNearbyCompetitions } from '../services/api';
-import { subDays, startOfDay, isAfter, isBefore, isSameDay } from 'date-fns';
+import { subDays, startOfDay, isAfter, isBefore, isSameDay, addMonths } from 'date-fns';
 
 const CompetitionsPage: React.FC = () => {
   const [showLocationSheet, setShowLocationSheet] = useState(false);
@@ -45,19 +45,23 @@ const CompetitionsPage: React.FC = () => {
       setError(null);
       
       try {
-        const result = await getNearbyCompetitions(userLocation.latitude, userLocation.longitude);
+        // Get today's date and 3 months in the future for the date range
+        const today = new Date();
+        const threeMonthsLater = addMonths(today, 3);
         
-        // Filter out old competitions (more than 5 days ago)
-        const today = startOfDay(new Date());
-        const fiveDaysAgo = subDays(today, 5);
-        
-        const filteredCompetitions = result.filter(competition => {
-          const competitionDate = new Date(competition.date);
-          return isAfter(competitionDate, fiveDaysAgo) || isSameDay(competitionDate, fiveDaysAgo);
-        });
+        const result = await getNearbyCompetitions(
+          userLocation.latitude, 
+          userLocation.longitude,
+          {
+            from: today,
+            to: threeMonthsLater,
+            maxDistanceKm: 150, // Default max distance of 150km
+            limit: 50 // Limit to 50 results
+          }
+        );
         
         // Sort by date
-        const sortedCompetitions = filteredCompetitions.sort((a, b) => 
+        const sortedCompetitions = result.sort((a, b) => 
           new Date(a.date).getTime() - new Date(b.date).getTime()
         );
         
