@@ -9,7 +9,7 @@ import LocationInputForm from '../components/LocationInputForm';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { CompetitionSummary } from '../types';
 import { getNearbyCompetitions } from '../services/api';
-import { subDays, addMonths } from 'date-fns';
+import { addMonths } from 'date-fns';
 import PullToRefresh from '../components/PullToRefresh';
 import { toast } from '@/hooks/use-toast';
 
@@ -45,15 +45,15 @@ const CompetitionsPage: React.FC = () => {
     setError(null);
     
     try {
-      // Get five days ago and 2 months in the future for the date range
-      const fiveDaysAgo = subDays(new Date(), 5);
-      const twoMonthsLater = addMonths(new Date(), 2);
+      // Get today and 2 months in the future for the date range
+      const today = new Date();
+      const twoMonthsLater = addMonths(today, 2);
       
       const result = await getNearbyCompetitions(
         userLocation.latitude, 
         userLocation.longitude,
         {
-          from: fiveDaysAgo,
+          from: today, // Changed from subDays(new Date(), 5) to today
           to: twoMonthsLater,
           // No maxDistanceKm parameter, so no distance limitation
           limit: 50 // Limit to 50 results
