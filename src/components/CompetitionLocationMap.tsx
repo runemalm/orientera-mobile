@@ -37,7 +37,7 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
   useEffect(() => {
     if (!mapRef.current) return;
     
-    // Create a map instance centered on the actual competition coordinates
+    // Create a map instance centered on the competition coordinates
     const map = L.map(mapRef.current, {
       center: [coordinates.lat, coordinates.lng],
       zoom: 13,
@@ -61,8 +61,14 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
       iconAnchor: [16, 16],
     });
     
-    // Add a marker at the specified coordinates without a popup
+    // Add a marker at the specified coordinates
     const marker = L.marker([coordinates.lat, coordinates.lng], { icon: customMarkerIcon }).addTo(map);
+    
+    // Ensure the map is centered on the marker coordinates and revalidate size
+    setTimeout(() => {
+      map.invalidateSize();
+      map.setView([coordinates.lat, coordinates.lng], 13);
+    }, 100);
     
     // After the marker is added, we can render our React component into the container
     if (document.querySelector('.checkpoint-icon-container')) {
