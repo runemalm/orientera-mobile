@@ -17,14 +17,14 @@ const OrienteeringCheckpointIcon: React.FC<OrienteeringCheckpointIconProps> = ({
     >
       <div 
         className="absolute inset-0 border border-gray-600" 
-        style={{ transform: 'rotate(45deg)' }}
+        style={{ transform: 'rotate(135deg)' }}
       />
       <div 
         className="absolute inset-0" 
         style={{ 
           clipPath: 'polygon(0 0, 100% 0, 0 100%)',
           backgroundColor: '#F97316', // Bright orange
-          transform: 'rotate(45deg)'
+          transform: 'rotate(135deg)'
         }} 
       />
       <div 
@@ -32,7 +32,7 @@ const OrienteeringCheckpointIcon: React.FC<OrienteeringCheckpointIconProps> = ({
         style={{ 
           clipPath: 'polygon(100% 0, 0 100%, 100% 100%)',
           backgroundColor: 'white',
-          transform: 'rotate(45deg)'
+          transform: 'rotate(135deg)'
         }} 
       />
     </div>
