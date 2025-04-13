@@ -6,8 +6,8 @@ import { mockCompetitions, mockCompetitionDetails } from "../utils/mockData";
 // In production, this would be set to false
 const USE_MOCK_API = false;
 
-// Base URL for the API - updated with the real API URL 
-const API_BASE_URL = 'https://orientera-backend.delightfulisland-78f87004.northeurope.azurecontainerapps.io/api/competitions';
+// Base URL for the API - updated with the correct base URL without the endpoint path
+const API_BASE_URL = 'https://orientera-backend.delightfulisland-78f87004.northeurope.azurecontainerapps.io/api';
 
 /**
  * Get nearby competitions based on location
@@ -25,7 +25,7 @@ export const getNearbyCompetitions = async (
   // Real API call implementation
   try {
     const response = await fetch(
-      `${API_BASE_URL}/get-competitions?lat=${latitude}&lon=${longitude}`,
+      `${API_BASE_URL}/competitions/get-competitions?lat=${latitude}&lon=${longitude}`,
       {
         headers: {
           'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ export const getCompetitionById = async (id: string): Promise<Competition | null
   // Real API call implementation
   try {
     const response = await fetch(
-      `${API_BASE_URL}/get-competitions/${id}`,
+      `${API_BASE_URL}/competitions/get-competitions/${id}`,
       {
         headers: {
           'Content-Type': 'application/json',
