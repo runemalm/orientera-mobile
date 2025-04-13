@@ -1,3 +1,4 @@
+
 import { Competition, CompetitionSummary } from "../types";
 import { mockCompetitions, mockCompetitionDetails } from "../utils/mockData";
 
@@ -57,6 +58,27 @@ export const getNearbyCompetitions = async (
   
   // Real API call implementation
   try {
+    // Create URLSearchParams object for query parameters
+    const params = new URLSearchParams();
+    params.append('latitude', latitude.toString());
+    params.append('longitude', longitude.toString());
+    
+    if (options?.from) {
+      params.append('from', options.from.toISOString().split('T')[0]);
+    }
+    
+    if (options?.to) {
+      params.append('to', options.to.toISOString().split('T')[0]);
+    }
+    
+    if (options?.maxDistanceKm) {
+      params.append('maxDistanceKm', options.maxDistanceKm.toString());
+    }
+    
+    if (options?.limit) {
+      params.append('limit', options.limit.toString());
+    }
+    
     const response = await fetch(
       `${API_BASE_URL}/competitions/get-competition-summaries?${params.toString()}`,
       {

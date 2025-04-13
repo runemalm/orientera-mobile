@@ -1,8 +1,10 @@
 import React from 'react';
 import { Competition, ResourceType } from '../types';
-import { Users, Map, FileText, Car, Trophy, Clock, List } from 'lucide-react';
+import { Users, Map, FileText, Car, Trophy, Clock, List, Calendar, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent } from '@/components/ui/card';
 import FileItem from './FileItem';
 import { translateDiscipline, translateCompetitionType } from '../utils/translations';
 import CompetitionDetailSection from './CompetitionDetailSection';
@@ -37,8 +39,14 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
       ResourceType.StartList, ResourceType.ClubStartList, ResourceType.Splits].includes(r.type)
   );
 
+  // Check if we have official documents
+  const hasOfficialDocs = invitation || pm || startList || clubStartList || results || splits;
+  
+  // Check if we have event links
+  const hasEventLinks = competition.liveloxLink || competition.eventorLink;
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Competition header - redesigned with more visual appeal */}
       <div className="bg-primary text-white p-5 rounded-lg shadow-md relative overflow-hidden">
         <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-primary-foreground/10"></div>
@@ -53,6 +61,9 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
       {/* Key info panel */}
       <div className="grid grid-cols-2 gap-3">
         <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 flex flex-col items-center justify-center">
+          <div className="text-primary mb-1">
+            <Calendar size={18} />
+          </div>
           <p className="text-xs text-gray-500 uppercase">Datum</p>
           <p className="font-semibold text-center">{new Date(competition.date).toLocaleDateString('sv-SE', {
             day: 'numeric',
@@ -61,148 +72,207 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
         </div>
         
         <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 flex flex-col items-center justify-center">
+          <div className="text-primary mb-1">
+            <Clock size={18} />
+          </div>
           <p className="text-xs text-gray-500 uppercase">Startar</p>
           <p className="font-semibold">{competition.startTime || 'Inte angivet'}</p>
         </div>
         
         <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 flex flex-col items-center justify-center col-span-2">
-          <div className="flex items-center gap-2">
-            <p className="font-semibold">{competition.location || 'Plats inte angiven'}</p>
+          <div className="text-primary mb-1">
+            <MapPin size={18} />
           </div>
+          <p className="font-semibold">{competition.location || 'Plats inte angiven'}</p>
           <p className="text-xs text-gray-500 mt-1">{competition.distance} km från dig</p>
         </div>
       </div>
       
-      {/* Competition resources section */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
-        {/* Official competition documents */}
-        {invitation && (
-          <FileItem key={invitation.id} file={invitation} />
-        )}
+      {/* Tabs for resources and info */}
+      <Tabs defaultValue="documents" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="documents">Dokument</TabsTrigger>
+          <TabsTrigger value="info">Info</TabsTrigger>
+        </TabsList>
         
-        {pm && (
-          <>
-            {invitation && <Separator />}
-            <FileItem key={pm.id} file={pm} />
-          </>
-        )}
-        
-        {/* Participant lists */}
-        <Link 
-          to={`/competition/${competition.id}/participants`}
-          className="flex items-center justify-between p-4 hover:bg-gray-50"
-        >
-          <div className="flex items-center gap-3">
-            <Users size={20} className="text-forest" />
-            <span className="font-medium">Anmälda deltagare</span>
-          </div>
-          <div className="text-gray-400">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="m9 18 6-6-6-6"/>
-            </svg>
-          </div>
-        </Link>
-        
-        {/* Club participants */}
-        <Separator />
-        <Link 
-          to={`/competition/${competition.id}/club-participants`}
-          className="flex items-center justify-between p-4 hover:bg-gray-50"
-        >
-          <div className="flex items-center gap-3">
-            <Users size={20} className="text-blue-600" />
-            <span className="font-medium">Klubbanmälda</span>
-          </div>
-          <div className="text-gray-400">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="m9 18 6-6-6-6"/>
-            </svg>
-          </div>
-        </Link>
-        
-        {/* Start lists */}
-        {startList && (
-          <>
-            <Separator />
-            <FileItem key={startList.id} file={startList} />
-          </>
-        )}
-        
-        {clubStartList && (
-          <>
-            <Separator />
-            <FileItem key={clubStartList.id} file={clubStartList} />
-          </>
-        )}
-        
-        {/* Results and splits */}
-        {results && (
-          <>
-            <Separator />
-            <FileItem key={results.id} file={results} />
-          </>
-        )}
-        
-        {splits && (
-          <>
-            <Separator />
-            <FileItem key={splits.id} file={splits} />
-          </>
-        )}
-        
-        {/* Livelox section */}
-        {competition.liveloxLink && (
-          <>
-            <Separator />
-            <a 
-              href={competition.liveloxLink} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="flex items-center justify-between p-4 hover:bg-gray-50"
-            >
-              <div className="flex items-center gap-3">
-                <Map size={20} className="text-forest" />
-                <span className="font-medium">Livelox</span>
+        <TabsContent value="documents" className="space-y-4 pt-2">
+          {/* Official competition documents */}
+          <Card className="border border-gray-100">
+            <CardContent className="p-0">
+              <div className="divide-y divide-gray-100">
+                {invitation && (
+                  <FileItem key={invitation.id} file={invitation} />
+                )}
+                
+                {pm && (
+                  <FileItem key={pm.id} file={pm} />
+                )}
+                
+                {startList && (
+                  <FileItem key={startList.id} file={startList} />
+                )}
+                
+                {clubStartList && (
+                  <FileItem key={clubStartList.id} file={clubStartList} />
+                )}
+                
+                {results && (
+                  <FileItem key={results.id} file={results} />
+                )}
+                
+                {splits && (
+                  <FileItem key={splits.id} file={splits} />
+                )}
               </div>
-              <div className="text-gray-400">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M7 7h10v10" />
-                  <path d="M7 17 17 7" />
-                </svg>
+            </CardContent>
+          </Card>
+
+          {/* Links to pages */}
+          <Card className="border border-gray-100">
+            <CardContent className="p-0">
+              <div className="divide-y divide-gray-100">
+                <Link 
+                  to={`/competition/${competition.id}/participants`}
+                  className="flex items-center justify-between p-4 hover:bg-gray-50"
+                >
+                  <div className="flex items-center gap-3">
+                    <Users size={20} className="text-forest" />
+                    <span className="font-medium">Anmälda deltagare</span>
+                  </div>
+                  <div className="text-gray-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="m9 18 6-6-6-6"/>
+                    </svg>
+                  </div>
+                </Link>
+                
+                <Link 
+                  to={`/competition/${competition.id}/club-participants`}
+                  className="flex items-center justify-between p-4 hover:bg-gray-50"
+                >
+                  <div className="flex items-center gap-3">
+                    <Users size={20} className="text-blue-600" />
+                    <span className="font-medium">Klubbanmälda</span>
+                  </div>
+                  <div className="text-gray-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="m9 18 6-6-6-6"/>
+                    </svg>
+                  </div>
+                </Link>
+                
+                <Link 
+                  to={`/competition/${competition.id}/carpooling`}
+                  className="flex items-center justify-between p-4 hover:bg-gray-50"
+                >
+                  <div className="flex items-center gap-3">
+                    <Car size={20} className="text-forest" />
+                    <span className="font-medium">Samåkning</span>
+                  </div>
+                  <div className="text-gray-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="m9 18 6-6-6-6"/>
+                    </svg>
+                  </div>
+                </Link>
               </div>
-            </a>
-          </>
-        )}
+            </CardContent>
+          </Card>
+          
+          {/* External links section */}
+          {hasEventLinks && (
+            <Card className="border border-gray-100">
+              <CardContent className="p-0">
+                <div className="divide-y divide-gray-100">
+                  {competition.liveloxLink && (
+                    <a 
+                      href={competition.liveloxLink} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-between p-4 hover:bg-gray-50"
+                    >
+                      <div className="flex items-center gap-3">
+                        <Map size={20} className="text-forest" />
+                        <span className="font-medium">Livelox</span>
+                      </div>
+                      <div className="text-gray-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M7 7h10v10" />
+                          <path d="M7 17 17 7" />
+                        </svg>
+                      </div>
+                    </a>
+                  )}
+                  
+                  {competition.eventorLink && (
+                    <a 
+                      href={competition.eventorLink} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-between p-4 hover:bg-gray-50"
+                    >
+                      <div className="flex items-center gap-3">
+                        <Trophy size={20} className="text-amber-500" />
+                        <span className="font-medium">Eventor</span>
+                      </div>
+                      <div className="text-gray-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M7 7h10v10" />
+                          <path d="M7 17 17 7" />
+                        </svg>
+                      </div>
+                    </a>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+          
+          {/* Other documents and links section */}
+          {otherResources.length > 0 && (
+            <Card className="border border-gray-100">
+              <CardContent className="p-3">
+                <h3 className="font-semibold text-gray-700 mb-3">Övriga dokument & länkar</h3>
+                <div className="space-y-2 divide-y divide-gray-100">
+                  {otherResources.map((resource) => (
+                    <FileItem key={resource.id} file={resource} className="pt-2 first:pt-0" />
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </TabsContent>
         
-        {/* Carpooling section */}
-        <Separator />
-        <Link 
-          to={`/competition/${competition.id}/carpooling`}
-          className="flex items-center justify-between p-4 hover:bg-gray-50"
-        >
-          <div className="flex items-center gap-3">
-            <Car size={20} className="text-forest" />
-            <span className="font-medium">Samåkning</span>
-          </div>
-          <div className="text-gray-400">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="m9 18 6-6-6-6"/>
-            </svg>
-          </div>
-        </Link>
-      </div>
-      
-      {/* Other documents and links section */}
-      {otherResources.length > 0 && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden p-4">
-          <h3 className="font-semibold text-gray-700 mb-3">Dokument & länkar</h3>
-          <div className="space-y-2">
-            {otherResources.map((resource) => (
-              <FileItem key={resource.id} file={resource} />
-            ))}
-          </div>
-        </div>
-      )}
+        <TabsContent value="info" className="space-y-4 pt-2">
+          {/* Basic competition info */}
+          <Card>
+            <CardContent className="p-4">
+              <div className="space-y-3">
+                {competition.description && (
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500">Beskrivning</h3>
+                    <p>{competition.description}</p>
+                  </div>
+                )}
+                
+                {competition.registrationDeadline && (
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500">Sista anmälningsdag</h3>
+                    <p>{new Date(competition.registrationDeadline).toLocaleDateString('sv-SE')}</p>
+                  </div>
+                )}
+                
+                {competition.contact && (
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500">Kontakt</h3>
+                    <p>{competition.contact}</p>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
