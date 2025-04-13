@@ -1,10 +1,9 @@
 
-import React from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import React, { useRef, useEffect } from 'react';
 import 'leaflet/dist/leaflet.css';
 import { cn } from '@/lib/utils';
-import OrienteeringCheckpointIcon from './OrienteeringCheckpointIcon';
 import L from 'leaflet';
+import OrienteeringCheckpointIcon from './OrienteeringCheckpointIcon';
 
 // Fix for default marker icons in Leaflet
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -30,75 +29,77 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
   className,
   coordinates = { lat: 59.334591, lng: 18.063240 } // Default to Stockholm
 }) => {
-  // Create a custom div icon using our OrienteeringCheckpointIcon component
-  const createCustomMarkerIcon = () => {
-    // We need to create a DOM element for the custom icon
-    const customIconDiv = document.createElement('div');
-    customIconDiv.style.width = '32px';
-    customIconDiv.style.height = '32px';
-    customIconDiv.style.position = 'relative';
+  // Reference to the map container element
+  const mapRef = useRef<HTMLDivElement>(null);
+  // Reference to the Leaflet map instance
+  const mapInstanceRef = useRef<L.Map | null>(null);
+  
+  // Initialize and clean up the map
+  useEffect(() => {
+    if (!mapRef.current) return;
     
-    // Create a shadow element for the marker
-    const shadowDiv = document.createElement('div');
-    shadowDiv.style.position = 'absolute';
-    shadowDiv.style.bottom = '-4px';
-    shadowDiv.style.left = '50%';
-    shadowDiv.style.transform = 'translateX(-50%)';
-    shadowDiv.style.width = '20px';
-    shadowDiv.style.height = '6px';
-    shadowDiv.style.borderRadius = '50%';
-    shadowDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
-    shadowDiv.style.zIndex = '1';
+    // Create a map instance
+    const map = L.map(mapRef.current, {
+      center: [coordinates.lat, coordinates.lng],
+      zoom: 13,
+      zoomControl: false,
+      attributionControl: false
+    });
     
-    // We'll render our React component into this div later
-    const iconContainer = document.createElement('div');
-    iconContainer.style.position = 'absolute';
-    iconContainer.style.top = '-16px';
-    iconContainer.style.left = '0';
-    iconContainer.style.zIndex = '2';
+    // Save the map instance for cleanup
+    mapInstanceRef.current = map;
     
-    customIconDiv.appendChild(shadowDiv);
-    customIconDiv.appendChild(iconContainer);
+    // Add the OpenStreetMap tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
     
-    // Create the Leaflet icon
-    return L.divIcon({
-      html: customIconDiv,
+    // Create a custom icon for the marker
+    const customMarkerIcon = L.divIcon({
       className: 'custom-orienteering-marker',
+      html: '<div class="checkpoint-icon-container"></div>',
       iconSize: [32, 32],
       iconAnchor: [16, 16],
     });
-  };
-
-  // Create position array from coordinates
-  const position: [number, number] = [coordinates.lat, coordinates.lng];
-  const customIcon = createCustomMarkerIcon();
+    
+    // Add a marker at the specified coordinates
+    const marker = L.marker([coordinates.lat, coordinates.lng], { icon: customMarkerIcon }).addTo(map);
+    
+    // Add a popup to the marker
+    marker.bindPopup(locationName).openPopup();
+    
+    // After the marker is added, we can render our React component into the container
+    if (document.querySelector('.checkpoint-icon-container')) {
+      // In a real application, you might want to use ReactDOM.render or similar
+      // Here we'll just add a styled div to represent the orienteering checkpoint
+      const iconContainer = document.querySelector('.checkpoint-icon-container');
+      if (iconContainer) {
+        iconContainer.innerHTML = `
+          <div style="position: relative; width: 20px; height: 20px;">
+            <div style="position: absolute; inset: 0; border: 1px solid #666; transform: rotate(135deg);"></div>
+            <div style="position: absolute; inset: 0; clip-path: polygon(0 0, 100% 0, 0 100%); background-color: #F97316; transform: rotate(135deg);"></div>
+            <div style="position: absolute; inset: 0; clip-path: polygon(100% 0, 0 100%, 100% 100%); background-color: white; transform: rotate(135deg);"></div>
+          </div>
+          <div style="position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 20px; height: 6px; border-radius: 50%; background-color: rgba(0,0,0,0.2); z-index: 1;"></div>
+        `;
+      }
+    }
+    
+    // Cleanup function to remove the map when the component unmounts
+    return () => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+    };
+  }, [coordinates, locationName]); // Re-initialize map if coordinates or locationName change
 
   return (
     <div 
       className={cn("relative w-full h-48 rounded-lg overflow-hidden shadow-inner", className)}
     >
-      <MapContainer 
-        // Use proper props for MapContainer
-        className="h-full w-full rounded-lg"
-        zoom={13} 
-        center={position}
-        zoomControl={false}
-      >
-        <TileLayer
-          // Use proper props for TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        />
-        <Marker 
-          // Use proper props for Marker
-          position={position}
-          icon={customIcon}
-        >
-          <Popup>
-            {locationName}
-          </Popup>
-        </Marker>
-      </MapContainer>
+      {/* Map container */}
+      <div ref={mapRef} className="h-full w-full rounded-lg"></div>
       
       {/* Map watermark */}
       <div className="absolute bottom-2 right-2 text-gray-500 text-xs bg-white/80 px-2 py-0.5 rounded-full z-[1000]">
