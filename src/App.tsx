@@ -7,6 +7,7 @@ import LandingPage from "./pages/LandingPage";
 import CompetitionsPage from "./pages/CompetitionsPage";
 import CompetitionDetailsPage from "./pages/CompetitionDetailsPage";
 import ParticipantsPage from "./pages/ParticipantsPage";
+import ClubParticipantsPage from "./pages/ClubParticipantsPage";
 import StartTimesPage from "./pages/StartTimesPage";
 import DocumentsPage from "./pages/DocumentsPage";
 import CarpoolingPage from "./pages/CarpoolingPage";
@@ -145,6 +146,7 @@ const App = () => (
         <Route path="/info" element={<InfoPage />} />
         <Route path="/competition/:competitionId" element={<CompetitionDetailsPage />} />
         <Route path="/competition/:competitionId/participants" element={<ParticipantsPage />} />
+        <Route path="/competition/:competitionId/club-participants" element={<ClubParticipantsPage />} />
         <Route path="/competition/:competitionId/start-times" element={<StartTimesPage />} />
         <Route path="/competition/:competitionId/documents" element={<DocumentsPage />} />
         <Route path="/competition/:competitionId/carpooling" element={<CarpoolingPage />} />
