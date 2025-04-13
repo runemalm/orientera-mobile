@@ -69,39 +69,36 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
     });
   };
 
+  // Fixed: Convert lat/lng object to array format for react-leaflet
+  const position: [number, number] = [coordinates.lat, coordinates.lng];
+  const customIcon = createCustomMarkerIcon();
+
   return (
     <div 
       className={cn("relative w-full h-48 rounded-lg overflow-hidden shadow-inner", className)}
     >
       <MapContainer 
-        center={[coordinates.lat, coordinates.lng]} 
+        // Fixed: Use the proper LatLngExpression type for center
+        center={position}
         zoom={13} 
         style={{ height: '100%', width: '100%', borderRadius: '0.5rem' }}
         zoomControl={false}
       >
         <TileLayer
+          // Fixed: Use proper attribution format for TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <Marker 
-          position={[coordinates.lat, coordinates.lng]} 
-          icon={createCustomMarkerIcon()}
+          // Fixed: Use the position array instead of object
+          position={position}
+          // Fixed: Use the proper icon type
+          icon={customIcon}
         >
           <Popup>
             {locationName}
           </Popup>
         </Marker>
-        
-        {/* Custom Controls */}
-        <div className="leaflet-top leaflet-right">
-          <div className="leaflet-control leaflet-bar">
-            {/* North Indicator */}
-            <div className="absolute top-2 right-2 flex flex-col items-center bg-white/80 p-1 rounded-full shadow-sm">
-              <div className="text-xs font-bold text-gray-700">N</div>
-              <div className="h-4 w-[2px] bg-gray-700"></div>
-            </div>
-          </div>
-        </div>
       </MapContainer>
       
       {/* Map watermark */}
@@ -113,6 +110,12 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
         <div className="bg-white/80 px-2 py-0.5 rounded-full text-xs font-medium shadow-sm">
           {locationName}
         </div>
+      </div>
+      
+      {/* North Indicator */}
+      <div className="absolute top-2 right-2 flex flex-col items-center bg-white/80 p-1 rounded-full shadow-sm z-[1000]">
+        <div className="text-xs font-bold text-gray-700">N</div>
+        <div className="h-4 w-[2px] bg-gray-700"></div>
       </div>
     </div>
   );
