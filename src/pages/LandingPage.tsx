@@ -5,7 +5,17 @@ import { Compass, MapPin, Calendar, Navigation, FileText, RefreshCw, ArrowRight,
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
-const LandingPage: React.FC = () => {
+interface LandingPageProps {
+  showLocationOnboarding?: boolean;
+  onLocationEnable?: () => void;
+  onLocationSkip?: () => void;
+}
+
+const LandingPage: React.FC<LandingPageProps> = ({ 
+  showLocationOnboarding, 
+  onLocationEnable, 
+  onLocationSkip 
+}) => {
   const navigate = useNavigate();
   const [tapCount, setTapCount] = useState(0);
   const [lastTapTime, setLastTapTime] = useState(0);
