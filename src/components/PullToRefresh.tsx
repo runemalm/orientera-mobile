@@ -21,6 +21,7 @@ const PullToRefresh: React.FC<PullToRefreshProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const startYRef = useRef<number | null>(null);
   const animationRef = useRef<ReturnType<typeof requestAnimationFrame> | null>(null);
+  const isMouseDown = useRef<boolean>(false);
 
   // Clean up animation frame on unmount
   useEffect(() => {
@@ -54,6 +55,63 @@ const PullToRefresh: React.FC<PullToRefreshProps> = ({
 
       // Prevent default scrolling behavior when pulling
       e.preventDefault();
+    }
+  };
+
+  // Mouse event handlers for desktop support
+  const handleMouseDown = (e: React.MouseEvent) => {
+    // Only enable pull-to-refresh when at the top of the page
+    if (window.scrollY === 0) {
+      startYRef.current = e.clientY;
+      setIsPulling(true);
+      isMouseDown.current = true;
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isPulling || startYRef.current === null || !isMouseDown.current) return;
+
+    const currentY = e.clientY;
+    const diff = currentY - startYRef.current;
+
+    // Only allow pulling down (positive diff)
+    if (diff > 0) {
+      // Add resistance to make it harder to pull down
+      const resistance = 0.4;
+      const newPullDistance = Math.min(diff * resistance, pullDownThreshold * 1.5);
+      setPullDistance(newPullDistance);
+
+      // Prevent default behavior
+      e.preventDefault();
+    }
+  };
+
+  const handleMouseUp = async () => {
+    if (!isPulling || !isMouseDown.current) return;
+    
+    isMouseDown.current = false;
+    
+    if (pullDistance > pullDownThreshold) {
+      setIsRefreshing(true);
+      try {
+        await onRefresh();
+      } finally {
+        setIsRefreshing(false);
+        resetPullState();
+      }
+    } else {
+      resetPullState();
+    }
+
+    startYRef.current = null;
+  };
+
+  // Also handle mouse leave for better desktop experience
+  const handleMouseLeave = () => {
+    if (isMouseDown.current) {
+      isMouseDown.current = false;
+      resetPullState();
+      startYRef.current = null;
     }
   };
 
@@ -112,7 +170,12 @@ const PullToRefresh: React.FC<PullToRefreshProps> = ({
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseLeave}
       className="relative w-full"
+      style={{ cursor: isPulling ? 'grabbing' : 'default' }}
     >
       <div
         className="transition-transform duration-200 w-full flex flex-col"
