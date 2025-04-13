@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Competition, ResourceType } from '../types';
 import { Users, Map, FileText, Car, Trophy, Clock, List, Calendar, MapPin } from 'lucide-react';
@@ -8,6 +9,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import FileItem from './FileItem';
 import { translateDiscipline, translateCompetitionType } from '../utils/translations';
 import CompetitionDetailSection from './CompetitionDetailSection';
+import CompetitionLocationMap from './CompetitionLocationMap';
 
 interface CompetitionDetailsProps {
   competition: Competition;
@@ -244,6 +246,22 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
         </TabsContent>
         
         <TabsContent value="info" className="space-y-4 pt-2">
+          {/* Competition location map - Added new component */}
+          {competition.location && (
+            <Card>
+              <CardContent className="p-4 space-y-4">
+                <h3 className="font-medium text-gray-700 flex items-center gap-2">
+                  <MapPin size={18} className="text-primary" />
+                  Arena
+                </h3>
+                <CompetitionLocationMap 
+                  locationName={competition.location} 
+                  className="mt-2"
+                />
+              </CardContent>
+            </Card>
+          )}
+          
           {/* Basic competition info */}
           <Card>
             <CardContent className="p-4">
