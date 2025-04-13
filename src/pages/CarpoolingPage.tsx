@@ -38,11 +38,11 @@ const CarpoolingPage: React.FC = () => {
   const { competitionId } = useParams<{ competitionId: string }>();
   const [competition, setCompetition] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [rides, setRides] = useState(mockRides);
+  const [rides] = useState(mockRides);
   const { toast } = useToast();
 
   useEffect(() => {
-    // Simulate API fetch with timeout
+    // Simulate API fetch with timeout - using MOCK DATA ONLY
     const timer = setTimeout(() => {
       if (competitionId && mockCompetitionDetails[competitionId]) {
         setCompetition(mockCompetitionDetails[competitionId]);
@@ -55,6 +55,7 @@ const CarpoolingPage: React.FC = () => {
 
   const handleJoinRide = (rideId: string) => {
     // In a real app, this would make an API call to join the ride
+    // Instead, just show a toast notification
     toast({
       title: "Förfrågan skickad",
       description: "Chauffören har meddelats om din förfrågan.",
