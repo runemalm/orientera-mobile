@@ -12,6 +12,7 @@ import { getNearbyCompetitions } from '../services/api';
 import { addMonths } from 'date-fns';
 import PullToRefresh from '../components/PullToRefresh';
 import { toast } from '@/hooks/use-toast';
+import { calculateDistance } from '../utils/distanceUtils';
 
 const CompetitionsPage: React.FC = () => {
   const [showLocationSheet, setShowLocationSheet] = useState(false);
@@ -60,10 +61,32 @@ const CompetitionsPage: React.FC = () => {
         }
       );
       
-      // Sort by date
-      const sortedCompetitions = result.sort((a, b) => 
-        new Date(a.date).getTime() - new Date(b.date).getTime()
-      );
+      // Sort competitions by date and then by distance
+      const sortedCompetitions = [...result].sort((a, b) => {
+        // First sort by date
+        const dateComparison = new Date(a.date).getTime() - new Date(b.date).getTime();
+        
+        // If dates are the same, sort by distance
+        if (dateComparison === 0) {
+          const distanceA = calculateDistance(
+            userLocation.latitude, 
+            userLocation.longitude, 
+            a.latitude, 
+            a.longitude
+          );
+          
+          const distanceB = calculateDistance(
+            userLocation.latitude, 
+            userLocation.longitude, 
+            b.latitude, 
+            b.longitude
+          );
+          
+          return distanceA - distanceB;
+        }
+        
+        return dateComparison;
+      });
       
       setCompetitions(sortedCompetitions);
     } catch (err) {

@@ -8,6 +8,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { format, differenceInDays } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { translateDiscipline, translateCompetitionType } from '../utils/translations';
+import { useUserLocation } from '../hooks/useUserLocation';
+import { calculateDistance, formatDistance } from '../utils/distanceUtils';
 
 interface CompetitionCardProps {
   competition: CompetitionSummary;
@@ -15,6 +17,7 @@ interface CompetitionCardProps {
 
 const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition }) => {
   const navigate = useNavigate();
+  const { userLocation } = useUserLocation();
   
   const handleCardClick = () => {
     navigate(`/competition/${competition.id}`);
@@ -57,12 +60,13 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition }) => {
 
   const status = getStatusInfo();
 
-  const formatDistance = (distance: number) => {
-    if (distance < 1) {
-      return `${(distance * 1000).toFixed(0)} m`;
-    }
-    return `${distance} km`;
-  };
+  // Calculate the distance between competition and user location
+  const distance = calculateDistance(
+    userLocation?.latitude || null,
+    userLocation?.longitude || null,
+    competition.latitude,
+    competition.longitude
+  );
 
   return (
     <Card 
@@ -79,7 +83,7 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition }) => {
             
             <Badge variant="outline" className="bg-forest-light/20 text-forest-dark px-3 py-1 gap-1 font-medium border-0">
               <Navigation size={14} />
-              {formatDistance(competition.distance)}
+              {formatDistance(distance)}
             </Badge>
           </div>
           

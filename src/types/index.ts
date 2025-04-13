@@ -77,7 +77,6 @@ export interface CompetitionSummary {
   name: string;
   date: string;
   location: string;
-  distance: number; // Distance in km from user's location
   club: string;
   description: string;
   discipline: Discipline;
@@ -94,7 +93,6 @@ export interface Competition {
   name: string;
   date: string;
   location: string;
-  distance: number;
   club: string;
   description: string;
   discipline: Discipline;

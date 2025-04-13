@@ -1,4 +1,3 @@
-
 import { Competition, CompetitionSummary } from "../types";
 import { mockCompetitions, mockCompetitionDetails } from "../utils/mockData";
 
@@ -40,12 +39,6 @@ export const getNearbyCompetitions = async (
       const toDate = options.to.toISOString().split('T')[0];
       filteredCompetitions = filteredCompetitions.filter(comp => 
         comp.date <= toDate
-      );
-    }
-    
-    if (options?.maxDistanceKm) {
-      filteredCompetitions = filteredCompetitions.filter(comp => 
-        comp.distance <= options.maxDistanceKm!
       );
     }
     

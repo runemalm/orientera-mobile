@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Competition, ResourceType } from '../types';
 import { Users, Map, FileText, Car, Trophy, Clock, List, Calendar, MapPin } from 'lucide-react';
@@ -10,12 +9,16 @@ import FileItem from './FileItem';
 import { translateDiscipline, translateCompetitionType } from '../utils/translations';
 import CompetitionDetailSection from './CompetitionDetailSection';
 import CompetitionLocationMap from './CompetitionLocationMap';
+import { useUserLocation } from '../hooks/useUserLocation';
+import { calculateDistance, formatDistance } from '../utils/distanceUtils';
 
 interface CompetitionDetailsProps {
   competition: Competition;
 }
 
 const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) => {
+  const { userLocation } = useUserLocation();
+  
   // Format date to be more readable using Swedish format
   const formattedDate = new Date(competition.date).toLocaleDateString('sv-SE', {
     weekday: 'long',
@@ -23,6 +26,14 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
     month: 'long',
     year: 'numeric'
   });
+  
+  // Calculate the distance between competition and user location
+  const distance = calculateDistance(
+    userLocation?.latitude || null,
+    userLocation?.longitude || null,
+    competition.latitude,
+    competition.longitude
+  );
   
   // Group resources by type for easier display
   const resources = competition.resources || [];
@@ -86,7 +97,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
             <MapPin size={18} />
           </div>
           <p className="font-semibold">{competition.location || 'Plats inte angiven'}</p>
-          <p className="text-xs text-gray-500 mt-1">{competition.distance} km från dig</p>
+          <p className="text-xs text-gray-500 mt-1">{formatDistance(distance)} från dig</p>
         </div>
       </div>
       
