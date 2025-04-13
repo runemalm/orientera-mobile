@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
 import { MapPin, Loader2 } from 'lucide-react';
@@ -10,6 +10,8 @@ import { useUserLocation } from '../hooks/useUserLocation';
 import { CompetitionSummary } from '../types';
 import { getNearbyCompetitions } from '../services/api';
 import { subDays, addMonths } from 'date-fns';
+import PullToRefresh from '../components/PullToRefresh';
+import { toast } from '@/hooks/use-toast';
 
 const CompetitionsPage: React.FC = () => {
   const [showLocationSheet, setShowLocationSheet] = useState(false);
@@ -36,46 +38,59 @@ const CompetitionsPage: React.FC = () => {
     }
   }, []);
 
+  const fetchCompetitions = useCallback(async () => {
+    if (!userLocation) return;
+    
+    setIsLoadingCompetitions(true);
+    setError(null);
+    
+    try {
+      // Get five days ago and 2 months in the future for the date range
+      const fiveDaysAgo = subDays(new Date(), 5);
+      const twoMonthsLater = addMonths(new Date(), 2);
+      
+      const result = await getNearbyCompetitions(
+        userLocation.latitude, 
+        userLocation.longitude,
+        {
+          from: fiveDaysAgo,
+          to: twoMonthsLater,
+          // No maxDistanceKm parameter, so no distance limitation
+          limit: 50 // Limit to 50 results
+        }
+      );
+      
+      // Sort by date
+      const sortedCompetitions = result.sort((a, b) => 
+        new Date(a.date).getTime() - new Date(b.date).getTime()
+      );
+      
+      setCompetitions(sortedCompetitions);
+    } catch (err) {
+      console.error('Error fetching competitions:', err);
+      setError('Det gick inte att hämta tävlingar. Försök igen senare.');
+    } finally {
+      setIsLoadingCompetitions(false);
+    }
+  }, [userLocation]);
+
   // Fetch competitions when location is updated
   useEffect(() => {
-    const fetchCompetitions = async () => {
-      if (!userLocation) return;
-      
-      setIsLoadingCompetitions(true);
-      setError(null);
-      
-      try {
-        // Get five days ago and 2 months in the future for the date range
-        const fiveDaysAgo = subDays(new Date(), 5);
-        const twoMonthsLater = addMonths(new Date(), 2);
-        
-        const result = await getNearbyCompetitions(
-          userLocation.latitude, 
-          userLocation.longitude,
-          {
-            from: fiveDaysAgo,
-            to: twoMonthsLater,
-            // No maxDistanceKm parameter, so no distance limitation
-            limit: 50 // Limit to 50 results
-          }
-        );
-        
-        // Sort by date
-        const sortedCompetitions = result.sort((a, b) => 
-          new Date(a.date).getTime() - new Date(b.date).getTime()
-        );
-        
-        setCompetitions(sortedCompetitions);
-      } catch (err) {
-        console.error('Error fetching competitions:', err);
-        setError('Det gick inte att hämta tävlingar. Försök igen senare.');
-      } finally {
-        setIsLoadingCompetitions(false);
-      }
-    };
-    
     fetchCompetitions();
-  }, [userLocation]);
+  }, [fetchCompetitions]);
+
+  const handleRefresh = async () => {
+    try {
+      await fetchCompetitions();
+      toast({
+        title: "Uppdaterad",
+        description: "Listan med tävlingar har uppdaterats",
+        duration: 2000
+      });
+    } catch (error) {
+      console.error("Error refreshing competitions:", error);
+    }
+  };
 
   const handleUpdateLocation = (location: { city: string; latitude: number; longitude: number }) => {
     updateUserLocation(location);
@@ -126,15 +141,7 @@ const CompetitionsPage: React.FC = () => {
           <Button 
             variant="outline" 
             className="mt-4"
-            onClick={() => {
-              if (userLocation) {
-                setIsLoadingCompetitions(true);
-                getNearbyCompetitions(userLocation.latitude, userLocation.longitude)
-                  .then(data => setCompetitions(data))
-                  .catch(() => setError('Det gick inte att hämta tävlingar. Försök igen senare.'))
-                  .finally(() => setIsLoadingCompetitions(false));
-              }
-            }}
+            onClick={() => fetchCompetitions()}
           >
             Försök igen
           </Button>
@@ -166,11 +173,13 @@ const CompetitionsPage: React.FC = () => {
         </div>
         
         {competitions.length > 0 ? (
-          <div className="space-y-3">
-            {competitions.map(competition => (
-              <CompetitionCard key={competition.id} competition={competition} />
-            ))}
-          </div>
+          <PullToRefresh onRefresh={handleRefresh}>
+            <div className="space-y-3">
+              {competitions.map(competition => (
+                <CompetitionCard key={competition.id} competition={competition} />
+              ))}
+            </div>
+          </PullToRefresh>
         ) : (
           <div className="text-center py-8">
             <div className="text-gray-400 mb-2">
