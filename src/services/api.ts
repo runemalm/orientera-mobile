@@ -1,10 +1,9 @@
-
 import { Competition, CompetitionSummary } from "../types";
 import { mockCompetitions, mockCompetitionDetails } from "../utils/mockData";
 
 // Configuration to determine whether to use mock data or real API
 // In production, this would be set to false
-const USE_MOCK_API = false;
+const USE_MOCK_API = true; // Changed to true to use mock data
 
 // Base URL for the API - updated with the correct base URL without the endpoint path
 const API_BASE_URL = 'https://orientera-backend.delightfulisland-78f87004.northeurope.azurecontainerapps.io/api';
@@ -25,33 +24,35 @@ export const getNearbyCompetitions = async (
   if (USE_MOCK_API) {
     // Simulate API latency
     await new Promise(resolve => setTimeout(resolve, 800));
-    return mockCompetitions;
-  }
-  
-  // Build query parameters
-  const params = new URLSearchParams();
-  params.append('lat', latitude.toString());
-  params.append('lng', longitude.toString());
-  
-  // Add optional parameters if provided
-  if (options?.from) {
-    // Format date as YYYY-MM-DD for DateOnly parameter
-    const fromDate = options.from.toISOString().split('T')[0];
-    params.append('from', fromDate);
-  }
-  
-  if (options?.to) {
-    // Format date as YYYY-MM-DD for DateOnly parameter
-    const toDate = options.to.toISOString().split('T')[0];
-    params.append('to', toDate);
-  }
-  
-  if (options?.maxDistanceKm) {
-    params.append('maxDistanceKm', options.maxDistanceKm.toString());
-  }
-  
-  if (options?.limit) {
-    params.append('limit', options.limit.toString());
+    
+    // Filter mock competitions based on date range if provided
+    let filteredCompetitions = [...mockCompetitions];
+    
+    if (options?.from) {
+      const fromDate = options.from.toISOString().split('T')[0];
+      filteredCompetitions = filteredCompetitions.filter(comp => 
+        comp.date >= fromDate
+      );
+    }
+    
+    if (options?.to) {
+      const toDate = options.to.toISOString().split('T')[0];
+      filteredCompetitions = filteredCompetitions.filter(comp => 
+        comp.date <= toDate
+      );
+    }
+    
+    if (options?.maxDistanceKm) {
+      filteredCompetitions = filteredCompetitions.filter(comp => 
+        comp.distance <= options.maxDistanceKm!
+      );
+    }
+    
+    if (options?.limit) {
+      filteredCompetitions = filteredCompetitions.slice(0, options.limit);
+    }
+    
+    return filteredCompetitions;
   }
   
   // Real API call implementation
