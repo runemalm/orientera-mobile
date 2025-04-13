@@ -13,11 +13,7 @@ import { addMonths } from 'date-fns';
 import PullToRefresh from '../components/PullToRefresh';
 import { toast } from '@/hooks/use-toast';
 
-interface CompetitionsPageProps {
-  geolocationEnabled?: boolean;
-}
-
-const CompetitionsPage: React.FC<CompetitionsPageProps> = ({ geolocationEnabled }) => {
+const CompetitionsPage: React.FC = () => {
   const [showLocationSheet, setShowLocationSheet] = useState(false);
   const { userLocation, isLoading: isLoadingLocation, updateUserLocation } = useUserLocation();
   const [keyboardVisible, setKeyboardVisible] = useState(false);
