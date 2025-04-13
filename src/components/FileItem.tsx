@@ -7,8 +7,8 @@ import {
   Clock, 
   Link as LinkIcon, 
   ExternalLink, 
-  FilePdf,
-  FileImage,
+  FileIcon,
+  Image,
   Download
 } from 'lucide-react';
 
@@ -38,11 +38,11 @@ const FileItem: React.FC<FileItemProps> = ({ file, className }) => {
     }
     
     if (file.format === ResourceFormat.Pdf) {
-      return <FilePdf className="text-red-500" size={20} />;
+      return <FileIcon className="text-red-500" size={20} />;
     }
     
     if (file.format === ResourceFormat.Png) {
-      return <FileImage className="text-purple-500" size={20} />;
+      return <Image className="text-purple-500" size={20} />;
     }
 
     // Then by type if format didn't determine
