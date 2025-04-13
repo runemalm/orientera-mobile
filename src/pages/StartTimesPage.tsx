@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -6,6 +7,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Toaster } from '@/components/ui/toaster';
 import { Competition } from '../types';
 import { mockCompetitionDetails } from '../utils/mockData';
+import { formatSwedishTime } from '../utils/dateUtils';
 
 // Define interfaces for our data
 interface Participant {
@@ -155,8 +157,8 @@ const StartTimesPage: React.FC = () => {
     <MobileLayout title="Starttider" showBackButton>
       <div className="pb-4 space-y-4">
         <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-          <h2 className="text-xl font-bold">{competition.name}</h2>
-          <p className="text-sm text-gray-500">{competition.club}</p>
+          <h2 className="text-xl font-bold">{competition?.name}</h2>
+          <p className="text-sm text-gray-500">{competition?.club}</p>
         </div>
         
         {startTimeClasses.length > 0 ? (
@@ -177,7 +179,9 @@ const StartTimesPage: React.FC = () => {
                   <TableBody>
                     {startTimeClass.participants.map((participant) => (
                       <TableRow key={participant.id}>
-                        <TableCell className="font-medium">{participant.startTime}</TableCell>
+                        <TableCell className="font-medium">
+                          {competition ? formatSwedishTime(participant.startTime, competition.date) : participant.startTime}
+                        </TableCell>
                         <TableCell>{participant.name}</TableCell>
                         <TableCell>{participant.club}</TableCell>
                       </TableRow>

@@ -13,6 +13,7 @@ import { addMonths } from 'date-fns';
 import PullToRefresh from '../components/PullToRefresh';
 import { toast } from '@/hooks/use-toast';
 import { calculateDistance } from '../utils/distanceUtils';
+import { toSwedishTime } from '../utils/dateUtils';
 
 const CompetitionsPage: React.FC = () => {
   const [showLocationSheet, setShowLocationSheet] = useState(false);
@@ -54,17 +55,18 @@ const CompetitionsPage: React.FC = () => {
         userLocation.latitude, 
         userLocation.longitude,
         {
-          from: today, // Changed from subDays(new Date(), 5) to today
+          from: today,
           to: twoMonthsLater,
-          // No maxDistanceKm parameter, so no distance limitation
-          limit: 50 // Limit to 50 results
+          limit: 50
         }
       );
       
-      // Sort competitions by date and then by distance
+      // Convert dates to Swedish timezone before sorting
       const sortedCompetitions = [...result].sort((a, b) => {
-        // First sort by date
-        const dateComparison = new Date(a.date).getTime() - new Date(b.date).getTime();
+        // First sort by date (using Swedish timezone)
+        const dateA = toSwedishTime(a.date);
+        const dateB = toSwedishTime(b.date);
+        const dateComparison = dateA.getTime() - dateB.getTime();
         
         // If dates are the same, sort by distance
         if (dateComparison === 0) {

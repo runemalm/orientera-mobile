@@ -11,6 +11,7 @@ import CompetitionDetailSection from './CompetitionDetailSection';
 import CompetitionLocationMap from './CompetitionLocationMap';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { calculateDistance, formatDistance } from '../utils/distanceUtils';
+import { formatSwedishDate, formatSwedishTime } from '../utils/dateUtils';
 
 interface CompetitionDetailsProps {
   competition: Competition;
@@ -19,13 +20,11 @@ interface CompetitionDetailsProps {
 const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) => {
   const { userLocation } = useUserLocation();
   
-  // Format date to be more readable using Swedish format
-  const formattedDate = new Date(competition.date).toLocaleDateString('sv-SE', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
-  });
+  // Format date using Swedish timezone
+  const formattedDate = formatSwedishDate(competition.date, 'EEEE d MMMM yyyy');
+  
+  // Format start time if available
+  const formattedTime = formatSwedishTime(competition.startTime, competition.date);
   
   // Calculate the distance between competition and user location
   const distance = calculateDistance(
@@ -78,10 +77,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
             <Calendar size={18} />
           </div>
           <p className="text-xs text-gray-500 uppercase">Datum</p>
-          <p className="font-semibold text-center">{new Date(competition.date).toLocaleDateString('sv-SE', {
-            day: 'numeric',
-            month: 'short'
-          })}</p>
+          <p className="font-semibold text-center">{formatSwedishDate(competition.date, 'd MMM')}</p>
         </div>
         
         <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 flex flex-col items-center justify-center">
@@ -89,7 +85,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
             <Clock size={18} />
           </div>
           <p className="text-xs text-gray-500 uppercase">Startar</p>
-          <p className="font-semibold">{competition.startTime || 'Inte angivet'}</p>
+          <p className="font-semibold">{competition.startTime ? formattedTime : 'Inte angivet'}</p>
         </div>
         
         <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 flex flex-col items-center justify-center col-span-2">

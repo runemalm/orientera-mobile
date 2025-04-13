@@ -1,15 +1,14 @@
-
 import React from 'react';
 import { CompetitionSummary } from '../types';
 import { Calendar, Clock, MapPin, Navigation } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { format, differenceInDays } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { translateDiscipline, translateCompetitionType } from '../utils/translations';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { calculateDistance, formatDistance } from '../utils/distanceUtils';
+import { formatSwedishDate, getDaysRemaining } from '../utils/dateUtils';
 
 interface CompetitionCardProps {
   competition: CompetitionSummary;
@@ -23,11 +22,8 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition }) => {
     navigate(`/competition/${competition.id}`);
   };
 
-  const competitionDate = new Date(competition.date);
-  const today = new Date();
-  const daysRemaining = differenceInDays(competitionDate, today);
-  
-  const formattedDate = format(competitionDate, 'E d MMM');
+  const daysRemaining = getDaysRemaining(competition.date);
+  const formattedDate = formatSwedishDate(competition.date, 'E d MMM');
 
   const getStatusInfo = () => {
     if (daysRemaining > 7) {
