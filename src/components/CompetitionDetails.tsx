@@ -254,7 +254,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
         
         <TabsContent value="info" className="space-y-4 pt-2">
           {/* Competition location map - Added new component */}
-          {competition.location && (
+          {competition.latitude && competition.longitude && (
             <Card>
               <CardContent className="p-4 space-y-4">
                 <h3 className="font-medium text-gray-700 flex items-center gap-2">
@@ -262,8 +262,12 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
                   Arena
                 </h3>
                 <CompetitionLocationMap 
-                  locationName={competition.location} 
+                  locationName={competition.location || 'Arena'}
                   className="mt-2"
+                  coordinates={{ 
+                    lat: competition.latitude, 
+                    lng: competition.longitude 
+                  }}
                 />
               </CardContent>
             </Card>
