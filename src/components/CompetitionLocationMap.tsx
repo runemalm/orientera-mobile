@@ -69,7 +69,7 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
     });
   };
 
-  // Fixed: Convert lat/lng object to array format for react-leaflet
+  // Create position array from coordinates
   const position: [number, number] = [coordinates.lat, coordinates.lng];
   const customIcon = createCustomMarkerIcon();
 
@@ -78,21 +78,20 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
       className={cn("relative w-full h-48 rounded-lg overflow-hidden shadow-inner", className)}
     >
       <MapContainer 
-        // Fixed: Use the proper LatLngExpression type for center
-        center={position}
+        // Use proper props for MapContainer
+        className="h-full w-full rounded-lg"
         zoom={13} 
-        style={{ height: '100%', width: '100%', borderRadius: '0.5rem' }}
+        center={position}
         zoomControl={false}
       >
         <TileLayer
-          // Fixed: Use proper attribution format for TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          // Use proper props for TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
         <Marker 
-          // Fixed: Use the position array instead of object
+          // Use proper props for Marker
           position={position}
-          // Fixed: Use the proper icon type
           icon={customIcon}
         >
           <Popup>
