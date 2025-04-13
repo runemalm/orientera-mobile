@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { VariantProps, cva } from "class-variance-authority"
@@ -10,6 +11,8 @@ import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { Sheet, SheetContent } from "@/components/ui/sheet"
 import { Skeleton } from "@/components/ui/skeleton"
+
+// Import tooltip components directly from the file instead of using the package
 import {
   Tooltip,
   TooltipContent,
@@ -129,25 +132,24 @@ const SidebarProvider = React.forwardRef<
 
     return (
       <SidebarContext.Provider value={contextValue}>
-        <TooltipProvider delayDuration={0}>
-          <div
-            style={
-              {
-                "--sidebar-width": SIDEBAR_WIDTH,
-                "--sidebar-width-icon": SIDEBAR_WIDTH_ICON,
-                ...style,
-              } as React.CSSProperties
-            }
-            className={cn(
-              "group/sidebar-wrapper flex min-h-svh w-full has-[[data-variant=inset]]:bg-sidebar",
-              className
-            )}
-            ref={ref}
-            {...props}
-          >
-            {children}
-          </div>
-        </TooltipProvider>
+        {/* Remove wrapping TooltipProvider here and use it only when needed */}
+        <div
+          style={
+            {
+              "--sidebar-width": SIDEBAR_WIDTH,
+              "--sidebar-width-icon": SIDEBAR_WIDTH_ICON,
+              ...style,
+            } as React.CSSProperties
+          }
+          className={cn(
+            "group/sidebar-wrapper flex min-h-svh w-full has-[[data-variant=inset]]:bg-sidebar",
+            className
+          )}
+          ref={ref}
+          {...props}
+        >
+          {children}
+        </div>
       </SidebarContext.Provider>
     )
   }
@@ -575,16 +577,19 @@ const SidebarMenuButton = React.forwardRef<
       }
     }
 
+    // Wrap only the tooltip usage in TooltipProvider
     return (
-      <Tooltip>
-        <TooltipTrigger asChild>{button}</TooltipTrigger>
-        <TooltipContent
-          side="right"
-          align="center"
-          hidden={state !== "collapsed" || isMobile}
-          {...tooltip}
-        />
-      </Tooltip>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>{button}</TooltipTrigger>
+          <TooltipContent
+            side="right"
+            align="center"
+            hidden={state !== "collapsed" || isMobile}
+            {...tooltip}
+          />
+        </Tooltip>
+      </TooltipProvider>
     )
   }
 )
