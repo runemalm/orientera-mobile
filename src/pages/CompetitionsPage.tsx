@@ -9,7 +9,7 @@ import LocationInputForm from '../components/LocationInputForm';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { CompetitionSummary } from '../types';
 import { getNearbyCompetitions } from '../services/api';
-import { subDays, startOfDay, isAfter, isBefore, isSameDay, addMonths } from 'date-fns';
+import { subDays, addMonths } from 'date-fns';
 
 const CompetitionsPage: React.FC = () => {
   const [showLocationSheet, setShowLocationSheet] = useState(false);
@@ -45,17 +45,17 @@ const CompetitionsPage: React.FC = () => {
       setError(null);
       
       try {
-        // Get today's date and 3 months in the future for the date range
-        const today = new Date();
-        const threeMonthsLater = addMonths(today, 3);
+        // Get five days ago and 2 months in the future for the date range
+        const fiveDaysAgo = subDays(new Date(), 5);
+        const twoMonthsLater = addMonths(new Date(), 2);
         
         const result = await getNearbyCompetitions(
           userLocation.latitude, 
           userLocation.longitude,
           {
-            from: today,
-            to: threeMonthsLater,
-            maxDistanceKm: 150, // Default max distance of 150km
+            from: fiveDaysAgo,
+            to: twoMonthsLater,
+            // No maxDistanceKm parameter, so no distance limitation
             limit: 50 // Limit to 50 results
           }
         );
