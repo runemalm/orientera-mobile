@@ -55,6 +55,7 @@ export enum OrienteeringDistrict {
 
 export enum ResourceType {
   StartList = 'StartList',
+  ClubStartList = 'ClubStartList',  // Added new resource type
   Results = 'Results',
   Splits = 'Splits',
   Invitation = 'Invitation',

@@ -1,11 +1,11 @@
-
 import React from 'react';
-import { Competition } from '../types';
-import { Users, Map, FileText, Car } from 'lucide-react';
+import { Competition, ResourceType } from '../types';
+import { Users, Map, FileText, Car, Trophy, Clock, List } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Separator } from '@/components/ui/separator';
 import FileItem from './FileItem';
 import { translateDiscipline, translateCompetitionType } from '../utils/translations';
+import CompetitionDetailSection from './CompetitionDetailSection';
 
 interface CompetitionDetailsProps {
   competition: Competition;
@@ -20,6 +20,23 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
     year: 'numeric'
   });
   
+  // Group resources by type for easier display
+  const resources = competition.resources || [];
+  
+  // Find specific resources by their type
+  const invitation = resources.find(r => r.type === ResourceType.Invitation);
+  const pm = resources.find(r => r.type === ResourceType.PM);
+  const results = resources.find(r => r.type === ResourceType.Results);
+  const startList = resources.find(r => r.type === ResourceType.StartList);
+  const clubStartList = resources.find(r => r.type === ResourceType.ClubStartList);
+  const splits = resources.find(r => r.type === ResourceType.Splits);
+  
+  // All other resources that don't fit in the categories above
+  const otherResources = resources.filter(r => 
+    ![ResourceType.Invitation, ResourceType.PM, ResourceType.Results, 
+      ResourceType.StartList, ResourceType.ClubStartList, ResourceType.Splits].includes(r.type)
+  );
+
   return (
     <div className="space-y-4">
       {/* Competition header - redesigned with more visual appeal */}
@@ -56,19 +73,21 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
         </div>
       </div>
       
-      {/* Simplified uniform sections */}
+      {/* Competition resources section */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
-        {/* Documents section - show files directly */}
-        {competition.resources && competition.resources.length > 0 && (
+        {/* Official competition documents */}
+        {invitation && (
+          <FileItem key={invitation.id} file={invitation} />
+        )}
+        
+        {pm && (
           <>
-            {competition.resources.map((resource) => (
-              <FileItem key={resource.id} file={resource} />
-            ))}
-            <Separator />
+            {invitation && <Separator />}
+            <FileItem key={pm.id} file={pm} />
           </>
         )}
         
-        {/* Registered participants */}
+        {/* Participant lists */}
         <Link 
           to={`/competition/${competition.id}/participants`}
           className="flex items-center justify-between p-4 hover:bg-gray-50"
@@ -84,15 +103,15 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
           </div>
         </Link>
         
-        {/* Carpooling section */}
+        {/* Club participants */}
         <Separator />
         <Link 
-          to={`/competition/${competition.id}/carpooling`}
+          to={`/competition/${competition.id}/club-participants`}
           className="flex items-center justify-between p-4 hover:bg-gray-50"
         >
           <div className="flex items-center gap-3">
-            <Car size={20} className="text-forest" />
-            <span className="font-medium">Samåkning</span>
+            <Users size={20} className="text-blue-600" />
+            <span className="font-medium">Klubbanmälda</span>
           </div>
           <div className="text-gray-400">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -100,6 +119,36 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
             </svg>
           </div>
         </Link>
+        
+        {/* Start lists */}
+        {startList && (
+          <>
+            <Separator />
+            <FileItem key={startList.id} file={startList} />
+          </>
+        )}
+        
+        {clubStartList && (
+          <>
+            <Separator />
+            <FileItem key={clubStartList.id} file={clubStartList} />
+          </>
+        )}
+        
+        {/* Results and splits */}
+        {results && (
+          <>
+            <Separator />
+            <FileItem key={results.id} file={results} />
+          </>
+        )}
+        
+        {splits && (
+          <>
+            <Separator />
+            <FileItem key={splits.id} file={splits} />
+          </>
+        )}
         
         {/* Livelox section */}
         {competition.liveloxLink && (
@@ -124,7 +173,36 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
             </a>
           </>
         )}
+        
+        {/* Carpooling section */}
+        <Separator />
+        <Link 
+          to={`/competition/${competition.id}/carpooling`}
+          className="flex items-center justify-between p-4 hover:bg-gray-50"
+        >
+          <div className="flex items-center gap-3">
+            <Car size={20} className="text-forest" />
+            <span className="font-medium">Samåkning</span>
+          </div>
+          <div className="text-gray-400">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="m9 18 6-6-6-6"/>
+            </svg>
+          </div>
+        </Link>
       </div>
+      
+      {/* Other documents and links section */}
+      {otherResources.length > 0 && (
+        <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden p-4">
+          <h3 className="font-semibold text-gray-700 mb-3">Dokument & länkar</h3>
+          <div className="space-y-2">
+            {otherResources.map((resource) => (
+              <FileItem key={resource.id} file={resource} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
