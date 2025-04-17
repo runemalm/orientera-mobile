@@ -44,7 +44,7 @@ const BottomTabBar: React.FC = () => {
   };
 
   return (
-    <div className="bottom-tabs flex items-center justify-around">
+    <div className="bottom-tabs fixed bottom-0 left-0 right-0 flex items-center justify-around bg-white border-t border-gray-200 z-10">
       {tabs.map((tab) => (
         <button
           key={tab.name}
