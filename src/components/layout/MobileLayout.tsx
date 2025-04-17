@@ -19,7 +19,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const isHomePage = location.pathname === '/';
+  const isHomePage = location.pathname === '/home' || location.pathname === '/';
 
   const handleBack = () => {
     navigate(-1);
