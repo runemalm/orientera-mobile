@@ -39,8 +39,8 @@ const CompetitionDetailsPage: React.FC = () => {
   if (loading) {
     return (
       <MobileLayout title="Laddar..." showBackButton>
-        <div className="flex flex-col justify-center items-center h-60 mt-2 space-y-3">
-          <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary"></div>
+        <div className="flex flex-col justify-center items-center h-64 mt-4 space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
           <p className="text-gray-500">Hämtar tävlingsinformation...</p>
         </div>
         <Toaster />
@@ -51,15 +51,15 @@ const CompetitionDetailsPage: React.FC = () => {
   if (error) {
     return (
       <MobileLayout title="Fel" showBackButton>
-        <div className="flex flex-col items-center justify-center h-60 mt-6 px-3 text-center">
-          <div className="bg-red-100 rounded-full p-3 mb-3">
-            <AlertCircle size={28} className="text-red-500" />
+        <div className="flex flex-col items-center justify-center h-64 mt-8 px-4 text-center">
+          <div className="bg-red-100 rounded-full p-4 mb-4">
+            <AlertCircle size={32} className="text-red-500" />
           </div>
-          <h2 className="text-lg font-bold">Ett fel uppstod</h2>
+          <h2 className="text-xl font-bold">Ett fel uppstod</h2>
           <p className="text-gray-500 mt-2">{error}</p>
           <Button 
             variant="outline" 
-            className="mt-3"
+            className="mt-4"
             onClick={fetchCompetition}
           >
             Försök igen
@@ -73,11 +73,11 @@ const CompetitionDetailsPage: React.FC = () => {
   if (!competition) {
     return (
       <MobileLayout title="Hittades inte" showBackButton>
-        <div className="flex flex-col items-center justify-center h-60 mt-6 px-3 text-center">
-          <div className="bg-red-100 rounded-full p-3 mb-3">
-            <Trophy size={28} className="text-red-500" />
+        <div className="flex flex-col items-center justify-center h-64 mt-8 px-4 text-center">
+          <div className="bg-red-100 rounded-full p-4 mb-4">
+            <Trophy size={32} className="text-red-500" />
           </div>
-          <h2 className="text-lg font-bold">Tävlingen hittades inte</h2>
+          <h2 className="text-xl font-bold">Tävlingen hittades inte</h2>
           <p className="text-gray-500 mt-2">Vi kunde tyvärr inte hitta den tävling du söker.</p>
         </div>
         <Toaster />
@@ -87,7 +87,7 @@ const CompetitionDetailsPage: React.FC = () => {
 
   return (
     <MobileLayout title={competition.name} showBackButton>
-      <div className="pb-2">
+      <div className="pb-4">
         <CompetitionDetails competition={competition} />
       </div>
       <Toaster />

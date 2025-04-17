@@ -14,19 +14,19 @@ const BottomTabBar: React.FC = () => {
   const tabs: { name: TabName; icon: React.ReactNode; label: string; path: string }[] = [
     {
       name: 'competitions',
-      icon: <MapPin size={22} />,
+      icon: <MapPin size={24} />,
       label: 'Tävlingar',
       path: '/competitions'
     },
     {
       name: 'settings',
-      icon: <Settings size={22} />,
+      icon: <Settings size={24} />,
       label: 'Inställningar',
       path: '/settings'
     },
     {
       name: 'info',
-      icon: <Info size={22} />,
+      icon: <Info size={24} />,
       label: 'Om',
       path: '/info'
     }
@@ -41,7 +41,7 @@ const BottomTabBar: React.FC = () => {
       {tabs.map((tab) => (
         <button
           key={tab.name}
-          className={`flex flex-col items-center justify-center w-full py-1.5 ${
+          className={`flex flex-col items-center justify-center w-full py-2 ${
             (tab.name === 'competitions' && (currentPath === '/competitions' || isCompetitionRelated)) ||
             (tab.path === currentPath)
               ? 'text-primary font-medium'
@@ -52,7 +52,7 @@ const BottomTabBar: React.FC = () => {
           <div className="flex items-center justify-center">
             {tab.icon}
           </div>
-          <span className="text-xs mt-0.5">{tab.label}</span>
+          <span className="text-xs mt-1">{tab.label}</span>
         </button>
       ))}
     </div>

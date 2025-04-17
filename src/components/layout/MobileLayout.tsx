@@ -29,9 +29,9 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
       />
       
       <main 
-        className="flex-grow mobile-page"
+        className="flex-grow mobile-page mobile-container"
         style={{
-          paddingBottom: !hideBottomTabs ? 'calc(3.5rem + var(--safe-area-inset-bottom))' : '0.5rem'
+          paddingBottom: !hideBottomTabs ? 'calc(5rem + var(--safe-area-inset-bottom))' : '1rem'
         }}
       >
         {children}

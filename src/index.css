@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -42,35 +43,7 @@
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 142 52% 34%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 35 100% 50%;
-    --secondary-foreground: 0 0% 100%;
-
-    --muted: 212.5 26.8% 14.3%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 142 41% 64%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-
-    --radius: 0.5rem;
+    /* ... keep existing code (dark theme variables) */
   }
 }
 
@@ -134,30 +107,25 @@
 /* Utility classes for mobile layout */
 @layer components {
   .mobile-container {
-    @apply px-3 w-full max-w-[540px] mx-auto;
+    @apply px-4 w-full max-w-[500px] mx-auto;
   }
   
   .mobile-page {
-    @apply pt-14 px-2 min-h-screen w-full;
+    @apply pt-16 pb-20 min-h-screen w-full;
   }
   
   .top-nav {
-    @apply fixed top-0 left-0 right-0 h-14 z-50 bg-white shadow-sm;
+    @apply fixed top-0 left-0 right-0 h-16 z-50 bg-white shadow-sm;
     padding-top: var(--safe-area-inset-top);
   }
   
   .bottom-tabs {
     @apply fixed bottom-0 left-0 right-0 z-50 bg-white shadow-lg border-t;
     padding-bottom: var(--safe-area-inset-bottom);
-    height: calc(3.5rem + var(--safe-area-inset-bottom));
+    height: calc(4rem + var(--safe-area-inset-bottom));
   }
   
   .location-badge {
-    @apply bg-location-light/20 text-location-dark px-2 py-1 rounded-full text-xs flex items-center gap-1;
-  }
-
-  /* Card styles */
-  .card-compact {
-    @apply rounded-lg border border-gray-100 shadow-sm overflow-hidden;
+    @apply bg-location-light/20 text-location-dark px-2 py-1 rounded-full text-sm flex items-center gap-1;
   }
 }

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -97,7 +96,7 @@ const CompetitionsPage: React.FC = () => {
     if (isLoadingLocation || isLoadingCompetitions) {
       return (
         <div className="flex flex-col justify-center items-center h-[70vh]">
-          <Loader2 className="h-10 w-10 text-primary animate-spin mb-3" />
+          <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
           <p className="text-gray-600">Laddar...</p>
         </div>
       );
@@ -105,10 +104,10 @@ const CompetitionsPage: React.FC = () => {
 
     if (!userLocation) {
       return (
-        <div className="p-4">
-          <div className="bg-white rounded-lg p-4 shadow-sm text-center">
-            <MapPin size={28} className="text-forest mx-auto mb-2" />
-            <h2 className="text-lg font-medium mb-3">Sätt din plats för att se tävlingar</h2>
+        <div className="p-6">
+          <div className="bg-white rounded-lg p-6 shadow-sm text-center">
+            <MapPin size={32} className="text-forest mx-auto mb-2" />
+            <h2 className="text-lg font-medium mb-4">Sätt din plats för att se tävlingar</h2>
             <Button 
               onClick={() => navigate('/settings')}
               className="bg-forest hover:bg-forest-dark"
@@ -122,9 +121,9 @@ const CompetitionsPage: React.FC = () => {
     
     if (error) {
       return (
-        <div className="text-center py-6">
+        <div className="text-center py-8">
           <div className="text-red-500 mb-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mx-auto">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mx-auto">
               <circle cx="12" cy="12" r="10" />
               <line x1="12" y1="8" x2="12" y2="12" />
               <line x1="12" y1="16" x2="12" y2="16" />
@@ -133,7 +132,7 @@ const CompetitionsPage: React.FC = () => {
           <p className="text-gray-500">{error}</p>
           <Button 
             variant="outline" 
-            className="mt-3"
+            className="mt-4"
             onClick={() => fetchCompetitions()}
           >
             Försök igen
@@ -143,19 +142,19 @@ const CompetitionsPage: React.FC = () => {
     }
     
     return (
-      <div className="space-y-3">
+      <div className="space-y-4">
         {competitions.length > 0 ? (
           <PullToRefresh onRefresh={handleRefresh}>
-            <div className="space-y-2.5">
+            <div className="space-y-3">
               {competitions.map(competition => (
                 <CompetitionCard key={competition.id} competition={competition} />
               ))}
             </div>
           </PullToRefresh>
         ) : (
-          <div className="text-center py-6">
+          <div className="text-center py-8">
             <div className="text-gray-400 mb-2">
-              <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mx-auto">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mx-auto">
                 <circle cx="12" cy="12" r="10" />
                 <path d="m15 9-6 6" />
                 <path d="m9 9 6 6" />
@@ -170,7 +169,7 @@ const CompetitionsPage: React.FC = () => {
 
   return (
     <MobileLayout title="Tävlingar i närheten">
-      <div className="mt-2 px-2">
+      <div className="mt-4 px-4">
         {renderContent()}
       </div>
     </MobileLayout>
