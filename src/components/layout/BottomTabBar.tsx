@@ -19,16 +19,16 @@ const BottomTabBar: React.FC = () => {
       path: '/competitions'
     },
     {
-      name: 'info',
-      icon: <Info size={24} />,
-      label: 'Om',
-      path: '/info'
-    },
-    {
       name: 'settings',
       icon: <Settings size={24} />,
       label: 'Inställningar',
       path: '/settings'
+    },
+    {
+      name: 'info',
+      icon: <Info size={24} />,
+      label: 'Om',
+      path: '/info'
     }
   ];
 
