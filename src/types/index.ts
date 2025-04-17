@@ -1,4 +1,3 @@
-
 // Enums to match backend C# models
 export enum Branch {
   FootO = 'FootO',    // Orienteringslöpning
@@ -69,7 +68,7 @@ export enum ResourceFormat {
   Png = 'Png'
 }
 
-export type TabName = 'competitions' | 'info';
+export type TabName = 'competitions' | 'info' | 'settings';
 
 // CompetitionSummary for list views
 export interface CompetitionSummary {

@@ -13,6 +13,7 @@ import DocumentsPage from "./pages/DocumentsPage";
 import CarpoolingPage from "./pages/CarpoolingPage";
 import NotFound from "./pages/NotFound";
 import InfoPage from "./pages/InfoPage";
+import SettingsPage from "./pages/SettingsPage";
 import Index from "./pages/Index";
 
 const queryClient = new QueryClient();
