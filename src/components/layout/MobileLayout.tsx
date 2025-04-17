@@ -2,7 +2,7 @@
 import React from 'react';
 import TopNavBar from './TopNavBar';
 import BottomTabBar from './BottomTabBar';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 interface MobileLayoutProps {
   children: React.ReactNode;
@@ -18,6 +18,8 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
   hideBottomTabs = false 
 }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
 
   const handleBack = () => {
     navigate(-1);
@@ -34,13 +36,13 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
       <main 
         className="flex-grow mobile-page mobile-container"
         style={{
-          paddingBottom: hideBottomTabs ? '1rem' : 'calc(5rem + var(--safe-area-inset-bottom))'
+          paddingBottom: (!isHomePage && hideBottomTabs) ? '1rem' : 'calc(5rem + var(--safe-area-inset-bottom))'
         }}
       >
         {children}
       </main>
       
-      {!hideBottomTabs && <BottomTabBar />}
+      {(!isHomePage && hideBottomTabs) ? null : <BottomTabBar />}
     </div>
   );
 };
