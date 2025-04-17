@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { MapPin, Info, Settings, Home } from 'lucide-react';
+import { MapPin, Info, Settings } from 'lucide-react';
 import { TabName } from '../../types';
 
 const BottomTabBar: React.FC = () => {
@@ -10,15 +10,8 @@ const BottomTabBar: React.FC = () => {
   const currentPath = location.pathname;
 
   const isCompetitionRelated = currentPath.startsWith('/competition/');
-  const isHomePage = currentPath === '/' || currentPath === '/home';
 
   const tabs: { name: TabName; icon: React.ReactNode; label: string; path: string }[] = [
-    {
-      name: 'home',
-      icon: <Home size={24} />,
-      label: 'Hem',
-      path: '/'
-    },
     {
       name: 'competitions',
       icon: <MapPin size={24} />,
@@ -49,7 +42,6 @@ const BottomTabBar: React.FC = () => {
         <button
           key={tab.name}
           className={`flex flex-col items-center justify-center w-full py-2 ${
-            (tab.name === 'home' && isHomePage) ||
             (tab.name === 'competitions' && (currentPath === '/competitions' || isCompetitionRelated)) ||
             (tab.path === currentPath)
               ? 'text-primary font-medium'

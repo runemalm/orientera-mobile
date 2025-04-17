@@ -2,7 +2,6 @@
 import React from 'react';
 import TopNavBar from './TopNavBar';
 import BottomTabBar from './BottomTabBar';
-import { useNavigate, useLocation } from 'react-router-dom';
 
 interface MobileLayoutProps {
   children: React.ReactNode;
@@ -17,16 +16,9 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
   showBackButton = false, 
   hideBottomTabs = false 
 }) => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const isHomePage = location.pathname === '/home' || location.pathname === '/';
-
   const handleBack = () => {
-    navigate(-1);
+    window.history.back();
   };
-
-  // Always show bottom tabs on home page regardless of hideBottomTabs prop
-  const shouldShowBottomTabs = isHomePage ? true : !hideBottomTabs;
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
@@ -39,13 +31,13 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
       <main 
         className="flex-grow mobile-page mobile-container"
         style={{
-          paddingBottom: shouldShowBottomTabs ? 'calc(5rem + var(--safe-area-inset-bottom))' : '1rem'
+          paddingBottom: !hideBottomTabs ? 'calc(5rem + var(--safe-area-inset-bottom))' : '1rem'
         }}
       >
         {children}
       </main>
       
-      {shouldShowBottomTabs ? <BottomTabBar /> : null}
+      {!hideBottomTabs && <BottomTabBar />}
     </div>
   );
 };

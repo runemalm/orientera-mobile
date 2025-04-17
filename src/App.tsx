@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useIsMobile } from "./hooks/use-mobile";
 import LandingPage from "./pages/LandingPage";
@@ -118,9 +118,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/index" element={<Index />} />
-        <Route path="/landing" element={<LandingPage />} />
+        <Route path="/" element={<Navigate to="/competitions" replace />} />
         <Route path="/competitions" element={<CompetitionsPage />} />
         <Route path="/info" element={<InfoPage />} />
         <Route path="/settings" element={<SettingsPage />} />
