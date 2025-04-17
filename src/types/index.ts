@@ -68,7 +68,7 @@ export enum ResourceFormat {
   Png = 'Png'
 }
 
-export type TabName = 'competitions' | 'info' | 'settings';
+export type TabName = 'home' | 'competitions' | 'info' | 'settings';
 
 // CompetitionSummary for list views
 export interface CompetitionSummary {
