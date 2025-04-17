@@ -1,11 +1,9 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
 import { MapPin, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import LocationInputForm from '../components/LocationInputForm';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { CompetitionSummary } from '../types';
 import { getNearbyCompetitions } from '../services/api';
@@ -16,29 +14,11 @@ import { calculateDistance } from '../utils/distanceUtils';
 import { toSwedishTime } from '../utils/dateUtils';
 
 const CompetitionsPage: React.FC = () => {
-  const [showLocationSheet, setShowLocationSheet] = useState(false);
-  const { userLocation, isLoading: isLoadingLocation, updateUserLocation } = useUserLocation();
-  const [keyboardVisible, setKeyboardVisible] = useState(false);
+  const navigate = useNavigate();
+  const { userLocation, isLoading: isLoadingLocation } = useUserLocation();
   const [competitions, setCompetitions] = useState<CompetitionSummary[]>([]);
   const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const handleVisualViewportResize = () => {
-        const newKeyboardVisible = window.visualViewport && 
-          window.visualViewport.height < window.innerHeight * 0.75;
-        setKeyboardVisible(newKeyboardVisible);
-      };
-      
-      if (window.visualViewport) {
-        window.visualViewport.addEventListener('resize', handleVisualViewportResize);
-        return () => {
-          window.visualViewport.removeEventListener('resize', handleVisualViewportResize);
-        };
-      }
-    }
-  }, []);
 
   const fetchCompetitions = useCallback(async () => {
     if (!userLocation) return;
@@ -47,7 +27,6 @@ const CompetitionsPage: React.FC = () => {
     setError(null);
     
     try {
-      // Get today and 2 months in the future for the date range
       const today = new Date();
       const twoMonthsLater = addMonths(today, 2);
       
@@ -61,14 +40,11 @@ const CompetitionsPage: React.FC = () => {
         }
       );
       
-      // Convert dates to Swedish timezone before sorting
       const sortedCompetitions = [...result].sort((a, b) => {
-        // First sort by date (using Swedish timezone)
         const dateA = toSwedishTime(a.date);
         const dateB = toSwedishTime(b.date);
         const dateComparison = dateA.getTime() - dateB.getTime();
         
-        // If dates are the same, sort by distance
         if (dateComparison === 0) {
           const distanceA = calculateDistance(
             userLocation.latitude, 
@@ -99,7 +75,6 @@ const CompetitionsPage: React.FC = () => {
     }
   }, [userLocation]);
 
-  // Fetch competitions when location is updated
   useEffect(() => {
     fetchCompetitions();
   }, [fetchCompetitions]);
@@ -117,11 +92,6 @@ const CompetitionsPage: React.FC = () => {
     }
   };
 
-  const handleUpdateLocation = (location: { city: string; latitude: number; longitude: number }) => {
-    updateUserLocation(location);
-    setShowLocationSheet(false);
-  };
-
   const renderContent = () => {
     if (isLoadingLocation || isLoadingCompetitions) {
       return (
@@ -135,22 +105,19 @@ const CompetitionsPage: React.FC = () => {
     if (!userLocation) {
       return (
         <div className="p-6">
-          <div className="bg-white rounded-lg p-6 shadow-sm">
-            <div className="text-center mb-6">
-              <MapPin size={32} className="text-forest mx-auto mb-2" />
-              <h2 className="text-lg font-medium">Var befinner du dig?</h2>
-              <p className="text-sm text-gray-500">För att visa tävlingar nära dig</p>
-            </div>
-            
-            <LocationInputForm onLocationSelected={handleUpdateLocation} />
+          <div className="bg-white rounded-lg p-6 shadow-sm text-center">
+            <MapPin size={32} className="text-forest mx-auto mb-2" />
+            <h2 className="text-lg font-medium mb-4">Sätt din plats för att se tävlingar</h2>
+            <Button 
+              onClick={() => navigate('/settings')}
+              className="bg-forest hover:bg-forest-dark"
+            >
+              Gå till inställningar
+            </Button>
           </div>
         </div>
       );
     }
-    
-    const displayName = userLocation.city.length > 25 
-      ? userLocation.city.split(',')[0]
-      : userLocation.city;
     
     if (error) {
       return (
@@ -175,28 +142,7 @@ const CompetitionsPage: React.FC = () => {
     }
     
     return (
-      <>
-        <div className="bg-gradient-to-br from-forest-light/30 to-forest-light/10 rounded-xl p-4 shadow-sm mb-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="bg-forest/10 p-2 rounded-full">
-                <MapPin size={18} className="text-forest" />
-              </div>
-              <div>
-                <span className="font-medium text-sm line-clamp-1 text-forest-dark">{displayName}</span>
-              </div>
-            </div>
-            <Button 
-              variant="outline" 
-              size="sm"
-              className="text-forest border-forest/30 hover:bg-forest/10"
-              onClick={() => setShowLocationSheet(true)}
-            >
-              Byt plats
-            </Button>
-          </div>
-        </div>
-        
+      <div className="space-y-4">
         {competitions.length > 0 ? (
           <PullToRefresh onRefresh={handleRefresh}>
             <div className="space-y-3">
@@ -217,39 +163,16 @@ const CompetitionsPage: React.FC = () => {
             <p className="text-gray-500">Inga tävlingar hittades</p>
           </div>
         )}
-      </>
+      </div>
     );
   };
 
   return (
-    <>
-      <MobileLayout title="Tävlingar i närheten">
-        <div className="mt-4">
-          {renderContent()}
-        </div>
-      </MobileLayout>
-      
-      <Sheet 
-        open={showLocationSheet} 
-        onOpenChange={setShowLocationSheet}
-        modal={true}
-      >
-        <SheetContent 
-          side="bottom" 
-          className={`p-4 max-h-[90vh] overflow-y-auto z-[100] ${keyboardVisible ? 'fixed bottom-0 pb-24' : ''}`}
-        >
-          <SheetHeader>
-            <SheetTitle>Byt plats</SheetTitle>
-          </SheetHeader>
-          <div className="pb-8">
-            <LocationInputForm 
-              onLocationSelected={handleUpdateLocation}
-              onCancel={() => setShowLocationSheet(false)}
-            />
-          </div>
-        </SheetContent>
-      </Sheet>
-    </>
+    <MobileLayout title="Tävlingar i närheten">
+      <div className="mt-4 px-4">
+        {renderContent()}
+      </div>
+    </MobileLayout>
   );
 };
 

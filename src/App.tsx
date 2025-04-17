@@ -144,6 +144,7 @@ const App = () => (
         <Route path="/landing" element={<LandingPage />} />
         <Route path="/competitions" element={<CompetitionsPage />} />
         <Route path="/info" element={<InfoPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
         <Route path="/competition/:competitionId" element={<CompetitionDetailsPage />} />
         <Route path="/competition/:competitionId/participants" element={<ParticipantsPage />} />
         <Route path="/competition/:competitionId/club-participants" element={<ClubParticipantsPage />} />

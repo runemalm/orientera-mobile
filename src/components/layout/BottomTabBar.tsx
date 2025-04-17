@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { MapPin, Info } from 'lucide-react';
+import { MapPin, Info, Settings } from 'lucide-react';
 import { TabName } from '../../types';
 
 const BottomTabBar: React.FC = () => {
@@ -9,7 +9,6 @@ const BottomTabBar: React.FC = () => {
   const location = useLocation();
   const currentPath = location.pathname;
 
-  // Check if current path is competition-related
   const isCompetitionRelated = currentPath === '/' || 
                              currentPath === '/competitions' || 
                              currentPath.startsWith('/competition/');
@@ -26,6 +25,12 @@ const BottomTabBar: React.FC = () => {
       icon: <Info size={24} />,
       label: 'Om',
       path: '/info'
+    },
+    {
+      name: 'settings',
+      icon: <Settings size={24} />,
+      label: 'Inställningar',
+      path: '/settings'
     }
   ];
 
