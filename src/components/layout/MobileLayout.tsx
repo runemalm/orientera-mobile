@@ -25,6 +25,9 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
     navigate(-1);
   };
 
+  // Always show bottom tabs on home page regardless of hideBottomTabs prop
+  const shouldShowBottomTabs = isHomePage ? true : !hideBottomTabs;
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       <TopNavBar 
@@ -36,13 +39,13 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
       <main 
         className="flex-grow mobile-page mobile-container"
         style={{
-          paddingBottom: (!isHomePage && hideBottomTabs) ? '1rem' : 'calc(5rem + var(--safe-area-inset-bottom))'
+          paddingBottom: shouldShowBottomTabs ? 'calc(5rem + var(--safe-area-inset-bottom))' : '1rem'
         }}
       >
         {children}
       </main>
       
-      {(!isHomePage && hideBottomTabs) ? null : <BottomTabBar />}
+      {shouldShowBottomTabs ? <BottomTabBar /> : null}
     </div>
   );
 };
