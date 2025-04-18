@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { MapPin, Home, User } from 'lucide-react';
 import { TabName } from '../../types';
@@ -31,9 +32,11 @@ const BottomTabBar: React.FC = () => {
     }
   ];
 
-  const handleTabClick = (path: string) => {
-    navigate(path);
-  };
+  const handleTabClick = useCallback((path: string) => {
+    if (path !== currentPath) {
+      navigate(path);
+    }
+  }, [navigate, currentPath]);
 
   return (
     <div className="bottom-tabs fixed bottom-0 left-0 right-0 flex items-center justify-around bg-white border-t border-gray-200 z-10">

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -78,6 +79,13 @@ const CompetitionsPage: React.FC = () => {
       setIsLoadingCompetitions(false);
     }
   }, [userLocation]);
+
+  // Fetch competitions when the component mounts or userLocation changes
+  useEffect(() => {
+    if (userLocation) {
+      fetchCompetitions();
+    }
+  }, [userLocation, fetchCompetitions]);
 
   const handleUpdateLocation = (location: { city: string; latitude: number; longitude: number }) => {
     updateUserLocation(location);

@@ -14,7 +14,7 @@ const DEFAULT_LOCATION = {
 };
 
 export const useUserLocation = () => {
-  const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
+  const [userLocation, setUserLocation] = useState<UserLocation>(DEFAULT_LOCATION);
   const [isFirstVisit, setIsFirstVisit] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
