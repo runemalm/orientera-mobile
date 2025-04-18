@@ -20,6 +20,8 @@ import LocationInputForm from '../components/LocationInputForm';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { formatSwedishDate } from '../utils/dateUtils';
 import { cn } from '@/lib/utils';
+import { useNavigate } from 'react-router-dom';
+import { toast } from '@/components/ui/use-toast';
 
 const SettingsPage: React.FC = () => {
   const { userLocation, updateUserLocation } = useUserLocation();
@@ -31,10 +33,21 @@ const SettingsPage: React.FC = () => {
     from: undefined,
     to: undefined,
   });
+  const navigate = useNavigate();
 
   const handleLocationUpdate = (location: { city: string; latitude: number; longitude: number }) => {
     updateUserLocation(location);
     setShowLocationInput(false);
+  };
+
+  const handleApplyFilters = () => {
+    // Save the filters to local storage is already done by the useLocalStorage hook
+    // Navigate to competitions page for immediate feedback
+    navigate('/competitions');
+    toast({
+      title: "Filter uppdaterade",
+      description: "Tävlingslistan har uppdaterats med dina valda datumfilter.",
+    });
   };
 
   return (
@@ -96,7 +109,6 @@ const SettingsPage: React.FC = () => {
                       mode="single"
                       selected={dateRange.from}
                       onSelect={(date) => setDateRange({ ...dateRange, from: date })}
-                      disabled={(date) => date < new Date()}
                       initialFocus
                       className={cn("p-3 pointer-events-auto")}
                     />
@@ -130,7 +142,7 @@ const SettingsPage: React.FC = () => {
                       selected={dateRange.to}
                       onSelect={(date) => setDateRange({ ...dateRange, to: date })}
                       disabled={(date) => 
-                        date < (dateRange.from || new Date())
+                        dateRange.from && date < dateRange.from
                       }
                       initialFocus
                       className={cn("p-3 pointer-events-auto")}
@@ -138,6 +150,14 @@ const SettingsPage: React.FC = () => {
                   </PopoverContent>
                 </Popover>
               </div>
+
+              {/* Apply button */}
+              <Button
+                className="w-full bg-forest hover:bg-forest-dark"
+                onClick={handleApplyFilters}
+              >
+                Uppdatera tävlingar
+              </Button>
             </div>
           </div>
         </div>

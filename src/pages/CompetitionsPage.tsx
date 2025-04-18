@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Loader2, Star } from 'lucide-react';
@@ -7,6 +8,7 @@ import { getNearbyCompetitions } from '../services/api';
 import CompetitionList from '../components/competition/CompetitionList';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
 // Store competitions in memory to persist between navigations
 let cachedCompetitions: CompetitionSummary[] = [];
@@ -18,6 +20,19 @@ const CompetitionsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const initialFetchCompleted = useRef(false);
   const [selectedTab, setSelectedTab] = useState("all");
+  const [dateRange] = useLocalStorage<{
+    from: Date | undefined;
+    to: Date | undefined;
+  }>('competitionDateRange', {
+    from: undefined,
+    to: undefined,
+  });
+
+  // Force refetch when date filters change
+  const dateFilterSignature = JSON.stringify({
+    from: dateRange.from?.toISOString(),
+    to: dateRange.to?.toISOString()
+  });
 
   const fetchCompetitions = useCallback(async () => {
     if (!userLocation) return;
@@ -25,11 +40,18 @@ const CompetitionsPage: React.FC = () => {
     setIsLoadingCompetitions(true);
     setError(null);
     
-    const fromDate = new Date();
-    fromDate.setDate(fromDate.getDate() - 1); // 1 day before today
+    // Use date filters from settings if available, otherwise use default dates
+    const fromDate = dateRange.from || new Date();
+    if (!dateRange.from) {
+      // If no from date is set, use yesterday as default
+      fromDate.setDate(fromDate.getDate() - 1);
+    }
     
-    const toDate = new Date();
-    toDate.setMonth(toDate.getMonth() + 1); // 1 month ahead
+    const toDate = dateRange.to || new Date();
+    if (!dateRange.to) {
+      // If no to date is set, use one month ahead as default
+      toDate.setMonth(toDate.getMonth() + 1);
+    }
     
     try {
       const result = await getNearbyCompetitions(
@@ -51,14 +73,14 @@ const CompetitionsPage: React.FC = () => {
     } finally {
       setIsLoadingCompetitions(false);
     }
-  }, [userLocation]);
+  }, [userLocation, dateRange.from, dateRange.to]);
 
   useEffect(() => {
-    if (userLocation && (!initialFetchCompleted.current || cachedCompetitions.length === 0)) {
+    if (userLocation) {
       fetchCompetitions();
       initialFetchCompleted.current = true;
     }
-  }, [userLocation, fetchCompetitions]);
+  }, [userLocation, fetchCompetitions, dateFilterSignature]);
 
   const renderContent = () => {
     if (isLoadingCompetitions && competitions.length === 0) {
