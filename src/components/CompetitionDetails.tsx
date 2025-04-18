@@ -4,6 +4,7 @@ import { Competition, ResourceType } from '../types';
 import { Users, Car, FileText } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { translateDiscipline, translateCompetitionType } from '../utils/translations';
+import { formatSwedishDate } from '../utils/dateUtils';
 
 interface CompetitionDetailsProps {
   competition: Competition;
