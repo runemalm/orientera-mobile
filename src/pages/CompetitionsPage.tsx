@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
-import { MapPin, Loader2, Filter, Building, CalendarRange } from 'lucide-react';
+import { MapPin, Loader2, Filter, CalendarRange } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -225,24 +224,6 @@ const CompetitionsPage: React.FC = () => {
                   </Button>
                 </div>
               </div>
-            </div>
-
-            <div 
-              className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 space-y-4"
-              role="region"
-              aria-label="Club filter"
-            >
-              <div className="flex items-center gap-2 text-forest">
-                <Building className="h-5 w-5" />
-                <h2 className="font-semibold">Klubb</h2>
-              </div>
-              <Button 
-                variant="outline" 
-                className="w-full justify-start text-left text-sm text-muted-foreground"
-                onClick={() => {}}
-              >
-                Välj klubbar
-              </Button>
             </div>
 
             <div 
