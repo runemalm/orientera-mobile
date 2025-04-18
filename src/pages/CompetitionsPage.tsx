@@ -4,6 +4,12 @@ import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
 import { MapPin, Loader2, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { useUserLocation } from '../hooks/useUserLocation';
 import { CompetitionSummary } from '../types';
 import { getNearbyCompetitions } from '../services/api';
@@ -19,6 +25,7 @@ const CompetitionsPage: React.FC = () => {
   const [competitions, setCompetitions] = useState<CompetitionSummary[]>([]);
   const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [filterSheetOpen, setFilterSheetOpen] = useState(false);
 
   const fetchCompetitions = useCallback(async () => {
     if (!userLocation) return;
@@ -176,7 +183,7 @@ const CompetitionsPage: React.FC = () => {
         <Button 
           variant="ghost" 
           size="icon"
-          onClick={() => navigate('/competitions/filters')}
+          onClick={() => setFilterSheetOpen(true)}
           className="relative"
         >
           <Filter className="h-[1.2rem] w-[1.2rem]" />
@@ -186,6 +193,39 @@ const CompetitionsPage: React.FC = () => {
       <div className="mt-4 px-4">
         {renderContent()}
       </div>
+
+      <Sheet open={filterSheetOpen} onOpenChange={setFilterSheetOpen}>
+        <SheetContent side="right" className="w-full sm:max-w-full p-0">
+          <SheetHeader className="h-[3.5rem] flex flex-row items-center px-4 border-b">
+            <SheetTitle className="flex-1 text-center">Filter</SheetTitle>
+          </SheetHeader>
+          <div className="p-4">
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                  <MapPin className="h-5 w-5" />
+                  Plats
+                </h2>
+                
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <MapPin className="h-4 w-4 text-muted-foreground" />
+                      <span>{userLocation?.city}</span>
+                    </div>
+                    <Button 
+                      variant="outline"
+                      onClick={() => navigate('/competitions/filters')}
+                    >
+                      Byt plats
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
     </MobileLayout>
   );
 };
