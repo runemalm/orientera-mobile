@@ -9,7 +9,6 @@ import PullToRefresh from '../components/PullToRefresh';
 import { toast } from '@/hooks/use-toast';
 import CompetitionList from '../components/competition/CompetitionList';
 import CompetitionFilters from '../components/competition/CompetitionFilters';
-import CompetitionFilterBadges from '../components/competition/CompetitionFilterBadges';
 
 const CompetitionsPage: React.FC = () => {
   const { userLocation, isLoading: isLoadingLocation } = useUserLocation();
@@ -117,10 +116,6 @@ const CompetitionsPage: React.FC = () => {
 
     return (
       <div>
-        <CompetitionFilterBadges
-          location={userLocation.city}
-          onChangeLocation={() => setFilterDrawerOpen(true)}
-        />
         <PullToRefresh onRefresh={handleRefresh}>
           <CompetitionList 
             competitions={competitions} 
