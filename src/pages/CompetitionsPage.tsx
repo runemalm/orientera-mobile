@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
-import { Filter, Loader2, MapPin, RefreshCw } from 'lucide-react';
+import { Loader2, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { CompetitionSummary } from '../types';
@@ -62,19 +62,6 @@ const CompetitionsPage: React.FC = () => {
       initialFetchCompleted.current = true;
     }
   }, [userLocation, fetchCompetitions]);
-
-  const handleRefresh = async () => {
-    try {
-      await fetchCompetitions();
-      toast({
-        title: "Uppdaterad",
-        description: "Listan med tävlingar har uppdaterats",
-        duration: 2000
-      });
-    } catch (error) {
-      console.error("Error refreshing competitions:", error);
-    }
-  };
 
   const handleApplyFilters = () => {
     setFilterDrawerOpen(false);
@@ -152,17 +139,6 @@ const CompetitionsPage: React.FC = () => {
   return (
     <MobileLayout 
       title="Tävlingar nära dig"
-      action={
-        <Button 
-          variant="ghost" 
-          size="icon"
-          onClick={handleRefresh}
-          disabled={isLoadingCompetitions}
-          className="relative"
-        >
-          <RefreshCw className={`h-[1.2rem] w-[1.2rem] ${isLoadingCompetitions ? 'animate-spin' : ''}`} />
-        </Button>
-      }
     >
       <div className="mt-4">
         {renderContent()}
