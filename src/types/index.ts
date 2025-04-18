@@ -68,7 +68,8 @@ export enum ResourceFormat {
   Png = 'Png'
 }
 
-export type TabName = 'home' | 'competitions' | 'profile';
+// Update the TabName type to include 'settings'
+export type TabName = 'home' | 'competitions' | 'profile' | 'settings';
 
 // CompetitionSummary for list views
 export interface CompetitionSummary {
