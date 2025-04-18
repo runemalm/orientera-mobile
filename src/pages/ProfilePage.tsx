@@ -1,23 +1,105 @@
 
 import React from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
-import { User } from 'lucide-react';
+import { User, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import LocationInputForm from '../components/LocationInputForm';
+import { useUserLocation } from '../hooks/useUserLocation';
 
 const ProfilePage: React.FC = () => {
+  const [showLocationSheet, setShowLocationSheet] = React.useState(false);
+  const { userLocation, updateUserLocation } = useUserLocation();
+  const [keyboardVisible, setKeyboardVisible] = React.useState(false);
+
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const handleVisualViewportResize = () => {
+        const newKeyboardVisible = window.visualViewport && 
+          window.visualViewport.height < window.innerHeight * 0.75;
+        setKeyboardVisible(newKeyboardVisible);
+      };
+      
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', handleVisualViewportResize);
+        return () => {
+          window.visualViewport.removeEventListener('resize', handleVisualViewportResize);
+        };
+      }
+    }
+  }, []);
+
+  const handleUpdateLocation = (location: { city: string; latitude: number; longitude: number }) => {
+    updateUserLocation(location);
+    setShowLocationSheet(false);
+  };
+
+  const displayName = userLocation?.city 
+    ? (userLocation.city.length > 25 ? userLocation.city.split(',')[0] : userLocation.city)
+    : 'Ingen plats vald';
+
   return (
-    <MobileLayout title="Min profil">
-      <div className="p-4">
-        <div className="flex flex-col items-center justify-center py-8">
-          <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-            <User className="w-10 h-10 text-primary" />
+    <>
+      <MobileLayout title="Min profil">
+        <div className="p-4">
+          <div className="flex flex-col items-center justify-center py-8">
+            <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+              <User className="w-10 h-10 text-primary" />
+            </div>
+            <h2 className="text-xl font-semibold mb-1">Min profil</h2>
+            <p className="text-gray-500 mb-8">Logga in för att se din profil</p>
+            <Button>Logga in</Button>
           </div>
-          <h2 className="text-xl font-semibold mb-1">Min profil</h2>
-          <p className="text-gray-500 mb-4">Logga in för att se din profil</p>
-          <Button>Logga in</Button>
+
+          <div className="mt-8">
+            <div className="bg-white rounded-lg shadow-sm">
+              <div className="p-4 border-b">
+                <h2 className="text-lg font-medium">Plats</h2>
+                <p className="text-sm text-gray-500">Din plats används för att hitta tävlingar nära dig</p>
+              </div>
+              <div className="p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="bg-forest/10 p-2 rounded-full">
+                      <Settings size={18} className="text-forest" />
+                    </div>
+                    <span className="font-medium text-sm">{displayName}</span>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setShowLocationSheet(true)}
+                  >
+                    Byt plats
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </MobileLayout>
+      </MobileLayout>
+
+      <Sheet 
+        open={showLocationSheet} 
+        onOpenChange={setShowLocationSheet}
+        modal={true}
+      >
+        <SheetContent 
+          side="bottom" 
+          className={`p-4 max-h-[90vh] overflow-y-auto z-[100] ${keyboardVisible ? 'fixed bottom-0 pb-24' : ''}`}
+        >
+          <SheetHeader>
+            <SheetTitle>Byt plats</SheetTitle>
+          </SheetHeader>
+          <div className="pb-8">
+            <LocationInputForm 
+              onLocationSelected={handleUpdateLocation}
+              onCancel={() => setShowLocationSheet(false)}
+            />
+          </div>
+        </SheetContent>
+      </Sheet>
+    </>
   );
 };
 
