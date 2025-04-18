@@ -19,11 +19,8 @@ const CompetitionsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const initialFetchCompleted = useRef(false);
   const [favorites] = useLocalStorage<string[]>('favoriteCompetitions', []);
+  const [selectedTab, setSelectedTab] = useLocalStorage<string>('selectedCompetitionsTab', 'all');
   const [daysBack] = useLocalStorage<number>('competitionsDaysBack', 1);
-  
-  // Determine initial active tab based on whether user has favorites
-  const defaultTab = favorites?.length ? "favorites" : "all";
-  const [selectedTab, setSelectedTab] = useState(defaultTab);
 
   const fetchCompetitions = useCallback(async () => {
     if (!userLocation) return;
@@ -84,7 +81,7 @@ const CompetitionsPage: React.FC = () => {
     }
 
     return (
-      <Tabs defaultValue={defaultTab} className="w-full" onValueChange={setSelectedTab}>
+      <Tabs defaultValue={selectedTab} className="w-full" onValueChange={setSelectedTab}>
         <div className="sticky top-16 z-10 bg-gray-50 pt-2 pb-3 px-4 shadow-sm">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="all">Alla</TabsTrigger>
