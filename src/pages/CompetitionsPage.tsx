@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Filter, Loader2, MapPin } from 'lucide-react';
@@ -73,6 +72,30 @@ const CompetitionsPage: React.FC = () => {
     fetchCompetitions();
   };
 
+  const renderFilterSection = () => {
+    if (!userLocation) return null;
+
+    return (
+      <div className="bg-white p-4 shadow-sm border-b">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <MapPin className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm text-muted-foreground">{userLocation.city}</span>
+          </div>
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setFilterDrawerOpen(true)}
+            className="text-xs"
+          >
+            <Filter className="h-3 w-3 mr-1" />
+            Filter
+          </Button>
+        </div>
+      </div>
+    );
+  };
+
   const renderContent = () => {
     if (isLoadingLocation || isLoadingCompetitions) {
       return (
@@ -123,29 +146,20 @@ const CompetitionsPage: React.FC = () => {
     }
 
     return (
-      <CompetitionList 
-        competitions={competitions} 
-        userLocation={userLocation}
-      />
+      <>
+        {renderFilterSection()}
+        <div className="p-4">
+          <CompetitionList 
+            competitions={competitions} 
+            userLocation={userLocation}
+          />
+        </div>
+      </>
     );
   };
 
   return (
-    <MobileLayout 
-      title="Tävlingar nära dig" 
-      action={
-        userLocation && (
-          <Button 
-            variant="ghost" 
-            size="icon"
-            onClick={() => setFilterDrawerOpen(true)}
-            className="relative"
-          >
-            <Filter className="h-[1.2rem] w-[1.2rem]" />
-          </Button>
-        )
-      }
-    >
+    <MobileLayout title="Tävlingar nära dig">
       <div className="mt-4">
         {renderContent()}
       </div>
