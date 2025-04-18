@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Loader2 } from 'lucide-react';
@@ -81,7 +82,7 @@ const CompetitionsPage: React.FC = () => {
 
     return (
       <Tabs defaultValue="all" className="w-full" onValueChange={setSelectedTab}>
-        <div className="px-4">
+        <div className="sticky top-16 z-10 bg-gray-50 pt-2 pb-3 px-4 shadow-sm">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="all">Alla</TabsTrigger>
             <TabsTrigger value="favorites">Favoriter</TabsTrigger>
