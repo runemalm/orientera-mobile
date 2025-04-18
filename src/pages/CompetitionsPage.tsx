@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Filter, Loader2, MapPin, RefreshCw } from 'lucide-react';
@@ -10,7 +9,6 @@ import { toast } from '@/hooks/use-toast';
 import CompetitionList from '../components/competition/CompetitionList';
 import CompetitionFilters from '../components/competition/CompetitionFilters';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import PullToRefresh from '../components/PullToRefresh';
 
 // Store competitions in memory to persist between navigations
 let cachedCompetitions: CompetitionSummary[] = [];
@@ -160,14 +158,12 @@ const CompetitionsPage: React.FC = () => {
       <>
         {renderFilterSection()}
         <ScrollArea className="h-[calc(100vh-10rem)]">
-          <PullToRefresh onRefresh={handleRefresh}>
-            <div className="p-4">
-              <CompetitionList 
-                competitions={competitions} 
-                userLocation={userLocation}
-              />
-            </div>
-          </PullToRefresh>
+          <div className="p-4">
+            <CompetitionList 
+              competitions={competitions} 
+              userLocation={userLocation}
+            />
+          </div>
         </ScrollArea>
       </>
     );
