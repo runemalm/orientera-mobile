@@ -1,4 +1,3 @@
-
 import React from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { User, Flag, Settings } from 'lucide-react';
@@ -41,7 +40,7 @@ const ProfilePage: React.FC = () => {
         </Card>
 
         <p className="text-center text-sm text-muted-foreground mt-8">
-          Version 1.0 - Beta
+          Version 1.0.0 - Beta
         </p>
       </div>
     </MobileLayout>
@@ -49,4 +48,3 @@ const ProfilePage: React.FC = () => {
 };
 
 export default ProfilePage;
-
