@@ -1,10 +1,13 @@
 
 import React from 'react';
 import { Competition, ResourceType } from '../types';
-import { Users, Car, FileText } from 'lucide-react';
+import { Users, Car, Map, FileText } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { translateDiscipline, translateCompetitionType } from '../utils/translations';
 import { formatSwedishDate } from '../utils/dateUtils';
+import CompetitionLocationMap from './CompetitionLocationMap';
+import FileItem from './FileItem';
+import CompetitionDetailSection from './CompetitionDetailSection';
 
 interface CompetitionDetailsProps {
   competition: Competition;
@@ -13,6 +16,7 @@ interface CompetitionDetailsProps {
 const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) => {
   // Format date using Swedish timezone
   const formattedDate = formatSwedishDate(competition.date, 'EEEE d MMMM yyyy');
+  const hasCoordinates = competition.latitude !== null && competition.longitude !== null;
   
   return (
     <div className="space-y-6">
@@ -27,6 +31,23 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
         </div>
       </div>
       
+      {/* Map section - only show if coordinates exist */}
+      {hasCoordinates && (
+        <CompetitionDetailSection 
+          icon={<Map size={20} className="text-forest" />}
+          title="Tävlingsplats"
+          borderless
+        >
+          <CompetitionLocationMap 
+            locationName={competition.location}
+            coordinates={{ 
+              lat: competition.latitude!, 
+              lng: competition.longitude! 
+            }}
+          />
+        </CompetitionDetailSection>
+      )}
+
       {/* Key info panel - simplified */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-100">
         <div className="divide-y divide-gray-100">
@@ -76,6 +97,20 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
           </Link>
         </div>
       </div>
+
+      {/* Resources section - only show if there are resources */}
+      {competition.resources && competition.resources.length > 0 && (
+        <CompetitionDetailSection 
+          icon={<FileText size={20} className="text-forest" />}
+          title="Dokument & länkar"
+        >
+          <div className="space-y-2">
+            {competition.resources.map((resource) => (
+              <FileItem key={resource.id} file={resource} />
+            ))}
+          </div>
+        </CompetitionDetailSection>
+      )}
     </div>
   );
 };
