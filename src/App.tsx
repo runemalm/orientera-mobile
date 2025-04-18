@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import CompetitionsPage from './pages/CompetitionsPage';
@@ -6,7 +7,7 @@ import { useLocalStorage } from './hooks/useLocalStorage';
 import CompetitionFiltersPage from './pages/CompetitionFiltersPage';
 
 const App = () => {
-  const [hasLocation, setHasLocation] = useLocalStorage('userLocation');
+  const [hasLocation, setHasLocation] = useLocalStorage<boolean>('userLocation', false);
 
   return (
     <Router>
