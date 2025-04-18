@@ -21,20 +21,19 @@ const LoginWaitlistDialog: React.FC<LoginWaitlistDialogProps> = ({ isOpen, onClo
     
     if (!email || !email.includes('@')) {
       toast({
-        title: "Invalid email",
-        description: "Please enter a valid email address",
+        title: "Ogiltig e-postadress",
+        description: "Vänligen ange en giltig e-postadress",
         variant: "destructive",
       });
       return;
     }
 
-    // Here you would typically send this to your backend
     console.log('Email submitted to waitlist:', email);
     setIsSubmitted(true);
     
     toast({
-      title: "Success!",
-      description: "You've been added to the waitlist",
+      title: "Tack!",
+      description: "Du har lagts till i väntelistan",
     });
   };
 
@@ -42,9 +41,9 @@ const LoginWaitlistDialog: React.FC<LoginWaitlistDialogProps> = ({ isOpen, onClo
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold">Join the waitlist</DialogTitle>
+          <DialogTitle className="text-xl font-semibold">Gå med i väntelistan</DialogTitle>
           <DialogDescription>
-            Login features are coming soon! Join our waitlist to get early access.
+            Inloggningsfunktionen kommer snart! Gå med i väntelistan för att få tidig tillgång.
           </DialogDescription>
         </DialogHeader>
         
@@ -53,40 +52,40 @@ const LoginWaitlistDialog: React.FC<LoginWaitlistDialogProps> = ({ isOpen, onClo
             <div className="rounded-full bg-green-100 p-3">
               <CheckCircle className="h-8 w-8 text-green-600" />
             </div>
-            <h3 className="font-medium text-lg">Thank you for joining!</h3>
+            <h3 className="font-medium text-lg">Tack för ditt intresse!</h3>
             <p className="text-muted-foreground">
-              We'll notify you when login features are available.
+              Vi meddelar dig när inloggningsfunktionen är tillgänglig.
             </p>
             <Button onClick={onClose} className="mt-4">
-              Close
+              Stäng
             </Button>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4 py-4">
             <div className="space-y-2">
               <label htmlFor="email" className="text-sm font-medium">
-                Email address
+                E-postadress
               </label>
               <Input
                 id="email"
                 type="email"
-                placeholder="you@example.com"
+                placeholder="du@exempel.se"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full"
                 required
               />
               <p className="text-xs text-muted-foreground">
-                We'll never share your email with anyone else.
+                Vi delar aldrig din e-postadress med någon annan.
               </p>
             </div>
             
             <DialogFooter className="pt-4">
               <Button variant="outline" onClick={onClose}>
-                Cancel
+                Avbryt
               </Button>
               <Button type="submit">
-                Join waitlist
+                Gå med
               </Button>
             </DialogFooter>
           </form>
