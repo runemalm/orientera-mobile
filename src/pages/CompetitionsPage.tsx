@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Loader2 } from 'lucide-react';
@@ -7,6 +6,7 @@ import { CompetitionSummary } from '../types';
 import { getNearbyCompetitions } from '../services/api';
 import CompetitionList from '../components/competition/CompetitionList';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 // Store competitions in memory to persist between navigations
 let cachedCompetitions: CompetitionSummary[] = [];
@@ -17,6 +17,7 @@ const CompetitionsPage: React.FC = () => {
   const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(cachedCompetitions.length === 0);
   const [error, setError] = useState<string | null>(null);
   const initialFetchCompleted = useRef(false);
+  const [selectedTab, setSelectedTab] = useState("all");
 
   const fetchCompetitions = useCallback(async () => {
     if (!userLocation) return;
@@ -78,14 +79,35 @@ const CompetitionsPage: React.FC = () => {
     }
 
     return (
-      <ScrollArea className="h-[calc(100vh-10rem)]">
-        <div className="p-4">
-          <CompetitionList 
-            competitions={competitions} 
-            userLocation={userLocation}
-          />
+      <Tabs defaultValue="all" className="w-full" onValueChange={setSelectedTab}>
+        <div className="px-4">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="all">Alla</TabsTrigger>
+            <TabsTrigger value="favorites">Favoriter</TabsTrigger>
+          </TabsList>
         </div>
-      </ScrollArea>
+
+        <TabsContent value="all">
+          <ScrollArea className="h-[calc(100vh-14rem)]">
+            <div className="p-4">
+              <CompetitionList 
+                competitions={competitions} 
+                userLocation={userLocation}
+              />
+            </div>
+          </ScrollArea>
+        </TabsContent>
+
+        <TabsContent value="favorites">
+          <ScrollArea className="h-[calc(100vh-14rem)]">
+            <div className="p-4">
+              <div className="text-center py-8 text-gray-500">
+                Favoriter kommer snart
+              </div>
+            </div>
+          </ScrollArea>
+        </TabsContent>
+      </Tabs>
     );
   };
 
