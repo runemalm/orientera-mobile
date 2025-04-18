@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Filter, Loader2, MapPin } from 'lucide-react';
@@ -6,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { CompetitionSummary } from '../types';
 import { getNearbyCompetitions } from '../services/api';
-import PullToRefresh from '../components/PullToRefresh';
 import { toast } from '@/hooks/use-toast';
 import CompetitionList from '../components/competition/CompetitionList';
 import CompetitionFilters from '../components/competition/CompetitionFilters';
@@ -24,7 +22,6 @@ const CompetitionsPage: React.FC = () => {
     setIsLoadingCompetitions(true);
     setError(null);
     
-    // Calculate date range
     const fromDate = new Date();
     fromDate.setDate(fromDate.getDate() - 2); // 2 days before today
     
@@ -125,14 +122,10 @@ const CompetitionsPage: React.FC = () => {
     }
 
     return (
-      <div>
-        <PullToRefresh onRefresh={handleRefresh}>
-          <CompetitionList 
-            competitions={competitions} 
-            userLocation={userLocation}
-          />
-        </PullToRefresh>
-      </div>
+      <CompetitionList 
+        competitions={competitions} 
+        userLocation={userLocation}
+      />
     );
   };
 
