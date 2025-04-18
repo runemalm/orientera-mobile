@@ -23,9 +23,6 @@ const CompetitionFilters: React.FC<CompetitionFiltersProps> = ({
   const handleLocationUpdate = (location: { city: string; latitude: number; longitude: number }) => {
     updateUserLocation(location);
     setShowLocationInput(false);
-  };
-
-  const handleApply = () => {
     onApplyFilters();
   };
 
@@ -62,8 +59,7 @@ const CompetitionFilters: React.FC<CompetitionFiltersProps> = ({
           <DrawerTitle>Filter</DrawerTitle>
         </DrawerHeader>
         
-        <div className="p-4 space-y-4">
-          {/* Location section */}
+        <div className="p-4">
           <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 space-y-4">
             <div className="flex items-center gap-2 text-forest">
               <MapPin className="h-5 w-5" />
@@ -86,15 +82,6 @@ const CompetitionFilters: React.FC<CompetitionFiltersProps> = ({
             </div>
           </div>
         </div>
-        
-        <DrawerFooter>
-          <Button 
-            className="w-full bg-forest hover:bg-forest-dark" 
-            onClick={handleApply}
-          >
-            Visa tävlingar
-          </Button>
-        </DrawerFooter>
       </DrawerContent>
     </Drawer>
   );

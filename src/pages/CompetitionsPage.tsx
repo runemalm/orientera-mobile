@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Filter, Loader2, MapPin } from 'lucide-react';
@@ -10,6 +9,7 @@ import PullToRefresh from '../components/PullToRefresh';
 import { toast } from '@/hooks/use-toast';
 import CompetitionList from '../components/competition/CompetitionList';
 import CompetitionFilters from '../components/competition/CompetitionFilters';
+import CompetitionFilterBadges from '../components/competition/CompetitionFilterBadges';
 
 const CompetitionsPage: React.FC = () => {
   const { userLocation, isLoading: isLoadingLocation } = useUserLocation();
@@ -117,13 +117,10 @@ const CompetitionsPage: React.FC = () => {
 
     return (
       <div>
-        <div className="mb-4">
-          <div className="flex items-center gap-1.5">
-            <MapPin className="h-4 w-4 text-forest" />
-            <span className="text-sm font-medium">{userLocation.city}</span>
-          </div>
-        </div>
-
+        <CompetitionFilterBadges
+          location={userLocation.city}
+          onChangeLocation={() => setFilterDrawerOpen(true)}
+        />
         <PullToRefresh onRefresh={handleRefresh}>
           <CompetitionList 
             competitions={competitions} 
@@ -138,17 +135,19 @@ const CompetitionsPage: React.FC = () => {
     <MobileLayout 
       title="Sök tävlingar" 
       action={
-        <Button 
-          variant="ghost" 
-          size="icon"
-          onClick={() => setFilterDrawerOpen(true)}
-          className="relative"
-        >
-          <Filter className="h-[1.2rem] w-[1.2rem]" />
-        </Button>
+        userLocation && (
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={() => setFilterDrawerOpen(true)}
+            className="relative"
+          >
+            <Filter className="h-[1.2rem] w-[1.2rem]" />
+          </Button>
+        )
       }
     >
-      <div className="mt-4 px-4">
+      <div className="mt-4">
         {renderContent()}
       </div>
 
