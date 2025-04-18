@@ -1,10 +1,11 @@
 import React from 'react';
 import { Competition, ResourceType } from '../types';
-import { Users, Car, FileText } from 'lucide-react';
+import { Users, Car } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { translateDiscipline, translateCompetitionType } from '../utils/translations';
 import { formatSwedishDate } from '../utils/dateUtils';
 import FileItem from './FileItem';
+import CompetitionLocationMap from './CompetitionLocationMap';
 
 interface CompetitionDetailsProps {
   competition: Competition;
@@ -23,7 +24,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
   
   return (
     <div className="space-y-6">
-      {/* Competition header - redesigned with more visual appeal */}
+      {/* Competition header */}
       <div className="bg-primary text-white p-5 rounded-lg shadow-md relative overflow-hidden">
         <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-primary-foreground/10"></div>
         <div className="absolute bottom-0 right-0 w-16 h-16 rounded-full bg-primary-foreground/10"></div>
@@ -107,6 +108,15 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
           ))}
         </div>
       </div>
+
+      {/* Arena Map */}
+      {competition.latitude && competition.longitude && (
+        <CompetitionLocationMap 
+          locationName={competition.location}
+          coordinates={{ lat: competition.latitude, lng: competition.longitude }}
+          className="h-48 w-full rounded-lg overflow-hidden"
+        />
+      )}
     </div>
   );
 };
