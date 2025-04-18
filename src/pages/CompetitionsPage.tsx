@@ -26,7 +26,7 @@ const CompetitionsPage: React.FC = () => {
     
     // Calculate date range
     const fromDate = new Date();
-    fromDate.setDate(fromDate.getDate() - 3); // 3 days before today
+    fromDate.setDate(fromDate.getDate() - 2); // 2 days before today
     
     const toDate = new Date();
     toDate.setMonth(toDate.getMonth() + 1); // 1 month ahead
