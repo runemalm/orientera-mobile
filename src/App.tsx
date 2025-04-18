@@ -1,7 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { useIsMobile } from "./hooks/use-mobile";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import CompetitionsPage from "./pages/CompetitionsPage";
 import CompetitionDetailsPage from "./pages/CompetitionDetailsPage";
@@ -11,8 +9,6 @@ import StartTimesPage from "./pages/StartTimesPage";
 import DocumentsPage from "./pages/DocumentsPage";
 import CarpoolingPage from "./pages/CarpoolingPage";
 import NotFound from "./pages/NotFound";
-import InfoPage from "./pages/InfoPage";
-import SettingsPage from "./pages/SettingsPage";
 import HomePage from "./pages/HomePage";
 import ProfilePage from "./pages/ProfilePage";
 
@@ -121,7 +117,6 @@ const RouterSetup = () => (
       <Route path="/" element={<Navigate to="/home" replace />} />
       <Route path="/home" element={<HomePage />} />
       <Route path="/competitions" element={<CompetitionsPage />} />
-      <Route path="/info" element={<InfoPage />} />
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/competition/:competitionId" element={<CompetitionDetailsPage />} />
       <Route path="/competition/:competitionId/participants" element={<ParticipantsPage />} />
