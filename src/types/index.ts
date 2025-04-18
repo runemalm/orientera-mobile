@@ -69,7 +69,7 @@ export enum ResourceFormat {
 }
 
 // Update the TabName type to include 'settings'
-export type TabName = 'home' | 'competitions' | 'profile' | 'settings';
+export type TabName = 'home' | 'competitions' | 'settings';
 
 // CompetitionSummary for list views
 export interface CompetitionSummary {
