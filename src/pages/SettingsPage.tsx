@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { useUserLocation } from '../hooks/useUserLocation';
@@ -18,7 +17,7 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 const SettingsPage: React.FC = () => {
   const { userLocation, updateUserLocation } = useUserLocation();
   const [showLocationInput, setShowLocationInput] = useState(false);
-  const [daysBack, setDaysBack] = useLocalStorage<number>('competitionsDaysBack', 7);
+  const [daysBack, setDaysBack] = useLocalStorage<number>('competitionsDaysBack', 1);
 
   const handleLocationUpdate = (location: { city: string; latitude: number; longitude: number }) => {
     updateUserLocation(location);

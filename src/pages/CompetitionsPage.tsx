@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Loader2 } from 'lucide-react';
@@ -20,7 +19,7 @@ const CompetitionsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const initialFetchCompleted = useRef(false);
   const [selectedTab, setSelectedTab] = useState("all");
-  const [daysBack] = useLocalStorage<number>('competitionsDaysBack', 7);
+  const [daysBack] = useLocalStorage<number>('competitionsDaysBack', 1);
 
   const fetchCompetitions = useCallback(async () => {
     if (!userLocation) return;
