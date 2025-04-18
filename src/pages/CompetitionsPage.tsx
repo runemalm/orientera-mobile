@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
-import { MapPin, Loader2 } from 'lucide-react';
+import { MapPin, Loader2, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { CompetitionSummary } from '../types';
@@ -12,13 +12,17 @@ import PullToRefresh from '../components/PullToRefresh';
 import { toast } from '@/hooks/use-toast';
 import { calculateDistance } from '../utils/distanceUtils';
 import { toSwedishTime } from '../utils/dateUtils';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import LocationInputForm from '../components/LocationInputForm';
 
 const CompetitionsPage: React.FC = () => {
   const navigate = useNavigate();
-  const { userLocation, isLoading: isLoadingLocation } = useUserLocation();
+  const { userLocation, updateUserLocation, isLoading: isLoadingLocation } = useUserLocation();
   const [competitions, setCompetitions] = useState<CompetitionSummary[]>([]);
   const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showLocationSheet, setShowLocationSheet] = useState(false);
+  const [keyboardVisible, setKeyboardVisible] = React.useState(false);
 
   const fetchCompetitions = useCallback(async () => {
     if (!userLocation) return;
@@ -75,9 +79,28 @@ const CompetitionsPage: React.FC = () => {
     }
   }, [userLocation]);
 
-  useEffect(() => {
+  const handleUpdateLocation = (location: { city: string; latitude: number; longitude: number }) => {
+    updateUserLocation(location);
+    setShowLocationSheet(false);
     fetchCompetitions();
-  }, [fetchCompetitions]);
+  };
+
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const handleVisualViewportResize = () => {
+        const newKeyboardVisible = window.visualViewport && 
+          window.visualViewport.height < window.innerHeight * 0.75;
+        setKeyboardVisible(newKeyboardVisible);
+      };
+      
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', handleVisualViewportResize);
+        return () => {
+          window.visualViewport.removeEventListener('resize', handleVisualViewportResize);
+        };
+      }
+    }
+  }, []);
 
   const handleRefresh = async () => {
     try {
@@ -109,10 +132,10 @@ const CompetitionsPage: React.FC = () => {
             <MapPin size={32} className="text-forest mx-auto mb-2" />
             <h2 className="text-lg font-medium mb-4">Sätt din plats för att se tävlingar</h2>
             <Button 
-              onClick={() => navigate('/settings')}
+              onClick={() => setShowLocationSheet(true)}
               className="bg-forest hover:bg-forest-dark"
             >
-              Gå till inställningar
+              Välj plats
             </Button>
           </div>
         </div>
@@ -168,11 +191,46 @@ const CompetitionsPage: React.FC = () => {
   };
 
   return (
-    <MobileLayout title="Tävlingar i närheten">
-      <div className="mt-4 px-4">
-        {renderContent()}
-      </div>
-    </MobileLayout>
+    <>
+      <MobileLayout 
+        title="Tävlingar i närheten" 
+        action={
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={() => setShowLocationSheet(true)}
+            className="relative"
+          >
+            <Filter className="h-[1.2rem] w-[1.2rem]" />
+          </Button>
+        }
+      >
+        <div className="mt-4 px-4">
+          {renderContent()}
+        </div>
+      </MobileLayout>
+
+      <Sheet 
+        open={showLocationSheet} 
+        onOpenChange={setShowLocationSheet}
+        modal={true}
+      >
+        <SheetContent 
+          side="bottom" 
+          className={`p-4 max-h-[90vh] overflow-y-auto z-[100] ${keyboardVisible ? 'fixed bottom-0 pb-24' : ''}`}
+        >
+          <SheetHeader>
+            <SheetTitle>Välj plats</SheetTitle>
+          </SheetHeader>
+          <div className="pb-8">
+            <LocationInputForm 
+              onLocationSelected={handleUpdateLocation}
+              onCancel={() => setShowLocationSheet(false)}
+            />
+          </div>
+        </SheetContent>
+      </Sheet>
+    </>
   );
 };
 
