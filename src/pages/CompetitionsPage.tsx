@@ -1,12 +1,14 @@
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
-import { Loader2, Star } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { CompetitionSummary } from '../types';
 import { getNearbyCompetitions } from '../services/api';
 import CompetitionList from '../components/competition/CompetitionList';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
 // Store competitions in memory to persist between navigations
 let cachedCompetitions: CompetitionSummary[] = [];
@@ -18,6 +20,7 @@ const CompetitionsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const initialFetchCompleted = useRef(false);
   const [selectedTab, setSelectedTab] = useState("all");
+  const [daysBack] = useLocalStorage<number>('competitionsDaysBack', 7);
 
   const fetchCompetitions = useCallback(async () => {
     if (!userLocation) return;
@@ -26,7 +29,7 @@ const CompetitionsPage: React.FC = () => {
     setError(null);
     
     const fromDate = new Date();
-    fromDate.setDate(fromDate.getDate() - 1); // 1 day before today
+    fromDate.setDate(fromDate.getDate() - daysBack); // Use daysBack setting
     
     const toDate = new Date();
     toDate.setMonth(toDate.getMonth() + 1); // 1 month ahead
@@ -43,7 +46,6 @@ const CompetitionsPage: React.FC = () => {
       );
       
       setCompetitions(result);
-      // Update the cache
       cachedCompetitions = result;
     } catch (err) {
       console.error('Error fetching competitions:', err);
@@ -51,7 +53,7 @@ const CompetitionsPage: React.FC = () => {
     } finally {
       setIsLoadingCompetitions(false);
     }
-  }, [userLocation]);
+  }, [userLocation, daysBack]);
 
   useEffect(() => {
     if (userLocation && (!initialFetchCompleted.current || cachedCompetitions.length === 0)) {
