@@ -7,6 +7,12 @@ interface UserLocation {
   longitude: number;
 }
 
+const DEFAULT_LOCATION = {
+  city: 'Kalmar',
+  latitude: 56.6784,  // Latitude of Kalmar
+  longitude: 16.3620  // Longitude of Kalmar
+};
+
 export const useUserLocation = () => {
   const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
   const [isFirstVisit, setIsFirstVisit] = useState<boolean>(false);
@@ -22,9 +28,13 @@ export const useUserLocation = () => {
         setIsFirstVisit(false);
       } catch (error) {
         console.error('Error parsing saved location:', error);
-        setIsFirstVisit(true);
+        setUserLocation(DEFAULT_LOCATION);
+        localStorage.setItem('userLocation', JSON.stringify(DEFAULT_LOCATION));
+        setIsFirstVisit(false);
       }
     } else {
+      setUserLocation(DEFAULT_LOCATION);
+      localStorage.setItem('userLocation', JSON.stringify(DEFAULT_LOCATION));
       setIsFirstVisit(true);
     }
     
@@ -39,7 +49,8 @@ export const useUserLocation = () => {
 
   const resetUserLocation = () => {
     localStorage.removeItem('userLocation');
-    setUserLocation(null);
+    setUserLocation(DEFAULT_LOCATION);
+    localStorage.setItem('userLocation', JSON.stringify(DEFAULT_LOCATION));
     setIsFirstVisit(true);
   };
 
