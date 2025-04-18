@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Filter, Loader2, MapPin } from 'lucide-react';
@@ -23,7 +24,7 @@ const CompetitionsPage: React.FC = () => {
     setError(null);
     
     const fromDate = new Date();
-    fromDate.setDate(fromDate.getDate() - 2); // 2 days before today
+    fromDate.setDate(fromDate.getDate() - 1); // 1 day before today instead of 2
     
     const toDate = new Date();
     toDate.setMonth(toDate.getMonth() + 1); // 1 month ahead
