@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Competition, ResourceType } from '../types';
 import { Users, Car, FileText } from 'lucide-react';
@@ -6,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { translateDiscipline, translateCompetitionType } from '../utils/translations';
 import { formatSwedishDate } from '../utils/dateUtils';
 import FileItem from './FileItem';
-import CompetitionDetailSection from './CompetitionDetailSection';
 
 interface CompetitionDetailsProps {
   competition: Competition;
@@ -29,7 +27,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
         </div>
       </div>
 
-      {/* Key info panel - simplified */}
+      {/* Info panel with all sections including documents */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-100">
         <div className="divide-y divide-gray-100">
           <Link 
@@ -76,22 +74,17 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
               </svg>
             </div>
           </Link>
+
+          {/* Documents section - now integrated into the same panel */}
+          {competition.resources && competition.resources.length > 0 && (
+            competition.resources.map((resource) => (
+              <div key={resource.id} className="hover:bg-gray-50">
+                <FileItem file={resource} />
+              </div>
+            ))
+          )}
         </div>
       </div>
-
-      {/* Resources section - only show if there are resources */}
-      {competition.resources && competition.resources.length > 0 && (
-        <CompetitionDetailSection 
-          icon={<FileText size={20} className="text-forest" />}
-          title="Dokument & länkar"
-        >
-          <div className="space-y-2">
-            {competition.resources.map((resource) => (
-              <FileItem key={resource.id} file={resource} />
-            ))}
-          </div>
-        </CompetitionDetailSection>
-      )}
     </div>
   );
 };
