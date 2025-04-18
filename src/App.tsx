@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import LandingPage from "./pages/LandingPage";
 import CompetitionsPage from "./pages/CompetitionsPage";
 import CompetitionDetailsPage from "./pages/CompetitionDetailsPage";
@@ -11,6 +12,7 @@ import CarpoolingPage from "./pages/CarpoolingPage";
 import NotFound from "./pages/NotFound";
 import HomePage from "./pages/HomePage";
 import ProfilePage from "./pages/ProfilePage";
+import { useIsMobile } from "./hooks/use-mobile";
 
 const queryClient = new QueryClient();
 
