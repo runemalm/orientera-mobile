@@ -68,7 +68,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, className }) => {
       href={file.url} 
       target="_blank" 
       rel="noopener noreferrer" 
-      className={`block transition-all hover:translate-x-1 duration-200 ${className}`}
+      className={`block ${className}`}
     >
       <div className="flex items-center p-4 bg-white rounded-lg hover:bg-gray-50 transition-colors border border-gray-100">
         <div className="mr-3 flex-shrink-0">{getFileIcon()}</div>
@@ -89,3 +89,4 @@ const FileItem: React.FC<FileItemProps> = ({ file, className }) => {
 };
 
 export default FileItem;
+

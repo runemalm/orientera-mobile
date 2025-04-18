@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Competition, ResourceType } from '../types';
 import { Users, Car } from 'lucide-react';
@@ -40,14 +41,14 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
         <div className="divide-y divide-gray-100">
           {/* Show Invitation first if it exists */}
           {invitation && (
-            <div className="hover:bg-gray-50">
+            <div>
               <FileItem file={invitation} />
             </div>
           )}
           
           {/* Show PM second if it exists */}
           {pm && (
-            <div className="hover:bg-gray-50">
+            <div>
               <FileItem file={pm} />
             </div>
           )}
@@ -55,7 +56,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
           {/* Participants */}
           <Link 
             to={`/competition/${competition.id}/participants`}
-            className="flex items-center justify-between p-4 hover:bg-gray-50"
+            className="flex items-center justify-between p-4"
           >
             <div className="flex items-center gap-3">
               <Users size={20} className="text-forest" />
@@ -71,7 +72,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
           {/* Club Participants */}
           <Link 
             to={`/competition/${competition.id}/club-participants`}
-            className="flex items-center justify-between p-4 hover:bg-gray-50"
+            className="flex items-center justify-between p-4"
           >
             <div className="flex items-center gap-3">
               <Users size={20} className="text-blue-600" />
@@ -87,7 +88,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
           {/* Carpooling */}
           <Link 
             to={`/competition/${competition.id}/carpooling`}
-            className="flex items-center justify-between p-4 hover:bg-gray-50"
+            className="flex items-center justify-between p-4"
           >
             <div className="flex items-center gap-3">
               <Car size={20} className="text-forest" />
@@ -102,7 +103,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
 
           {/* Other resources */}
           {otherResources && otherResources.map((resource) => (
-            <div key={resource.id} className="hover:bg-gray-50">
+            <div key={resource.id}>
               <FileItem file={resource} />
             </div>
           ))}
@@ -122,3 +123,4 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
 };
 
 export default CompetitionDetails;
+
