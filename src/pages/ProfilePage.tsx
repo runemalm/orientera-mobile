@@ -1,3 +1,4 @@
+
 import React from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { User, Flag, Settings } from 'lucide-react';
@@ -23,7 +24,7 @@ const ProfilePage: React.FC = () => {
             <div>
               <h3 className="font-medium">Tävlingar</h3>
               <p className="text-sm text-muted-foreground">
-                Hitta och anmäl dig till tävlingar i hela Sverige
+                Hitta tävlingar nära dig
               </p>
             </div>
           </div>
