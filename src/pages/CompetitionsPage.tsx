@@ -1,8 +1,9 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionCard from '../components/CompetitionCard';
-import { MapPin, Loader2, Filter } from 'lucide-react';
+import { MapPin, Loader2, Filter, Building, CalendarRange } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -199,30 +200,75 @@ const CompetitionsPage: React.FC = () => {
           <SheetHeader className="h-[3.5rem] flex flex-row items-center px-4 border-b">
             <SheetTitle className="flex-1 text-center">Filter</SheetTitle>
           </SheetHeader>
-          <div className="p-4">
-            <div className="space-y-6">
-              <div>
-                <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                  <MapPin className="h-5 w-5" />
-                  Plats
-                </h2>
-                
-                <div className="bg-white rounded-lg p-4 shadow-sm">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <MapPin className="h-4 w-4 text-muted-foreground" />
-                      <span>{userLocation?.city}</span>
-                    </div>
-                    <Button 
-                      variant="outline"
-                      onClick={() => navigate('/competitions/filters')}
-                    >
-                      Byt plats
-                    </Button>
+          <div className="p-4 space-y-4">
+            <div 
+              className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 space-y-4"
+              role="region"
+              aria-label="Location filter"
+            >
+              <div className="flex items-center gap-2 text-forest">
+                <MapPin className="h-5 w-5" />
+                <h2 className="font-semibold">Plats</h2>
+              </div>
+              <div className="bg-gray-50 rounded-lg p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <MapPin className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm">{userLocation?.city}</span>
                   </div>
+                  <Button 
+                    variant="outline"
+                    onClick={() => navigate('/competitions/filters')}
+                    className="text-forest hover:text-forest-dark border-forest hover:border-forest-dark"
+                  >
+                    Byt plats
+                  </Button>
                 </div>
               </div>
             </div>
+
+            <div 
+              className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 space-y-4"
+              role="region"
+              aria-label="Club filter"
+            >
+              <div className="flex items-center gap-2 text-forest">
+                <Building className="h-5 w-5" />
+                <h2 className="font-semibold">Klubb</h2>
+              </div>
+              <Button 
+                variant="outline" 
+                className="w-full justify-start text-left text-sm text-muted-foreground"
+                onClick={() => {}}
+              >
+                Välj klubbar
+              </Button>
+            </div>
+
+            <div 
+              className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 space-y-4"
+              role="region"
+              aria-label="Date filter"
+            >
+              <div className="flex items-center gap-2 text-forest">
+                <CalendarRange className="h-5 w-5" />
+                <h2 className="font-semibold">Datum</h2>
+              </div>
+              <Button 
+                variant="outline" 
+                className="w-full justify-start text-left text-sm text-muted-foreground"
+                onClick={() => {}}
+              >
+                Välj datum
+              </Button>
+            </div>
+
+            <Button 
+              className="w-full bg-forest hover:bg-forest-dark mt-4"
+              onClick={() => setFilterSheetOpen(false)}
+            >
+              Visa tävlingar
+            </Button>
           </div>
         </SheetContent>
       </Sheet>
