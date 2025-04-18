@@ -1,143 +1,22 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import LandingPage from "./pages/LandingPage";
-import CompetitionsPage from "./pages/CompetitionsPage";
-import CompetitionDetailsPage from "./pages/CompetitionDetailsPage";
-import ParticipantsPage from "./pages/ParticipantsPage";
-import ClubParticipantsPage from "./pages/ClubParticipantsPage";
-import StartTimesPage from "./pages/StartTimesPage";
-import DocumentsPage from "./pages/DocumentsPage";
-import CarpoolingPage from "./pages/CarpoolingPage";
-import NotFound from "./pages/NotFound";
-import HomePage from "./pages/HomePage";
-import ProfilePage from "./pages/ProfilePage";
-import { useIsMobile } from "./hooks/use-mobile";
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import CompetitionsPage from './pages/CompetitionsPage';
+import LocationOnboarding from './components/LocationOnboarding';
+import { useLocalStorage } from './hooks/useLocalStorage';
+import CompetitionFiltersPage from './pages/CompetitionFiltersPage';
 
-const queryClient = new QueryClient();
+const App = () => {
+  const [hasLocation, setHasLocation] = useLocalStorage('userLocation');
 
-const KeyboardShortcutHandler = () => {
-  const navigate = useNavigate();
-  const isMobile = useIsMobile();
-  const [touchCount, setTouchCount] = useState(0);
-  const [lastTouchTime, setLastTouchTime] = useState(0);
-  const [clickCount, setClickCount] = useState(0);
-  const [lastClickTime, setLastClickTime] = useState(0);
-  
-  const resetUserLocation = () => {
-    localStorage.removeItem('userLocation');
-  };
-  
-  const navigateAndResetLocation = () => {
-    resetUserLocation();
-    navigate('/landing');
-  };
-  
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.ctrlKey && event.altKey && event.key === 'l') {
-        navigateAndResetLocation();
-      }
-    };
-    
-    const handleTouchStart = (event: TouchEvent) => {
-      const touch = event.touches[0];
-      const screenWidth = window.innerWidth;
-      const screenHeight = window.innerHeight;
-      
-      if (touch.clientX > screenWidth * 0.8 && touch.clientY < screenHeight * 0.1) {
-        const currentTime = new Date().getTime();
-        const timeSinceLastTouch = currentTime - lastTouchTime;
-        
-        if (timeSinceLastTouch > 1500) {
-          setTouchCount(1);
-        } else {
-          setTouchCount(prev => prev + 1);
-        }
-        
-        const newCount = timeSinceLastTouch <= 1500 ? touchCount + 1 : 1;
-        if (newCount === 3 || newCount === 5) {
-          navigateAndResetLocation();
-          setTouchCount(0);
-        }
-        
-        setLastTouchTime(currentTime);
-      } else {
-        setTouchCount(0);
-      }
-    };
-    
-    const handleMouseClick = (event: MouseEvent) => {
-      const screenWidth = window.innerWidth;
-      const screenHeight = window.innerHeight;
-      
-      if (event.clientX > screenWidth * 0.8 && event.clientY < screenHeight * 0.1) {
-        const currentTime = new Date().getTime();
-        const timeSinceLastClick = currentTime - lastClickTime;
-        
-        if (timeSinceLastClick > 1500) {
-          setClickCount(1);
-        } else {
-          setClickCount(prev => prev + 1);
-        }
-        
-        const newCount = timeSinceLastClick <= 1500 ? clickCount + 1 : 1;
-        if (newCount === 3 || newCount === 5) {
-          navigateAndResetLocation();
-          setClickCount(0);
-        }
-        
-        setLastClickTime(currentTime);
-      } else {
-        setClickCount(0);
-      }
-    };
-    
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('click', handleMouseClick);
-    
-    if (isMobile) {
-      window.addEventListener('touchstart', handleTouchStart);
-    }
-    
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('click', handleMouseClick);
-      
-      if (isMobile) {
-        window.removeEventListener('touchstart', handleTouchStart);
-      }
-    };
-  }, [navigate, isMobile, touchCount, lastTouchTime, clickCount, lastClickTime]);
-  
-  return null;
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={hasLocation ? <CompetitionsPage /> : <LocationOnboarding isOpen={!hasLocation} onComplete={() => setHasLocation(true)} />} />
+        <Route path="/competitions" element={<CompetitionsPage />} />
+        <Route path="/competitions/filters" element={<CompetitionFiltersPage />} />
+      </Routes>
+    </Router>
+  );
 };
-
-const RouterSetup = () => (
-  <>
-    <Routes>
-      <Route path="/" element={<Navigate to="/home" replace />} />
-      <Route path="/home" element={<HomePage />} />
-      <Route path="/competitions" element={<CompetitionsPage />} />
-      <Route path="/profile" element={<ProfilePage />} />
-      <Route path="/competition/:competitionId" element={<CompetitionDetailsPage />} />
-      <Route path="/competition/:competitionId/participants" element={<ParticipantsPage />} />
-      <Route path="/competition/:competitionId/club-participants" element={<ClubParticipantsPage />} />
-      <Route path="/competition/:competitionId/start-times" element={<StartTimesPage />} />
-      <Route path="/competition/:competitionId/documents" element={<DocumentsPage />} />
-      <Route path="/competition/:competitionId/carpooling" element={<CarpoolingPage />} />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
-    <KeyboardShortcutHandler />
-  </>
-);
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <BrowserRouter>
-      <RouterSetup />
-    </BrowserRouter>
-  </QueryClientProvider>
-);
 
 export default App;

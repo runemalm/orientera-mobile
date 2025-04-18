@@ -12,22 +12,13 @@ import PullToRefresh from '../components/PullToRefresh';
 import { toast } from '@/hooks/use-toast';
 import { calculateDistance } from '../utils/distanceUtils';
 import { toSwedishTime } from '../utils/dateUtils';
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-} from '@/components/ui/drawer';
-import LocationInputForm from '../components/LocationInputForm';
 
 const CompetitionsPage: React.FC = () => {
   const navigate = useNavigate();
-  const { userLocation, updateUserLocation, isLoading: isLoadingLocation } = useUserLocation();
+  const { userLocation, isLoading: isLoadingLocation } = useUserLocation();
   const [competitions, setCompetitions] = useState<CompetitionSummary[]>([]);
   const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showFilterDrawer, setShowFilterDrawer] = useState(false);
-  const [keyboardVisible, setKeyboardVisible] = React.useState(false);
 
   const fetchCompetitions = useCallback(async () => {
     if (!userLocation) return;
@@ -90,29 +81,6 @@ const CompetitionsPage: React.FC = () => {
     }
   }, [userLocation, fetchCompetitions]);
 
-  const handleUpdateLocation = (location: { city: string; latitude: number; longitude: number }) => {
-    updateUserLocation(location);
-    setShowFilterDrawer(false);
-    fetchCompetitions();
-  };
-
-  React.useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const handleVisualViewportResize = () => {
-        const newKeyboardVisible = window.visualViewport && 
-          window.visualViewport.height < window.innerHeight * 0.75;
-        setKeyboardVisible(newKeyboardVisible);
-      };
-      
-      if (window.visualViewport) {
-        window.visualViewport.addEventListener('resize', handleVisualViewportResize);
-        return () => {
-          window.visualViewport.removeEventListener('resize', handleVisualViewportResize);
-        };
-      }
-    }
-  }, []);
-
   const handleRefresh = async () => {
     try {
       await fetchCompetitions();
@@ -143,7 +111,7 @@ const CompetitionsPage: React.FC = () => {
             <MapPin size={32} className="text-forest mx-auto mb-2" />
             <h2 className="text-lg font-medium mb-4">Sätt din plats för att se tävlingar</h2>
             <Button 
-              onClick={() => setShowFilterDrawer(true)}
+              onClick={() => navigate('/competitions/filters')}
               className="bg-forest hover:bg-forest-dark"
             >
               Välj plats
@@ -202,41 +170,23 @@ const CompetitionsPage: React.FC = () => {
   };
 
   return (
-    <>
-      <MobileLayout 
-        title="Tävlingar i närheten" 
-        action={
-          <Button 
-            variant="ghost" 
-            size="icon"
-            onClick={() => setShowFilterDrawer(true)}
-            className="relative"
-          >
-            <Filter className="h-[1.2rem] w-[1.2rem]" />
-          </Button>
-        }
-      >
-        <div className="mt-4 px-4">
-          {renderContent()}
-        </div>
-      </MobileLayout>
-
-      <Drawer open={showFilterDrawer} onOpenChange={setShowFilterDrawer}>
-        <DrawerContent>
-          <div className={`${keyboardVisible ? 'pb-24' : ''}`}>
-            <DrawerHeader className="text-left">
-              <DrawerTitle>Välj plats</DrawerTitle>
-            </DrawerHeader>
-            <div className="px-4 pb-8">
-              <LocationInputForm 
-                onLocationSelected={handleUpdateLocation}
-                onCancel={() => setShowFilterDrawer(false)}
-              />
-            </div>
-          </div>
-        </DrawerContent>
-      </Drawer>
-    </>
+    <MobileLayout 
+      title="Tävlingar i närheten" 
+      action={
+        <Button 
+          variant="ghost" 
+          size="icon"
+          onClick={() => navigate('/competitions/filters')}
+          className="relative"
+        >
+          <Filter className="h-[1.2rem] w-[1.2rem]" />
+        </Button>
+      }
+    >
+      <div className="mt-4 px-4">
+        {renderContent()}
+      </div>
+    </MobileLayout>
   );
 };
 
