@@ -45,9 +45,13 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
     // Create a map instance centered on the competition coordinates
     const map = L.map(mapRef.current, {
       center: [coordinates.lat, coordinates.lng],
-      zoom: 11, // Changed from 13 to 11 for a more zoomed out view
+      zoom: 11,
       zoomControl: false,
-      attributionControl: false
+      attributionControl: false,
+      doubleClickZoom: false,  // Disable double-click zoom
+      scrollWheelZoom: false,  // Disable scroll wheel zoom
+      boxZoom: false,          // Disable box zoom
+      touchZoom: false         // Disable touch-based zooming
     });
     
     // Save the map instance for cleanup
@@ -82,7 +86,7 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
     // Ensure the map is centered on the marker coordinates and revalidate size
     setTimeout(() => {
       map.invalidateSize();
-      map.setView([coordinates.lat, coordinates.lng], 11); // Changed from 13 to 11 for a more zoomed out view
+      map.setView([coordinates.lat, coordinates.lng], 11);
     }, 100);
     
     // After the marker is added, we can render our React component into the container
