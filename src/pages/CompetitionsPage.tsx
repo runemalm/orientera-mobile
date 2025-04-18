@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Filter, Loader2, MapPin, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -8,13 +9,19 @@ import { getNearbyCompetitions } from '../services/api';
 import { toast } from '@/hooks/use-toast';
 import CompetitionList from '../components/competition/CompetitionList';
 import CompetitionFilters from '../components/competition/CompetitionFilters';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import PullToRefresh from '../components/PullToRefresh';
+
+// Store competitions in memory to persist between navigations
+let cachedCompetitions: CompetitionSummary[] = [];
 
 const CompetitionsPage: React.FC = () => {
   const { userLocation, isLoading: isLoadingLocation } = useUserLocation();
-  const [competitions, setCompetitions] = useState<CompetitionSummary[]>([]);
-  const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(false);
+  const [competitions, setCompetitions] = useState<CompetitionSummary[]>(cachedCompetitions);
+  const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(cachedCompetitions.length === 0);
   const [error, setError] = useState<string | null>(null);
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
+  const initialFetchCompleted = useRef(false);
 
   const fetchCompetitions = useCallback(async () => {
     if (!userLocation) return;
@@ -23,7 +30,7 @@ const CompetitionsPage: React.FC = () => {
     setError(null);
     
     const fromDate = new Date();
-    fromDate.setDate(fromDate.getDate() - 1); // 1 day before today instead of 2
+    fromDate.setDate(fromDate.getDate() - 1); // 1 day before today
     
     const toDate = new Date();
     toDate.setMonth(toDate.getMonth() + 1); // 1 month ahead
@@ -40,6 +47,8 @@ const CompetitionsPage: React.FC = () => {
       );
       
       setCompetitions(result);
+      // Update the cache
+      cachedCompetitions = result;
     } catch (err) {
       console.error('Error fetching competitions:', err);
       setError('Det gick inte att hämta tävlingar. Försök igen senare.');
@@ -49,8 +58,10 @@ const CompetitionsPage: React.FC = () => {
   }, [userLocation]);
 
   useEffect(() => {
-    if (userLocation) {
+    // Only fetch if we have location and haven't already done initial fetch or cache is empty
+    if (userLocation && (!initialFetchCompleted.current || cachedCompetitions.length === 0)) {
       fetchCompetitions();
+      initialFetchCompleted.current = true;
     }
   }, [userLocation, fetchCompetitions]);
 
@@ -97,7 +108,7 @@ const CompetitionsPage: React.FC = () => {
   };
 
   const renderContent = () => {
-    if (isLoadingLocation || isLoadingCompetitions) {
+    if (isLoadingLocation || (isLoadingCompetitions && competitions.length === 0)) {
       return (
         <div className="flex flex-col justify-center items-center h-[70vh]">
           <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
@@ -148,12 +159,16 @@ const CompetitionsPage: React.FC = () => {
     return (
       <>
         {renderFilterSection()}
-        <div className="p-4">
-          <CompetitionList 
-            competitions={competitions} 
-            userLocation={userLocation}
-          />
-        </div>
+        <ScrollArea className="h-[calc(100vh-10rem)]">
+          <PullToRefresh onRefresh={handleRefresh}>
+            <div className="p-4">
+              <CompetitionList 
+                competitions={competitions} 
+                userLocation={userLocation}
+              />
+            </div>
+          </PullToRefresh>
+        </ScrollArea>
       </>
     );
   };
