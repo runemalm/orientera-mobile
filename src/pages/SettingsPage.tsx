@@ -45,16 +45,6 @@ const SettingsPage: React.FC = () => {
             </div>
           </div>
         </div>
-
-        <div className="text-sm text-gray-500">
-          Här kommer det snart finnas inställningar för:
-          <ul className="list-disc list-inside mt-2 space-y-1">
-            <li>Radie för närliggande tävlingar</li>
-            <li>Notifikationer</li>
-            <li>Standardklasser</li>
-            <li>Och mer...</li>
-          </ul>
-        </div>
       </div>
 
       <Drawer open={showLocationInput} onOpenChange={setShowLocationInput}>
