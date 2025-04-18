@@ -12,6 +12,8 @@ const BottomTabBar: React.FC = () => {
   const isCompetitionRelated = 
     currentPath === '/competitions' || 
     currentPath.startsWith('/competition/');
+    
+  const isHome = currentPath === '/home' || currentPath === '/';
 
   const tabs: { name: TabName; icon: React.ReactNode; label: string; path: string }[] = [
     {
@@ -47,7 +49,8 @@ const BottomTabBar: React.FC = () => {
           key={tab.name}
           className={`flex flex-col items-center justify-center w-full py-2 ${
             (tab.name === 'competitions' && isCompetitionRelated) ||
-            (tab.path === currentPath)
+            (tab.name === 'home' && isHome) ||
+            (tab.path === currentPath && tab.name !== 'home' && tab.name !== 'competitions')
               ? 'text-primary font-medium'
               : 'text-gray-500'
           }`}
