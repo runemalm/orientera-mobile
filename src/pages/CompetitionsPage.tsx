@@ -82,27 +82,7 @@ const CompetitionsPage: React.FC = () => {
   };
 
   const renderFilterSection = () => {
-    if (!userLocation) return null;
-
-    return (
-      <div className="bg-white p-4 shadow-sm border-b">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <MapPin className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground">{userLocation.city}</span>
-          </div>
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => setFilterDrawerOpen(true)}
-            className="text-xs"
-          >
-            <Filter className="h-3 w-3 mr-1" />
-            Filter
-          </Button>
-        </div>
-      </div>
-    );
+    return null;
   };
 
   const renderContent = () => {
