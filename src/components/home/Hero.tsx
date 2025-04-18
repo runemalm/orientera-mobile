@@ -1,14 +1,11 @@
 
 import React from 'react';
 import { Compass } from 'lucide-react';
-import { useIsMobile } from '@/hooks/use-mobile';
 
 const Hero: React.FC = () => {
-  const isMobile = useIsMobile();
-
   return (
     <div className="flex items-center justify-center w-full py-8">
-      <div className={`flex ${isMobile ? 'flex-row gap-6' : 'flex-col gap-8'} items-center max-w-sm`}>
+      <div className="flex flex-col gap-8 items-center max-w-sm">
         <div className="relative">
           <div className="w-24 h-24 bg-gradient-to-br from-primary/20 to-primary/5 rounded-full flex items-center justify-center shrink-0">
             <Compass className="w-12 h-12 text-primary" />
