@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
-import { Loader2, Settings } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { CompetitionSummary } from '../types';
 import { getNearbyCompetitions } from '../services/api';
@@ -82,13 +81,9 @@ const CompetitionsPage: React.FC = () => {
     return (
       <Tabs defaultValue="all" className="w-full" onValueChange={setSelectedTab}>
         <div className="px-4">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="all">Alla</TabsTrigger>
             <TabsTrigger value="favorites">Favoriter</TabsTrigger>
-            <TabsTrigger value="settings" className="flex items-center gap-2">
-              <Settings className="h-4 w-4" />
-              Inställningar
-            </TabsTrigger>
           </TabsList>
         </div>
 
@@ -108,23 +103,6 @@ const CompetitionsPage: React.FC = () => {
             <div className="p-4">
               <div className="text-center py-8 text-gray-500">
                 Favoriter kommer snart
-              </div>
-            </div>
-          </ScrollArea>
-        </TabsContent>
-
-        <TabsContent value="settings">
-          <ScrollArea className="h-[calc(100vh-14rem)]">
-            <div className="p-4 space-y-4">
-              <h2 className="text-lg font-semibold">Inställningar</h2>
-              <div className="text-sm text-gray-500">
-                Här kommer det snart finnas inställningar för:
-                <ul className="list-disc list-inside mt-2 space-y-1">
-                  <li>Radie för närliggande tävlingar</li>
-                  <li>Notifikationer</li>
-                  <li>Standardklasser</li>
-                  <li>Och mer...</li>
-                </ul>
               </div>
             </div>
           </ScrollArea>
