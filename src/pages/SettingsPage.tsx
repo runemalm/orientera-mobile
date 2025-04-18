@@ -35,19 +35,36 @@ const SettingsPage: React.FC = () => {
   });
   const navigate = useNavigate();
 
+  // Helper function to ensure we're working with Date objects
+  const handleDateSelection = (field: 'from' | 'to', date: Date | undefined) => {
+    setDateRange({ 
+      ...dateRange, 
+      [field]: date 
+    });
+  };
+
   const handleLocationUpdate = (location: { city: string; latitude: number; longitude: number }) => {
     updateUserLocation(location);
     setShowLocationInput(false);
   };
 
   const handleApplyFilters = () => {
-    // Save the filters to local storage is already done by the useLocalStorage hook
-    // Navigate to competitions page for immediate feedback
     navigate('/competitions');
     toast({
       title: "Filter uppdaterade",
       description: "Tävlingslistan har uppdaterats med dina valda datumfilter.",
     });
+  };
+
+  // Ensure dates from localStorage are converted to Date objects for display
+  const getFromDate = () => {
+    if (!dateRange.from) return undefined;
+    return dateRange.from instanceof Date ? dateRange.from : new Date(dateRange.from);
+  };
+
+  const getToDate = () => {
+    if (!dateRange.to) return undefined;
+    return dateRange.to instanceof Date ? dateRange.to : new Date(dateRange.to);
   };
 
   return (
@@ -98,7 +115,7 @@ const SettingsPage: React.FC = () => {
                     >
                       <Calendar className="mr-2 h-4 w-4" />
                       {dateRange.from ? (
-                        formatSwedishDate(dateRange.from, 'PPP')
+                        formatSwedishDate(getFromDate(), 'PPP')
                       ) : (
                         <span>Välj startdatum</span>
                       )}
@@ -107,8 +124,8 @@ const SettingsPage: React.FC = () => {
                   <PopoverContent className="w-auto p-0" align="start">
                     <CalendarComponent
                       mode="single"
-                      selected={dateRange.from}
-                      onSelect={(date) => setDateRange({ ...dateRange, from: date })}
+                      selected={getFromDate()}
+                      onSelect={(date) => handleDateSelection('from', date)}
                       initialFocus
                       className={cn("p-3 pointer-events-auto")}
                     />
@@ -130,7 +147,7 @@ const SettingsPage: React.FC = () => {
                     >
                       <Calendar className="mr-2 h-4 w-4" />
                       {dateRange.to ? (
-                        formatSwedishDate(dateRange.to, 'PPP')
+                        formatSwedishDate(getToDate(), 'PPP')
                       ) : (
                         <span>Välj slutdatum</span>
                       )}
@@ -139,10 +156,10 @@ const SettingsPage: React.FC = () => {
                   <PopoverContent className="w-auto p-0" align="start">
                     <CalendarComponent
                       mode="single"
-                      selected={dateRange.to}
-                      onSelect={(date) => setDateRange({ ...dateRange, to: date })}
+                      selected={getToDate()}
+                      onSelect={(date) => handleDateSelection('to', date)}
                       disabled={(date) => 
-                        dateRange.from && date < dateRange.from
+                        dateRange.from && date < getFromDate()!
                       }
                       initialFocus
                       className={cn("p-3 pointer-events-auto")}

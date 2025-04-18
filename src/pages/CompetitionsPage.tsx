@@ -30,8 +30,8 @@ const CompetitionsPage: React.FC = () => {
 
   // Force refetch when date filters change
   const dateFilterSignature = JSON.stringify({
-    from: dateRange.from?.toISOString(),
-    to: dateRange.to?.toISOString()
+    from: dateRange.from ? (dateRange.from instanceof Date ? dateRange.from.toISOString() : new Date(dateRange.from).toISOString()) : undefined,
+    to: dateRange.to ? (dateRange.to instanceof Date ? dateRange.to.toISOString() : new Date(dateRange.to).toISOString()) : undefined
   });
 
   const fetchCompetitions = useCallback(async () => {
@@ -40,16 +40,22 @@ const CompetitionsPage: React.FC = () => {
     setIsLoadingCompetitions(true);
     setError(null);
     
-    // Use date filters from settings if available, otherwise use default dates
-    const fromDate = dateRange.from || new Date();
-    if (!dateRange.from) {
+    // Convert date strings to Date objects if needed
+    let fromDate: Date | undefined;
+    if (dateRange.from) {
+      fromDate = dateRange.from instanceof Date ? dateRange.from : new Date(dateRange.from);
+    } else {
       // If no from date is set, use yesterday as default
+      fromDate = new Date();
       fromDate.setDate(fromDate.getDate() - 1);
     }
     
-    const toDate = dateRange.to || new Date();
-    if (!dateRange.to) {
+    let toDate: Date | undefined;
+    if (dateRange.to) {
+      toDate = dateRange.to instanceof Date ? dateRange.to : new Date(dateRange.to);
+    } else {
       // If no to date is set, use one month ahead as default
+      toDate = new Date();
       toDate.setMonth(toDate.getMonth() + 1);
     }
     
