@@ -5,7 +5,6 @@ import CompetitionsPage from './pages/CompetitionsPage';
 import HomePage from './pages/HomePage';
 import LocationOnboarding from './components/LocationOnboarding';
 import { useLocalStorage } from './hooks/useLocalStorage';
-import CompetitionFiltersPage from './pages/CompetitionFiltersPage';
 import ProfilePage from './pages/ProfilePage';
 import CompetitionDetailsPage from './pages/CompetitionDetailsPage';
 
@@ -18,7 +17,6 @@ const App = () => {
         <Route path="/" element={hasLocation ? <Navigate to="/home" /> : <LocationOnboarding isOpen={!hasLocation} onComplete={() => setHasLocation(true)} />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/competitions" element={<CompetitionsPage />} />
-        <Route path="/competitions/filters" element={<CompetitionFiltersPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/competition/:competitionId" element={<CompetitionDetailsPage />} />
       </Routes>

@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 
-interface UserLocation {
+export interface UserLocation {
   city: string;
   latitude: number;
   longitude: number;
