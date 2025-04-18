@@ -7,6 +7,9 @@ import LocationOnboarding from './components/LocationOnboarding';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import ProfilePage from './pages/ProfilePage';
 import CompetitionDetailsPage from './pages/CompetitionDetailsPage';
+import ParticipantsPage from './pages/ParticipantsPage';
+import ClubParticipantsPage from './pages/ClubParticipantsPage';
+import CarpoolingPage from './pages/CarpoolingPage';
 
 const App = () => {
   const [hasLocation, setHasLocation] = useLocalStorage<boolean>('userLocation', false);
@@ -19,6 +22,9 @@ const App = () => {
         <Route path="/competitions" element={<CompetitionsPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/competition/:competitionId" element={<CompetitionDetailsPage />} />
+        <Route path="/competition/:competitionId/participants" element={<ParticipantsPage />} />
+        <Route path="/competition/:competitionId/club-participants" element={<ClubParticipantsPage />} />
+        <Route path="/competition/:competitionId/carpooling" element={<CarpoolingPage />} />
       </Routes>
     </Router>
   );
