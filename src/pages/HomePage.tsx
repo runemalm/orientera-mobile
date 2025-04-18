@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { MapPin, ArrowRight } from 'lucide-react';
+import { Compass, ArrowRight } from 'lucide-react';
 import MobileLayout from '../components/layout/MobileLayout';
 
 const HomePage: React.FC = () => {
@@ -14,42 +14,31 @@ const HomePage: React.FC = () => {
 
   return (
     <MobileLayout title="Hem">
-      <div className="flex flex-col min-h-[80vh] justify-center p-6 space-y-8">
-        <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold text-primary">
-            Hitta tävlingar
-          </h1>
-          <p className="text-xl text-gray-600">
-            Upptäck orienteringstävlingar nära dig
-          </p>
-        </div>
+      <div className="flex flex-col items-center justify-between min-h-[80vh] p-6">
+        {/* Hero Section */}
+        <div className="flex-1 flex flex-col items-center justify-center w-full space-y-8">
+          <div className="w-20 h-20 bg-gradient-to-br from-primary/20 to-primary/5 rounded-full flex items-center justify-center mb-4">
+            <Compass className="w-10 h-10 text-primary" />
+          </div>
 
-        <div className="flex justify-center">
-          <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
-            <MapPin className="w-8 h-8 text-primary" />
+          <div className="text-center space-y-3 max-w-sm">
+            <h1 className="text-3xl font-bold tracking-tight">
+              Upptäck orienterings­tävlingar i närheten
+            </h1>
+            <p className="text-muted-foreground">
+              Ett enkelt sätt att hitta ditt nästa äventyr i skogen
+            </p>
           </div>
         </div>
 
-        <div className="space-y-6">
-          <ul className="space-y-3">
-            {[
-              'Se kommande tävlingar i ditt område',
-              'Direkt information om alla event',
-              'Enkel översikt av tävlingsdetaljer'
-            ].map((feature, index) => (
-              <li key={index} className="flex items-center gap-3">
-                <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                <span className="text-gray-600">{feature}</span>
-              </li>
-            ))}
-          </ul>
-
+        {/* CTA Section */}
+        <div className="w-full mt-8">
           <Button 
             onClick={handleFindCompetitions} 
-            className="w-full py-6 text-lg shadow-lg hover:scale-105 transition-transform duration-200 group"
+            className="w-full py-7 text-lg font-medium rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200"
           >
-            Hitta tävlingar nära dig
-            <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            Visa tävlingar
+            <ArrowRight className="ml-2 w-5 h-5" />
           </Button>
         </div>
       </div>
