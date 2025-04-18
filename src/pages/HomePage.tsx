@@ -15,10 +15,10 @@ const HomePage: React.FC = () => {
 
   return (
     <MobileLayout title="Hem">
-      <div className="flex flex-col items-center min-h-full space-y-12">
+      <div className="flex flex-col items-center min-h-full space-y-6 py-4">
         <Hero />
         <Features />
-        <div className="mt-auto pb-8">
+        <div className="mt-auto">
           <CallToAction onAction={handleFindCompetitions} />
         </div>
       </div>
