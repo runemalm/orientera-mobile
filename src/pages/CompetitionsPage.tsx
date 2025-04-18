@@ -1,12 +1,11 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
-import { Filter, Loader2, MapPin, CalendarRange } from 'lucide-react';
+import { Filter, Loader2, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { CompetitionSummary } from '../types';
 import { getNearbyCompetitions } from '../services/api';
-import { addDays, addMonths, format, isAfter, isBefore, parseISO } from 'date-fns';
 import PullToRefresh from '../components/PullToRefresh';
 import { toast } from '@/hooks/use-toast';
 import CompetitionList from '../components/competition/CompetitionList';
@@ -15,19 +14,9 @@ import CompetitionFilters from '../components/competition/CompetitionFilters';
 const CompetitionsPage: React.FC = () => {
   const { userLocation, isLoading: isLoadingLocation } = useUserLocation();
   const [competitions, setCompetitions] = useState<CompetitionSummary[]>([]);
-  const [filteredCompetitions, setFilteredCompetitions] = useState<CompetitionSummary[]>([]);
   const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
-  
-  // Filter states
-  const [dateRange, setDateRange] = useState<{
-    from: Date;
-    to: Date;
-  }>({
-    from: new Date(),
-    to: addMonths(new Date(), 2),
-  });
 
   const fetchCompetitions = useCallback(async () => {
     if (!userLocation) return;
@@ -40,43 +29,24 @@ const CompetitionsPage: React.FC = () => {
         userLocation.latitude, 
         userLocation.longitude,
         {
-          from: dateRange.from,
-          to: dateRange.to,
           limit: 50
         }
       );
       
       setCompetitions(result);
-      setFilteredCompetitions(result);
     } catch (err) {
       console.error('Error fetching competitions:', err);
       setError('Det gick inte att hämta tävlingar. Försök igen senare.');
     } finally {
       setIsLoadingCompetitions(false);
     }
-  }, [userLocation, dateRange]);
+  }, [userLocation]);
 
   useEffect(() => {
     if (userLocation) {
       fetchCompetitions();
     }
   }, [userLocation, fetchCompetitions]);
-
-  // Apply filters whenever competitions or filter values change
-  useEffect(() => {
-    if (competitions.length === 0) return;
-
-    // Apply date range filter
-    const filtered = competitions.filter(competition => {
-      const competitionDate = parseISO(competition.date);
-      return (
-        isAfter(competitionDate, dateRange.from) && 
-        isBefore(competitionDate, dateRange.to)
-      );
-    });
-
-    setFilteredCompetitions(filtered);
-  }, [competitions, dateRange]);
 
   const handleRefresh = async () => {
     try {
@@ -91,9 +61,9 @@ const CompetitionsPage: React.FC = () => {
     }
   };
 
-  const handleApplyFilters = (newDateRange: { from: Date; to: Date }) => {
-    setDateRange(newDateRange);
+  const handleApplyFilters = () => {
     setFilterDrawerOpen(false);
+    fetchCompetitions();
   };
 
   const renderContent = () => {
@@ -148,23 +118,15 @@ const CompetitionsPage: React.FC = () => {
     return (
       <div>
         <div className="mb-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1.5">
-              <MapPin className="h-4 w-4 text-forest" />
-              <span className="text-sm font-medium">{userLocation.city}</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <CalendarRange className="h-4 w-4 text-forest" />
-              <span className="text-sm font-medium">
-                {format(dateRange.from, 'd MMM')} - {format(dateRange.to, 'd MMM')}
-              </span>
-            </div>
+          <div className="flex items-center gap-1.5">
+            <MapPin className="h-4 w-4 text-forest" />
+            <span className="text-sm font-medium">{userLocation.city}</span>
           </div>
         </div>
 
         <PullToRefresh onRefresh={handleRefresh}>
           <CompetitionList 
-            competitions={filteredCompetitions} 
+            competitions={competitions} 
             userLocation={userLocation}
           />
         </PullToRefresh>
@@ -194,7 +156,6 @@ const CompetitionsPage: React.FC = () => {
         open={filterDrawerOpen}
         onOpenChange={setFilterDrawerOpen}
         onApplyFilters={handleApplyFilters}
-        initialDateRange={dateRange}
       />
     </MobileLayout>
   );
