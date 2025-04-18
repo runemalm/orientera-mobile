@@ -8,13 +8,15 @@ interface MobileLayoutProps {
   title: string;
   showBackButton?: boolean;
   hideBottomTabs?: boolean;
+  action?: React.ReactNode;
 }
 
 const MobileLayout: React.FC<MobileLayoutProps> = ({ 
   children, 
   title, 
   showBackButton = false, 
-  hideBottomTabs = false 
+  hideBottomTabs = false,
+  action
 }) => {
   const handleBack = () => {
     window.history.back();
@@ -25,7 +27,8 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
       <TopNavBar 
         title={title} 
         showBackButton={showBackButton} 
-        onBack={handleBack} 
+        onBack={handleBack}
+        action={action}
       />
       
       <main 

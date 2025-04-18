@@ -6,9 +6,10 @@ interface TopNavBarProps {
   title: string;
   showBackButton?: boolean;
   onBack?: () => void;
+  action?: React.ReactNode;
 }
 
-const TopNavBar: React.FC<TopNavBarProps> = ({ title, showBackButton = false, onBack }) => {
+const TopNavBar: React.FC<TopNavBarProps> = ({ title, showBackButton = false, onBack, action }) => {
   return (
     <div className="top-nav flex items-center justify-between px-4">
       <div className="flex items-center gap-2">
@@ -29,7 +30,9 @@ const TopNavBar: React.FC<TopNavBarProps> = ({ title, showBackButton = false, on
         <h1 className="text-lg font-semibold">{title || "orientera.com"}</h1>
       </div>
       
-      {/* Menu button removed */}
+      <div className="flex items-center">
+        {action}
+      </div>
     </div>
   );
 };
