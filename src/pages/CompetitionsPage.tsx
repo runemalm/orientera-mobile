@@ -24,11 +24,20 @@ const CompetitionsPage: React.FC = () => {
     setIsLoadingCompetitions(true);
     setError(null);
     
+    // Calculate date range
+    const fromDate = new Date();
+    fromDate.setDate(fromDate.getDate() - 3); // 3 days before today
+    
+    const toDate = new Date();
+    toDate.setMonth(toDate.getMonth() + 1); // 1 month ahead
+    
     try {
       const result = await getNearbyCompetitions(
         userLocation.latitude, 
         userLocation.longitude,
         {
+          from: fromDate,
+          to: toDate,
           limit: 50
         }
       );
