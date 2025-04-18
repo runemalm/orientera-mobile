@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { MapPin, Info, Settings } from 'lucide-react';
+import { MapPin, Info, Settings, Home, User } from 'lucide-react';
 import { TabName } from '../../types';
 
 const BottomTabBar: React.FC = () => {
@@ -12,6 +12,12 @@ const BottomTabBar: React.FC = () => {
   const isCompetitionRelated = currentPath.startsWith('/competition/');
 
   const tabs: { name: TabName; icon: React.ReactNode; label: string; path: string }[] = [
+    {
+      name: 'home',
+      icon: <Home size={24} />,
+      label: 'Hem',
+      path: '/home'
+    },
     {
       name: 'competitions',
       icon: <MapPin size={24} />,
@@ -29,6 +35,12 @@ const BottomTabBar: React.FC = () => {
       icon: <Info size={24} />,
       label: 'Om',
       path: '/info'
+    },
+    {
+      name: 'profile',
+      icon: <User size={24} />,
+      label: 'Profil',
+      path: '/profile'
     }
   ];
 
