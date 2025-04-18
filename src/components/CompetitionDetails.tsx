@@ -14,6 +14,13 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
   // Format date using Swedish timezone
   const formattedDate = formatSwedishDate(competition.date, 'EEEE d MMMM yyyy');
   
+  // Find invitation and PM documents
+  const invitation = competition.resources?.find(r => r.type === ResourceType.Invitation);
+  const pm = competition.resources?.find(r => r.type === ResourceType.PM);
+  const otherResources = competition.resources?.filter(r => 
+    r.type !== ResourceType.Invitation && r.type !== ResourceType.PM
+  );
+  
   return (
     <div className="space-y-6">
       {/* Competition header - redesigned with more visual appeal */}
@@ -30,6 +37,21 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
       {/* Info panel with all sections including documents */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-100">
         <div className="divide-y divide-gray-100">
+          {/* Show Invitation first if it exists */}
+          {invitation && (
+            <div className="hover:bg-gray-50">
+              <FileItem file={invitation} />
+            </div>
+          )}
+          
+          {/* Show PM second if it exists */}
+          {pm && (
+            <div className="hover:bg-gray-50">
+              <FileItem file={pm} />
+            </div>
+          )}
+
+          {/* Participants */}
           <Link 
             to={`/competition/${competition.id}/participants`}
             className="flex items-center justify-between p-4 hover:bg-gray-50"
@@ -45,6 +67,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
             </div>
           </Link>
           
+          {/* Club Participants */}
           <Link 
             to={`/competition/${competition.id}/club-participants`}
             className="flex items-center justify-between p-4 hover:bg-gray-50"
@@ -60,6 +83,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
             </div>
           </Link>
           
+          {/* Carpooling */}
           <Link 
             to={`/competition/${competition.id}/carpooling`}
             className="flex items-center justify-between p-4 hover:bg-gray-50"
@@ -75,14 +99,12 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
             </div>
           </Link>
 
-          {/* Documents section - now integrated into the same panel */}
-          {competition.resources && competition.resources.length > 0 && (
-            competition.resources.map((resource) => (
-              <div key={resource.id} className="hover:bg-gray-50">
-                <FileItem file={resource} />
-              </div>
-            ))
-          )}
+          {/* Other resources */}
+          {otherResources && otherResources.map((resource) => (
+            <div key={resource.id} className="hover:bg-gray-50">
+              <FileItem file={resource} />
+            </div>
+          ))}
         </div>
       </div>
     </div>
