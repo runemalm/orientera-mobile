@@ -11,93 +11,90 @@ const ProfilePage: React.FC = () => {
 
   return (
     <MobileLayout title="Profil">
-      <div className="p-4 space-y-8">
-        {/* Profile Header with gradient background */}
-        <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-primary/30 to-accent/40">
-          <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
-          <div className="relative flex flex-col items-center justify-center py-10 px-4 text-center">
-            <div className="w-24 h-24 bg-white rounded-full shadow-lg flex items-center justify-center mb-4 border-4 border-white">
-              <UserRound className="w-12 h-12 text-primary" />
+      <div className="p-3 space-y-4">
+        {/* Compact Profile Header */}
+        <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-primary/20 to-accent/30">
+          <div className="relative flex items-center justify-center py-6 px-3">
+            <div className="w-16 h-16 bg-white rounded-full shadow-md flex items-center justify-center mb-2 border-2 border-white">
+              <UserRound className="w-8 h-8 text-primary" />
             </div>
-            <h2 className="text-xl font-bold mt-3">Välkommen!</h2>
-            <p className="text-sm text-muted-foreground mt-1">
-              Logga in för att se din profil
-            </p>
+            <div className="ml-4 text-left">
+              <h2 className="text-lg font-semibold">Välkommen!</h2>
+              <p className="text-xs text-muted-foreground">
+                Logga in för att se din profil
+              </p>
+            </div>
           </div>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-2 gap-4">
-          <Card className="p-4 bg-secondary/10 border-none shadow-sm">
-            <div className="flex flex-col items-center">
-              <Compass className="h-8 w-8 text-secondary mb-2" />
-              <h3 className="font-semibold">0</h3>
-              <p className="text-xs text-muted-foreground">Tävlingar</p>
+        <div className="grid grid-cols-2 gap-3">
+          <Card className="p-3 bg-secondary/10 border-none shadow-sm">
+            <div className="flex items-center space-x-3">
+              <Compass className="h-6 w-6 text-secondary" />
+              <div>
+                <p className="text-xs text-muted-foreground">Tävlingar</p>
+                <p className="font-semibold">0</p>
+              </div>
             </div>
           </Card>
           
-          <Card className="p-4 bg-primary/10 border-none shadow-sm">
-            <div className="flex flex-col items-center">
-              <Award className="h-8 w-8 text-primary mb-2" />
-              <h3 className="font-semibold">0</h3>
-              <p className="text-xs text-muted-foreground">Resultat</p>
+          <Card className="p-3 bg-primary/10 border-none shadow-sm">
+            <div className="flex items-center space-x-3">
+              <Award className="h-6 w-6 text-primary" />
+              <div>
+                <p className="text-xs text-muted-foreground">Resultat</p>
+                <p className="font-semibold">0</p>
+              </div>
             </div>
           </Card>
         </div>
 
         {/* Quick Links */}
         <Card className="overflow-hidden border-none shadow-sm divide-y">
-          <div className="p-5 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <MapPin className="text-primary w-5 h-5" />
-              <div>
-                <h3 className="font-medium">Klubb</h3>
-                <p className="text-sm text-muted-foreground">
-                  Din klubbtillhörighet
-                </p>
+          {[
+            {
+              icon: <MapPin className="text-primary w-4 h-4" />,
+              title: "Klubb",
+              subtitle: "Din klubbtillhörighet"
+            },
+            {
+              icon: <Calendar className="text-primary w-4 h-4" />,
+              title: "Kommande tävlingar",
+              subtitle: "Se dina anmälningar"
+            },
+            {
+              icon: <Settings className="text-primary w-4 h-4" />,
+              title: "Inställningar",
+              subtitle: "Anpassa din upplevelse"
+            }
+          ].map((item, index) => (
+            <div key={index} className="p-3 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                {item.icon}
+                <div>
+                  <h3 className="text-sm font-medium">{item.title}</h3>
+                  <p className="text-xs text-muted-foreground">
+                    {item.subtitle}
+                  </p>
+                </div>
               </div>
+              <ChevronRight className="text-muted-foreground w-4 h-4" />
             </div>
-            <ChevronRight className="text-muted-foreground w-5 h-5" />
-          </div>
-
-          <div className="p-5 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Calendar className="text-primary w-5 h-5" />
-              <div>
-                <h3 className="font-medium">Kommande tävlingar</h3>
-                <p className="text-sm text-muted-foreground">
-                  Se dina anmälningar
-                </p>
-              </div>
-            </div>
-            <ChevronRight className="text-muted-foreground w-5 h-5" />
-          </div>
-
-          <div className="p-5 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Settings className="text-primary w-5 h-5" />
-              <div>
-                <h3 className="font-medium">Inställningar</h3>
-                <p className="text-sm text-muted-foreground">
-                  Anpassa din upplevelse
-                </p>
-              </div>
-            </div>
-            <ChevronRight className="text-muted-foreground w-5 h-5" />
-          </div>
+          ))}
         </Card>
         
         {/* About text */}
-        <div className="text-center text-sm text-muted-foreground">
+        <div className="text-center text-xs text-muted-foreground">
           <p>Orientera.com är en tjänst för orienterare i Sverige</p>
-          <p className="mt-1">Version 1.0.0</p>
+          <p className="mt-0.5">Version 1.0.0</p>
         </div>
 
         {/* Login Button */}
-        <div className="fixed bottom-24 inset-x-0 px-4">
+        <div className="fixed bottom-20 inset-x-0 px-3">
           <Button 
             variant="default" 
-            className="w-full py-6 text-lg font-medium shadow-md"
+            className="w-full py-4 text-base font-medium shadow-md"
             onClick={() => setShowWaitlistDialog(true)}
           >
             Logga in
