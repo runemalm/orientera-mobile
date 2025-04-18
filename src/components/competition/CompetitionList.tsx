@@ -2,33 +2,47 @@
 import React from 'react';
 import { CompetitionSummary } from '../../types';
 import CompetitionCard from '../CompetitionCard';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { UserLocation } from '../../hooks/useUserLocation';
 
 interface CompetitionListProps {
   competitions: CompetitionSummary[];
   userLocation: UserLocation;
+  showFavorites?: boolean;
 }
 
-const CompetitionList: React.FC<CompetitionListProps> = ({ competitions, userLocation }) => {
-  if (competitions.length === 0) {
+const CompetitionList: React.FC<CompetitionListProps> = ({ 
+  competitions, 
+  userLocation,
+  showFavorites = false 
+}) => {
+  const [favorites] = useLocalStorage<string[]>('favoriteCompetitions', []);
+
+  const filteredCompetitions = showFavorites
+    ? competitions.filter(comp => favorites?.includes(comp.id))
+    : competitions;
+
+  if (filteredCompetitions.length === 0) {
     return (
       <div className="text-center py-8">
         <div className="text-gray-400 mb-2">
-          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mx-auto">
-            <circle cx="12" cy="12" r="10" />
-            <path d="m15 9-6 6" />
-            <path d="m9 9 6 6" />
-          </svg>
+          <Star className="w-12 h-12 mx-auto" />
         </div>
-        <p className="text-gray-500">Inga tävlingar hittades</p>
+        <p className="text-gray-500">
+          {showFavorites ? 'Inga favorittävlingar än' : 'Inga tävlingar hittades'}
+        </p>
       </div>
     );
   }
 
   return (
     <div className="space-y-3">
-      {competitions.map(competition => (
-        <CompetitionCard key={competition.id} competition={competition} />
+      {filteredCompetitions.map(competition => (
+        <CompetitionCard 
+          key={competition.id} 
+          competition={competition}
+          userLocation={userLocation}
+        />
       ))}
     </div>
   );

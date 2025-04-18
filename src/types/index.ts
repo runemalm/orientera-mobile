@@ -84,6 +84,7 @@ export interface CompetitionSummary {
   district: OrienteeringDistrict;
   latitude: number | null; // Updated to allow null
   longitude: number | null; // Updated to allow null
+  isFavorite?: boolean;
 }
 
 // Competition class to match the backend C# model
@@ -118,4 +119,9 @@ export interface Resource {
   format: ResourceFormat;
   url: string;
   uploadDate: string;
+}
+
+// Add new interface for favorites
+export interface UserFavorites {
+  competitions: string[]; // Array of competition IDs
 }

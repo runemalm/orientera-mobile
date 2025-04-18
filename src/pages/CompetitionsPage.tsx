@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Star } from 'lucide-react';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { CompetitionSummary } from '../types';
 import { getNearbyCompetitions } from '../services/api';
@@ -93,6 +93,7 @@ const CompetitionsPage: React.FC = () => {
               <CompetitionList 
                 competitions={competitions} 
                 userLocation={userLocation}
+                showFavorites={false}
               />
             </div>
           </ScrollArea>
@@ -101,9 +102,11 @@ const CompetitionsPage: React.FC = () => {
         <TabsContent value="favorites">
           <ScrollArea className="h-[calc(100vh-14rem)]">
             <div className="p-4">
-              <div className="text-center py-8 text-gray-500">
-                Favoriter kommer snart
-              </div>
+              <CompetitionList 
+                competitions={competitions}
+                userLocation={userLocation}
+                showFavorites={true}
+              />
             </div>
           </ScrollArea>
         </TabsContent>
