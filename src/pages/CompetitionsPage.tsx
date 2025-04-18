@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -13,7 +12,12 @@ import PullToRefresh from '../components/PullToRefresh';
 import { toast } from '@/hooks/use-toast';
 import { calculateDistance } from '../utils/distanceUtils';
 import { toSwedishTime } from '../utils/dateUtils';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from '@/components/ui/drawer';
 import LocationInputForm from '../components/LocationInputForm';
 
 const CompetitionsPage: React.FC = () => {
@@ -22,7 +26,7 @@ const CompetitionsPage: React.FC = () => {
   const [competitions, setCompetitions] = useState<CompetitionSummary[]>([]);
   const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showLocationSheet, setShowLocationSheet] = useState(false);
+  const [showFilterDrawer, setShowFilterDrawer] = useState(false);
   const [keyboardVisible, setKeyboardVisible] = React.useState(false);
 
   const fetchCompetitions = useCallback(async () => {
@@ -80,7 +84,6 @@ const CompetitionsPage: React.FC = () => {
     }
   }, [userLocation]);
 
-  // Fetch competitions when the component mounts or userLocation changes
   useEffect(() => {
     if (userLocation) {
       fetchCompetitions();
@@ -89,7 +92,7 @@ const CompetitionsPage: React.FC = () => {
 
   const handleUpdateLocation = (location: { city: string; latitude: number; longitude: number }) => {
     updateUserLocation(location);
-    setShowLocationSheet(false);
+    setShowFilterDrawer(false);
     fetchCompetitions();
   };
 
@@ -140,7 +143,7 @@ const CompetitionsPage: React.FC = () => {
             <MapPin size={32} className="text-forest mx-auto mb-2" />
             <h2 className="text-lg font-medium mb-4">Sätt din plats för att se tävlingar</h2>
             <Button 
-              onClick={() => setShowLocationSheet(true)}
+              onClick={() => setShowFilterDrawer(true)}
               className="bg-forest hover:bg-forest-dark"
             >
               Välj plats
@@ -206,7 +209,7 @@ const CompetitionsPage: React.FC = () => {
           <Button 
             variant="ghost" 
             size="icon"
-            onClick={() => setShowLocationSheet(true)}
+            onClick={() => setShowFilterDrawer(true)}
             className="relative"
           >
             <Filter className="h-[1.2rem] w-[1.2rem]" />
@@ -218,26 +221,21 @@ const CompetitionsPage: React.FC = () => {
         </div>
       </MobileLayout>
 
-      <Sheet 
-        open={showLocationSheet} 
-        onOpenChange={setShowLocationSheet}
-        modal={true}
-      >
-        <SheetContent 
-          side="bottom" 
-          className={`p-4 max-h-[90vh] overflow-y-auto z-[100] ${keyboardVisible ? 'fixed bottom-0 pb-24' : ''}`}
-        >
-          <SheetHeader>
-            <SheetTitle>Välj plats</SheetTitle>
-          </SheetHeader>
-          <div className="pb-8">
-            <LocationInputForm 
-              onLocationSelected={handleUpdateLocation}
-              onCancel={() => setShowLocationSheet(false)}
-            />
+      <Drawer open={showFilterDrawer} onOpenChange={setShowFilterDrawer}>
+        <DrawerContent>
+          <div className={`${keyboardVisible ? 'pb-24' : ''}`}>
+            <DrawerHeader className="text-left">
+              <DrawerTitle>Välj plats</DrawerTitle>
+            </DrawerHeader>
+            <div className="px-4 pb-8">
+              <LocationInputForm 
+                onLocationSelected={handleUpdateLocation}
+                onCancel={() => setShowFilterDrawer(false)}
+              />
+            </div>
           </div>
-        </SheetContent>
-      </Sheet>
+        </DrawerContent>
+      </Drawer>
     </>
   );
 };
