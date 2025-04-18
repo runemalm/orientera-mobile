@@ -6,32 +6,21 @@ import { Button } from '@/components/ui/button';
 import { MapPin, ArrowLeft } from 'lucide-react';
 import LocationInputForm from '../components/LocationInputForm';
 import { useUserLocation } from '../hooks/useUserLocation';
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer";
 
 const CompetitionFiltersPage = () => {
   const navigate = useNavigate();
-  const { updateUserLocation } = useUserLocation();
-  const [keyboardVisible, setKeyboardVisible] = React.useState(false);
-
-  React.useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const handleVisualViewportResize = () => {
-        const newKeyboardVisible = window.visualViewport && 
-          window.visualViewport.height < window.innerHeight * 0.75;
-        setKeyboardVisible(newKeyboardVisible);
-      };
-      
-      if (window.visualViewport) {
-        window.visualViewport.addEventListener('resize', handleVisualViewportResize);
-        return () => {
-          window.visualViewport.removeEventListener('resize', handleVisualViewportResize);
-        };
-      }
-    }
-  }, []);
+  const { userLocation, updateUserLocation } = useUserLocation();
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
 
   const handleUpdateLocation = (location: { city: string; latitude: number; longitude: number }) => {
     updateUserLocation(location);
-    navigate(-1);
+    setDrawerOpen(false);
   };
 
   return (
@@ -47,22 +36,45 @@ const CompetitionFiltersPage = () => {
         </Button>
       }
     >
-      <div className={`p-4 ${keyboardVisible ? 'pb-24' : ''}`}>
+      <div className="p-4">
         <div className="space-y-6">
           <div>
             <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
               <MapPin className="h-5 w-5" />
               Plats
             </h2>
-            <LocationInputForm 
-              onLocationSelected={handleUpdateLocation}
-              onCancel={() => navigate(-1)}
-            />
+            
+            <div className="bg-white rounded-lg p-4 shadow-sm">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4 text-muted-foreground" />
+                  <span>{userLocation.city}</span>
+                </div>
+                <Button 
+                  variant="outline"
+                  onClick={() => setDrawerOpen(true)}
+                >
+                  Byt plats
+                </Button>
+              </div>
+            </div>
           </div>
-          
-          {/* More filter sections can be added here in the future */}
         </div>
       </div>
+
+      <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle>Byt plats</DrawerTitle>
+          </DrawerHeader>
+          <div className="p-4">
+            <LocationInputForm 
+              onLocationSelected={handleUpdateLocation}
+              onCancel={() => setDrawerOpen(false)}
+            />
+          </div>
+        </DrawerContent>
+      </Drawer>
     </MobileLayout>
   );
 };
