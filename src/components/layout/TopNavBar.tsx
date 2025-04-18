@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { Compass } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface TopNavBarProps {
   title: string;
@@ -12,25 +13,27 @@ interface TopNavBarProps {
 const TopNavBar: React.FC<TopNavBarProps> = ({ title, showBackButton = false, onBack, action }) => {
   return (
     <div className="top-nav flex items-center justify-between px-4">
-      <div className="flex items-center gap-2">
-        {showBackButton ? (
-          <button 
-            onClick={onBack} 
-            className="w-8 h-8 flex items-center justify-center text-gray-600"
+      {/* Left slot - Back button or empty */}
+      <div className="w-20">
+        {showBackButton && (
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={onBack}
+            className="text-muted-foreground -ml-2"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-left">
-              <path d="m15 18-6-6 6-6"/>
-            </svg>
-          </button>
-        ) : (
-          <div className="w-8 h-8 flex items-center justify-center text-primary">
-            <Compass size={24} />
-          </div>
+            <ChevronLeft className="h-6 w-6" />
+          </Button>
         )}
-        <h1 className="text-lg font-semibold">{title || "orientera.com"}</h1>
       </div>
-      
-      <div className="flex items-center">
+
+      {/* Center slot - Title */}
+      <div className="flex-1 text-center">
+        <h1 className="text-lg font-semibold truncate">{title}</h1>
+      </div>
+
+      {/* Right slot - Action button or empty */}
+      <div className="w-20 flex justify-end">
         {action}
       </div>
     </div>
