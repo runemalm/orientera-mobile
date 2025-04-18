@@ -66,9 +66,11 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition, userLoca
         text: "Idag"
       };
     } else {
+      const daysSince = Math.abs(daysRemaining);
+      const daysText = daysSince === 1 ? "dag" : "dagar";
       return {
         color: "bg-gray-100 text-gray-500",
-        text: "Avslutad"
+        text: `${daysSince} ${daysText} sedan`
       };
     }
   };
