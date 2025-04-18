@@ -51,7 +51,10 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
       doubleClickZoom: false,  // Disable double-click zoom
       scrollWheelZoom: false,  // Disable scroll wheel zoom
       boxZoom: false,          // Disable box zoom
-      touchZoom: false         // Disable touch-based zooming
+      touchZoom: false,        // Disable touch-based zooming
+      dragging: false,         // Disable map dragging
+      keyboard: false,         // Disable keyboard interactions
+      tap: false               // Disable tap interactions on mobile
     });
     
     // Save the map instance for cleanup
@@ -71,17 +74,10 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
     });
     
     // Add a marker at the specified coordinates
-    const marker = L.marker([coordinates.lat, coordinates.lng], { icon: customMarkerIcon }).addTo(map);
-    
-    // Add a click handler to the entire map
-    map.on('click', () => {
-      openInGoogleMaps();
-    });
-    
-    // Make the marker clickable too
-    marker.on('click', () => {
-      openInGoogleMaps();
-    });
+    const marker = L.marker([coordinates.lat, coordinates.lng], { 
+      icon: customMarkerIcon,
+      interactive: false  // Disable marker interactions
+    }).addTo(map);
     
     // Ensure the map is centered on the marker coordinates and revalidate size
     setTimeout(() => {
@@ -91,8 +87,6 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
     
     // After the marker is added, we can render our React component into the container
     if (document.querySelector('.checkpoint-icon-container')) {
-      // In a real application, you might want to use ReactDOM.render or similar
-      // Here we'll just add a styled div to represent the orienteering checkpoint
       const iconContainer = document.querySelector('.checkpoint-icon-container');
       if (iconContainer) {
         iconContainer.innerHTML = `
