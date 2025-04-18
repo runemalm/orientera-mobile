@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -11,6 +10,12 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer";
 import { useUserLocation } from '../hooks/useUserLocation';
 import { CompetitionSummary } from '../types';
 import { getNearbyCompetitions } from '../services/api';
@@ -19,14 +24,16 @@ import PullToRefresh from '../components/PullToRefresh';
 import { toast } from '@/hooks/use-toast';
 import { calculateDistance } from '../utils/distanceUtils';
 import { toSwedishTime } from '../utils/dateUtils';
+import LocationInputForm from '../components/LocationInputForm';
 
 const CompetitionsPage: React.FC = () => {
   const navigate = useNavigate();
-  const { userLocation, isLoading: isLoadingLocation } = useUserLocation();
+  const { userLocation, isLoading: isLoadingLocation, updateUserLocation } = useUserLocation();
   const [competitions, setCompetitions] = useState<CompetitionSummary[]>([]);
   const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [filterSheetOpen, setFilterSheetOpen] = useState(false);
+  const [locationDrawerOpen, setLocationDrawerOpen] = useState(false);
 
   const fetchCompetitions = useCallback(async () => {
     if (!userLocation) return;
@@ -100,6 +107,12 @@ const CompetitionsPage: React.FC = () => {
     } catch (error) {
       console.error("Error refreshing competitions:", error);
     }
+  };
+
+  const handleLocationUpdate = (location: { city: string; latitude: number; longitude: number }) => {
+    updateUserLocation(location);
+    setLocationDrawerOpen(false);
+    fetchCompetitions();
   };
 
   const renderContent = () => {
@@ -218,7 +231,10 @@ const CompetitionsPage: React.FC = () => {
                   </div>
                   <Button 
                     variant="outline"
-                    onClick={() => navigate('/competitions/filters')}
+                    onClick={() => {
+                      setLocationDrawerOpen(true);
+                      setFilterSheetOpen(false);
+                    }}
                     className="text-forest hover:text-forest-dark border-forest hover:border-forest-dark"
                   >
                     Byt plats
@@ -254,6 +270,20 @@ const CompetitionsPage: React.FC = () => {
           </div>
         </SheetContent>
       </Sheet>
+
+      <Drawer open={locationDrawerOpen} onOpenChange={setLocationDrawerOpen}>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle>Byt plats</DrawerTitle>
+          </DrawerHeader>
+          <div className="p-4">
+            <LocationInputForm 
+              onLocationSelected={handleLocationUpdate}
+              onCancel={() => setLocationDrawerOpen(false)}
+            />
+          </div>
+        </DrawerContent>
+      </Drawer>
     </MobileLayout>
   );
 };
