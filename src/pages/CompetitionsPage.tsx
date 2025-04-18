@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Filter, Loader2, MapPin } from 'lucide-react';
@@ -128,7 +129,7 @@ const CompetitionsPage: React.FC = () => {
 
   return (
     <MobileLayout 
-      title="Sök tävlingar" 
+      title="Tävlingar nära dig" 
       action={
         userLocation && (
           <Button 
