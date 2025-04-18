@@ -18,7 +18,7 @@ const HomePage: React.FC = () => {
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">Orientera.com</h1>
           <p className="text-gray-600 mb-6">
-            Ett komplement till Eventor. Hitta och utforska orienteringstävlingar enkelt med vår mobilapp.
+            En ny tjänst för orienterare som vill förenkla och inspirera till att fortsätta med sitt älskade intresse.
           </p>
         </div>
 
