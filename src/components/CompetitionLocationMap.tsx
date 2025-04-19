@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect } from 'react';
 import 'leaflet/dist/leaflet.css';
 import { cn } from '@/lib/utils';
@@ -105,7 +104,7 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
       
       {/* Map UI elements */}
       <div className="absolute bottom-2 right-2 text-gray-500 text-xs bg-white/80 px-2 py-0.5 rounded-full z-[500]">
-        Arena Location
+        <span role="complementary">© OpenStreetMap</span>
       </div>
       
       <div className="absolute bottom-2 left-2 z-[500]">
