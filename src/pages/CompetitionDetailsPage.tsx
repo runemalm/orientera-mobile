@@ -7,6 +7,7 @@ import { Competition } from '../types';
 import { AlertCircle, Share2, Trophy } from 'lucide-react';
 import { getCompetitionById } from '../services/api';
 import { Button } from '@/components/ui/button';
+import { formatSwedishDate } from '../utils/dateUtils';
 
 const CompetitionDetailsPage: React.FC = () => {
   const { competitionId } = useParams<{ competitionId: string }>();
