@@ -25,12 +25,9 @@ const CompetitionList: React.FC<CompetitionListProps> = ({
   // Debug output for favorites
   console.log('CompetitionList - Current favorites:', safetyFavorites);
   
+  // Only filter by favorites if showFavorites is true, otherwise show all competitions passed in
   const filteredCompetitions = showFavorites
-    ? competitions.filter(comp => {
-        const isIncluded = safetyFavorites.includes(comp.id);
-        console.log(`Competition ${comp.id} (${comp.name}) is${isIncluded ? '' : ' not'} in favorites`);
-        return isIncluded;
-      })
+    ? competitions.filter(comp => safetyFavorites.includes(comp.id))
     : competitions;
     
   console.log(`Showing ${filteredCompetitions.length} competitions in ${showFavorites ? 'favorites' : 'all'} tab`);
