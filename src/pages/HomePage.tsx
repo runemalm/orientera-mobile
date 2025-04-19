@@ -1,20 +1,14 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
-import { Button } from '@/components/ui/button';
 import { Compass, MapPin, Calendar, Navigation } from 'lucide-react';
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
 
-  const handleFindCompetitions = () => {
-    navigate('/competitions');
-  };
-
   return (
     <MobileLayout title="orientera.com">
-      <div className="flex flex-col items-center min-h-full p-4 space-y-8">
+      <div className="flex flex-col items-center h-[calc(100vh-4rem)] p-4">
         {/* Hero section */}
         <div className="flex flex-col items-center text-center space-y-6 mt-6">
           <div className="relative">
@@ -35,7 +29,7 @@ const HomePage: React.FC = () => {
         </div>
         
         {/* Features section */}
-        <div className="grid grid-cols-2 gap-4 w-full">
+        <div className="grid grid-cols-2 gap-4 w-full mt-8">
           <FeatureCard 
             icon={<MapPin />} 
             title="Hitta tävlingar" 
@@ -56,17 +50,6 @@ const HomePage: React.FC = () => {
             title="Karta & arena" 
             description="Hitta till arenan enkelt"
           />
-        </div>
-        
-        {/* CTA Button */}
-        <div className="mt-auto w-full pb-4">
-          <Button 
-            onClick={handleFindCompetitions} 
-            className="w-full py-6 text-lg transition-all duration-200 shadow-md hover:shadow-lg group"
-          >
-            Hitta tävlingar nära dig
-            <MapPin className="ml-2 group-hover:translate-x-0.5 transition-transform" />
-          </Button>
         </div>
       </div>
     </MobileLayout>
