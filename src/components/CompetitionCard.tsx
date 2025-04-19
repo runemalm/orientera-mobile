@@ -27,24 +27,15 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition, userLoca
   const toggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
     
-    const currentFavorites = Array.isArray(favorites) ? [...favorites] : [];
-    
-    let newFavorites: string[];
-    
-    if (isFavorite) {
-      newFavorites = currentFavorites.filter(id => id !== competition.id);
-    } else {
-      newFavorites = [...currentFavorites, competition.id];
-    }
-    
-    console.log('Toggling favorite:', {
-      competitionId: competition.id,
-      wasInFavorites: isFavorite,
-      oldFavorites: currentFavorites,
-      newFavorites: newFavorites
+    setFavorites((currentFavorites) => {
+      const validCurrentFavorites = Array.isArray(currentFavorites) ? [...currentFavorites] : [];
+      
+      if (validCurrentFavorites.includes(competition.id)) {
+        return validCurrentFavorites.filter(id => id !== competition.id);
+      } else {
+        return [...validCurrentFavorites, competition.id];
+      }
     });
-    
-    setFavorites(newFavorites);
   };
 
   const daysRemaining = getDaysRemaining(competition.date);
