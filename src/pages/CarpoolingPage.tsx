@@ -1,18 +1,18 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Car, MapPin, Clock, Users, Plus, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Card } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Table, TableBody, TableCell, TableHead, TableRow } from '@/components/ui/table';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { mockCompetitionDetails } from '../utils/mockData';
+import { useToast } from '@/hooks/use-toast';
+import OfferRideForm from '../components/carpooling/OfferRideForm';
 import { Toaster } from '@/components/ui/toaster';
-import { useToast } from '@/components/ui/use-toast';
 
-// Mock data for carpooling rides
 const mockRides = [
   {
     id: 'ride-1',
@@ -39,34 +39,24 @@ const CarpoolingPage: React.FC = () => {
   const [competition, setCompetition] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [rides] = useState(mockRides);
+  const [showOfferForm, setShowOfferForm] = useState(false);
   const { toast } = useToast();
 
-  useEffect(() => {
-    // Simulate API fetch with timeout - using MOCK DATA ONLY
-    const timer = setTimeout(() => {
+  React.useEffect(() => {
+    const fetchCompetition = () => {
       if (competitionId && mockCompetitionDetails[competitionId]) {
         setCompetition(mockCompetitionDetails[competitionId]);
       }
       setLoading(false);
-    }, 500);
+    };
 
-    return () => clearTimeout(timer);
+    fetchCompetition();
   }, [competitionId]);
 
   const handleJoinRide = (rideId: string) => {
-    // In a real app, this would make an API call to join the ride
-    // Instead, just show a toast notification
     toast({
       title: "Förfrågan skickad",
       description: "Chauffören har meddelats om din förfrågan.",
-    });
-  };
-
-  const handleOfferRide = () => {
-    // In a real app, this would navigate to a form for offering a ride
-    toast({
-      title: "Funktion kommer snart",
-      description: "Möjlighet att erbjuda samåkning är under utveckling.",
     });
   };
 
@@ -100,7 +90,6 @@ const CarpoolingPage: React.FC = () => {
   return (
     <MobileLayout title="Samåkning" showBackButton>
       <div className="space-y-4 pb-4">
-        {/* Competition Info Banner */}
         <div className="bg-primary/10 p-4 rounded-lg">
           <h2 className="font-semibold">{competition.name}</h2>
           <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
@@ -109,17 +98,17 @@ const CarpoolingPage: React.FC = () => {
           </div>
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <Clock size={16} />
-            <span>{new Date(competition.date).toLocaleDateString('sv-SE')} - {competition.startTime}</span>
+            <span>
+              {new Date(competition.date).toLocaleDateString('sv-SE')} - {competition.startTime}
+            </span>
           </div>
         </div>
 
-        {/* Offer a ride button */}
-        <Button onClick={handleOfferRide} className="w-full">
-          <Plus size={16} />
+        <Button onClick={() => setShowOfferForm(true)} className="w-full">
+          <Plus size={16} className="mr-2" />
           Erbjud samåkning
         </Button>
 
-        {/* Available Rides */}
         <div>
           <h3 className="font-semibold text-lg mb-2">Tillgängliga samåkningar</h3>
           
@@ -198,6 +187,15 @@ const CarpoolingPage: React.FC = () => {
           )}
         </div>
       </div>
+
+      <Dialog open={showOfferForm} onOpenChange={setShowOfferForm}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Erbjud samåkning</DialogTitle>
+          </DialogHeader>
+          <OfferRideForm onClose={() => setShowOfferForm(false)} />
+        </DialogContent>
+      </Dialog>
       <Toaster />
     </MobileLayout>
   );
