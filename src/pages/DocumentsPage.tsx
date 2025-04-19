@@ -1,24 +1,21 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import FileItem from '../components/FileItem';
 import { mockCompetitionDetails } from '../utils/mockData';
-import { Resource } from '../types'; // Updated type import
-import { Toaster } from '@/components/ui/toaster';
+import { Resource } from '../types';
 
 const DocumentsPage: React.FC = () => {
   const { competitionId } = useParams<{ competitionId: string }>();
-  const [files, setFiles] = useState<Resource[]>([]); // Updated type
+  const [files, setFiles] = useState<Resource[]>([]);
   const [loading, setLoading] = useState(true);
   const [competitionName, setCompetitionName] = useState('');
 
   useEffect(() => {
-    // Simulate API fetch with timeout
     const timer = setTimeout(() => {
       if (competitionId && mockCompetitionDetails[competitionId]) {
         const competitionData = mockCompetitionDetails[competitionId];
-        setFiles(competitionData.resources); // Updated property name
+        setFiles(competitionData.resources);
         setCompetitionName(competitionData.name);
       }
       setLoading(false);
@@ -34,7 +31,6 @@ const DocumentsPage: React.FC = () => {
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
           <p className="text-gray-500">Hämtar dokument...</p>
         </div>
-        <Toaster />
       </MobileLayout>
     );
   }
@@ -55,7 +51,6 @@ const DocumentsPage: React.FC = () => {
           <h2 className="text-xl font-bold">Inga dokument tillgängliga</h2>
           <p className="text-gray-500 mt-2">Det finns inga dokument för denna tävling ännu.</p>
         </div>
-        <Toaster />
       </MobileLayout>
     );
   }
@@ -72,7 +67,6 @@ const DocumentsPage: React.FC = () => {
           </div>
         </div>
       </div>
-      <Toaster />
     </MobileLayout>
   );
 };

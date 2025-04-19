@@ -4,21 +4,15 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/hooks/use-toast';
 
 interface OfferRideFormProps {
   onClose: () => void;
 }
 
 const OfferRideForm: React.FC<OfferRideFormProps> = ({ onClose }) => {
-  const { toast } = useToast();
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Samåkning skapad",
-      description: "Din samåkning har registrerats.",
-    });
+    console.log('Ride offer submitted');
     onClose();
   };
 

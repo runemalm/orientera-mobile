@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useToast } from '@/hooks/use-toast';
 import { CheckCircle } from 'lucide-react';
 
 interface LoginWaitlistDialogProps {
@@ -14,27 +13,17 @@ interface LoginWaitlistDialogProps {
 const LoginWaitlistDialog: React.FC<LoginWaitlistDialogProps> = ({ isOpen, onClose }) => {
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!email || !email.includes('@')) {
-      toast({
-        title: "Ogiltig e-postadress",
-        description: "Vänligen ange en giltig e-postadress",
-        variant: "destructive",
-      });
+      console.error('Invalid email address');
       return;
     }
 
     console.log('Email submitted to waitlist:', email);
     setIsSubmitted(true);
-    
-    toast({
-      title: "Tack!",
-      description: "Du har lagts till i väntelistan",
-    });
   };
 
   return (

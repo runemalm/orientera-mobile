@@ -3,18 +3,15 @@ import { useParams } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionDetails from '../components/CompetitionDetails';
 import { Competition } from '../types';
-import { Toaster } from '@/components/ui/toaster';
-import { Trophy, AlertCircle, Share2 } from 'lucide-react';
+import { AlertCircle, Share2 } from 'lucide-react';
 import { getCompetitionById } from '../services/api';
 import { Button } from '@/components/ui/button';
-import { useToast } from "@/hooks/use-toast";
 
 const CompetitionDetailsPage: React.FC = () => {
   const { competitionId } = useParams<{ competitionId: string }>();
   const [competition, setCompetition] = useState<Competition | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { toast } = useToast();
 
   const handleShare = async () => {
     if (!competition) return;
@@ -29,26 +26,15 @@ const CompetitionDetailsPage: React.FC = () => {
       } catch (error) {
         if ((error as Error).name !== 'AbortError') {
           console.error('Error sharing:', error);
-          toast({
-            title: "Kunde inte dela",
-            description: "Det gick inte att dela tävlingen just nu.",
-          });
         }
       }
     } else {
       // Fallback: Copy to clipboard
       try {
         await navigator.clipboard.writeText(window.location.href);
-        toast({
-          title: "Länken kopierad!",
-          description: "Tävlingens länk har kopierats till urklipp.",
-        });
+        console.log('URL copied to clipboard');
       } catch (error) {
         console.error('Error copying to clipboard:', error);
-        toast({
-          title: "Kunde inte kopiera länken",
-          description: "Det gick inte att kopiera tävlingens länk.",
-        });
       }
     }
   };
@@ -81,7 +67,6 @@ const CompetitionDetailsPage: React.FC = () => {
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
           <p className="text-gray-500">Hämtar tävlingsinformation...</p>
         </div>
-        <Toaster />
       </MobileLayout>
     );
   }
@@ -103,7 +88,6 @@ const CompetitionDetailsPage: React.FC = () => {
             Försök igen
           </Button>
         </div>
-        <Toaster />
       </MobileLayout>
     );
   }
@@ -118,7 +102,6 @@ const CompetitionDetailsPage: React.FC = () => {
           <h2 className="text-xl font-bold">Tävlingen hittades inte</h2>
           <p className="text-gray-500 mt-2">Vi kunde tyvärr inte hitta den tävling du söker.</p>
         </div>
-        <Toaster />
       </MobileLayout>
     );
   }
@@ -143,7 +126,6 @@ const CompetitionDetailsPage: React.FC = () => {
       <div className="pb-4">
         <CompetitionDetails competition={competition} />
       </div>
-      <Toaster />
     </MobileLayout>
   );
 };

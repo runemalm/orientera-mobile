@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -9,7 +8,6 @@ import { Competition } from '../types';
 import { mockCompetitionDetails } from '../utils/mockData';
 import { formatSwedishTime } from '../utils/dateUtils';
 
-// Define interfaces for our data
 interface Participant {
   id: string;
   name: string;
@@ -29,13 +27,11 @@ const StartTimesPage: React.FC = () => {
   const [startTimeClasses, setStartTimeClasses] = useState<StartTimeClass[]>([]);
 
   useEffect(() => {
-    // Simulate API fetch with timeout
     const timer = setTimeout(() => {
       if (competitionId && mockCompetitionDetails[competitionId]) {
         const competitionData = mockCompetitionDetails[competitionId];
         setCompetition(competitionData);
         
-        // Generate mock start time data for this competition
         const mockClasses = generateMockStartTimeData();
         setStartTimeClasses(mockClasses);
       }
@@ -45,23 +41,19 @@ const StartTimesPage: React.FC = () => {
     return () => clearTimeout(timer);
   }, [competitionId]);
 
-  // Function to generate mock start time data
   const generateMockStartTimeData = (): StartTimeClass[] => {
-    // Common Swedish orienteering classes
     const classes = [
       "H21", "D21", "H20", "D20", "H18", "D18", 
       "H16", "D16", "H14", "D14", "H12", "D12", "H10", "D10",
       "H40", "D40", "H50", "D50", "H60", "D60", "H70", "D70"
     ];
     
-    // Swedish clubs
     const clubs = [
       "OK Linné", "IFK Göteborg", "Järla Orientering", 
       "OK Södertörn", "Stora Tuna OK", "Dalregementets IF",
       "IF Thor", "Attunda OK", "IFK Mora", "Malungs OK"
     ];
     
-    // Swedish names
     const firstNames = [
       "Erik", "Lars", "Anders", "Johan", "Per", "Karl", "Nils", "Lennart", 
       "Anna", "Maria", "Karin", "Sara", "Lena", "Emma", "Eva", "Kristina"
@@ -72,17 +64,14 @@ const StartTimesPage: React.FC = () => {
       "Larsson", "Olsson", "Persson", "Svensson", "Gustafsson"
     ];
     
-    // Choose a random subset of classes for this competition
     const selectedClasses = classes
       .sort(() => Math.random() - 0.5)
-      .slice(0, 8 + Math.floor(Math.random() * 8)); // 8-15 classes
+      .slice(0, 8 + Math.floor(Math.random() * 8));
     
     return selectedClasses.map(className => {
-      // Generate 3-15 participants per class
       const participantCount = 3 + Math.floor(Math.random() * 13);
       const participants: Participant[] = [];
       
-      // Start times will be between 10:00 and 14:00
       let startHour = 10;
       let startMinute = 0;
       
@@ -91,12 +80,10 @@ const StartTimesPage: React.FC = () => {
         const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
         const club = clubs[Math.floor(Math.random() * clubs.length)];
         
-        // Generate sequential start times (2-minute intervals)
         const formattedHour = startHour.toString().padStart(2, '0');
         const formattedMinute = startMinute.toString().padStart(2, '0');
         const startTime = `${formattedHour}:${formattedMinute}`;
         
-        // Increment start time by 2 minutes for the next participant
         startMinute += 2;
         if (startMinute >= 60) {
           startHour += 1;
@@ -111,7 +98,6 @@ const StartTimesPage: React.FC = () => {
         });
       }
       
-      // Sort participants by start time
       participants.sort((a, b) => {
         return a.startTime.localeCompare(b.startTime);
       });
