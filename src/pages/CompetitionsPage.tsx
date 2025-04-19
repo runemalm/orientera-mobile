@@ -83,7 +83,7 @@ const CompetitionsPage: React.FC = () => {
 
     return (
       <div className="h-full flex flex-col">
-        <div className="sticky top-0 z-10 bg-white pt-4 pb-3 px-4">
+        <div className="sticky top-0 z-10 bg-gray-50 pt-4 pb-3 px-4">
           <Tabs defaultValue={selectedTab} className="w-full" onValueChange={setSelectedTab}>
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="all">Alla</TabsTrigger>
