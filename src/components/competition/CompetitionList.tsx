@@ -1,5 +1,5 @@
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Star } from 'lucide-react';
 import { CompetitionSummary } from '../../types';
 import CompetitionCard from '../CompetitionCard';
@@ -19,27 +19,17 @@ const CompetitionList: React.FC<CompetitionListProps> = ({
 }) => {
   const [favorites] = useLocalStorage<string[]>('favoriteCompetitions', []);
 
-  // Calculate filtered competitions with useMemo to prevent unnecessary recalculations
-  const filteredCompetitions = useMemo(() => {
-    // Debug output for favorites
-    console.log('CompetitionList - Current favorites:', favorites);
-    
-    if (!showFavorites) return competitions;
-    
-    // Make sure we have valid favorites
-    if (!Array.isArray(favorites)) {
-      console.log('Favorites is not an array, returning empty list');
-      return [];
-    }
-    
-    // Filter competitions by favorites
-    return competitions.filter(comp => {
-      const isIncluded = favorites.includes(comp.id);
-      console.log(`Competition ${comp.id} (${comp.name}) is${isIncluded ? '' : ' not'} in favorites`);
-      return isIncluded;
-    });
-  }, [competitions, favorites, showFavorites]);
+  // Debug output for favorites
+  console.log('CompetitionList - Current favorites:', favorites);
   
+  const filteredCompetitions = showFavorites
+    ? competitions.filter(comp => {
+        const isIncluded = Array.isArray(favorites) && favorites.includes(comp.id);
+        console.log(`Competition ${comp.id} (${comp.name}) is${isIncluded ? '' : ' not'} in favorites`);
+        return isIncluded;
+      })
+    : competitions;
+    
   console.log(`Showing ${filteredCompetitions.length} competitions in ${showFavorites ? 'favorites' : 'all'} tab`);
 
   if (filteredCompetitions.length === 0) {

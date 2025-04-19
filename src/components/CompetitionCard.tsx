@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { CompetitionSummary } from '../types';
 import { Clock, MapPin, Navigation, Star } from 'lucide-react';
@@ -27,25 +26,25 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition, userLoca
 
   const toggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
-    e.preventDefault(); // Added to prevent any default behavior
     
-    // Use functional update with the latest state
-    setFavorites((currentFavorites) => {
-      // Debug output to trace the current state
-      console.log(`Toggling favorite ${competition.id} (${competition.name}), current state: ${isFavorite ? 'favorite' : 'not favorite'}`);
-      
-      // Ensure we have a valid array to work with
-      const validFavorites = Array.isArray(currentFavorites) ? currentFavorites : [];
-      
-      // Create a new array to avoid mutating the original state
-      if (validFavorites.includes(competition.id)) {
-        console.log(`Removing ${competition.id} from favorites`);
-        return validFavorites.filter(id => id !== competition.id);
-      } else {
-        console.log(`Adding ${competition.id} to favorites`);
-        return [...validFavorites, competition.id];
-      }
+    const currentFavorites = Array.isArray(favorites) ? [...favorites] : [];
+    
+    let newFavorites: string[];
+    
+    if (isFavorite) {
+      newFavorites = currentFavorites.filter(id => id !== competition.id);
+    } else {
+      newFavorites = [...currentFavorites, competition.id];
+    }
+    
+    console.log('Toggling favorite:', {
+      competitionId: competition.id,
+      wasInFavorites: isFavorite,
+      oldFavorites: currentFavorites,
+      newFavorites: newFavorites
     });
+    
+    setFavorites(newFavorites);
   };
 
   const daysRemaining = getDaysRemaining(competition.date);

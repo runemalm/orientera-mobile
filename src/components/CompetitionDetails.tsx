@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Competition, ResourceType } from '../types';
 import { Users, Car, FileText, Navigation, BarChart2, Map, Star, Clock } from 'lucide-react';
@@ -17,25 +18,17 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
   const formattedDate = formatSwedishDate(competition.date, 'EEEE d MMMM yyyy');
   const [favorites, setFavorites] = useLocalStorage<string[]>('favoriteCompetitions', []);
   
-  const isFavorite = Array.isArray(favorites) && favorites.includes(competition.id);
+  const isFavorite = favorites?.includes(competition.id) || false;
 
   const toggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
-    e.preventDefault();
+    if (!favorites) return;
     
-    setFavorites((currentFavorites) => {
-      console.log(`Toggling favorite ${competition.id} (${competition.name}) in details, current state: ${isFavorite ? 'favorite' : 'not favorite'}`);
-      
-      const validFavorites = Array.isArray(currentFavorites) ? currentFavorites : [];
-      
-      if (validFavorites.includes(competition.id)) {
-        console.log(`Removing ${competition.id} from favorites in details`);
-        return validFavorites.filter(id => id !== competition.id);
-      } else {
-        console.log(`Adding ${competition.id} to favorites in details`);
-        return [...validFavorites, competition.id];
-      }
-    });
+    const newFavorites = isFavorite
+      ? favorites.filter(id => id !== competition.id)
+      : [...favorites, competition.id];
+    
+    setFavorites(newFavorites);
   };
 
   const daysRemaining = getDaysRemaining(competition.date);
@@ -135,8 +128,9 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
         <div className="bg-white rounded-lg shadow-sm border border-gray-100">
           <div className="divide-y divide-gray-100">
             {invitation && (
-              <div key={invitation.id}>
+              <div>
                 <Link
+                  key={invitation.id}
                   to={invitation.url}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -155,8 +149,9 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
               </div>
             )}
             {pm && (
-              <div key={pm.id}>
+              <div>
                 <Link
+                  key={pm.id}
                   to={pm.url}
                   target="_blank"
                   rel="noopener noreferrer"

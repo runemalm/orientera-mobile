@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { useUserLocation } from '../hooks/useUserLocation';
@@ -31,48 +30,46 @@ const SettingsPage: React.FC = () => {
 
   return (
     <MobileLayout title="Inställningar">
-      <div className="h-full overflow-hidden p-4">
-        <div className="space-y-4 overflow-hidden">
-          <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 space-y-4">
-            <div className="flex items-center gap-2 text-forest">
-              <MapPin className="h-5 w-5" />
-              <h2 className="font-semibold">Plats</h2>
-            </div>
-            <div className="bg-gray-50 rounded-lg p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">{userLocation?.city}</span>
-                </div>
-                <Button 
-                  variant="outline"
-                  onClick={() => setShowLocationInput(true)}
-                  className="text-forest hover:text-forest-dark border-forest hover:border-forest-dark"
-                >
-                  Byt plats
-                </Button>
+      <div className="p-4 space-y-4">
+        <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 space-y-4">
+          <div className="flex items-center gap-2 text-forest">
+            <MapPin className="h-5 w-5" />
+            <h2 className="font-semibold">Plats</h2>
+          </div>
+          <div className="bg-gray-50 rounded-lg p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm">{userLocation?.city}</span>
               </div>
+              <Button 
+                variant="outline"
+                onClick={() => setShowLocationInput(true)}
+                className="text-forest hover:text-forest-dark border-forest hover:border-forest-dark"
+              >
+                Byt plats
+              </Button>
             </div>
           </div>
+        </div>
 
-          <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 space-y-4">
-            <div className="flex items-center gap-2 text-forest">
-              <CalendarRange className="h-5 w-5" />
-              <h2 className="font-semibold">Tidsperiod för tävlingar</h2>
-            </div>
-            <div className="bg-gray-50 rounded-lg p-4 space-y-4">
-              <div className="space-y-2">
-                <label className="text-sm text-muted-foreground">
-                  Visa tävlingar {daysBack} dagar tillbaka i tiden
-                </label>
-                <Slider
-                  defaultValue={[daysBack]}
-                  max={30}
-                  min={1}
-                  step={1}
-                  onValueChange={handleDaysBackChange}
-                />
-              </div>
+        <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 space-y-4">
+          <div className="flex items-center gap-2 text-forest">
+            <CalendarRange className="h-5 w-5" />
+            <h2 className="font-semibold">Tidsperiod för tävlingar</h2>
+          </div>
+          <div className="bg-gray-50 rounded-lg p-4 space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm text-muted-foreground">
+                Visa tävlingar {daysBack} dagar tillbaka i tiden
+              </label>
+              <Slider
+                defaultValue={[daysBack]}
+                max={30}
+                min={1}
+                step={1}
+                onValueChange={handleDaysBackChange}
+              />
             </div>
           </div>
         </div>
