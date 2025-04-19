@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Loader2 } from 'lucide-react';
@@ -77,7 +78,7 @@ const CompetitionsPage: React.FC = () => {
     }
 
     return (
-      <div className="px-4 py-4">
+      <div className="px-4 pb-20">
         <CompetitionList 
           competitions={competitions} 
           userLocation={userLocation}
