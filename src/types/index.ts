@@ -85,6 +85,8 @@ export interface CompetitionSummary {
   latitude: number | null; // Updated to allow null
   longitude: number | null; // Updated to allow null
   isFavorite?: boolean;
+  participantCount?: number; // Added to match Competition interface
+  clubParticipantCount?: number; // Added to match Competition interface
 }
 
 // Competition class to match the backend C# model
@@ -108,6 +110,8 @@ export interface Competition {
   eventorLink?: string | null; // Updated to allow null
   liveloxLink?: string | null; // Updated to allow null
   resources: Resource[];
+  participantCount?: number; // Added property
+  clubParticipantCount?: number; // Added property
 }
 
 // Resource interface matching backend C# model

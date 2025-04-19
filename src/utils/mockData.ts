@@ -12,7 +12,9 @@ export const mockCompetitions: CompetitionSummary[] = [
     competitionType: CompetitionType.National,
     district: OrienteeringDistrict.Smaland,
     latitude: 56.9258,
-    longitude: 16.4332
+    longitude: 16.4332,
+    participantCount: 125,
+    clubParticipantCount: 18
   },
   {
     id: "comp-2",
@@ -154,7 +156,9 @@ export const mockCompetitionDetails: Record<string, Competition> = {
     startTime: "10:00",
     contact: "Anders Karlsson",
     eventorLink: "https://eventor.orientering.se/Events/Show/108121",
-    liveloxLink: "https://www.livelox.com/Events/Show/12345"
+    liveloxLink: "https://www.livelox.com/Events/Show/12345",
+    participantCount: 125,
+    clubParticipantCount: 18
   },
   "comp-2": {
     ...mockCompetitions[1],
@@ -202,7 +206,9 @@ export const mockCompetitionDetails: Record<string, Competition> = {
     startTime: "09:30",
     contact: "Eva Lindström",
     eventorLink: "https://eventor.orientering.se/Events/Show/109122",
-    liveloxLink: "https://www.livelox.com/Events/Show/67890"
+    liveloxLink: "https://www.livelox.com/Events/Show/67890",
+    participantCount: 92,
+    clubParticipantCount: 14
   },
   "comp-3": {
     ...mockCompetitions[2],
@@ -231,7 +237,9 @@ export const mockCompetitionDetails: Record<string, Competition> = {
     registrationDeadline: "2025-05-02",
     startTime: "09:00",
     contact: "Emma Svensson",
-    eventorLink: "https://eventor.orientering.se/Events/Show/109123"
+    eventorLink: "https://eventor.orientering.se/Events/Show/109123",
+    participantCount: 78,
+    clubParticipantCount: 10
   },
   "comp-4": {
     ...mockCompetitions[3],
@@ -261,7 +269,9 @@ export const mockCompetitionDetails: Record<string, Competition> = {
     startTime: "17:30",
     contact: "Maria Svensson",
     eventorLink: "https://www.lessebook.se/xxlungdom2025",
-    liveloxLink: "https://www.livelox.com/Events/Show/54321"
+    liveloxLink: "https://www.livelox.com/Events/Show/54321",
+    participantCount: 56,
+    clubParticipantCount: 12
   },
   "comp-5": {
     ...mockCompetitions[4],
@@ -299,7 +309,9 @@ export const mockCompetitionDetails: Record<string, Competition> = {
     registrationDeadline: "2025-05-12",
     startTime: "12:00",
     contact: "Regional Committee",
-    eventorLink: "https://regiono.org/relay2025"
+    eventorLink: "https://regiono.org/relay2025",
+    participantCount: 45,
+    clubParticipantCount: 15
   },
   "comp-6": {
     ...mockCompetitions[5],
@@ -319,7 +331,9 @@ export const mockCompetitionDetails: Record<string, Competition> = {
     registrationDeadline: "2025-05-20",
     startTime: "14:00",
     contact: "Lennart Svensson",
-    eventorLink: "https://lessebook.se"
+    eventorLink: "https://lessebook.se",
+    participantCount: 32,
+    clubParticipantCount: 8
   },
   "comp-7": {
     ...mockCompetitions[6],
@@ -348,7 +362,9 @@ export const mockCompetitionDetails: Record<string, Competition> = {
     registrationDeadline: "2025-05-28",
     startTime: "11:00",
     contact: "Karin Johansson",
-    eventorLink: "https://torsasok.se"
+    eventorLink: "https://torsasok.se",
+    participantCount: 28,
+    clubParticipantCount: 6
   },
   "comp-8": {
     ...mockCompetitions[7],
@@ -378,6 +394,8 @@ export const mockCompetitionDetails: Record<string, Competition> = {
     startTime: "10:00",
     contact: "Sven Pettersson",
     eventorLink: "https://www.torsasok.se/veteran2025",
-    liveloxLink: "https://www.livelox.com/Events/Show/78901"
+    liveloxLink: "https://www.livelox.com/Events/Show/78901",
+    participantCount: 40,
+    clubParticipantCount: 9
   },
 };
