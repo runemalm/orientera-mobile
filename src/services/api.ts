@@ -3,10 +3,9 @@ import { Competition, CompetitionSummary } from "../types";
 import { mockCompetitions, mockCompetitionDetails } from "../utils/mockData";
 
 // Configuration to determine whether to use mock data or real API
-// In production, this would be set to false
-const USE_MOCK_API = false; // Changed to false to use real API
+const USE_MOCK_API = true; // Set to true to use mock data
 
-// Base URL for the API - updated with the correct base URL without the endpoint path
+// Base URL for the API
 const API_BASE_URL = 'https://orientera-backend.delightfulisland-78f87004.northeurope.azurecontainerapps.io/api';
 
 /**
@@ -127,3 +126,4 @@ export const getCompetitionById = async (id: string): Promise<Competition | null
     throw error;
   }
 };
+
