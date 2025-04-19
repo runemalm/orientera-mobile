@@ -38,14 +38,14 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
     const map = L.map(mapRef.current, {
       center: [coordinates.lat, coordinates.lng],
       zoom: 13,
-      zoomControl: true,
+      zoomControl: false, // Disable zoom controls
       attributionControl: true,
-      doubleClickZoom: true,
-      scrollWheelZoom: true,
-      boxZoom: true,
-      touchZoom: true,
+      doubleClickZoom: false, // Disable double click zoom
+      scrollWheelZoom: false, // Disable scroll wheel zoom
+      boxZoom: false, // Disable box zoom
+      touchZoom: false, // Disable touch zoom
       dragging: true,
-      keyboard: true,
+      keyboard: false, // Disable keyboard controls
       tap: true
     });
     
