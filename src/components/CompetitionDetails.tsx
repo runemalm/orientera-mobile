@@ -1,6 +1,6 @@
 import React from 'react';
-import { Competition, ResourceType } from '../types';
-import { Users, Car, FileText, Navigation, BarChart2, Map, Star, Clock } from 'lucide-react';
+import { Competition, ResourceType, ResourceFormat } from '../types';
+import { Users, Car, FileText, Navigation, BarChart2, Map, Star, Clock, ExternalLink } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { translateDiscipline, translateCompetitionType } from '../utils/translations';
 import { formatSwedishDate, getDaysRemaining } from '../utils/dateUtils';
@@ -92,19 +92,14 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
   const invitation = competition.resources?.find(r => r.type === ResourceType.Invitation);
   const pm = competition.resources?.find(r => r.type === ResourceType.PM);
   const results = competition.resources?.filter(r => 
-    r.type === ResourceType.Results || r.type === ResourceType.Splits
-  );
-  const otherResources = competition.resources?.filter(r => 
-    r.type !== ResourceType.Invitation && 
-    r.type !== ResourceType.PM && 
-    r.type !== ResourceType.Results &&
-    r.type !== ResourceType.Splits
+    r.type === ResourceType.Results || 
+    r.type === ResourceType.Splits
   );
 
   const formattedLocation = getFormattedLocation(
     competition.location,
-    competition.latitude,
-    competition.longitude
+    null, // Set to null to exclude coordinates from display
+    null
   );
 
   const directionsUrl = hasValidCoordinates(competition.latitude, competition.longitude)
@@ -242,10 +237,13 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
               <Car size={20} className="text-forest" />
               <span className="font-medium">Samåkning</span>
             </div>
-            <div className="text-gray-400">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m9 18 6-6-6-6"/>
-              </svg>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-500">3</span>
+              <div className="text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m9 18 6-6-6-6"/>
+                </svg>
+              </div>
             </div>
           </Link>
 
@@ -296,20 +294,38 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
         </div>
       </div>
 
-      {results && results.length > 0 && (
+      {(results?.length > 0 || competition.liveloxLink) && (
         <div className="bg-white rounded-lg shadow-sm border border-gray-100">
           <div className="p-4 border-b border-gray-100">
             <div className="flex items-center gap-2">
               <BarChart2 className="text-forest" size={20} />
-              <h3 className="font-semibold">Resultat</h3>
+              <h3 className="font-semibold">Resultat och analys</h3>
             </div>
           </div>
           <div className="divide-y divide-gray-100">
-            {results.map((result) => (
+            {results?.map((result) => (
               <div key={result.id}>
                 <FileItem file={result} />
               </div>
             ))}
+            {competition.liveloxLink && (
+              <a
+                href={competition.liveloxLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between p-4"
+              >
+                <div className="flex items-center gap-3">
+                  <ExternalLink size={20} className="text-forest" />
+                  <span className="font-medium">Livelox</span>
+                </div>
+                <div className="text-gray-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="m9 18 6-6-6-6"/>
+                  </svg>
+                </div>
+              </a>
+            )}
           </div>
         </div>
       )}
