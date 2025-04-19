@@ -1,8 +1,9 @@
 
 import { useState, useEffect } from 'react';
 
-export function useLocalStorage<T>(key: string, initialValue?: T): [T | undefined, (value: T) => void] {
-  const [storedValue, setStoredValue] = useState<T | undefined>(() => {
+export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T) => void] {
+  // Using a function in useState ensures the localStorage lookup only happens once on initial render
+  const [storedValue, setStoredValue] = useState<T>(() => {
     try {
       const item = window.localStorage.getItem(key);
       return item ? JSON.parse(item) : initialValue;
