@@ -1,9 +1,10 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionDetails from '../components/CompetitionDetails';
 import { Competition } from '../types';
-import { AlertCircle, Share2 } from 'lucide-react';
+import { AlertCircle, Share2, Trophy } from 'lucide-react';
 import { getCompetitionById } from '../services/api';
 import { Button } from '@/components/ui/button';
 

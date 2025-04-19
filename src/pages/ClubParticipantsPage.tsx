@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Toaster } from '@/components/ui/toaster';
 import { Competition } from '../types';
 import { mockCompetitionDetails } from '../utils/mockData';
 
@@ -108,7 +107,6 @@ const ClubParticipantsPage: React.FC = () => {
         <div className="flex justify-center items-center h-64 mt-4">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
         </div>
-        <Toaster />
       </MobileLayout>
     );
   }
@@ -127,7 +125,6 @@ const ClubParticipantsPage: React.FC = () => {
           <h2 className="text-xl font-bold">Tävlingen hittades inte</h2>
           <p className="text-gray-500 mt-2">Tävlingen du söker existerar inte</p>
         </div>
-        <Toaster />
       </MobileLayout>
     );
   }
@@ -173,7 +170,6 @@ const ClubParticipantsPage: React.FC = () => {
           </div>
         )}
       </div>
-      <Toaster />
     </MobileLayout>
   );
 };

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getFormattedLocation } from '../utils/locationUtils';
@@ -9,9 +10,7 @@ import { Card } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@/components/ui/table';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { useToast } from '@/hooks/use-toast';
 import OfferRideForm from '../components/carpooling/OfferRideForm';
-import { Toaster } from '@/components/ui/toaster';
 import { getCompetitionById } from '../services/api';
 import { Competition } from '../types';
 
@@ -43,7 +42,6 @@ const CarpoolingPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [rides] = useState(mockRides);
   const [showOfferForm, setShowOfferForm] = useState(false);
-  const { toast } = useToast();
 
   console.log("CarpoolingPage rendered, competitionId:", competitionId);
 
@@ -70,10 +68,8 @@ const CarpoolingPage: React.FC = () => {
   }, [competitionId]);
 
   const handleJoinRide = (rideId: string) => {
-    toast({
-      title: "Förfrågan skickad",
-      description: "Chauffören har meddelats om din förfrågan.",
-    });
+    console.log("Join ride request sent for ride:", rideId);
+    // Without toast, we could show visual feedback in other ways if needed
   };
 
   if (loading) {
@@ -83,7 +79,6 @@ const CarpoolingPage: React.FC = () => {
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
           <p className="text-gray-500">Hämtar information om samåkning...</p>
         </div>
-        <Toaster />
       </MobileLayout>
     );
   }
@@ -98,7 +93,6 @@ const CarpoolingPage: React.FC = () => {
           <h2 className="text-xl font-bold">Ett fel uppstod</h2>
           <p className="text-gray-500 mt-2">{error}</p>
         </div>
-        <Toaster />
       </MobileLayout>
     );
   }
@@ -113,7 +107,6 @@ const CarpoolingPage: React.FC = () => {
           <h2 className="text-xl font-bold">Tävlingen hittades inte</h2>
           <p className="text-gray-500 mt-2">Vi kunde tyvärr inte hitta information om samåkning.</p>
         </div>
-        <Toaster />
       </MobileLayout>
     );
   }
@@ -231,7 +224,6 @@ const CarpoolingPage: React.FC = () => {
           <OfferRideForm onClose={() => setShowOfferForm(false)} />
         </DialogContent>
       </Dialog>
-      <Toaster />
     </MobileLayout>
   );
 };
