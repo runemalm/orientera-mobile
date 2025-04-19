@@ -56,6 +56,7 @@ export const getNearbyCompetitions = async (
     params.append('latitude', latitude.toString());
     params.append('longitude', longitude.toString());
     
+    // Only add date filters if they are provided
     if (options?.from) {
       params.append('from', options.from.toISOString().split('T')[0]);
     }
