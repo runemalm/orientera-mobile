@@ -1,8 +1,10 @@
-
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 // Updated type to support functional updates
 export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T | ((val: T) => T)) => void] {
+  // Keep a ref to the latest value to prevent race conditions
+  const latestValueRef = useRef<T | null>(null);
+  
   // Using a function in useState ensures the localStorage lookup only happens once on initial render
   const [storedValue, setStoredValue] = useState<T>(() => {
     try {
@@ -11,11 +13,15 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T 
       if (item) {
         const parsedItem = JSON.parse(item);
         // Make sure we return initialValue if parsedItem is null or undefined
-        return parsedItem !== null && parsedItem !== undefined ? parsedItem : initialValue;
+        const value = parsedItem !== null && parsedItem !== undefined ? parsedItem : initialValue;
+        latestValueRef.current = value; // Set the initial ref value
+        return value;
       }
+      latestValueRef.current = initialValue;
       return initialValue;
     } catch (error) {
       console.error('Error reading localStorage:', error);
+      latestValueRef.current = initialValue;
       return initialValue;
     }
   });
@@ -25,9 +31,11 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T 
     try {
       if (storedValue !== undefined && storedValue !== null) {
         window.localStorage.setItem(key, JSON.stringify(storedValue));
+        latestValueRef.current = storedValue;
       } else {
         // If value is undefined or null, remove the item from localStorage
         window.localStorage.removeItem(key);
+        latestValueRef.current = null;
       }
     } catch (error) {
       console.error('Error writing to localStorage:', error);
@@ -38,8 +46,12 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T 
   const setValue = (value: T | ((val: T) => T)) => {
     try {
       // Allow value to be a function so we have the same API as useState
-      const valueToStore =
-        value instanceof Function ? value(storedValue) : value;
+      const valueToStore = value instanceof Function 
+        ? value(latestValueRef.current !== null ? latestValueRef.current : storedValue) 
+        : value;
+      
+      // Immediately update the ref to the latest value to prevent race conditions
+      latestValueRef.current = valueToStore;
       
       // Save state
       setStoredValue(valueToStore);
