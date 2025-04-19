@@ -34,7 +34,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
       />
       
       <main 
-        className={`flex-grow mobile-page mobile-container ${fullHeight ? 'h-full overflow-hidden' : 'overflow-y-auto'}`}
+        className={`flex-grow mobile-page mobile-container ${fullHeight ? 'h-full overflow-hidden' : ''}`}
         style={{
           paddingBottom: !hideBottomTabs ? 'calc(5rem + var(--safe-area-inset-bottom))' : '1rem'
         }}
