@@ -1,10 +1,12 @@
 import React from 'react';
 import { Competition, ResourceType } from '../types';
-import { Users, Car, Link as LinkIcon, FileText, Navigation, BarChart2, Map } from 'lucide-react';
+import { Users, Car, Link as LinkIcon, FileText, Navigation, BarChart2, Map, Star, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { translateDiscipline, translateCompetitionType } from '../utils/translations';
-import { formatSwedishDate } from '../utils/dateUtils';
+import { formatSwedishDate, getDaysRemaining } from '../utils/dateUtils';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 import FileItem from './FileItem';
+import { cn } from '@/lib/utils';
 
 interface CompetitionDetailsProps {
   competition: Competition;
@@ -12,6 +14,55 @@ interface CompetitionDetailsProps {
 
 const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) => {
   const formattedDate = formatSwedishDate(competition.date, 'EEEE d MMMM yyyy');
+  const [favorites, setFavorites] = useLocalStorage<string[]>('favoriteCompetitions', []);
+  
+  const isFavorite = favorites?.includes(competition.id) || false;
+
+  const toggleFavorite = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!favorites) return;
+    
+    const newFavorites = isFavorite
+      ? favorites.filter(id => id !== competition.id)
+      : [...favorites, competition.id];
+    
+    setFavorites(newFavorites);
+  };
+
+  const daysRemaining = getDaysRemaining(competition.date);
+  
+  const getStatusInfo = () => {
+    if (daysRemaining > 7) {
+      return { 
+        color: "bg-gray-100 text-gray-700",
+        text: `${daysRemaining} dagar kvar`
+      };
+    } else if (daysRemaining > 1) {
+      return {
+        color: "bg-blue-100 text-blue-700", 
+        text: `${daysRemaining} dagar kvar`
+      };
+    } else if (daysRemaining === 1) {
+      return {
+        color: "bg-blue-200 text-blue-800",
+        text: "Imorgon"
+      };
+    } else if (daysRemaining === 0) {
+      return {
+        color: "bg-green-100 text-green-700",
+        text: "Idag"
+      };
+    } else {
+      const daysSince = Math.abs(daysRemaining);
+      const daysText = daysSince === 1 ? "dag" : "dagar";
+      return {
+        color: "bg-gray-100 text-gray-500",
+        text: `${daysSince} ${daysText} sedan`
+      };
+    }
+  };
+
+  const status = getStatusInfo();
   
   const invitation = competition.resources?.find(r => r.type === ResourceType.Invitation);
   const pm = competition.resources?.find(r => r.type === ResourceType.PM);
@@ -37,10 +88,34 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
       <div className="bg-primary text-white p-5 rounded-lg shadow-md relative overflow-hidden">
         <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-primary-foreground/10"></div>
         <div className="absolute bottom-0 right-0 w-16 h-16 rounded-full bg-primary-foreground/10"></div>
-        <h2 className="text-xl font-bold relative z-10">{competition.name}</h2>
-        <p className="text-sm text-white/80 relative z-10">{competition.club}</p>
-        <div className="mt-3 inline-block bg-white/20 px-3 py-1 rounded-full text-sm relative z-10">
-          {translateCompetitionType(competition.competitionType)} • {translateDiscipline(competition.discipline)}
+        
+        <div className="flex items-start justify-between relative z-10">
+          <div className="flex-1">
+            <h2 className="text-xl font-bold">{competition.name}</h2>
+            <p className="text-sm text-white/80">{competition.club}</p>
+          </div>
+          <button 
+            onClick={toggleFavorite}
+            className="p-1 hover:bg-primary-foreground/10 rounded-full transition-colors"
+          >
+            <Star
+              size={24}
+              className={cn(
+                "transition-colors",
+                isFavorite ? "fill-yellow-400 text-yellow-400" : "text-white/80"
+              )}
+            />
+          </button>
+        </div>
+        
+        <div className="mt-3 flex items-center gap-2 relative z-10">
+          <div className="inline-flex items-center gap-1 bg-white/20 px-3 py-1 rounded-full text-sm">
+            <Clock size={14} />
+            {status.text}
+          </div>
+          <div className="inline-flex bg-white/20 px-3 py-1 rounded-full text-sm">
+            {translateCompetitionType(competition.competitionType)} • {translateDiscipline(competition.discipline)}
+          </div>
         </div>
       </div>
 
