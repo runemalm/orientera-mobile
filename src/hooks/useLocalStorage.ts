@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
 
-// Updated type to support functional updates
+import { useState, useEffect, useRef, useCallback } from 'react';
+
+// A more robust useLocalStorage hook with synchronous and asynchronous update support
 export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T | ((val: T) => T)) => void] {
   // Keep a ref to the latest value to prevent race conditions
   const latestValueRef = useRef<T | null>(null);
@@ -26,24 +27,8 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T 
     }
   });
 
-  // Update localStorage whenever storedValue changes
-  useEffect(() => {
-    try {
-      if (storedValue !== undefined && storedValue !== null) {
-        window.localStorage.setItem(key, JSON.stringify(storedValue));
-        latestValueRef.current = storedValue;
-      } else {
-        // If value is undefined or null, remove the item from localStorage
-        window.localStorage.removeItem(key);
-        latestValueRef.current = null;
-      }
-    } catch (error) {
-      console.error('Error writing to localStorage:', error);
-    }
-  }, [key, storedValue]);
-
-  // Modified setValue function to handle both direct values and functional updates
-  const setValue = (value: T | ((val: T) => T)) => {
+  // A memoized version of setValue to ensure it doesn't change on re-renders
+  const setValue = useCallback((value: T | ((val: T) => T)) => {
     try {
       // Allow value to be a function so we have the same API as useState
       const valueToStore = value instanceof Function 
@@ -55,10 +40,41 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T 
       
       // Save state
       setStoredValue(valueToStore);
+
+      // Update localStorage synchronously
+      if (valueToStore !== undefined && valueToStore !== null) {
+        window.localStorage.setItem(key, JSON.stringify(valueToStore));
+      } else {
+        window.localStorage.removeItem(key);
+      }
     } catch (error) {
       console.error('Error setting localStorage:', error);
     }
-  };
+  }, [key, storedValue]);
+
+  // Update localStorage when value changes
+  // This is primarily here for cross-tab synchronization
+  useEffect(() => {
+    // Since we're already writing to localStorage in setValue,
+    // we only need to handle external changes here
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === key && event.newValue !== null) {
+        try {
+          const newValue = JSON.parse(event.newValue);
+          // Only update the state if the value has actually changed
+          if (JSON.stringify(newValue) !== JSON.stringify(latestValueRef.current)) {
+            latestValueRef.current = newValue;
+            setStoredValue(newValue);
+          }
+        } catch (error) {
+          console.error('Error parsing storage change:', error);
+        }
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, [key]);
 
   return [storedValue, setValue];
 }

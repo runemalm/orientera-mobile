@@ -27,16 +27,24 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition, userLoca
 
   const toggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
+    e.preventDefault(); // Added to prevent any default behavior
     
-    // Use functional update to ensure we're always working with the latest state
+    // Use functional update with the latest state
     setFavorites((currentFavorites) => {
+      // Debug output to trace the current state
+      console.log(`Toggling favorite ${competition.id} (${competition.name}), current state: ${isFavorite ? 'favorite' : 'not favorite'}`);
+      
       // Ensure we have a valid array to work with
       const validFavorites = Array.isArray(currentFavorites) ? currentFavorites : [];
       
       // Create a new array to avoid mutating the original state
-      return validFavorites.includes(competition.id)
-        ? validFavorites.filter(id => id !== competition.id)
-        : [...validFavorites, competition.id];
+      if (validFavorites.includes(competition.id)) {
+        console.log(`Removing ${competition.id} from favorites`);
+        return validFavorites.filter(id => id !== competition.id);
+      } else {
+        console.log(`Adding ${competition.id} to favorites`);
+        return [...validFavorites, competition.id];
+      }
     });
   };
 
