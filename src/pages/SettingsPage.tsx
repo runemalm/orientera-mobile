@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { useUserLocation } from '../hooks/useUserLocation';
@@ -10,13 +9,8 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { Slider } from "@/components/ui/slider";
 import LocationInputForm from '../components/LocationInputForm';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 
@@ -28,6 +22,10 @@ const SettingsPage: React.FC = () => {
   const handleLocationUpdate = (location: { city: string; latitude: number; longitude: number }) => {
     updateUserLocation(location);
     setShowLocationInput(false);
+  };
+
+  const handleDaysBackChange = (value: number[]) => {
+    setDaysBack(value[0]);
   };
 
   return (
@@ -63,25 +61,15 @@ const SettingsPage: React.FC = () => {
           <div className="bg-gray-50 rounded-lg p-4 space-y-4">
             <div className="space-y-2">
               <label className="text-sm text-muted-foreground">
-                Visa tävlingar tillbaka i tiden
+                Visa tävlingar {daysBack} dagar tillbaka i tiden
               </label>
-              <Select
-                value={daysBack.toString()}
-                onValueChange={(value) => setDaysBack(parseInt(value))}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Välj antal dagar" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1">1 dag</SelectItem>
-                  <SelectItem value="2">2 dagar</SelectItem>
-                  <SelectItem value="3">3 dagar</SelectItem>
-                  <SelectItem value="5">5 dagar</SelectItem>
-                  <SelectItem value="7">1 vecka</SelectItem>
-                  <SelectItem value="14">2 veckor</SelectItem>
-                  <SelectItem value="30">1 månad</SelectItem>
-                </SelectContent>
-              </Select>
+              <Slider
+                defaultValue={[daysBack]}
+                max={30}
+                min={1}
+                step={1}
+                onValueChange={handleDaysBackChange}
+              />
             </div>
           </div>
         </div>
