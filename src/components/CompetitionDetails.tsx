@@ -1,6 +1,6 @@
 import React from 'react';
 import { Competition, ResourceType } from '../types';
-import { Users, Car, Link as LinkIcon, FileText } from 'lucide-react';
+import { Users, Car, Link as LinkIcon, FileText, Navigation } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { translateDiscipline, translateCompetitionType } from '../utils/translations';
 import { formatSwedishDate } from '../utils/dateUtils';
@@ -22,6 +22,13 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
     r.type !== ResourceType.Invitation && r.type !== ResourceType.PM
   );
   
+  const getDirectionsUrl = () => {
+    if (!competition.latitude || !competition.longitude) return null;
+    return `https://www.google.com/maps/dir/?api=1&destination=${competition.latitude},${competition.longitude}`;
+  };
+  
+  const directionsUrl = getDirectionsUrl();
+
   return (
     <div className="space-y-6">
       {/* Competition header */}
@@ -88,6 +95,26 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
       {/* Info panel with all sections */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-100">
         <div className="divide-y divide-gray-100">
+          {/* Directions link */}
+          {directionsUrl && (
+            <a
+              href={directionsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-between p-4"
+            >
+              <div className="flex items-center gap-3">
+                <Navigation size={20} className="text-forest" />
+                <span className="font-medium">Vägbeskrivning</span>
+              </div>
+              <div className="text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m9 18 6-6-6-6"/>
+                </svg>
+              </div>
+            </a>
+          )}
+          
           {/* Participants link */}
           <Link 
             to={`/competition/${competition.id}/participants`}
