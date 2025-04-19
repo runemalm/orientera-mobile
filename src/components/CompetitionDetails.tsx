@@ -270,10 +270,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
             >
               <div className="flex items-center gap-3">
                 <Navigation size={20} className="text-forest" />
-                <div>
-                  <span className="font-medium">Vägbeskrivning</span>
-                  <p className="text-sm text-gray-500">{formattedLocation}</p>
-                </div>
+                <span className="font-medium">Vägbeskrivning</span>
               </div>
               <div className="text-gray-400">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
