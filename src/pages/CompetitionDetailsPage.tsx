@@ -13,9 +13,12 @@ const CompetitionDetailsPage: React.FC = () => {
   const [competition, setCompetition] = useState<Competition | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isSharing, setIsSharing] = useState(false);
 
   const handleShare = async () => {
     if (!competition) return;
+    
+    setIsSharing(true);
     
     if (navigator.share) {
       try {
@@ -28,6 +31,8 @@ const CompetitionDetailsPage: React.FC = () => {
         if ((error as Error).name !== 'AbortError') {
           console.error('Error sharing:', error);
         }
+      } finally {
+        setIsSharing(false);
       }
     } else {
       // Fallback: Copy to clipboard
@@ -36,6 +41,8 @@ const CompetitionDetailsPage: React.FC = () => {
         console.log('URL copied to clipboard');
       } catch (error) {
         console.error('Error copying to clipboard:', error);
+      } finally {
+        setIsSharing(false);
       }
     }
   };
@@ -113,6 +120,7 @@ const CompetitionDetailsPage: React.FC = () => {
       size="icon"
       onClick={handleShare}
       className="text-muted-foreground"
+      disabled={isSharing}
     >
       <Share2 className="h-5 w-5" />
     </Button>
