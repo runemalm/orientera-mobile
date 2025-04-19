@@ -9,6 +9,7 @@ interface MobileLayoutProps {
   showBackButton?: boolean;
   hideBottomTabs?: boolean;
   action?: React.ReactNode;
+  fullHeight?: boolean;
 }
 
 const MobileLayout: React.FC<MobileLayoutProps> = ({ 
@@ -16,7 +17,8 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
   title, 
   showBackButton = false, 
   hideBottomTabs = false,
-  action
+  action,
+  fullHeight = false
 }) => {
   const handleBack = () => {
     window.history.back();
@@ -32,7 +34,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
       />
       
       <main 
-        className="flex-grow mobile-page mobile-container"
+        className={`flex-grow mobile-page mobile-container ${fullHeight ? 'h-full overflow-hidden' : 'overflow-y-auto'}`}
         style={{
           paddingBottom: !hideBottomTabs ? 'calc(5rem + var(--safe-area-inset-bottom))' : '1rem'
         }}

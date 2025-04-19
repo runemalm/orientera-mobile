@@ -78,11 +78,13 @@
   html {
     height: -webkit-fill-available;
     width: 100vw;
+    overflow-x: hidden;
   }
 
   body {
     min-height: 100vh;
     min-height: -webkit-fill-available;
+    overflow-x: hidden;
   }
 
   /* Hide scrollbar for a cleaner mobile look */

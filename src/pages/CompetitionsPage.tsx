@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Loader2 } from 'lucide-react';
@@ -5,7 +6,6 @@ import { useUserLocation } from '../hooks/useUserLocation';
 import { CompetitionSummary } from '../types';
 import { getNearbyCompetitions } from '../services/api';
 import CompetitionList from '../components/competition/CompetitionList';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useLocalStorage } from '../hooks/useLocalStorage';
 
@@ -82,35 +82,27 @@ const CompetitionsPage: React.FC = () => {
 
     return (
       <Tabs defaultValue={selectedTab} className="w-full" onValueChange={setSelectedTab}>
-        <div className="sticky top-16 z-10 bg-gray-50 pt-2 pb-3 px-4 shadow-sm">
+        <div className="sticky top-0 z-10 bg-gray-50 pt-2 pb-3 px-4 shadow-sm">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="all">Alla</TabsTrigger>
             <TabsTrigger value="favorites">Favoriter</TabsTrigger>
           </TabsList>
         </div>
 
-        <TabsContent value="all">
-          <ScrollArea className="h-[calc(100vh-14rem)]">
-            <div className="p-4">
-              <CompetitionList 
-                competitions={competitions} 
-                userLocation={userLocation}
-                showFavorites={false}
-              />
-            </div>
-          </ScrollArea>
+        <TabsContent value="all" className="mt-0 p-4">
+          <CompetitionList 
+            competitions={competitions} 
+            userLocation={userLocation}
+            showFavorites={false}
+          />
         </TabsContent>
 
-        <TabsContent value="favorites">
-          <ScrollArea className="h-[calc(100vh-14rem)]">
-            <div className="p-4">
-              <CompetitionList 
-                competitions={competitions}
-                userLocation={userLocation}
-                showFavorites={true}
-              />
-            </div>
-          </ScrollArea>
+        <TabsContent value="favorites" className="mt-0 p-4">
+          <CompetitionList 
+            competitions={competitions}
+            userLocation={userLocation}
+            showFavorites={true}
+          />
         </TabsContent>
       </Tabs>
     );
@@ -118,7 +110,7 @@ const CompetitionsPage: React.FC = () => {
 
   return (
     <MobileLayout title="Tävlingar nära dig">
-      <div className="mt-4">
+      <div className="mt-4 h-full">
         {renderContent()}
       </div>
     </MobileLayout>
