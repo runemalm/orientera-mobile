@@ -1,6 +1,6 @@
 import React from 'react';
 import { Competition, ResourceType, ResourceFormat } from '../types';
-import { Users, Car, FileText, Navigation, BarChart2, Map, Star, Clock, ExternalLink, BookText } from 'lucide-react';
+import { Users, Car, FileText, Navigation, BarChart2, Map, Star, Clock, ExternalLink, CircleAlert } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { translateDiscipline, translateCompetitionType } from '../utils/translations';
 import { formatSwedishDate, getDaysRemaining } from '../utils/dateUtils';
@@ -156,7 +156,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
         <div className="bg-white rounded-lg shadow-sm border border-gray-100">
           <div className="p-4 border-b border-gray-100">
             <div className="flex items-center gap-2">
-              <BookText className="text-forest" size={20} />
+              <CircleAlert className="text-forest" size={20} />
               <h3 className="font-semibold">Tävlingsinformation</h3>
             </div>
           </div>
