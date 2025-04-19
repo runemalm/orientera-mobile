@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { CompetitionSummary } from '../types';
 import { Clock, MapPin, Navigation, Star } from 'lucide-react';
@@ -27,14 +28,15 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition, userLoca
   const toggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
     
+    // Use functional update to ensure we're always working with the latest state
     setFavorites((currentFavorites) => {
-      const validCurrentFavorites = Array.isArray(currentFavorites) ? [...currentFavorites] : [];
+      // Ensure we have a valid array to work with
+      const validFavorites = Array.isArray(currentFavorites) ? currentFavorites : [];
       
-      if (validCurrentFavorites.includes(competition.id)) {
-        return validCurrentFavorites.filter(id => id !== competition.id);
-      } else {
-        return [...validCurrentFavorites, competition.id];
-      }
+      // Create a new array to avoid mutating the original state
+      return validFavorites.includes(competition.id)
+        ? validFavorites.filter(id => id !== competition.id)
+        : [...validFavorites, competition.id];
     });
   };
 
