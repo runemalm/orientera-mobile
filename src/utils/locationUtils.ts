@@ -21,7 +21,7 @@ export const getFormattedLocation = (
     return `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
   }
 
-  return 'Ingen platsinfo tillgänglig';
+  return 'Ingen plats angiven';
 };
 
 /**
@@ -33,3 +33,4 @@ export const hasValidCoordinates = (
 ): boolean => {
   return latitude != null && longitude != null;
 };
+
