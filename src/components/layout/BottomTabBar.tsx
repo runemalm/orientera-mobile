@@ -1,3 +1,4 @@
+
 import React, { useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { CalendarSearch, Home, Settings, Star } from 'lucide-react';
@@ -24,7 +25,7 @@ const BottomTabBar: React.FC = () => {
     {
       name: 'competitions',
       icon: <CalendarSearch size={24} />,
-      label: 'Sök',
+      label: 'Tävlingar',
       path: '/competitions'
     },
     {

@@ -124,7 +124,7 @@ const CompetitionsPage: React.FC = () => {
 
   return (
     <MobileLayout 
-      title="Sök tävlingar" 
+      title="Tävlingar" 
       action={
         <Button 
           variant="ghost" 

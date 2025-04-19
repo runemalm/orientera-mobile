@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { useUserLocation } from '../hooks/useUserLocation';
@@ -62,7 +63,7 @@ const FavoritesPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <MobileLayout title="Mina favorittävlingar">
+      <MobileLayout title="Favoriter">
         <div className="flex flex-col justify-center items-center h-[70vh]">
           <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
           <p className="text-gray-600">Laddar...</p>
@@ -73,7 +74,7 @@ const FavoritesPage: React.FC = () => {
 
   if (error) {
     return (
-      <MobileLayout title="Mina favorittävlingar">
+      <MobileLayout title="Favoriter">
         <div className="text-center py-8">
           <p className="text-gray-500">{error}</p>
         </div>
@@ -83,7 +84,7 @@ const FavoritesPage: React.FC = () => {
 
   if (favorites.length === 0 || favoriteCompetitions.length === 0) {
     return (
-      <MobileLayout title="Mina favorittävlingar">
+      <MobileLayout title="Favoriter">
         <div className="text-center py-8">
           <div className="text-gray-400 mb-2">
             <Star className="w-12 h-12 mx-auto" />
@@ -95,7 +96,7 @@ const FavoritesPage: React.FC = () => {
   }
 
   return (
-    <MobileLayout title="Mina favorittävlingar">
+    <MobileLayout title="Favoriter">
       <div className="px-4 pt-4">
         <CompetitionList
           competitions={favoriteCompetitions}
