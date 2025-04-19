@@ -1,19 +1,57 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionDetails from '../components/CompetitionDetails';
 import { Competition } from '../types';
 import { Toaster } from '@/components/ui/toaster';
-import { Trophy, AlertCircle } from 'lucide-react';
+import { Trophy, AlertCircle, Share2 } from 'lucide-react';
 import { getCompetitionById } from '../services/api';
 import { Button } from '@/components/ui/button';
+import { useToast } from "@/hooks/use-toast";
 
 const CompetitionDetailsPage: React.FC = () => {
   const { competitionId } = useParams<{ competitionId: string }>();
   const [competition, setCompetition] = useState<Competition | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
+
+  const handleShare = async () => {
+    if (!competition) return;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: competition.name,
+          text: `${competition.name} - ${competition.club}`,
+          url: window.location.href
+        });
+      } catch (error) {
+        if ((error as Error).name !== 'AbortError') {
+          console.error('Error sharing:', error);
+          toast({
+            title: "Kunde inte dela",
+            description: "Det gick inte att dela tävlingen just nu.",
+          });
+        }
+      }
+    } else {
+      // Fallback: Copy to clipboard
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        toast({
+          title: "Länken kopierad!",
+          description: "Tävlingens länk har kopierats till urklipp.",
+        });
+      } catch (error) {
+        console.error('Error copying to clipboard:', error);
+        toast({
+          title: "Kunde inte kopiera länken",
+          description: "Det gick inte att kopiera tävlingens länk.",
+        });
+      }
+    }
+  };
 
   const fetchCompetition = async () => {
     if (!competitionId) return;
@@ -85,8 +123,23 @@ const CompetitionDetailsPage: React.FC = () => {
     );
   }
 
+  const shareButton = (
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={handleShare}
+      className="text-muted-foreground"
+    >
+      <Share2 className="h-5 w-5" />
+    </Button>
+  );
+
   return (
-    <MobileLayout title={competition.name} showBackButton>
+    <MobileLayout 
+      title={competition.name} 
+      showBackButton 
+      action={shareButton}
+    >
       <div className="pb-4">
         <CompetitionDetails competition={competition} />
       </div>
