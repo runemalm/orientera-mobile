@@ -44,7 +44,7 @@ const CompetitionMapPage: React.FC = () => {
 
   return (
     <MobileLayout title={competition.location} showBackButton>
-      <div className="h-[calc(100vh-64px)] -mx-4">
+      <div className="h-[calc(100vh-64px)] -mx-4 relative">
         <CompetitionLocationMap 
           locationName={competition.location}
           coordinates={{ lat: competition.latitude, lng: competition.longitude }}

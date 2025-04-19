@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect } from 'react';
 import 'leaflet/dist/leaflet.css';
 import { cn } from '@/lib/utils';
@@ -102,19 +103,19 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
     <div className={cn("relative w-full h-full", className)}>
       <div ref={mapRef} className="h-full w-full z-10"></div>
       
-      {/* Map UI elements */}
-      <div className="absolute bottom-2 right-2 text-gray-500 text-xs bg-white/80 px-2 py-0.5 rounded-full z-[500]">
+      {/* Map UI elements with lower z-index to ensure they don't overlap with tabs */}
+      <div className="absolute bottom-2 right-2 text-gray-500 text-xs bg-white/80 px-2 py-0.5 rounded-full z-[40]">
         <span role="complementary">© OpenStreetMap</span>
       </div>
       
-      <div className="absolute bottom-2 left-2 z-[500]">
+      <div className="absolute bottom-2 left-2 z-[40]">
         <div className="bg-white/80 px-2 py-0.5 rounded-full text-xs font-medium shadow-sm">
           {locationName}
         </div>
       </div>
       
       {/* North Indicator */}
-      <div className="absolute top-2 right-2 flex flex-col items-center bg-white/80 p-1 rounded-full shadow-sm z-[500]">
+      <div className="absolute top-2 right-2 flex flex-col items-center bg-white/80 p-1 rounded-full shadow-sm z-[40]">
         <div className="text-xs font-bold text-gray-700">N</div>
         <div className="h-4 w-[2px] bg-gray-700"></div>
       </div>

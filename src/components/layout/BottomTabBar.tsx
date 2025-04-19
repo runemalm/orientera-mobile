@@ -1,3 +1,4 @@
+
 import React, { useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { MapPin, Home, Settings } from 'lucide-react';
@@ -42,7 +43,7 @@ const BottomTabBar: React.FC = () => {
   }, [navigate, currentPath]);
 
   return (
-    <div className="bottom-tabs fixed bottom-0 left-0 right-0 flex items-center justify-around bg-white border-t border-gray-200 z-10">
+    <div className="bottom-tabs fixed bottom-0 left-0 right-0 flex items-center justify-around bg-white border-t border-gray-200 z-50">
       {tabs.map((tab) => (
         <button
           key={tab.name}
