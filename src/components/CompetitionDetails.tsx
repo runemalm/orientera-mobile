@@ -157,7 +157,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
           <div className="p-4 border-b border-gray-100">
             <div className="flex items-center gap-2">
               <FileText className="text-forest" size={20} />
-              <h3 className="font-semibold">Dokument</h3>
+              <h3 className="font-semibold">Tävlingsinformation</h3>
             </div>
           </div>
           <div className="divide-y divide-gray-100">
