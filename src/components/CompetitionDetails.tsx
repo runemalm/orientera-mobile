@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { translateDiscipline, translateCompetitionType } from '../utils/translations';
 import { formatSwedishDate } from '../utils/dateUtils';
 import FileItem from './FileItem';
-import CompetitionLocationMap from './CompetitionLocationMap';
 
 interface CompetitionDetailsProps {
   competition: Competition;
@@ -184,14 +183,6 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
             ))}
           </div>
         </div>
-      )}
-
-      {competition.latitude && competition.longitude && (
-        <CompetitionLocationMap 
-          locationName={competition.location}
-          coordinates={{ lat: competition.latitude, lng: competition.longitude }}
-          className="h-48 w-full rounded-lg overflow-hidden"
-        />
       )}
     </div>
   );
