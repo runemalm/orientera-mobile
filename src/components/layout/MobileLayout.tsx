@@ -39,9 +39,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
         }`}
         style={{
           paddingTop: '4rem', // Height of TopNavBar
-          paddingBottom: !hideBottomTabs ? 'calc(5rem + var(--safe-area-inset-bottom))' : '1rem',
-          WebkitOverflowScrolling: 'touch', // Enable momentum scrolling on iOS
-          overscrollBehavior: 'none' // Prevent overscroll effects
+          paddingBottom: !hideBottomTabs ? 'calc(5rem + var(--safe-area-inset-bottom))' : '1rem'
         }}
       >
         {children}

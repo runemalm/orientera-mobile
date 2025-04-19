@@ -8,6 +8,7 @@ import { getNearbyCompetitions } from '../services/api';
 import CompetitionList from '../components/competition/CompetitionList';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 // Store competitions in memory to persist between navigations
 let cachedCompetitions: CompetitionSummary[] = [];
@@ -91,10 +92,7 @@ const CompetitionsPage: React.FC = () => {
           </Tabs>
         </div>
         
-        <div className="flex-grow overflow-y-auto h-full" style={{ 
-          WebkitOverflowScrolling: 'touch', 
-          overscrollBehavior: 'contain' 
-        }}>
+        <div className="flex-grow overflow-y-auto h-full">
           {selectedTab === 'all' && (
             <div className="pl-4 pr-4 pb-4 pt-1">
               <CompetitionList 
@@ -106,7 +104,7 @@ const CompetitionsPage: React.FC = () => {
           )}
           
           {selectedTab === 'favorites' && (
-            <div className="pl-4 pr-4 pb-4 pt-1">
+            <div className="p-4">
               <CompetitionList 
                 competitions={competitions}
                 userLocation={userLocation}

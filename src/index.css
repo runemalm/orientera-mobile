@@ -61,7 +61,6 @@
     max-width: 100vw;
     overflow-x: hidden;
     position: relative;
-    overscroll-behavior-y: none; /* Prevent bounce effect at document level */
   }
   
   #root {
@@ -73,7 +72,6 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    overscroll-behavior: none;
   }
 
   /* Mobile viewport optimization */
@@ -81,7 +79,6 @@
     height: -webkit-fill-available;
     width: 100vw;
     overflow-x: hidden;
-    overscroll-behavior: none; /* Prevent bounce effect at document level */
   }
 
   body {
