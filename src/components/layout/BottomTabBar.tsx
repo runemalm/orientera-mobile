@@ -1,7 +1,7 @@
 
 import React, { useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { MapPin, Home, Settings } from 'lucide-react';
+import { MapPin, Home, Settings, Star } from 'lucide-react';
 import { TabName } from '../../types';
 
 const BottomTabBar: React.FC = () => {
@@ -27,6 +27,12 @@ const BottomTabBar: React.FC = () => {
       icon: <MapPin size={24} />,
       label: 'Tävlingar',
       path: '/competitions'
+    },
+    {
+      name: 'favorites',
+      icon: <Star size={24} />,
+      label: 'Favoriter',
+      path: '/favorites'
     },
     {
       name: 'settings',
