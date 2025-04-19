@@ -7,6 +7,7 @@ import { formatSwedishDate, getDaysRemaining } from '../utils/dateUtils';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import FileItem from './FileItem';
 import { cn } from '@/lib/utils';
+import { getFormattedLocation, hasValidCoordinates } from '../utils/locationUtils';
 
 interface CompetitionDetailsProps {
   competition: Competition;
@@ -76,12 +77,15 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
     r.type !== ResourceType.Splits
   );
 
-  const getDirectionsUrl = () => {
-    if (!competition.latitude || !competition.longitude) return null;
-    return `https://www.google.com/maps/dir/?api=1&destination=${competition.latitude},${competition.longitude}`;
-  };
-  
-  const directionsUrl = getDirectionsUrl();
+  const formattedLocation = getFormattedLocation(
+    competition.location,
+    competition.latitude,
+    competition.longitude
+  );
+
+  const directionsUrl = hasValidCoordinates(competition.latitude, competition.longitude)
+    ? `https://www.google.com/maps/dir/?api=1&destination=${competition.latitude},${competition.longitude}`
+    : null;
 
   return (
     <div className="space-y-6">
@@ -224,7 +228,10 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
             >
               <div className="flex items-center gap-3">
                 <Navigation size={20} className="text-forest" />
-                <span className="font-medium">Vägbeskrivning</span>
+                <div>
+                  <span className="font-medium">Vägbeskrivning</span>
+                  <p className="text-sm text-gray-500">{formattedLocation}</p>
+                </div>
               </div>
               <div className="text-gray-400">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -234,14 +241,17 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
             </a>
           )}
 
-          {competition.latitude && competition.longitude && (
+          {hasValidCoordinates(competition.latitude, competition.longitude) && (
             <Link 
               to={`/competition/${competition.id}/map`}
               className="flex items-center justify-between p-4"
             >
               <div className="flex items-center gap-3">
                 <Map size={20} className="text-forest" />
-                <span className="font-medium">Visa karta</span>
+                <div>
+                  <span className="font-medium">Visa karta</span>
+                  <p className="text-sm text-gray-500">{formattedLocation}</p>
+                </div>
               </div>
               <div className="text-gray-400">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
