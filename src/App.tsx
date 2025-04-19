@@ -14,6 +14,7 @@ import CompetitionMapPage from './pages/CompetitionMapPage';
 import FavoritesPage from './pages/FavoritesPage';
 import NotFound from './pages/NotFound';
 import CompetitionFilterPage from './pages/CompetitionFilterPage';
+import ProfilePage from './pages/ProfilePage';
 
 const App = () => {
   const [hasLocation, setHasLocation] = useLocalStorage<boolean>('userLocation', false);
@@ -33,6 +34,7 @@ const App = () => {
         <Route path="/competition/:competitionId/map" element={<CompetitionMapPage />} />
         <Route path="/favorites" element={<FavoritesPage />} />
         <Route path="/competitions/filter" element={<CompetitionFilterPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
