@@ -1,6 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { getFormattedLocation } from '../utils/locationUtils';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Car, MapPin, Clock, Users, Plus, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -45,7 +45,6 @@ const CarpoolingPage: React.FC = () => {
   const [showOfferForm, setShowOfferForm] = useState(false);
   const { toast } = useToast();
 
-  // Add console logs for debugging
   console.log("CarpoolingPage rendered, competitionId:", competitionId);
 
   useEffect(() => {
@@ -126,7 +125,11 @@ const CarpoolingPage: React.FC = () => {
           <h2 className="font-semibold">{competition.name}</h2>
           <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
             <MapPin size={16} />
-            <span>{competition.location || 'Ingen plats angiven'}</span>
+            <span>{getFormattedLocation(
+              competition.location, 
+              competition.latitude, 
+              competition.longitude
+            )}</span>
           </div>
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <Clock size={16} />
