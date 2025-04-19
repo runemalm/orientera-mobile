@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { useUserLocation } from '../hooks/useUserLocation';
@@ -30,8 +31,8 @@ const SettingsPage: React.FC = () => {
 
   return (
     <MobileLayout title="Inställningar">
-      <div className="h-[calc(100vh-4rem)] p-4">
-        <div className="space-y-4">
+      <div className="h-full overflow-hidden p-4">
+        <div className="space-y-4 overflow-hidden">
           <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 space-y-4">
             <div className="flex items-center gap-2 text-forest">
               <MapPin className="h-5 w-5" />

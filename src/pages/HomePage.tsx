@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -8,9 +9,9 @@ const HomePage: React.FC = () => {
 
   return (
     <MobileLayout title="orientera.com">
-      <div className="flex flex-col items-center h-[calc(100vh-4rem)] p-4">
+      <div className="flex flex-col items-center h-full overflow-hidden">
         {/* Hero section */}
-        <div className="flex flex-col items-center text-center space-y-6 mt-6">
+        <div className="flex flex-col items-center text-center space-y-6 mt-6 w-full px-4">
           <div className="relative">
             <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center">
               <Compass className="w-12 h-12 text-primary" />
@@ -29,7 +30,7 @@ const HomePage: React.FC = () => {
         </div>
         
         {/* Features section */}
-        <div className="grid grid-cols-2 gap-4 w-full mt-8">
+        <div className="grid grid-cols-2 gap-4 w-full mt-8 px-4 overflow-hidden">
           <FeatureCard 
             icon={<MapPin />} 
             title="Hitta tävlingar" 
