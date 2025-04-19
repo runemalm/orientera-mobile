@@ -101,21 +101,21 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
 
   return (
     <div className={cn("relative w-full h-full", className)}>
-      <div ref={mapRef} className="h-full w-full"></div>
+      <div ref={mapRef} className="h-full w-full z-10"></div>
       
-      {/* Map watermark */}
-      <div className="absolute bottom-2 right-2 text-gray-500 text-xs bg-white/80 px-2 py-0.5 rounded-full z-[1000]">
+      {/* Map UI elements */}
+      <div className="absolute bottom-2 right-2 text-gray-500 text-xs bg-white/80 px-2 py-0.5 rounded-full z-[500]">
         Arena Location
       </div>
       
-      <div className="absolute bottom-2 left-2 z-[1000]">
+      <div className="absolute bottom-2 left-2 z-[500]">
         <div className="bg-white/80 px-2 py-0.5 rounded-full text-xs font-medium shadow-sm">
           {locationName}
         </div>
       </div>
       
       {/* North Indicator */}
-      <div className="absolute top-2 right-2 flex flex-col items-center bg-white/80 p-1 rounded-full shadow-sm z-[1000]">
+      <div className="absolute top-2 right-2 flex flex-col items-center bg-white/80 p-1 rounded-full shadow-sm z-[500]">
         <div className="text-xs font-bold text-gray-700">N</div>
         <div className="h-4 w-[2px] bg-gray-700"></div>
       </div>
