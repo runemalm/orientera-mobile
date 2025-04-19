@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -43,7 +44,7 @@ const CompetitionMapPage: React.FC = () => {
 
   return (
     <MobileLayout 
-      title="Tävlingsplats" 
+      title="Arenans position" 
       showBackButton
     >
       <div className="h-[calc(100vh-64px)] -mx-4 relative">
@@ -58,3 +59,4 @@ const CompetitionMapPage: React.FC = () => {
 };
 
 export default CompetitionMapPage;
+
