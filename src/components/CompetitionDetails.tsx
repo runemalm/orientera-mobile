@@ -1,12 +1,11 @@
 import React from 'react';
 import { Competition, ResourceType } from '../types';
-import { Users, Car, FileText } from 'lucide-react';
+import { Users, Car, Link as LinkIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { translateDiscipline, translateCompetitionType } from '../utils/translations';
 import { formatSwedishDate } from '../utils/dateUtils';
 import FileItem from './FileItem';
 import CompetitionLocationMap from './CompetitionLocationMap';
-import { Card } from '@/components/ui/card';
 
 interface CompetitionDetailsProps {
   competition: Competition;
@@ -36,23 +35,21 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
         </div>
       </div>
 
-      {/* Important Documents Section */}
-      {(invitation || pm) && (
-        <Card className="overflow-hidden">
-          <div className="p-4 border-b border-gray-100 flex items-center gap-2">
-            <FileText className="text-primary h-5 w-5" />
-            <h3 className="font-semibold">Viktiga dokument</h3>
-          </div>
-          <div className="divide-y divide-gray-100">
-            {invitation && <FileItem file={invitation} />}
-            {pm && <FileItem file={pm} />}
-          </div>
-        </Card>
-      )}
-
-      {/* Info panel with remaining sections */}
+      {/* Info panel with all sections */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-100">
         <div className="divide-y divide-gray-100">
+          {/* Important Documents */}
+          {invitation && (
+            <div>
+              <FileItem file={invitation} />
+            </div>
+          )}
+          {pm && (
+            <div>
+              <FileItem file={pm} />
+            </div>
+          )}
+
           {/* Participants link */}
           <Link 
             to={`/competition/${competition.id}/participants`}
