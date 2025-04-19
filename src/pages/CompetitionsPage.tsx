@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Loader2 } from 'lucide-react';
@@ -118,7 +119,7 @@ const CompetitionsPage: React.FC = () => {
 
   return (
     <MobileLayout title="Tävlingar nära dig">
-      <div className="mt-4">
+      <div className="mt-0">
         {renderContent()}
       </div>
     </MobileLayout>
