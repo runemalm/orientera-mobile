@@ -1,4 +1,3 @@
-
 import React, { useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { CalendarSearch, Home, Settings, Star, UserRound } from 'lucide-react';
@@ -39,12 +38,6 @@ const BottomTabBar: React.FC = () => {
       icon: <UserRound size={24} />,
       label: 'Profil',
       path: '/profile'
-    },
-    {
-      name: 'settings',
-      icon: <Settings size={24} />,
-      label: 'Inställningar',
-      path: '/settings'
     }
   ];
 
