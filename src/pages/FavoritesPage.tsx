@@ -7,10 +7,11 @@ import CompetitionList from '../components/competition/CompetitionList';
 import { Star, Loader2 } from 'lucide-react';
 import { CompetitionSummary } from '../types';
 import { getNearbyCompetitions } from '../services/api';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const FavoritesPage: React.FC = () => {
   const { userLocation } = useUserLocation();
-  const [favorites] = useLocalStorage<string[]>('favoriteCompetitions', []);
+  const [favorites, setFavorites] = useLocalStorage<string[]>('favoriteCompetitions', []);
   const [competitions, setCompetitions] = useState<CompetitionSummary[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -57,6 +58,31 @@ const FavoritesPage: React.FC = () => {
     }
   }, [userLocation, fetchCompetitions]);
 
+  // Listen for changes to localStorage favorites
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const storedFavoritesString = window.localStorage.getItem('favoriteCompetitions');
+      if (storedFavoritesString) {
+        try {
+          const newFavorites = JSON.parse(storedFavoritesString);
+          // Only update state if favorites have changed
+          if (JSON.stringify(newFavorites) !== JSON.stringify(favorites)) {
+            setFavorites(newFavorites);
+          }
+        } catch (e) {
+          console.error('Error parsing favorites from localStorage:', e);
+        }
+      }
+    };
+
+    // Listen for storage events (when other tabs update localStorage)
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [favorites, setFavorites]);
+
   // Filter competitions to only include favorited ones
   const favoriteCompetitions = competitions.filter(comp => 
     Array.isArray(favorites) && favorites.includes(comp.id)
@@ -91,7 +117,7 @@ const FavoritesPage: React.FC = () => {
   }
 
   // Show empty state if no favorites
-  if (favorites.length === 0 || favoriteCompetitions.length === 0) {
+  if (!Array.isArray(favorites) || favorites.length === 0 || favoriteCompetitions.length === 0) {
     return (
       <MobileLayout title="Favoriter">
         <div className="text-center py-8">
@@ -106,13 +132,21 @@ const FavoritesPage: React.FC = () => {
 
   return (
     <MobileLayout title="Favoriter">
-      <div className="px-4 py-4">
+      <ScrollArea className="h-[calc(100vh-7rem)] px-4 py-4">
         <CompetitionList
           competitions={favoriteCompetitions}
           userLocation={userLocation}
           showFavorites={false} // We're already filtered to favorites
+          onFavoriteToggle={(id, isFavorite) => {
+            // We don't need to trigger a fetch, just update the UI with current data
+            if (!isFavorite) {
+              // Remove from the list visually without reload or scrolling
+              const updatedCompetitions = favoriteCompetitions.filter(comp => comp.id !== id);
+              setCompetitions(prev => prev.filter(comp => comp.id !== id || favorites.includes(comp.id)));
+            }
+          }}
         />
-      </div>
+      </ScrollArea>
     </MobileLayout>
   );
 };

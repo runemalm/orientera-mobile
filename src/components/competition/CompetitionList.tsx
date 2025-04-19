@@ -10,12 +10,14 @@ interface CompetitionListProps {
   competitions: CompetitionSummary[];
   userLocation: UserLocation;
   showFavorites?: boolean;
+  onFavoriteToggle?: (competitionId: string, isFavorited: boolean) => void;
 }
 
 const CompetitionList: React.FC<CompetitionListProps> = ({ 
   competitions, 
   userLocation,
-  showFavorites = false 
+  showFavorites = false,
+  onFavoriteToggle
 }) => {
   const [favorites] = useLocalStorage<string[]>('favoriteCompetitions', []);
   
@@ -52,6 +54,7 @@ const CompetitionList: React.FC<CompetitionListProps> = ({
           key={competition.id} 
           competition={competition}
           userLocation={userLocation}
+          onFavoriteToggle={onFavoriteToggle}
         />
       ))}
     </div>

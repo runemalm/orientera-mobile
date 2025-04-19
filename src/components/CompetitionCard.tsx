@@ -12,9 +12,10 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 interface CompetitionCardProps {
   competition: CompetitionSummary;
   userLocation: { latitude: number | null; longitude: number | null };
+  onFavoriteToggle?: (competitionId: string, isFavorited: boolean) => void;
 }
 
-const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition, userLocation }) => {
+const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition, userLocation, onFavoriteToggle }) => {
   const navigate = useNavigate();
   const [favorites, setFavorites] = useLocalStorage<string[]>('favoriteCompetitions', []);
   
@@ -57,6 +58,11 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition, userLoca
     
     // Update localStorage and state
     setFavorites(newFavorites);
+    
+    // Call the callback if provided
+    if (onFavoriteToggle) {
+      onFavoriteToggle(competition.id, !isCurrentlyFavorite);
+    }
   };
 
   const daysRemaining = getDaysRemaining(competition.date);
