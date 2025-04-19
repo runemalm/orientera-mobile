@@ -16,7 +16,7 @@ const ProfilePage: React.FC = () => {
         </div>
 
         <div className="text-center space-y-2">
-          <h1 className="text-2xl font-semibold">Välkommen till Orientera</h1>
+          <h1 className="text-2xl font-semibold">Välkommen till Orientera.com</h1>
           <p className="text-muted-foreground">
             Logga in med ditt Eventor-konto för att få tillgång till alla funktioner
           </p>
