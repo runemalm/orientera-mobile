@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Competition, ResourceType } from '../types';
 import { Users, Car, FileText, Navigation, BarChart2, Map, Star, Clock } from 'lucide-react';
@@ -25,24 +24,33 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
   const toggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
     
-    // Safety check - ensure we're working with an array
-    const currentFavorites = Array.isArray(favorites) ? [...favorites] : [];
+    // Get the current favorites directly from localStorage to ensure we have the most up-to-date list
+    const storedFavoritesString = window.localStorage.getItem('favoriteCompetitions');
+    // Parse stored favorites or default to empty array if null/invalid
+    const currentFavorites = storedFavoritesString ? 
+      (JSON.parse(storedFavoritesString) || []) : 
+      [];
+    
+    // Ensure we're working with an array
+    const safeCurrentFavorites = Array.isArray(currentFavorites) ? currentFavorites : [];
     
     let newFavorites: string[];
+    const isCurrentlyFavorite = safeCurrentFavorites.includes(competition.id);
     
-    if (isFavorite) {
-      newFavorites = currentFavorites.filter(id => id !== competition.id);
+    if (isCurrentlyFavorite) {
+      newFavorites = safeCurrentFavorites.filter(id => id !== competition.id);
     } else {
-      newFavorites = [...currentFavorites, competition.id];
+      newFavorites = [...safeCurrentFavorites, competition.id];
     }
     
     console.log('CompetitionDetails - Toggling favorite:', {
       competitionId: competition.id,
-      wasInFavorites: isFavorite,
-      oldFavorites: currentFavorites,
+      wasInFavorites: isCurrentlyFavorite,
+      oldFavorites: safeCurrentFavorites,
       newFavorites: newFavorites
     });
     
+    // Update localStorage and state
     setFavorites(newFavorites);
   };
 
