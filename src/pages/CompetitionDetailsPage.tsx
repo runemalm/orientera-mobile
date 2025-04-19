@@ -20,11 +20,13 @@ const CompetitionDetailsPage: React.FC = () => {
     
     setIsSharing(true);
     
+    const shareMessage = `Kolla in ${competition.name} - en ${competition.discipline.toLowerCase()}tävling anordnad av ${competition.club}!\n\nDatum: ${formatSwedishDate(competition.date, 'EEEE d MMMM yyyy')}`;
+    
     if (navigator.share) {
       try {
         await navigator.share({
           title: competition.name,
-          text: `${competition.name} - ${competition.club}`,
+          text: shareMessage,
           url: window.location.href
         });
       } catch (error) {
@@ -37,8 +39,9 @@ const CompetitionDetailsPage: React.FC = () => {
     } else {
       // Fallback: Copy to clipboard
       try {
-        await navigator.clipboard.writeText(window.location.href);
-        console.log('URL copied to clipboard');
+        const textToCopy = `${shareMessage}\n\n${window.location.href}`;
+        await navigator.clipboard.writeText(textToCopy);
+        console.log('Competition details copied to clipboard');
       } catch (error) {
         console.error('Error copying to clipboard:', error);
       } finally {
