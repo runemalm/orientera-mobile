@@ -82,10 +82,20 @@ const CompetitionsPage: React.FC = () => {
 
     return (
       <Tabs defaultValue={selectedTab} className="w-full" onValueChange={setSelectedTab}>
-        <div className="sticky top-0 z-10 bg-gray-50 pt-2 pb-3 px-4 shadow-sm">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="all">Alla</TabsTrigger>
-            <TabsTrigger value="favorites">Favoriter</TabsTrigger>
+        <div className="sticky top-0 z-10 bg-white pt-2 pb-3 px-4 shadow-sm">
+          <TabsList className="grid w-full grid-cols-2 rounded-none border-b border-gray-200 bg-transparent p-0">
+            <TabsTrigger 
+              value="all" 
+              className="data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none py-3"
+            >
+              Alla
+            </TabsTrigger>
+            <TabsTrigger 
+              value="favorites" 
+              className="data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none py-3"
+            >
+              Favoriter
+            </TabsTrigger>
           </TabsList>
         </div>
 
