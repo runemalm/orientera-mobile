@@ -28,33 +28,25 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
   className,
   coordinates
 }) => {
-  // Reference to the map container element
   const mapRef = useRef<HTMLDivElement>(null);
-  // Reference to the Leaflet map instance
   const mapInstanceRef = useRef<L.Map | null>(null);
   
-  const openInGoogleMaps = () => {
-    const googleMapsUrl = `https://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}`;
-    window.open(googleMapsUrl, '_blank');
-  };
-  
-  // Initialize and clean up the map
   useEffect(() => {
     if (!mapRef.current) return;
     
     // Create a map instance centered on the competition coordinates
     const map = L.map(mapRef.current, {
       center: [coordinates.lat, coordinates.lng],
-      zoom: 11,
-      zoomControl: false,
-      attributionControl: false,
-      doubleClickZoom: false,  // Disable double-click zoom
-      scrollWheelZoom: false,  // Disable scroll wheel zoom
-      boxZoom: false,          // Disable box zoom
-      touchZoom: false,        // Disable touch-based zooming
-      dragging: false,         // Disable map dragging
-      keyboard: false,         // Disable keyboard interactions
-      tap: false               // Disable tap interactions on mobile
+      zoom: 13,
+      zoomControl: true,
+      attributionControl: true,
+      doubleClickZoom: true,
+      scrollWheelZoom: true,
+      boxZoom: true,
+      touchZoom: true,
+      dragging: true,
+      keyboard: true,
+      tap: true
     });
     
     // Save the map instance for cleanup
@@ -75,14 +67,13 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
     
     // Add a marker at the specified coordinates
     const marker = L.marker([coordinates.lat, coordinates.lng], { 
-      icon: customMarkerIcon,
-      interactive: false  // Disable marker interactions
+      icon: customMarkerIcon
     }).addTo(map);
     
     // Ensure the map is centered on the marker coordinates and revalidate size
     setTimeout(() => {
       map.invalidateSize();
-      map.setView([coordinates.lat, coordinates.lng], 11);
+      map.setView([coordinates.lat, coordinates.lng], 13);
     }, 100);
     
     // After the marker is added, we can render our React component into the container
@@ -100,23 +91,17 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
       }
     }
     
-    // Cleanup function to remove the map when the component unmounts
     return () => {
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
       }
     };
-  }, [coordinates]); // Re-initialize map if coordinates change
+  }, [coordinates]);
 
   return (
-    <div 
-      className={cn("relative w-full h-48 rounded-lg overflow-hidden shadow-inner cursor-pointer", className)} 
-      onClick={openInGoogleMaps}
-      title="Click to open in Google Maps"
-    >
-      {/* Map container */}
-      <div ref={mapRef} className="h-full w-full rounded-lg"></div>
+    <div className={cn("relative w-full h-full", className)}>
+      <div ref={mapRef} className="h-full w-full"></div>
       
       {/* Map watermark */}
       <div className="absolute bottom-2 right-2 text-gray-500 text-xs bg-white/80 px-2 py-0.5 rounded-full z-[1000]">
@@ -133,15 +118,6 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
       <div className="absolute top-2 right-2 flex flex-col items-center bg-white/80 p-1 rounded-full shadow-sm z-[1000]">
         <div className="text-xs font-bold text-gray-700">N</div>
         <div className="h-4 w-[2px] bg-gray-700"></div>
-      </div>
-      
-      {/* Google Maps indicator */}
-      <div className="absolute top-2 left-2 bg-white/80 px-2 py-1 rounded-full text-xs font-medium shadow-sm z-[1000] flex items-center gap-1">
-        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="10"/>
-          <polygon points="10 8 16 12 10 16 10 8"/>
-        </svg>
-        Open in Maps
       </div>
     </div>
   );
