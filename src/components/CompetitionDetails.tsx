@@ -12,10 +12,8 @@ interface CompetitionDetailsProps {
 }
 
 const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) => {
-  // Format date using Swedish timezone
   const formattedDate = formatSwedishDate(competition.date, 'EEEE d MMMM yyyy');
   
-  // Find invitation and PM documents
   const invitation = competition.resources?.find(r => r.type === ResourceType.Invitation);
   const pm = competition.resources?.find(r => r.type === ResourceType.PM);
   const otherResources = competition.resources?.filter(r => 
@@ -31,7 +29,6 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
 
   return (
     <div className="space-y-6">
-      {/* Competition header */}
       <div className="bg-primary text-white p-5 rounded-lg shadow-md relative overflow-hidden">
         <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-primary-foreground/10"></div>
         <div className="absolute bottom-0 right-0 w-16 h-16 rounded-full bg-primary-foreground/10"></div>
@@ -42,7 +39,6 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
         </div>
       </div>
 
-      {/* beforePanel section with invitation and PM links */}
       {(invitation || pm) && (
         <div className="bg-white rounded-lg shadow-sm border border-gray-100">
           <div className="divide-y divide-gray-100">
@@ -92,10 +88,53 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
         </div>
       )}
 
-      {/* Info panel with all sections */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-100">
         <div className="divide-y divide-gray-100">
-          {/* Directions link */}
+          <Link 
+            to={`/competition/${competition.id}/participants`}
+            className="flex items-center justify-between p-4"
+          >
+            <div className="flex items-center gap-3">
+              <Users size={20} className="text-forest" />
+              <span className="font-medium">Anmälda deltagare</span>
+            </div>
+            <div className="text-gray-400">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="m9 18 6-6-6-6"/>
+              </svg>
+            </div>
+          </Link>
+          
+          <Link 
+            to={`/competition/${competition.id}/club-participants`}
+            className="flex items-center justify-between p-4"
+          >
+            <div className="flex items-center gap-3">
+              <Users size={20} className="text-blue-600" />
+              <span className="font-medium">Klubbanmälda</span>
+            </div>
+            <div className="text-gray-400">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="m9 18 6-6-6-6"/>
+              </svg>
+            </div>
+          </Link>
+          
+          <Link 
+            to={`/competition/${competition.id}/carpooling`}
+            className="flex items-center justify-between p-4"
+          >
+            <div className="flex items-center gap-3">
+              <Car size={20} className="text-forest" />
+              <span className="font-medium">Samåkning</span>
+            </div>
+            <div className="text-gray-400">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="m9 18 6-6-6-6"/>
+              </svg>
+            </div>
+          </Link>
+
           {directionsUrl && (
             <a
               href={directionsUrl}
@@ -114,56 +153,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
               </div>
             </a>
           )}
-          
-          {/* Participants link */}
-          <Link 
-            to={`/competition/${competition.id}/participants`}
-            className="flex items-center justify-between p-4"
-          >
-            <div className="flex items-center gap-3">
-              <Users size={20} className="text-forest" />
-              <span className="font-medium">Anmälda deltagare</span>
-            </div>
-            <div className="text-gray-400">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m9 18 6-6-6-6"/>
-              </svg>
-            </div>
-          </Link>
-          
-          {/* Club Participants link */}
-          <Link 
-            to={`/competition/${competition.id}/club-participants`}
-            className="flex items-center justify-between p-4"
-          >
-            <div className="flex items-center gap-3">
-              <Users size={20} className="text-blue-600" />
-              <span className="font-medium">Klubbanmälda</span>
-            </div>
-            <div className="text-gray-400">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m9 18 6-6-6-6"/>
-              </svg>
-            </div>
-          </Link>
-          
-          {/* Carpooling link */}
-          <Link 
-            to={`/competition/${competition.id}/carpooling`}
-            className="flex items-center justify-between p-4"
-          >
-            <div className="flex items-center gap-3">
-              <Car size={20} className="text-forest" />
-              <span className="font-medium">Samåkning</span>
-            </div>
-            <div className="text-gray-400">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m9 18 6-6-6-6"/>
-              </svg>
-            </div>
-          </Link>
 
-          {/* Other resources */}
           {otherResources && otherResources.map((resource) => (
             <div key={resource.id}>
               <FileItem file={resource} />
@@ -172,7 +162,6 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
         </div>
       </div>
 
-      {/* Arena Map */}
       {competition.latitude && competition.longitude && (
         <CompetitionLocationMap 
           locationName={competition.location}
