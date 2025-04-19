@@ -1,12 +1,12 @@
-
 import React from 'react';
 import { Competition, ResourceType } from '../types';
-import { Users, Car } from 'lucide-react';
+import { Users, Car, FileText } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { translateDiscipline, translateCompetitionType } from '../utils/translations';
 import { formatSwedishDate } from '../utils/dateUtils';
 import FileItem from './FileItem';
 import CompetitionLocationMap from './CompetitionLocationMap';
+import { Card } from '@/components/ui/card';
 
 interface CompetitionDetailsProps {
   competition: Competition;
@@ -36,24 +36,24 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
         </div>
       </div>
 
-      {/* Info panel with all sections including documents */}
+      {/* Important Documents Section */}
+      {(invitation || pm) && (
+        <Card className="overflow-hidden">
+          <div className="p-4 border-b border-gray-100 flex items-center gap-2">
+            <FileText className="text-primary h-5 w-5" />
+            <h3 className="font-semibold">Viktiga dokument</h3>
+          </div>
+          <div className="divide-y divide-gray-100">
+            {invitation && <FileItem file={invitation} />}
+            {pm && <FileItem file={pm} />}
+          </div>
+        </Card>
+      )}
+
+      {/* Info panel with remaining sections */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-100">
         <div className="divide-y divide-gray-100">
-          {/* Show Invitation first if it exists */}
-          {invitation && (
-            <div>
-              <FileItem file={invitation} />
-            </div>
-          )}
-          
-          {/* Show PM second if it exists */}
-          {pm && (
-            <div>
-              <FileItem file={pm} />
-            </div>
-          )}
-
-          {/* Participants */}
+          {/* Participants link */}
           <Link 
             to={`/competition/${competition.id}/participants`}
             className="flex items-center justify-between p-4"
@@ -69,7 +69,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
             </div>
           </Link>
           
-          {/* Club Participants */}
+          {/* Club Participants link */}
           <Link 
             to={`/competition/${competition.id}/club-participants`}
             className="flex items-center justify-between p-4"
@@ -85,7 +85,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
             </div>
           </Link>
           
-          {/* Carpooling */}
+          {/* Carpooling link */}
           <Link 
             to={`/competition/${competition.id}/carpooling`}
             className="flex items-center justify-between p-4"
@@ -123,4 +123,3 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
 };
 
 export default CompetitionDetails;
-
