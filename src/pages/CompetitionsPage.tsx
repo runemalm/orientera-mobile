@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
-import { Loader2, Filter } from 'lucide-react';
+import { Loader2, Filter, List } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { CompetitionSummary } from '../types';
@@ -124,7 +124,7 @@ const CompetitionsPage: React.FC = () => {
 
   return (
     <MobileLayout 
-      title="Alla tävlingar" 
+      title="Sök tävlingar" 
       action={
         <Button 
           variant="ghost" 
