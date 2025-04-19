@@ -110,7 +110,7 @@ const CompetitionsPage: React.FC = () => {
 
   return (
     <MobileLayout title="Tävlingar nära dig">
-      <div className="mt-4 h-full">
+      <div className="h-full">
         {renderContent()}
       </div>
     </MobileLayout>
