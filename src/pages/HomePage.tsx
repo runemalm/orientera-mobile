@@ -14,7 +14,7 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <MobileLayout title="Hem">
+    <MobileLayout title="Orientera">
       <div className="flex flex-col items-center gap-8 py-4">
         <Hero />
         <Features />

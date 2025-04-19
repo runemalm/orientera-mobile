@@ -15,10 +15,10 @@ const Hero: React.FC = () => {
 
         <div className="text-center space-y-4">
           <h1 className="text-3xl font-bold tracking-tight">
-            Upptäck orienterings­tävlingar
+            Framtidens app för svensk orientering
           </h1>
           <p className="text-muted-foreground text-lg">
-            Ett enkelt sätt att hitta ditt nästa äventyr i skogen
+            Ett smidigare sätt att upptäcka och hålla koll på orienteringssäsongen
           </p>
         </div>
       </div>

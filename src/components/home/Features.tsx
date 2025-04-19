@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Map, Navigation } from 'lucide-react';
+import { Map, Navigation, Calendar } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 
 const Features: React.FC = () => {
@@ -12,13 +12,18 @@ const Features: React.FC = () => {
     },
     {
       icon: <Navigation className="w-5 h-5 text-primary" />,
-      title: 'All information',
-      description: 'PM, startlistor och resultat'
+      title: 'Modern upplevelse',
+      description: 'Snabb & mobiloptimerad'
+    },
+    {
+      icon: <Calendar className="w-5 h-5 text-primary" />,
+      title: 'Säsongsöversikt',
+      description: 'Allt samlat på ett ställe'
     }
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-3 w-full px-3">
+    <div className="grid grid-cols-3 gap-3 w-full px-3">
       {features.map((feature, index) => (
         <Card key={index} className="p-3 hover:shadow-lg transition-shadow">
           <div className="flex flex-col items-center text-center space-y-1.5">
