@@ -18,13 +18,16 @@ const CompetitionList: React.FC<CompetitionListProps> = ({
   showFavorites = false 
 }) => {
   const [favorites] = useLocalStorage<string[]>('favoriteCompetitions', []);
+  
+  // Safety check - ensure favorites is array
+  const safetyFavorites = Array.isArray(favorites) ? favorites : [];
 
   // Debug output for favorites
-  console.log('CompetitionList - Current favorites:', favorites);
+  console.log('CompetitionList - Current favorites:', safetyFavorites);
   
   const filteredCompetitions = showFavorites
     ? competitions.filter(comp => {
-        const isIncluded = Array.isArray(favorites) && favorites.includes(comp.id);
+        const isIncluded = safetyFavorites.includes(comp.id);
         console.log(`Competition ${comp.id} (${comp.name}) is${isIncluded ? '' : ' not'} in favorites`);
         return isIncluded;
       })

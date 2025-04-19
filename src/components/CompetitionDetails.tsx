@@ -18,15 +18,30 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
   const formattedDate = formatSwedishDate(competition.date, 'EEEE d MMMM yyyy');
   const [favorites, setFavorites] = useLocalStorage<string[]>('favoriteCompetitions', []);
   
-  const isFavorite = favorites?.includes(competition.id) || false;
+  // Safety check - ensure favorites is array
+  const safetyFavorites = Array.isArray(favorites) ? favorites : [];
+  const isFavorite = safetyFavorites.includes(competition.id);
 
   const toggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!favorites) return;
     
-    const newFavorites = isFavorite
-      ? favorites.filter(id => id !== competition.id)
-      : [...favorites, competition.id];
+    // Safety check - ensure we're working with an array
+    const currentFavorites = Array.isArray(favorites) ? [...favorites] : [];
+    
+    let newFavorites: string[];
+    
+    if (isFavorite) {
+      newFavorites = currentFavorites.filter(id => id !== competition.id);
+    } else {
+      newFavorites = [...currentFavorites, competition.id];
+    }
+    
+    console.log('CompetitionDetails - Toggling favorite:', {
+      competitionId: competition.id,
+      wasInFavorites: isFavorite,
+      oldFavorites: currentFavorites,
+      newFavorites: newFavorites
+    });
     
     setFavorites(newFavorites);
   };

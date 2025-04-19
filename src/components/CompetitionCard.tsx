@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { CompetitionSummary } from '../types';
 import { Clock, MapPin, Navigation, Star } from 'lucide-react';
@@ -22,11 +23,14 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition, userLoca
     navigate(`/competition/${competition.id}`);
   };
 
-  const isFavorite = Array.isArray(favorites) && favorites.includes(competition.id);
+  // Ensure favorites is always an array
+  const safetyFavorites = Array.isArray(favorites) ? favorites : [];
+  const isFavorite = safetyFavorites.includes(competition.id);
 
   const toggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
     
+    // Safety check - ensure we're working with an array
     const currentFavorites = Array.isArray(favorites) ? [...favorites] : [];
     
     let newFavorites: string[];
