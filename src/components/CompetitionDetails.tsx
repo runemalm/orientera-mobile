@@ -106,6 +106,13 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
     ? `https://www.google.com/maps/dir/?api=1&destination=${competition.latitude},${competition.longitude}`
     : null;
 
+    const otherResources = competition.resources?.filter(r =>
+      r.type !== ResourceType.Results &&
+      r.type !== ResourceType.Splits &&
+      r.type !== ResourceType.Invitation &&
+      r.type !== ResourceType.PM
+    );
+
   return (
     <div className="space-y-6">
       <div className="bg-primary text-white p-5 rounded-lg shadow-md relative overflow-hidden">
