@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -13,7 +12,7 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <MobileLayout title="orientera.com">
+    <MobileLayout title="Hem">
       <div className="flex flex-col items-center min-h-full p-4 space-y-8">
         {/* Hero section */}
         <div className="flex flex-col items-center text-center space-y-6 mt-6">
