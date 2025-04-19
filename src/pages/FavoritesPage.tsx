@@ -15,21 +15,28 @@ const FavoritesPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch all competitions without date filtering, then filter by favorites
+  // Fetch competitions with specific date range
   const fetchCompetitions = useCallback(async () => {
     if (!userLocation) return;
     
     setIsLoading(true);
     setError(null);
     
-    // Remove date filtering to get all competitions, including past ones
+    // Set date range: 20 days back and 3 months forward
+    const fromDate = new Date();
+    fromDate.setDate(fromDate.getDate() - 20); // 20 days back
+    
+    const toDate = new Date();
+    toDate.setMonth(toDate.getMonth() + 3); // 3 months ahead
+    
     try {
       const result = await getNearbyCompetitions(
         userLocation.latitude, 
         userLocation.longitude,
         {
-          // No date filtering, to get past competitions as well
-          limit: 100 // Increase limit to get more competitions
+          from: fromDate,
+          to: toDate,
+          limit: 100
         }
       );
       
