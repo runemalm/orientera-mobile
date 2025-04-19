@@ -5,7 +5,9 @@ import MobileLayout from '../components/layout/MobileLayout';
 const HomePage: React.FC = () => {
   return (
     <MobileLayout title="Hem">
-      {/* Intentionally left blank */}
+      <div className="p-4">
+        {/* Intentionally left blank */}
+      </div>
     </MobileLayout>
   );
 };
