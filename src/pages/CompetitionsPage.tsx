@@ -82,14 +82,14 @@ const CompetitionsPage: React.FC = () => {
 
     return (
       <Tabs defaultValue={selectedTab} className="w-full" onValueChange={setSelectedTab}>
-        <div className="sticky top-0 z-10 bg-gray-50 pt-2 pb-3 px-4">
+        <div className="sticky top-0 z-10 bg-gray-50 pt-4 pb-3 px-4">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="all">Alla</TabsTrigger>
             <TabsTrigger value="favorites">Favoriter</TabsTrigger>
           </TabsList>
         </div>
 
-        <TabsContent value="all" className="mt-0 p-4">
+        <TabsContent value="all" className="mt-0 pl-4 pr-4 pb-4 pt-1">
           <CompetitionList 
             competitions={competitions} 
             userLocation={userLocation}
