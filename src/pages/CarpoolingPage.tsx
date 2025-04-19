@@ -42,10 +42,16 @@ const CarpoolingPage: React.FC = () => {
   const [showOfferForm, setShowOfferForm] = useState(false);
   const { toast } = useToast();
 
+  // Add console logs for debugging
+  console.log("CarpoolingPage rendered, competitionId:", competitionId);
+
   React.useEffect(() => {
     const fetchCompetition = () => {
       if (competitionId && mockCompetitionDetails[competitionId]) {
         setCompetition(mockCompetitionDetails[competitionId]);
+      } else {
+        console.log("Competition not found for ID:", competitionId);
+        console.log("Available competitions:", Object.keys(mockCompetitionDetails));
       }
       setLoading(false);
     };
@@ -91,15 +97,15 @@ const CarpoolingPage: React.FC = () => {
     <MobileLayout title="Samåkning" showBackButton>
       <div className="space-y-4 pb-4">
         <div className="bg-primary/10 p-4 rounded-lg">
-          <h2 className="font-semibold">{competition.name}</h2>
+          <h2 className="font-semibold">{competition?.name || 'Loading...'}</h2>
           <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
             <MapPin size={16} />
-            <span>{competition.location}</span>
+            <span>{competition?.location || 'Loading...'}</span>
           </div>
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <Clock size={16} />
             <span>
-              {new Date(competition.date).toLocaleDateString('sv-SE')} - {competition.startTime}
+              {competition ? new Date(competition.date).toLocaleDateString('sv-SE') : 'Loading...'} - {competition?.startTime || 'Loading...'}
             </span>
           </div>
         </div>
