@@ -105,11 +105,11 @@ const FavoritesPage: React.FC = () => {
 
   return (
     <MobileLayout title="Favoriter">
-      <div className="px-4 pb-20">
+      <div className="px-4 pb-24"> {/* Increased bottom padding */}
         <CompetitionList
           competitions={favoriteCompetitions}
           userLocation={userLocation}
-          showFavorites={false} // We're already filtered to favorites
+          showFavorites={false}
         />
       </div>
     </MobileLayout>

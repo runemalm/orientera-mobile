@@ -78,7 +78,7 @@ const CompetitionsPage: React.FC = () => {
     }
 
     return (
-      <div className="px-4 pb-20">
+      <div className="px-4 pb-24"> {/* Increased bottom padding */}
         <CompetitionList 
           competitions={competitions} 
           userLocation={userLocation}
