@@ -19,9 +19,18 @@ const CompetitionList: React.FC<CompetitionListProps> = ({
 }) => {
   const [favorites] = useLocalStorage<string[]>('favoriteCompetitions', []);
 
+  // Debug output for favorites
+  console.log('CompetitionList - Current favorites:', favorites);
+  
   const filteredCompetitions = showFavorites
-    ? competitions.filter(comp => favorites?.includes(comp.id))
+    ? competitions.filter(comp => {
+        const isIncluded = Array.isArray(favorites) && favorites.includes(comp.id);
+        console.log(`Competition ${comp.id} (${comp.name}) is${isIncluded ? '' : ' not'} in favorites`);
+        return isIncluded;
+      })
     : competitions;
+    
+  console.log(`Showing ${filteredCompetitions.length} competitions in ${showFavorites ? 'favorites' : 'all'} tab`);
 
   if (filteredCompetitions.length === 0) {
     return (

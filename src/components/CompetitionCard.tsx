@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { CompetitionSummary } from '../types';
 import { Clock, MapPin, Navigation, Star } from 'lucide-react';
@@ -9,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { getDaysRemaining } from '../utils/dateUtils';
 import { calculateDistance, formatDistance } from '../utils/distanceUtils';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import { useToast } from '@/hooks/use-toast';
 
 interface CompetitionCardProps {
   competition: CompetitionSummary;
@@ -18,22 +18,47 @@ interface CompetitionCardProps {
 const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition, userLocation }) => {
   const navigate = useNavigate();
   const [favorites, setFavorites] = useLocalStorage<string[]>('favoriteCompetitions', []);
+  const { toast } = useToast();
   
   const handleCardClick = () => {
     navigate(`/competition/${competition.id}`);
   };
 
-  const isFavorite = favorites?.includes(competition.id) || false;
+  const isFavorite = Array.isArray(favorites) && favorites.includes(competition.id);
 
   const toggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click when clicking favorite button
-    if (!favorites) return;
     
-    const newFavorites = isFavorite
-      ? favorites.filter(id => id !== competition.id)
-      : [...favorites, competition.id];
+    // Ensure favorites is an array before manipulating it
+    const currentFavorites = Array.isArray(favorites) ? [...favorites] : [];
     
+    let newFavorites: string[];
+    let toastMessage: string;
+    
+    if (isFavorite) {
+      newFavorites = currentFavorites.filter(id => id !== competition.id);
+      toastMessage = `${competition.name} borttagen från favoriter`;
+    } else {
+      newFavorites = [...currentFavorites, competition.id];
+      toastMessage = `${competition.name} tillagd i favoriter`;
+    }
+    
+    // Log for debugging
+    console.log('Toggling favorite:', {
+      competitionId: competition.id,
+      wasInFavorites: isFavorite,
+      oldFavorites: currentFavorites,
+      newFavorites: newFavorites
+    });
+    
+    // Update localStorage
     setFavorites(newFavorites);
+    
+    // Show feedback toast
+    toast({
+      title: toastMessage,
+      duration: 2000
+    });
   };
 
   const daysRemaining = getDaysRemaining(competition.date);
@@ -99,6 +124,7 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition, userLoca
               <button 
                 onClick={toggleFavorite}
                 className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                aria-label={isFavorite ? "Ta bort från favoriter" : "Lägg till i favoriter"}
               >
                 <Star
                   size={20}
