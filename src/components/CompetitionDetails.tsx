@@ -1,6 +1,7 @@
+
 import React from 'react';
 import { Competition, ResourceType } from '../types';
-import { Users, Car, Link as LinkIcon, FileText, Navigation, BarChart2, Map, Star, Clock } from 'lucide-react';
+import { Users, Car, FileText, Navigation, BarChart2, Map, Star, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { translateDiscipline, translateCompetitionType } from '../utils/translations';
 import { formatSwedishDate, getDaysRemaining } from '../utils/dateUtils';
@@ -182,10 +183,13 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
               <Users size={20} className="text-forest" />
               <span className="font-medium">Anmälda deltagare</span>
             </div>
-            <div className="text-gray-400">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m9 18 6-6-6-6"/>
-              </svg>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-500">{competition.participantCount || 0}</span>
+              <div className="text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m9 18 6-6-6-6"/>
+                </svg>
+              </div>
             </div>
           </Link>
           
@@ -197,10 +201,13 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
               <Users size={20} className="text-blue-600" />
               <span className="font-medium">Klubbanmälda</span>
             </div>
-            <div className="text-gray-400">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m9 18 6-6-6-6"/>
-              </svg>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-500">{competition.clubParticipantCount || 0}</span>
+              <div className="text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m9 18 6-6-6-6"/>
+                </svg>
+              </div>
             </div>
           </Link>
           
@@ -248,10 +255,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
             >
               <div className="flex items-center gap-3">
                 <Map size={20} className="text-forest" />
-                <div>
-                  <span className="font-medium">Visa karta</span>
-                  <p className="text-sm text-gray-500">{formattedLocation}</p>
-                </div>
+                <span className="font-medium">Visa karta</span>
               </div>
               <div className="text-gray-400">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
