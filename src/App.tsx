@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import CompetitionsPage from './pages/CompetitionsPage';
@@ -11,6 +10,7 @@ import ParticipantsPage from './pages/ParticipantsPage';
 import ClubParticipantsPage from './pages/ClubParticipantsPage';
 import CarpoolingPage from './pages/CarpoolingPage';
 import SettingsPage from './pages/SettingsPage';
+import CompetitionMapPage from './pages/CompetitionMapPage';
 
 const App = () => {
   const [hasLocation, setHasLocation] = useLocalStorage<boolean>('userLocation', false);
@@ -27,6 +27,7 @@ const App = () => {
         <Route path="/competition/:competitionId/participants" element={<ParticipantsPage />} />
         <Route path="/competition/:competitionId/club-participants" element={<ClubParticipantsPage />} />
         <Route path="/competition/:competitionId/carpooling" element={<CarpoolingPage />} />
+        <Route path="/competition/:competitionId/map" element={<CompetitionMapPage />} />
       </Routes>
     </Router>
   );

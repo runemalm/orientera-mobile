@@ -1,6 +1,6 @@
 import React from 'react';
 import { Competition, ResourceType } from '../types';
-import { Users, Car, Link as LinkIcon, FileText, Navigation, BarChart2 } from 'lucide-react';
+import { Users, Car, Link as LinkIcon, FileText, Navigation, BarChart2, Map } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { translateDiscipline, translateCompetitionType } from '../utils/translations';
 import { formatSwedishDate } from '../utils/dateUtils';
@@ -157,6 +157,23 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
                 </svg>
               </div>
             </a>
+          )}
+
+          {competition.latitude && competition.longitude && (
+            <Link 
+              to={`/competition/${competition.id}/map`}
+              className="flex items-center justify-between p-4"
+            >
+              <div className="flex items-center gap-3">
+                <Map size={20} className="text-forest" />
+                <span className="font-medium">Visa karta</span>
+              </div>
+              <div className="text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m9 18 6-6-6-6"/>
+                </svg>
+              </div>
+            </Link>
           )}
 
           {otherResources && otherResources.map((resource) => (
