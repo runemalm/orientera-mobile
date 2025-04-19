@@ -8,6 +8,7 @@ import { getNearbyCompetitions } from '../services/api';
 import CompetitionList from '../components/competition/CompetitionList';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 // Store competitions in memory to persist between navigations
 let cachedCompetitions: CompetitionSummary[] = [];
@@ -81,30 +82,38 @@ const CompetitionsPage: React.FC = () => {
     }
 
     return (
-      <Tabs defaultValue={selectedTab} className="w-full" onValueChange={setSelectedTab}>
-        <div className="sticky top-0 z-10 bg-gray-50 pt-4 pb-3 px-4">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="all">Alla</TabsTrigger>
-            <TabsTrigger value="favorites">Favoriter</TabsTrigger>
-          </TabsList>
+      <div className="h-full flex flex-col">
+        <div className="sticky top-0 z-10 bg-white pt-4 pb-3 px-4">
+          <Tabs defaultValue={selectedTab} className="w-full" onValueChange={setSelectedTab}>
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="all">Alla</TabsTrigger>
+              <TabsTrigger value="favorites">Favoriter</TabsTrigger>
+            </TabsList>
+          </Tabs>
         </div>
-
-        <TabsContent value="all" className="mt-0 pl-4 pr-4 pb-4 pt-1">
-          <CompetitionList 
-            competitions={competitions} 
-            userLocation={userLocation}
-            showFavorites={false}
-          />
-        </TabsContent>
-
-        <TabsContent value="favorites" className="mt-0 p-4">
-          <CompetitionList 
-            competitions={competitions}
-            userLocation={userLocation}
-            showFavorites={true}
-          />
-        </TabsContent>
-      </Tabs>
+        
+        <div className="flex-grow overflow-y-auto h-full">
+          {selectedTab === 'all' && (
+            <div className="pl-4 pr-4 pb-4 pt-1">
+              <CompetitionList 
+                competitions={competitions} 
+                userLocation={userLocation}
+                showFavorites={false}
+              />
+            </div>
+          )}
+          
+          {selectedTab === 'favorites' && (
+            <div className="p-4">
+              <CompetitionList 
+                competitions={competitions}
+                userLocation={userLocation}
+                showFavorites={true}
+              />
+            </div>
+          )}
+        </div>
+      </div>
     );
   };
 
