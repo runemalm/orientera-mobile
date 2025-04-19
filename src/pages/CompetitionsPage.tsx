@@ -1,17 +1,18 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Filter } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { CompetitionSummary } from '../types';
 import { getNearbyCompetitions } from '../services/api';
 import CompetitionList from '../components/competition/CompetitionList';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 
-// Store competitions in memory to persist between navigations
 let cachedCompetitions: CompetitionSummary[] = [];
 
 const CompetitionsPage: React.FC = () => {
+  const navigate = useNavigate();
   const { userLocation } = useUserLocation();
   const [competitions, setCompetitions] = useState<CompetitionSummary[]>(cachedCompetitions);
   const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(cachedCompetitions.length === 0);
@@ -59,6 +60,10 @@ const CompetitionsPage: React.FC = () => {
     }
   }, [userLocation, fetchCompetitions]);
 
+  const handleFilterClick = () => {
+    navigate('/competitions/filter', { state: { transition: 'slide' } });
+  };
+
   const renderContent = () => {
     if (isLoadingCompetitions && competitions.length === 0) {
       return (
@@ -89,7 +94,18 @@ const CompetitionsPage: React.FC = () => {
   };
 
   return (
-    <MobileLayout title="Tävlingar nära dig">
+    <MobileLayout 
+      title="Tävlingar nära dig"
+      action={
+        <Button 
+          variant="ghost" 
+          size="icon"
+          onClick={handleFilterClick}
+        >
+          <Filter className="h-[1.2rem] w-[1.2rem]" />
+        </Button>
+      }
+    >
       {renderContent()}
     </MobileLayout>
   );
