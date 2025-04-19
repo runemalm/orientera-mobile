@@ -34,8 +34,8 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
       />
       
       <main 
-        className={`flex-grow relative ${
-          fullHeight ? 'h-full overflow-hidden' : 'overflow-hidden'
+        className={`flex-grow mobile-container relative ${
+          fullHeight ? 'h-full overflow-hidden' : 'overflow-y-auto'
         }`}
         style={{
           paddingTop: '4rem', // Height of TopNavBar
