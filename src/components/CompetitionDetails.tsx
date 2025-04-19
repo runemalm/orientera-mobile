@@ -1,6 +1,6 @@
 import React from 'react';
 import { Competition, ResourceType } from '../types';
-import { Users, Car, Link as LinkIcon } from 'lucide-react';
+import { Users, Car, Link as LinkIcon, FileText } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { translateDiscipline, translateCompetitionType } from '../utils/translations';
 import { formatSwedishDate } from '../utils/dateUtils';
@@ -49,7 +49,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
                   className="flex items-center justify-between p-4"
                 >
                   <div className="flex items-center gap-3">
-                    <LinkIcon size={20} className="text-forest" />
+                    <FileText size={20} className="text-forest" />
                     <span className="font-medium">{invitation.name}</span>
                   </div>
                   <div className="text-gray-400">
@@ -70,7 +70,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
                   className="flex items-center justify-between p-4"
                 >
                   <div className="flex items-center gap-3">
-                    <LinkIcon size={20} className="text-forest" />
+                    <FileText size={20} className="text-forest" />
                     <span className="font-medium">{pm.name}</span>
                   </div>
                   <div className="text-gray-400">
