@@ -5,7 +5,7 @@ import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionLocationMap from '../components/CompetitionLocationMap';
 import { useQuery } from '@tanstack/react-query';
 import { getCompetitionById } from '../services/api';
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangle, MapPinned } from 'lucide-react';
 
 const CompetitionMapPage: React.FC = () => {
   const { competitionId } = useParams<{ competitionId: string }>();
@@ -20,7 +20,7 @@ const CompetitionMapPage: React.FC = () => {
       <MobileLayout title="Laddar..." showBackButton>
         <div className="flex flex-col justify-center items-center h-64 mt-4 space-y-4">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-          <p className="text-gray-500">Hämtar tävlingsinformation...</p>
+          <p className="text-gray-500">Hämtar tävlingsplatsen...</p>
         </div>
       </MobileLayout>
     );
@@ -43,7 +43,13 @@ const CompetitionMapPage: React.FC = () => {
   }
 
   return (
-    <MobileLayout title={competition.location} showBackButton>
+    <MobileLayout 
+      title="Tävlingsplats" 
+      showBackButton 
+      action={
+        <MapPinned className="text-muted-foreground" size={20} />
+      }
+    >
       <div className="h-[calc(100vh-64px)] -mx-4 relative">
         <CompetitionLocationMap 
           locationName={competition.location}
