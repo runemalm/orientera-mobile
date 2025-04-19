@@ -17,21 +17,17 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
   const formattedDate = formatSwedishDate(competition.date, 'EEEE d MMMM yyyy');
   const [favorites, setFavorites] = useLocalStorage<string[]>('favoriteCompetitions', []);
   
-  // Safety check - ensure favorites is array
   const safetyFavorites = Array.isArray(favorites) ? favorites : [];
   const isFavorite = safetyFavorites.includes(competition.id);
 
   const toggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
     
-    // Get the current favorites directly from localStorage to ensure we have the most up-to-date list
     const storedFavoritesString = window.localStorage.getItem('favoriteCompetitions');
-    // Parse stored favorites or default to empty array if null/invalid
     const currentFavorites = storedFavoritesString ? 
       (JSON.parse(storedFavoritesString) || []) : 
       [];
     
-    // Ensure we're working with an array
     const safeCurrentFavorites = Array.isArray(currentFavorites) ? currentFavorites : [];
     
     let newFavorites: string[];
@@ -50,7 +46,6 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
       newFavorites: newFavorites
     });
     
-    // Update localStorage and state
     setFavorites(newFavorites);
   };
 
@@ -98,7 +93,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
 
   const formattedLocation = getFormattedLocation(
     competition.location,
-    null, // Set to null to exclude coordinates from display
+    null,
     null
   );
 
@@ -106,12 +101,12 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
     ? `https://www.google.com/maps/dir/?api=1&destination=${competition.latitude},${competition.longitude}`
     : null;
 
-    const otherResources = competition.resources?.filter(r =>
-      r.type !== ResourceType.Results &&
-      r.type !== ResourceType.Splits &&
-      r.type !== ResourceType.Invitation &&
-      r.type !== ResourceType.PM
-    );
+  const otherResources = competition.resources?.filter(r =>
+    r.type !== ResourceType.Results &&
+    r.type !== ResourceType.Splits &&
+    r.type !== ResourceType.Invitation &&
+    r.type !== ResourceType.PM
+  );
 
   return (
     <div className="space-y-6">
@@ -151,6 +146,12 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
 
       {(invitation || pm) && (
         <div className="bg-white rounded-lg shadow-sm border border-gray-100">
+          <div className="p-4 border-b border-gray-100">
+            <div className="flex items-center gap-2">
+              <FileText className="text-forest" size={20} />
+              <h3 className="font-semibold">Dokument</h3>
+            </div>
+          </div>
           <div className="divide-y divide-gray-100">
             {invitation && (
               <div>
@@ -199,6 +200,12 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
       )}
 
       <div className="bg-white rounded-lg shadow-sm border border-gray-100">
+        <div className="p-4 border-b border-gray-100">
+          <div className="flex items-center gap-2">
+            <Users className="text-forest" size={20} />
+            <h3 className="font-semibold">Deltagare och samåkning</h3>
+          </div>
+        </div>
         <div className="divide-y divide-gray-100">
           <Link 
             to={`/competition/${competition.id}/participants`}
