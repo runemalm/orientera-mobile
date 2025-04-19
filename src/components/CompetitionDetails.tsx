@@ -35,21 +35,59 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
         </div>
       </div>
 
+      {/* beforePanel section with invitation and PM links */}
+      {(invitation || pm) && (
+        <div className="bg-white rounded-lg shadow-sm border border-gray-100">
+          <div className="divide-y divide-gray-100">
+            {invitation && (
+              <div>
+                <Link
+                  key={invitation.id}
+                  to={invitation.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-4"
+                >
+                  <div className="flex items-center gap-3">
+                    <LinkIcon size={20} className="text-forest" />
+                    <span className="font-medium">{invitation.name}</span>
+                  </div>
+                  <div className="text-gray-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="m9 18 6-6-6-6"/>
+                    </svg>
+                  </div>
+                </Link>
+              </div>
+            )}
+            {pm && (
+              <div>
+                <Link
+                  key={pm.id}
+                  to={pm.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-4"
+                >
+                  <div className="flex items-center gap-3">
+                    <LinkIcon size={20} className="text-forest" />
+                    <span className="font-medium">{pm.name}</span>
+                  </div>
+                  <div className="text-gray-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="m9 18 6-6-6-6"/>
+                    </svg>
+                  </div>
+                </Link>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Info panel with all sections */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-100">
         <div className="divide-y divide-gray-100">
-          {/* Important Documents */}
-          {invitation && (
-            <div>
-              <FileItem file={invitation} />
-            </div>
-          )}
-          {pm && (
-            <div>
-              <FileItem file={pm} />
-            </div>
-          )}
-
           {/* Participants link */}
           <Link 
             to={`/competition/${competition.id}/participants`}
