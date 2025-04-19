@@ -78,7 +78,7 @@ const CompetitionsPage: React.FC = () => {
     }
 
     return (
-      <div className="px-4 pb-24"> {/* Increased bottom padding */}
+      <div className="px-4 pt-4">
         <CompetitionList 
           competitions={competitions} 
           userLocation={userLocation}
@@ -90,9 +90,7 @@ const CompetitionsPage: React.FC = () => {
 
   return (
     <MobileLayout title="Tävlingar nära dig">
-      <div className="h-full">
-        {renderContent()}
-      </div>
+      {renderContent()}
     </MobileLayout>
   );
 };

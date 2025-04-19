@@ -105,7 +105,7 @@ const FavoritesPage: React.FC = () => {
 
   return (
     <MobileLayout title="Favoriter">
-      <div className="px-4 pb-24"> {/* Increased bottom padding */}
+      <div className="px-4 pt-4"> {/* Increased bottom padding */}
         <CompetitionList
           competitions={favoriteCompetitions}
           userLocation={userLocation}

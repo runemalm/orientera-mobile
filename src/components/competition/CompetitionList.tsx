@@ -41,7 +41,7 @@ const CompetitionList: React.FC<CompetitionListProps> = ({
   }
 
   return (
-    <div className="space-y-3 pb-24">
+    <div className="space-y-3">
       {filteredCompetitions.map(competition => (
         <CompetitionCard 
           key={competition.id} 
