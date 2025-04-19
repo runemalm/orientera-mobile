@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -11,6 +12,22 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 
 let cachedCompetitions: CompetitionSummary[] = [];
 
+interface Filter {
+  useLocationFilter: boolean;
+  maxDistanceKm: number;
+  districts: string[];
+  disciplines: string[];
+  competitionTypes: string[];
+}
+
+const DEFAULT_FILTERS: Filter = {
+  useLocationFilter: true,
+  maxDistanceKm: 100,
+  districts: [],
+  disciplines: [],
+  competitionTypes: []
+};
+
 const CompetitionsPage: React.FC = () => {
   const navigate = useNavigate();
   const { userLocation } = useUserLocation();
@@ -19,6 +36,7 @@ const CompetitionsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const initialFetchCompleted = useRef(false);
   const [daysBack] = useLocalStorage<number>('competitionsDaysBack', 1);
+  const [filters, setFilters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
 
   const fetchCompetitions = useCallback(async () => {
     if (!userLocation) return;
@@ -27,10 +45,10 @@ const CompetitionsPage: React.FC = () => {
     setError(null);
     
     const fromDate = new Date();
-    fromDate.setDate(fromDate.getDate() - daysBack); // Use daysBack setting
+    fromDate.setDate(fromDate.getDate() - daysBack);
     
     const toDate = new Date();
-    toDate.setMonth(toDate.getMonth() + 1); // 1 month ahead
+    toDate.setMonth(toDate.getMonth() + 1);
     
     try {
       const result = await getNearbyCompetitions(
@@ -39,7 +57,11 @@ const CompetitionsPage: React.FC = () => {
         {
           from: fromDate,
           to: toDate,
-          limit: 50
+          limit: 50,
+          maxDistanceKm: filters.useLocationFilter ? filters.maxDistanceKm : undefined,
+          districts: filters.districts.length > 0 ? filters.districts : undefined,
+          disciplines: filters.disciplines.length > 0 ? filters.disciplines : undefined,
+          competitionTypes: filters.competitionTypes.length > 0 ? filters.competitionTypes : undefined
         }
       );
       
@@ -51,7 +73,7 @@ const CompetitionsPage: React.FC = () => {
     } finally {
       setIsLoadingCompetitions(false);
     }
-  }, [userLocation, daysBack]);
+  }, [userLocation, daysBack, filters]);
 
   useEffect(() => {
     if (userLocation && (!initialFetchCompleted.current || cachedCompetitions.length === 0)) {
@@ -59,6 +81,13 @@ const CompetitionsPage: React.FC = () => {
       initialFetchCompleted.current = true;
     }
   }, [userLocation, fetchCompetitions]);
+
+  // Refetch when filters change
+  useEffect(() => {
+    if (initialFetchCompleted.current && userLocation) {
+      fetchCompetitions();
+    }
+  }, [filters, fetchCompetitions, userLocation]);
 
   const handleFilterClick = () => {
     navigate('/competitions/filter', { state: { transition: 'slide' } });
@@ -83,7 +112,7 @@ const CompetitionsPage: React.FC = () => {
     }
 
     return (
-      <div className="px-4 pt-4">
+      <div className="px-4 pt-4 pb-24">
         <CompetitionList 
           competitions={competitions} 
           userLocation={userLocation}

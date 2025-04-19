@@ -18,7 +18,10 @@ export const getNearbyCompetitions = async (
     from?: Date,
     to?: Date,
     maxDistanceKm?: number,
-    limit?: number
+    limit?: number,
+    districts?: string[],
+    disciplines?: string[],
+    competitionTypes?: string[]
   }
 ): Promise<CompetitionSummary[]> => {
   if (USE_MOCK_API) {
@@ -40,6 +43,39 @@ export const getNearbyCompetitions = async (
       filteredCompetitions = filteredCompetitions.filter(comp => 
         comp.date <= toDate
       );
+    }
+    
+    if (options?.districts && options.districts.length > 0) {
+      filteredCompetitions = filteredCompetitions.filter(comp => 
+        options.districts!.includes(comp.district)
+      );
+    }
+    
+    if (options?.disciplines && options.disciplines.length > 0) {
+      filteredCompetitions = filteredCompetitions.filter(comp => 
+        options.disciplines!.includes(comp.discipline)
+      );
+    }
+    
+    if (options?.competitionTypes && options.competitionTypes.length > 0) {
+      filteredCompetitions = filteredCompetitions.filter(comp => 
+        options.competitionTypes!.includes(comp.competitionType)
+      );
+    }
+    
+    // Apply distance filter if provided
+    if (options?.maxDistanceKm) {
+      // This is a simplified version, real distance calculation would be more complex
+      filteredCompetitions = filteredCompetitions.filter(comp => {
+        if (comp.latitude === null || comp.longitude === null) return true;
+        
+        // Simple distance calculation (this is not accurate for real-world use)
+        const latDiff = Math.abs(comp.latitude - latitude);
+        const lonDiff = Math.abs(comp.longitude - longitude);
+        const approxDistKm = Math.sqrt(latDiff * latDiff + lonDiff * lonDiff) * 111; // rough km conversion
+        
+        return approxDistKm <= options.maxDistanceKm;
+      });
     }
     
     if (options?.limit) {
@@ -71,6 +107,25 @@ export const getNearbyCompetitions = async (
     
     if (options?.limit) {
       params.append('limit', options.limit.toString());
+    }
+    
+    // Add new filter parameters
+    if (options?.districts && options.districts.length > 0) {
+      options.districts.forEach(district => {
+        params.append('districts', district);
+      });
+    }
+    
+    if (options?.disciplines && options.disciplines.length > 0) {
+      options.disciplines.forEach(discipline => {
+        params.append('disciplines', discipline);
+      });
+    }
+    
+    if (options?.competitionTypes && options.competitionTypes.length > 0) {
+      options.competitionTypes.forEach(type => {
+        params.append('competitionTypes', type);
+      });
     }
     
     const response = await fetch(
