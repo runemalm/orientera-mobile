@@ -104,7 +104,7 @@ const CompetitionsPage: React.FC = () => {
           )}
           
           {selectedTab === 'favorites' && (
-            <div className="p-4">
+            <div className="pl-4 pr-4 pb-4 pt-1">
               <CompetitionList 
                 competitions={competitions}
                 userLocation={userLocation}
