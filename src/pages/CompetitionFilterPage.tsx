@@ -1,32 +1,26 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Calendar } from '@/components/ui/calendar';
 import { 
   ArrowLeft, 
   MapPin, 
   Globe, 
   Activity, 
-  Calendar, 
-  CheckCircle
+  Calendar as CalendarIcon,
+  CheckCircle,
+  CalendarRange
 } from 'lucide-react';
 import { 
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { 
-  OrienteeringDistrict, 
-  Discipline, 
-  CompetitionType 
-} from '../types';
-import { useUserLocation } from '../hooks/useUserLocation';
-import { useLocalStorage } from '../hooks/useLocalStorage';
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { Checkbox } from "@/components/ui/checkbox";
+import { toast } from 'sonner';
 import { Label } from '@/components/ui/label';
 import LocationInputForm from '../components/LocationInputForm';
 import {
@@ -34,16 +28,15 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
-  DrawerFooter,
 } from "@/components/ui/drawer";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { Checkbox } from "@/components/ui/checkbox";
-import { toast } from 'sonner';
-import OrienteeringCheckpointIcon from '../components/OrienteeringCheckpointIcon';
+import { 
+  OrienteeringDistrict, 
+  Discipline, 
+  CompetitionType,
+  Branch
+} from '../types';
+import { useUserLocation } from '../hooks/useUserLocation';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
 interface Filter {
   useLocationFilter: boolean;
@@ -51,6 +44,11 @@ interface Filter {
   districts: OrienteeringDistrict[];
   disciplines: Discipline[];
   competitionTypes: CompetitionType[];
+  branches: Branch[];
+  dateRange: {
+    from: Date | null;
+    to: Date | null;
+  };
 }
 
 const DEFAULT_FILTERS: Filter = {
@@ -58,7 +56,12 @@ const DEFAULT_FILTERS: Filter = {
   maxDistanceKm: 100,
   districts: [],
   disciplines: [],
-  competitionTypes: []
+  competitionTypes: [],
+  branches: [],
+  dateRange: {
+    from: null,
+    to: null
+  }
 };
 
 const CompetitionFilterPage = () => {
@@ -67,6 +70,15 @@ const CompetitionFilterPage = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [filters, setFilters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
 
+  // Date range collapsible state
+  const [dateRangeCollapsibleOpen, setDateRangeCollapsibleOpen] = useState(
+    filters.dateRange.from !== null || filters.dateRange.to !== null
+  );
+
+  // Branch selection
+  const allBranches = Object.values(Branch);
+  const [branchCollapsibleOpen, setBranchCollapsibleOpen] = useState(filters.branches.length > 0);
+  
   // Districts selection
   const allDistricts = Object.values(OrienteeringDistrict);
   const [districtCollapsibleOpen, setDistrictCollapsibleOpen] = useState(filters.districts.length > 0);
@@ -82,6 +94,20 @@ const CompetitionFilterPage = () => {
   const handleUpdateLocation = (location: { city: string; latitude: number; longitude: number }) => {
     updateUserLocation(location);
     setDrawerOpen(false);
+  };
+
+  const handleBranchToggle = (branch: Branch) => {
+    if (filters.branches.includes(branch)) {
+      setFilters({
+        ...filters,
+        branches: filters.branches.filter(b => b !== branch)
+      });
+    } else {
+      setFilters({
+        ...filters,
+        branches: [...filters.branches, branch]
+      });
+    }
   };
 
   const handleDistrictToggle = (district: OrienteeringDistrict) => {
@@ -126,6 +152,16 @@ const CompetitionFilterPage = () => {
     }
   };
 
+  const handleDateRangeChange = (date: Date | undefined, type: 'from' | 'to') => {
+    setFilters({
+      ...filters,
+      dateRange: {
+        ...filters.dateRange,
+        [type]: date || null
+      }
+    });
+  };
+
   const handleApplyFilters = () => {
     navigate(-1);
     toast.success('Filter inställningar sparade', {
@@ -136,6 +172,17 @@ const CompetitionFilterPage = () => {
   const handleResetFilters = () => {
     setFilters(DEFAULT_FILTERS);
     toast.info('Filtren har återställts');
+  };
+
+  const getBranchTranslation = (branch: Branch) => {
+    const translations: Record<Branch, string> = {
+      [Branch.FootO]: 'Orienteringslöpning',
+      [Branch.PreO]: 'Precisionsorientering',
+      [Branch.MTBO]: 'Mountainbikeorientering',
+      [Branch.SkiO]: 'Skidorientering',
+      [Branch.TrailO]: 'Trail-O'
+    };
+    return translations[branch] || branch;
   };
 
   const getDistrictTranslation = (district: OrienteeringDistrict) => {
@@ -183,6 +230,55 @@ const CompetitionFilterPage = () => {
     >
       <div className="p-4 pb-24">
         <div className="space-y-6">
+          {/* Date Range Filter */}
+          <Collapsible
+            open={dateRangeCollapsibleOpen}
+            onOpenChange={setDateRangeCollapsibleOpen}
+            className="bg-white rounded-xl shadow-sm border border-gray-100"
+          >
+            <div className="flex items-center gap-2 text-forest p-4">
+              <CalendarRange className="h-5 w-5" />
+              <h2 className="font-semibold">Datumintervall</h2>
+              <div className="flex-grow"></div>
+              <CollapsibleTrigger asChild>
+                <Button variant="ghost" size="sm" className="p-1">
+                  <span className="text-xs">
+                    {filters.dateRange.from || filters.dateRange.to 
+                      ? 'Aktivt filter' 
+                      : 'Visa alla'}
+                  </span>
+                </Button>
+              </CollapsibleTrigger>
+            </div>
+            
+            <CollapsibleContent className="px-4 pb-4">
+              <div className="space-y-4">
+                <div>
+                  <Label className="mb-2 block">Från</Label>
+                  <Calendar
+                    mode="single"
+                    selected={filters.dateRange.from || undefined}
+                    onSelect={(date) => handleDateRangeChange(date, 'from')}
+                    disabled={(date) => 
+                      filters.dateRange.to ? date > filters.dateRange.to : false
+                    }
+                  />
+                </div>
+                <div>
+                  <Label className="mb-2 block">Till</Label>
+                  <Calendar
+                    mode="single"
+                    selected={filters.dateRange.to || undefined}
+                    onSelect={(date) => handleDateRangeChange(date, 'to')}
+                    disabled={(date) => 
+                      filters.dateRange.from ? date < filters.dateRange.from : false
+                    }
+                  />
+                </div>
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
+
           {/* Location Filter */}
           <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
             <div className="flex items-center gap-2 text-forest mb-3">
@@ -240,7 +336,47 @@ const CompetitionFilterPage = () => {
               </div>
             )}
           </div>
-          
+
+          {/* Branch Filter */}
+          <Collapsible
+            open={branchCollapsibleOpen}
+            onOpenChange={setBranchCollapsibleOpen}
+            className="bg-white rounded-xl shadow-sm border border-gray-100"
+          >
+            <div className="flex items-center gap-2 text-forest p-4">
+              <Activity className="h-5 w-5" />
+              <h2 className="font-semibold">Gren</h2>
+              <div className="flex-grow"></div>
+              <CollapsibleTrigger asChild>
+                <Button variant="ghost" size="sm" className="p-1">
+                  <span className="text-xs">
+                    {filters.branches.length > 0 
+                      ? `${filters.branches.length} valda` 
+                      : "Visa alla"}
+                  </span>
+                </Button>
+              </CollapsibleTrigger>
+            </div>
+            
+            <CollapsibleContent className="px-4 pb-4 space-y-2">
+              {allBranches.map((branch) => (
+                <div key={branch} className="flex items-center space-x-2">
+                  <Checkbox 
+                    id={`branch-${branch}`} 
+                    checked={filters.branches.includes(branch)}
+                    onCheckedChange={() => handleBranchToggle(branch)}
+                  />
+                  <label 
+                    htmlFor={`branch-${branch}`}
+                    className="text-sm cursor-pointer"
+                  >
+                    {getBranchTranslation(branch)}
+                  </label>
+                </div>
+              ))}
+            </CollapsibleContent>
+          </Collapsible>
+
           {/* District Filter */}
           <Collapsible
             open={districtCollapsibleOpen}
@@ -328,7 +464,7 @@ const CompetitionFilterPage = () => {
             className="bg-white rounded-xl shadow-sm border border-gray-100"
           >
             <div className="flex items-center gap-2 text-forest p-4">
-              <Calendar className="h-5 w-5" />
+              <CalendarIcon className="h-5 w-5" />
               <h2 className="font-semibold">Tävlingstyper</h2>
               <div className="flex-grow"></div>
               <CollapsibleTrigger asChild>
