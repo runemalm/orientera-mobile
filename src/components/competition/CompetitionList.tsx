@@ -22,16 +22,11 @@ const CompetitionList: React.FC<CompetitionListProps> = ({
   // Safety check - ensure favorites is array
   const safetyFavorites = Array.isArray(favorites) ? favorites : [];
 
-  // Debug output for favorites
-  console.log('CompetitionList - Current favorites:', safetyFavorites);
-  
   // Only filter by favorites if showFavorites is true, otherwise show all competitions passed in
   const filteredCompetitions = showFavorites
     ? competitions.filter(comp => safetyFavorites.includes(comp.id))
     : competitions;
     
-  console.log(`Showing ${filteredCompetitions.length} competitions in ${showFavorites ? 'favorites' : 'all'} tab`);
-
   if (filteredCompetitions.length === 0) {
     return (
       <div className="text-center py-8">
@@ -46,7 +41,7 @@ const CompetitionList: React.FC<CompetitionListProps> = ({
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 pb-24">
       {filteredCompetitions.map(competition => (
         <CompetitionCard 
           key={competition.id} 
