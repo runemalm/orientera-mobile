@@ -1,6 +1,6 @@
 import React from 'react';
 import { Competition, ResourceType } from '../types';
-import { Users, Car, Link as LinkIcon, FileText, Navigation } from 'lucide-react';
+import { Users, Car, Link as LinkIcon, FileText, Navigation, BarChart2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { translateDiscipline, translateCompetitionType } from '../utils/translations';
 import { formatSwedishDate } from '../utils/dateUtils';
@@ -16,10 +16,16 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
   
   const invitation = competition.resources?.find(r => r.type === ResourceType.Invitation);
   const pm = competition.resources?.find(r => r.type === ResourceType.PM);
-  const otherResources = competition.resources?.filter(r => 
-    r.type !== ResourceType.Invitation && r.type !== ResourceType.PM
+  const results = competition.resources?.filter(r => 
+    r.type === ResourceType.Results || r.type === ResourceType.Splits
   );
-  
+  const otherResources = competition.resources?.filter(r => 
+    r.type !== ResourceType.Invitation && 
+    r.type !== ResourceType.PM && 
+    r.type !== ResourceType.Results &&
+    r.type !== ResourceType.Splits
+  );
+
   const getDirectionsUrl = () => {
     if (!competition.latitude || !competition.longitude) return null;
     return `https://www.google.com/maps/dir/?api=1&destination=${competition.latitude},${competition.longitude}`;
@@ -161,6 +167,24 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
           ))}
         </div>
       </div>
+
+      {results && results.length > 0 && (
+        <div className="bg-white rounded-lg shadow-sm border border-gray-100">
+          <div className="p-4 border-b border-gray-100">
+            <div className="flex items-center gap-2">
+              <BarChart2 className="text-forest" size={20} />
+              <h3 className="font-semibold">Resultat</h3>
+            </div>
+          </div>
+          <div className="divide-y divide-gray-100">
+            {results.map((result) => (
+              <div key={result.id}>
+                <FileItem file={result} />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {competition.latitude && competition.longitude && (
         <CompetitionLocationMap 
