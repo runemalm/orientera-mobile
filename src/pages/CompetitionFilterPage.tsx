@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -70,26 +71,34 @@ const CompetitionFilterPage = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [filters, setFilters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
 
-  // Date range collapsible state
+  // Date range collapsible state - initialize based on filter values safely
   const [dateRangeCollapsibleOpen, setDateRangeCollapsibleOpen] = useState(
-    filters.dateRange.from !== null || filters.dateRange.to !== null
+    Boolean(filters?.dateRange?.from || filters?.dateRange?.to)
   );
 
   // Branch selection
   const allBranches = Object.values(Branch);
-  const [branchCollapsibleOpen, setBranchCollapsibleOpen] = useState(filters.branches.length > 0);
+  const [branchCollapsibleOpen, setBranchCollapsibleOpen] = useState(
+    Array.isArray(filters?.branches) && filters.branches.length > 0
+  );
   
   // Districts selection
   const allDistricts = Object.values(OrienteeringDistrict);
-  const [districtCollapsibleOpen, setDistrictCollapsibleOpen] = useState(filters.districts.length > 0);
+  const [districtCollapsibleOpen, setDistrictCollapsibleOpen] = useState(
+    Array.isArray(filters?.districts) && filters.districts.length > 0
+  );
   
   // Disciplines selection
   const allDisciplines = Object.values(Discipline);
-  const [disciplineCollapsibleOpen, setDisciplineCollapsibleOpen] = useState(filters.disciplines.length > 0);
+  const [disciplineCollapsibleOpen, setDisciplineCollapsibleOpen] = useState(
+    Array.isArray(filters?.disciplines) && filters.disciplines.length > 0
+  );
 
   // Competition types selection
   const allCompetitionTypes = Object.values(CompetitionType);
-  const [competitionTypeCollapsibleOpen, setCompetitionTypeCollapsibleOpen] = useState(filters.competitionTypes.length > 0);
+  const [competitionTypeCollapsibleOpen, setCompetitionTypeCollapsibleOpen] = useState(
+    Array.isArray(filters?.competitionTypes) && filters.competitionTypes.length > 0
+  );
 
   const handleUpdateLocation = (location: { city: string; latitude: number; longitude: number }) => {
     updateUserLocation(location);
@@ -152,11 +161,15 @@ const CompetitionFilterPage = () => {
     }
   };
 
+  // Ensure we're safely handling the date range
   const handleDateRangeChange = (date: Date | undefined, type: 'from' | 'to') => {
+    // Make sure we're working with a valid filters object that has dateRange
+    const currentDateRange = filters?.dateRange || { from: null, to: null };
+    
     setFilters({
       ...filters,
       dateRange: {
-        ...filters.dateRange,
+        ...currentDateRange,
         [type]: date || null
       }
     });
@@ -243,7 +256,7 @@ const CompetitionFilterPage = () => {
               <CollapsibleTrigger asChild>
                 <Button variant="ghost" size="sm" className="p-1">
                   <span className="text-xs">
-                    {filters.dateRange.from || filters.dateRange.to 
+                    {(filters?.dateRange?.from || filters?.dateRange?.to)
                       ? 'Aktivt filter' 
                       : 'Visa alla'}
                   </span>
@@ -257,10 +270,10 @@ const CompetitionFilterPage = () => {
                   <Label className="mb-2 block">Från</Label>
                   <Calendar
                     mode="single"
-                    selected={filters.dateRange.from || undefined}
+                    selected={filters?.dateRange?.from || undefined}
                     onSelect={(date) => handleDateRangeChange(date, 'from')}
                     disabled={(date) => 
-                      filters.dateRange.to ? date > filters.dateRange.to : false
+                      filters?.dateRange?.to ? date > filters.dateRange.to : false
                     }
                   />
                 </div>
@@ -268,10 +281,10 @@ const CompetitionFilterPage = () => {
                   <Label className="mb-2 block">Till</Label>
                   <Calendar
                     mode="single"
-                    selected={filters.dateRange.to || undefined}
+                    selected={filters?.dateRange?.to || undefined}
                     onSelect={(date) => handleDateRangeChange(date, 'to')}
                     disabled={(date) => 
-                      filters.dateRange.from ? date < filters.dateRange.from : false
+                      filters?.dateRange?.from ? date < filters.dateRange.from : false
                     }
                   />
                 </div>
@@ -350,7 +363,7 @@ const CompetitionFilterPage = () => {
               <CollapsibleTrigger asChild>
                 <Button variant="ghost" size="sm" className="p-1">
                   <span className="text-xs">
-                    {filters.branches.length > 0 
+                    {filters?.branches?.length > 0 
                       ? `${filters.branches.length} valda` 
                       : "Visa alla"}
                   </span>
@@ -363,7 +376,7 @@ const CompetitionFilterPage = () => {
                 <div key={branch} className="flex items-center space-x-2">
                   <Checkbox 
                     id={`branch-${branch}`} 
-                    checked={filters.branches.includes(branch)}
+                    checked={filters?.branches?.includes(branch)}
                     onCheckedChange={() => handleBranchToggle(branch)}
                   />
                   <label 
@@ -390,7 +403,7 @@ const CompetitionFilterPage = () => {
               <CollapsibleTrigger asChild>
                 <Button variant="ghost" size="sm" className="p-1">
                   <span className="text-xs">
-                    {filters.districts.length > 0 
+                    {filters?.districts?.length > 0 
                       ? `${filters.districts.length} valda` 
                       : "Visa alla"}
                   </span>
@@ -403,7 +416,7 @@ const CompetitionFilterPage = () => {
                 <div key={district} className="flex items-center space-x-2">
                   <Checkbox 
                     id={`district-${district}`} 
-                    checked={filters.districts.includes(district)}
+                    checked={filters?.districts?.includes(district)}
                     onCheckedChange={() => handleDistrictToggle(district)}
                   />
                   <label 
@@ -430,7 +443,7 @@ const CompetitionFilterPage = () => {
               <CollapsibleTrigger asChild>
                 <Button variant="ghost" size="sm" className="p-1">
                   <span className="text-xs">
-                    {filters.disciplines.length > 0 
+                    {filters?.disciplines?.length > 0 
                       ? `${filters.disciplines.length} valda` 
                       : "Visa alla"}
                   </span>
@@ -443,7 +456,7 @@ const CompetitionFilterPage = () => {
                 <div key={discipline} className="flex items-center space-x-2">
                   <Checkbox 
                     id={`discipline-${discipline}`} 
-                    checked={filters.disciplines.includes(discipline)}
+                    checked={filters?.disciplines?.includes(discipline)}
                     onCheckedChange={() => handleDisciplineToggle(discipline)}
                   />
                   <label 
@@ -470,7 +483,7 @@ const CompetitionFilterPage = () => {
               <CollapsibleTrigger asChild>
                 <Button variant="ghost" size="sm" className="p-1">
                   <span className="text-xs">
-                    {filters.competitionTypes.length > 0 
+                    {filters?.competitionTypes?.length > 0 
                       ? `${filters.competitionTypes.length} valda` 
                       : "Visa alla"}
                   </span>
@@ -483,7 +496,7 @@ const CompetitionFilterPage = () => {
                 <div key={type} className="flex items-center space-x-2">
                   <Checkbox 
                     id={`type-${type}`} 
-                    checked={filters.competitionTypes.includes(type)}
+                    checked={filters?.competitionTypes?.includes(type)}
                     onCheckedChange={() => handleCompetitionTypeToggle(type)}
                   />
                   <label 
