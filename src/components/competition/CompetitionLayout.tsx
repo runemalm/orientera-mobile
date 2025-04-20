@@ -6,7 +6,6 @@ import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 import CalendarList from './CalendarList';
 import CompetitionList from './CompetitionList';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
-import { useScrollPosition } from '../../hooks/useScrollPosition';
 
 interface CompetitionLayoutProps {
   competitions: CompetitionSummary[];
@@ -22,8 +21,6 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
   toDate
 }) => {
   const [viewMode, setViewMode] = useLocalStorage<'calendar' | 'list'>('competitionViewMode', 'calendar');
-  const calendarScrollRef = useScrollPosition('competition-calendar');
-  const listScrollRef = useScrollPosition('competition-list');
 
   return (
     <div className="flex flex-col h-full">
@@ -36,9 +33,9 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
         </Tabs>
       </div>
 
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-auto">
         {viewMode === 'calendar' ? (
-          <div ref={calendarScrollRef} className="h-full overflow-auto px-2 pt-0 pb-4">
+          <div className="px-2 pt-0 pb-4">
             <CalendarList
               competitions={competitions}
               userLocation={userLocation}
@@ -47,7 +44,7 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
             />
           </div>
         ) : (
-          <div ref={listScrollRef} className="h-full overflow-auto px-2 pt-0 pb-4">
+          <div className="px-2 pt-0 pb-4">
             {userLocation && (
               <CompetitionList
                 competitions={competitions}
