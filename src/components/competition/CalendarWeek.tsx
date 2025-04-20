@@ -2,6 +2,7 @@
 import React from 'react';
 import { CompetitionSummary } from '../../types';
 import CalendarDay from './CalendarDay';
+import CalendarWeekHeader from './CalendarWeekHeader';
 import { Separator } from '../ui/separator';
 import { isSameDay } from 'date-fns';
 import { cn } from '@/lib/utils';
@@ -21,10 +22,11 @@ const CalendarWeek: React.FC<CalendarWeekProps> = ({ days, weekNumber }) => {
   return (
     <div 
       className={cn(
-        "space-y-[1px] border border-cool-gray/30 rounded-lg overflow-hidden my-2",
+        "border border-cool-gray/30 rounded-lg overflow-hidden my-2",
         "shadow-sm hover:shadow-md transition-shadow duration-200"
       )}
     >
+      <CalendarWeekHeader weekNumber={weekNumber} />
       {days.map((day, dayIndex) => (
         <React.Fragment key={day.date.toISOString()}>
           <CalendarDay
@@ -44,3 +46,4 @@ const CalendarWeek: React.FC<CalendarWeekProps> = ({ days, weekNumber }) => {
 };
 
 export default CalendarWeek;
+
