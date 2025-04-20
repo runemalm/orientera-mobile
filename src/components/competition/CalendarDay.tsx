@@ -26,14 +26,13 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
       className={cn(
         "border-l-2 transition-colors duration-200",
         'border-l-transparent',
-        isWeekend ? 'bg-pink-100/60' : (hasCompetitions ? 'bg-soft-green/10' : 'bg-white/40'),
-        !hasCompetitions ? 'opacity-50' : '',
-        'hover:bg-soft-purple/10'
+        isWeekend ? 'bg-red-100/60' : 'bg-white/40',
+        ''
       )}
     >
       <div className="flex min-h-[2.5rem] w-full">
         <div className={cn(
-          "w-[4.5rem] py-2 px-2 text-sm shrink-0 self-start",
+          "w-[4.5rem] pt-3 px-2 text-sm shrink-0 self-start",
           isPast ? 'text-gray-400' : 'text-gray-600',
           isWeekend ? 'font-medium' : ''
         )}>

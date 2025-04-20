@@ -22,7 +22,7 @@ const CalendarWeek: React.FC<CalendarWeekProps> = ({ days, weekNumber }) => {
     <div 
       className={cn(
         "space-y-[1px] border border-cool-gray/30 rounded-lg overflow-hidden my-2",
-        "shadow-sm hover:shadow-md transition-shadow duration-200"
+        "shadow-sm transition-shadow duration-200"
       )}
     >
       {days.map((day, dayIndex) => (
