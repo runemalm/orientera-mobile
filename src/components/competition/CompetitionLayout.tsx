@@ -1,10 +1,11 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { CompetitionSummary } from '../../types';
 import { UserLocation } from '../../hooks/useUserLocation';
 import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 import CalendarList from './CalendarList';
 import CompetitionList from './CompetitionList';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 
 interface CompetitionLayoutProps {
   competitions: CompetitionSummary[];
@@ -19,12 +20,12 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
   fromDate,
   toDate
 }) => {
-  const [viewMode, setViewMode] = useState<'calendar' | 'list'>('calendar');
+  const [viewMode, setViewMode] = useLocalStorage<'calendar' | 'list'>('competitionViewMode', 'calendar');
 
   return (
     <div className="flex flex-col h-full">
       <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 pt-3 pb-2 px-2">
-        <Tabs defaultValue="calendar" onValueChange={(value) => setViewMode(value as 'calendar' | 'list')}>
+        <Tabs value={viewMode} onValueChange={(value) => setViewMode(value as 'calendar' | 'list')}>
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="calendar">Kalender</TabsTrigger>
             <TabsTrigger value="list">Lista</TabsTrigger>
