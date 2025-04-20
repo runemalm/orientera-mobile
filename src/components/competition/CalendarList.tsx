@@ -1,4 +1,3 @@
-
 import React, { useMemo } from 'react';
 import { CompetitionSummary } from '../../types';
 import { UserLocation } from '../../hooks/useUserLocation';
@@ -162,14 +161,14 @@ const CalendarList: React.FC<CalendarListProps> = ({
                       className={`
                         border-l-4
                         ${isToday ? 'border-l-primary bg-primary/5' : 'border-l-transparent'} 
-                        ${day.isWeekend ? 'bg-muted/30' : 'bg-gray-50/50'}
+                        ${day.isWeekend ? 'bg-muted/30' : hasCompetitions ? 'bg-white' : 'bg-gray-50/30'}
                       `}
                     >
                       <div className="flex min-h-[2.5rem] items-start w-full">
                         <div className={`
-                          w-[4.5rem] py-2 px-2 text-sm font-medium shrink-0
-                          ${isPast ? 'text-muted-foreground' : ''}
-                          ${isToday ? 'text-primary' : ''}
+                          w-[4.5rem] py-2 px-2 text-sm shrink-0
+                          ${isPast ? 'text-muted-foreground/70' : ''}
+                          ${isToday ? 'text-primary font-medium' : hasCompetitions ? 'font-medium' : 'font-normal text-muted-foreground/90'}
                         `}>
                           {format(day.date, 'EEE d', { locale: sv })}
                         </div>
@@ -185,8 +184,8 @@ const CalendarList: React.FC<CalendarListProps> = ({
                               ))}
                             </div>
                           ) : (
-                            <div className="h-8 flex items-center">
-                              <span className="text-muted-foreground text-sm">Inga tävlingar</span>
+                            <div className="h-8 flex items-center opacity-50">
+                              <span className="text-muted-foreground/70 text-sm italic">Inga tävlingar</span>
                             </div>
                           )}
                         </div>
