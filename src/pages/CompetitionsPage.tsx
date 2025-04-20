@@ -123,7 +123,7 @@ const CompetitionsPage: React.FC = () => {
 
   return (
     <MobileLayout 
-      title="Upptäck tävlingar" 
+      title="Tävlingskalender" 
       action={
         <Button 
           variant="ghost" 
