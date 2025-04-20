@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -102,8 +103,8 @@ const CompetitionsPage: React.FC = () => {
       );
     }
 
-    const fromDate = new Date();
-    fromDate.setDate(fromDate.getDate() - daysBack);
+    // Using startOfWeek instead of daysBack for fromDate
+    const fromDate = startOfWeek(new Date(), { weekStartsOn: 1 });
     
     const toDate = new Date();
     toDate.setMonth(toDate.getMonth() + 1);
