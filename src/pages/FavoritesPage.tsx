@@ -112,7 +112,7 @@ const FavoritesPage: React.FC = () => {
 
   return (
     <MobileLayout title="Favoriter">
-      <div className="px-4 pt-4">
+      <div className="px-2 pt-4">
         <CompetitionList
           competitions={favoriteCompetitions}
           userLocation={userLocation}

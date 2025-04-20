@@ -131,7 +131,7 @@ const CompetitionsPage: React.FC = () => {
     })();
 
     return (
-      <div className="px-4 pt-2 pb-24">
+      <div className="px-2 pt-2 pb-24">
         <CalendarList 
           competitions={competitions} 
           userLocation={userLocation}
