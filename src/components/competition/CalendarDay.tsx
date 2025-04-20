@@ -1,8 +1,4 @@
-
 import React from 'react';
-import { isSameDay } from 'date-fns';
-import { toZonedTime } from 'date-fns-tz';
-import { SWEDISH_TIMEZONE } from '../../utils/dateUtils';
 import { CompetitionSummary } from '../../types';
 import CalendarCompetitionItem from './CalendarCompetitionItem';
 import { cn } from '@/lib/utils';
@@ -28,7 +24,7 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
     <div 
       className={cn(
         "border-l-2 transition-colors duration-200",
-        isToday ? 'border-l-primary bg-primary/5' : 'border-l-transparent',
+        'border-l-transparent',
         isWeekend ? 
           (hasCompetitions ? 'bg-red-100/30' : 'bg-red-100/20') 
           : hasCompetitions ? 'bg-soft-green/10' : 'bg-white/40',
@@ -39,8 +35,7 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
       <div className="flex min-h-[2.5rem] w-full">
         <div className={cn(
           "w-[4.5rem] py-2 px-2 text-sm shrink-0 self-start",
-          isPast ? 'text-gray-400' : '',
-          isToday ? 'text-primary font-medium' : 'text-gray-600',
+          isPast ? 'text-gray-400' : 'text-gray-600',
           isWeekend ? 'font-medium' : ''
         )}>
           {date.toLocaleDateString('sv-SE', { weekday: 'short', day: 'numeric' })}
