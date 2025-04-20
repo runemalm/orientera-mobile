@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -6,9 +7,9 @@ import { Button } from '@/components/ui/button';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { CompetitionSummary } from '../types';
 import { getNearbyCompetitions } from '../services/api';
-import CalendarList from '../components/competition/CalendarList';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { startOfWeek } from 'date-fns';
+import CompetitionLayout from '../components/competition/CompetitionLayout';
 
 let cachedCompetitions: CompetitionSummary[] = [];
 
@@ -138,14 +139,12 @@ const CompetitionsPage: React.FC = () => {
     })();
 
     return (
-      <div className="px-2 pt-2 pb-24">
-        <CalendarList 
-          competitions={competitions} 
-          userLocation={userLocation}
-          fromDate={fromDate}
-          toDate={toDate}
-        />
-      </div>
+      <CompetitionLayout
+        competitions={competitions}
+        userLocation={userLocation}
+        fromDate={fromDate}
+        toDate={toDate}
+      />
     );
   };
 
@@ -161,6 +160,7 @@ const CompetitionsPage: React.FC = () => {
           <Filter className="h-[1.2rem] w-[1.2rem]" />
         </Button>
       }
+      fullHeight
     >
       {renderContent()}
     </MobileLayout>
@@ -168,3 +168,4 @@ const CompetitionsPage: React.FC = () => {
 };
 
 export default CompetitionsPage;
+
