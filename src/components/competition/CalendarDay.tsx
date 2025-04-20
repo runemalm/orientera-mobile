@@ -32,14 +32,11 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
     <div 
       className={cn(
         "border-l-2 transition-colors duration-200",
+        'border-l-transparent',
         isWeekend ? 'bg-red-100/60' : 'bg-white/40',
-        isToday ? 'border-l-forest-light' : 'border-l-transparent', // Add green border for today
-        'relative' // Add relative positioning for absolute positioning of today indicator
+        ''
       )}
     >
-      {isToday && (
-        <div className="absolute top-0 left-0 w-full h-1 bg-forest-light" />
-      )}
       <div className="flex min-h-[2.5rem] w-full">
         <div className={cn(
           "w-[5rem] pt-3 px-2 text-sm shrink-0 self-start whitespace-nowrap overflow-hidden text-ellipsis",
