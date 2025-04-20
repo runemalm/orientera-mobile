@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,6 +15,14 @@ const LoginWaitlistDialog: React.FC<LoginWaitlistDialogProps> = ({ isOpen, onClo
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const isMobile = useIsMobile();
+  const emailInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    // Only focus the input if it's not a mobile device and the dialog is open
+    if (!isMobile && isOpen && emailInputRef.current && !isSubmitted) {
+      emailInputRef.current.focus();
+    }
+  }, [isMobile, isOpen, isSubmitted]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,6 +66,7 @@ const LoginWaitlistDialog: React.FC<LoginWaitlistDialogProps> = ({ isOpen, onClo
                 E-postadress
               </label>
               <Input
+                ref={emailInputRef}
                 id="email"
                 type="email"
                 placeholder="du@exempel.se"
