@@ -84,14 +84,12 @@ const CompetitionFilterPage = () => {
   const allCompetitionTypes = Object.values(CompetitionType);
 
   useEffect(() => {
-    const hasDateFilter = Boolean(filters?.dateRange?.from || filters?.dateRange?.to);
-    setDateRangeCollapsibleOpen(hasDateFilter);
-    
-    setBranchCollapsibleOpen(Array.isArray(filters?.branches) && filters.branches.length > 0);
-    setDistrictCollapsibleOpen(Array.isArray(filters?.districts) && filters.districts.length > 0);
-    setDisciplineCollapsibleOpen(Array.isArray(filters?.disciplines) && filters.disciplines.length > 0);
-    setCompetitionTypeCollapsibleOpen(Array.isArray(filters?.competitionTypes) && filters.competitionTypes.length > 0);
-  }, [filters]);
+    setDateRangeCollapsibleOpen(false);
+    setBranchCollapsibleOpen(false);
+    setDistrictCollapsibleOpen(false);
+    setDisciplineCollapsibleOpen(false);
+    setCompetitionTypeCollapsibleOpen(false);
+  }, []);
 
   const handleUpdateLocation = (location: { city: string; latitude: number; longitude: number }) => {
     updateUserLocation(location);
