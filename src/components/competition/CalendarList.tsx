@@ -41,8 +41,8 @@ const CalendarList: React.FC<CalendarListProps> = ({
   // Sort competitions by date
   const sortedCompetitions = useMemo(() => {
     return [...competitions].sort((a, b) => {
-      const dateA = new Date(a.startDate);
-      const dateB = new Date(b.startDate);
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
       return compareAsc(dateA, dateB);
     });
   }, [competitions]);
@@ -89,7 +89,7 @@ const CalendarList: React.FC<CalendarListProps> = ({
       
       // Filter competitions for this day
       const dayCompetitions = sortedCompetitions.filter(comp => 
-        isSameDay(new Date(comp.startDate), zonedDay)
+        isSameDay(new Date(comp.date), zonedDay)
       );
 
       // Check if we need to create a new month
@@ -177,7 +177,6 @@ const CalendarList: React.FC<CalendarListProps> = ({
                                   key={competition.id}
                                   competition={competition}
                                   userLocation={userLocation}
-                                  compact={true}
                                 />
                               ))}
                             </div>
