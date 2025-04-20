@@ -1,3 +1,4 @@
+
 import React, { useMemo } from 'react';
 import { CompetitionSummary } from '../../types';
 import { UserLocation } from '../../hooks/useUserLocation';
@@ -161,7 +162,9 @@ const CalendarList: React.FC<CalendarListProps> = ({
                       className={`
                         border-l-4
                         ${isToday ? 'border-l-primary bg-primary/5' : 'border-l-transparent'} 
+                        ${day.isWeekend && !hasCompetitions ? 'bg-[#F1F0FB]' : ''}
                         ${day.isWeekend ? 'bg-muted/30' : 'bg-gray-50/30'}
+                        ${!hasCompetitions ? 'opacity-60' : ''}
                         hover:bg-gray-100/50 transition-colors
                         border-b border-gray-100 last:border-b-0
                       `}
@@ -171,6 +174,7 @@ const CalendarList: React.FC<CalendarListProps> = ({
                           w-[4.5rem] py-2 px-2 text-sm shrink-0
                           ${isPast ? 'text-muted-foreground/70' : ''}
                           ${isToday ? 'text-primary font-medium' : 'text-muted-foreground/90'}
+                          ${day.isWeekend && !hasCompetitions ? 'italic' : ''}
                         `}>
                           {format(day.date, 'EEE d', { locale: sv })}
                         </div>
@@ -186,9 +190,7 @@ const CalendarList: React.FC<CalendarListProps> = ({
                               ))}
                             </div>
                           ) : (
-                            <div className="h-8 flex items-center">
-                              {/* Empty state - no text */}
-                            </div>
+                            <div className="h-8"></div>
                           )}
                         </div>
                       </div>
