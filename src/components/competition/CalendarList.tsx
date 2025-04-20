@@ -1,3 +1,4 @@
+
 import React, { useMemo } from 'react';
 import { CompetitionSummary } from '../../types';
 import { UserLocation } from '../../hooks/useUserLocation';
@@ -138,7 +139,7 @@ const CalendarList: React.FC<CalendarListProps> = ({
                   const today = new Date();
                   const isToday = isSameDay(day.date, toZonedTime(today, SWEDISH_TIMEZONE));
                   const isPast = day.date < today;
-                  const isWeekend = isWeekend(day.date);
+                  const dayIsWeekend = day.isWeekend;
                   const isMonday = day.date.getDay() === 1;
                   const isSunday = day.date.getDay() === 0;
                   
@@ -149,7 +150,7 @@ const CalendarList: React.FC<CalendarListProps> = ({
                           border-l-2 
                           transition-colors duration-200
                           ${isToday ? 'border-l-primary bg-primary/5' : 'border-l-transparent'}
-                          ${isWeekend ? 
+                          ${dayIsWeekend ? 
                             (hasCompetitions ? 'bg-red-100/30' : 'bg-red-100/20') 
                             : hasCompetitions ? 'bg-soft-green/10' : 'bg-white/40'}
                           ${!hasCompetitions ? 'opacity-50' : ''}
@@ -161,7 +162,7 @@ const CalendarList: React.FC<CalendarListProps> = ({
                             w-[4.5rem] py-2 px-2 text-sm shrink-0 self-start
                             ${isPast ? 'text-gray-400' : ''}
                             ${isToday ? 'text-primary font-medium' : 'text-gray-600'}
-                            ${isWeekend ? 'font-medium' : ''}
+                            ${dayIsWeekend ? 'font-medium' : ''}
                           `}>
                             {format(day.date, 'EEE d', { locale: sv })}
                           </div>
