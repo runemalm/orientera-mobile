@@ -1,4 +1,3 @@
-
 import React, { useMemo } from 'react';
 import { CompetitionSummary } from '../../types';
 import { UserLocation } from '../../hooks/useUserLocation';
@@ -142,65 +141,61 @@ const CalendarList: React.FC<CalendarListProps> = ({
 
           <div className="space-y-2 rounded-lg">
             {/* Days */}
-            <div className="space-y-2 rounded-lg overflow-hidden">
-              {month.weeks.flatMap((week, weekIndex) => [
-                // Add week's days
-                ...week.days.map((day) => {
+            <div className="rounded-lg overflow-hidden">
+              {month.weeks.flatMap((week) => 
+                week.days.map((day, dayIndex, daysArray) => {
                   const hasCompetitions = day.competitions.length > 0;
                   const today = new Date();
                   const isToday = isSameDay(day.date, toZonedTime(today, SWEDISH_TIMEZONE));
                   const isPast = day.date < today;
                   
                   return (
-                    <div 
-                      key={day.date.toISOString()} 
-                      className={`
-                        border-l-2 
-                        transition-colors duration-200
-                        ${isToday ? 'border-l-primary bg-primary/5' : 'border-l-transparent'}
-                        ${day.isWeekend ? 
-                          (hasCompetitions ? 'bg-soft-purple/20' : 'bg-soft-purple/10') 
-                          : hasCompetitions ? 'bg-soft-green/10' : 'bg-white/40'}
-                        ${!hasCompetitions ? 'opacity-50' : ''}
-                        hover:bg-soft-purple/10
-                        border-b border-gray-100/50
-                      `}
-                    >
-                      <div className="flex min-h-[2.5rem] w-full">
-                        <div className={`
-                          w-[4.5rem] py-2 px-2 text-sm shrink-0 self-start
-                          ${isPast ? 'text-gray-400' : ''}
-                          ${isToday ? 'text-primary font-medium' : 'text-gray-600'}
-                          ${day.isWeekend ? 'font-medium' : ''}
-                        `}>
-                          {format(day.date, 'EEE d', { locale: sv })}
-                        </div>
-                        
-                        <div className="flex-1 py-1 pr-2 min-w-0 overflow-hidden">
-                          {hasCompetitions && (
-                            <div className="space-y-1">
-                              {day.competitions.map((competition, index) => (
-                                <CalendarCompetitionItem
-                                  key={competition.id}
-                                  competition={competition}
-                                  className={index === 0 ? 'first:self-center' : ''}
-                                />
-                              ))}
-                            </div>
-                          )}
+                    <React.Fragment key={day.date.toISOString()}>
+                      <div 
+                        className={`
+                          border-l-2 
+                          transition-colors duration-200
+                          ${isToday ? 'border-l-primary bg-primary/5' : 'border-l-transparent'}
+                          ${day.isWeekend ? 
+                            (hasCompetitions ? 'bg-soft-purple/20' : 'bg-soft-purple/10') 
+                            : hasCompetitions ? 'bg-soft-green/10' : 'bg-white/40'}
+                          ${!hasCompetitions ? 'opacity-50' : ''}
+                          hover:bg-soft-purple/10
+                        `}
+                      >
+                        <div className="flex min-h-[2.5rem] w-full">
+                          <div className={`
+                            w-[4.5rem] py-2 px-2 text-sm shrink-0 self-start
+                            ${isPast ? 'text-gray-400' : ''}
+                            ${isToday ? 'text-primary font-medium' : 'text-gray-600'}
+                            ${day.isWeekend ? 'font-medium' : ''}
+                          `}>
+                            {format(day.date, 'EEE d', { locale: sv })}
+                          </div>
+                          
+                          <div className="flex-1 py-1 pr-2 min-w-0 overflow-hidden">
+                            {hasCompetitions && (
+                              <div className="space-y-1">
+                                {day.competitions.map((competition, index) => (
+                                  <CalendarCompetitionItem
+                                    key={competition.id}
+                                    competition={competition}
+                                    className={index === 0 ? 'first:self-center' : ''}
+                                  />
+                                ))}
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
+                      {/* Add separator between days, except for the last day */}
+                      {dayIndex < daysArray.length - 1 && (
+                        <div className="h-[3px] bg-gray-100 rounded-full mx-1" />
+                      )}
+                    </React.Fragment>
                   );
-                }),
-                // Add week separator if not the last week
-                weekIndex < month.weeks.length - 1 ? (
-                  <div 
-                    key={`week-separator-${monthIndex}-${weekIndex}`}
-                    className="h-[3px] bg-gray-100 rounded-full mx-1"
-                  />
-                ) : null
-              ])}
+                })
+              )}
             </div>
           </div>
         </div>
@@ -210,4 +205,3 @@ const CalendarList: React.FC<CalendarListProps> = ({
 };
 
 export default CalendarList;
-
