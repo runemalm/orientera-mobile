@@ -132,7 +132,7 @@ const CalendarList: React.FC<CalendarListProps> = ({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-full overflow-hidden">
       {calendarStructure.map((month, monthIndex) => (
         <div key={`month-${monthIndex}`} className="space-y-2">
           {/* Month header */}
@@ -164,12 +164,12 @@ const CalendarList: React.FC<CalendarListProps> = ({
                         ${day.isWeekend ? 'bg-muted/30' : ''}
                       `}
                     >
-                      <div className="flex min-h-[2.5rem] items-start">
-                        <div className={`w-20 py-2 px-2 text-sm font-medium shrink-0 ${isPast ? 'text-muted-foreground' : ''}`}>
+                      <div className="flex min-h-[2.5rem] items-start w-full">
+                        <div className={`w-[4.5rem] py-2 px-2 text-sm font-medium shrink-0 ${isPast ? 'text-muted-foreground' : ''}`}>
                           {format(day.date, 'EEE d', { locale: sv })}
                         </div>
                         
-                        <div className="flex-1 py-1 pr-2">
+                        <div className="flex-1 py-1 pr-2 min-w-0 overflow-hidden">
                           {hasCompetitions ? (
                             <div className="space-y-1">
                               {day.competitions.map(competition => (
