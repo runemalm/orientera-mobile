@@ -1,6 +1,6 @@
 import React from 'react';
 import { Competition, ResourceType, ResourceFormat } from '../types';
-import { Users, Car, FileText, Navigation, BarChart2, Map, Star, Clock, ExternalLink, CircleAlert } from 'lucide-react';
+import { Users, Car, FileText, Navigation, BarChart2, Map, Star, Clock, ExternalLink, CircleAlert, Link2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { translateDiscipline, translateCompetitionType } from '../utils/translations';
 import { formatSwedishDate, getDaysRemaining } from '../utils/dateUtils';
@@ -103,10 +103,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
     : null;
 
   const otherResources = competition.resources?.filter(r =>
-    r.type !== ResourceType.Results &&
-    r.type !== ResourceType.Splits &&
-    r.type !== ResourceType.Invitation &&
-    r.type !== ResourceType.PM
+    r.type === ResourceType.Other
   );
 
   const { data: availableSeats = 0 } = useQuery({
@@ -304,14 +301,44 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
               </div>
             </a>
           )}
-
-          {otherResources && otherResources.map((resource) => (
-            <div key={resource.id}>
-              <FileItem file={resource} />
-            </div>
-          ))}
         </div>
       </div>
+
+      {otherResources && otherResources.length > 0 && (
+        <div className="bg-white rounded-lg shadow-sm border border-gray-100">
+          <div className="p-4 border-b border-gray-100">
+            <div className="flex items-center gap-2">
+              <Link2 className="text-forest" size={20} />
+              <h3 className="font-semibold">Övriga Dokument & Länkar</h3>
+            </div>
+          </div>
+          <div className="divide-y divide-gray-100">
+            {otherResources.map((resource) => (
+              <a
+                key={resource.id}
+                href={resource.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between p-4"
+              >
+                <div className="flex items-center gap-3">
+                  {resource.format === ResourceFormat.Link ? (
+                    <ExternalLink size={20} className="text-forest" />
+                  ) : (
+                    <FileText size={20} className="text-forest" />
+                  )}
+                  <span className="font-medium">{resource.name}</span>
+                </div>
+                <div className="text-gray-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="m9 18 6-6-6-6"/>
+                  </svg>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
 
       {(results?.length > 0 || competition.liveloxLink) && (
         <div className="bg-white rounded-lg shadow-sm border border-gray-100">
