@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -43,7 +42,33 @@
   }
 
   .dark {
-    /* ... keep existing code (dark theme variables) */
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 142 52% 34%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 35 100% 50%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 216 39% 8%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 142 41% 64%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 216 34% 17%;
+    --input: 216 34% 17%;
+    --ring: 216 34% 17%;
   }
 }
 
@@ -64,27 +89,49 @@
     
     /* Prevent element selection when tapping */
     -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
     
     /* Prevent scroll bounce effects on iOS */
     overscroll-behavior: none;
   }
   
-  /* Fix for buttons, links and interactive elements to prevent stuck states */
+  /* Enhanced fix for buttons, links and interactive elements to prevent stuck states */
   button, a, [role="button"], .interactive {
     -webkit-touch-callout: none;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+    
+    /* Ensure active state is removed */
+    &:active {
+      opacity: 0.9;
+      transition: opacity 0.1s;
+    }
+    
+    /* Force release of active state */
+    &:not(:active) {
+      opacity: 1;
+      transition: opacity 0.1s;
+    }
   }
   
-  /* Force all focused elements to reset on next interaction to prevent stuck states */
-  :focus:not(:focus-visible) {
+  /* Force all focused elements to reset */
+  :focus {
     outline: none;
   }
   
-  /* Add a specific active state that properly resets */
-  button:active, a:active, [role="button"]:active {
-    opacity: 0.9;
-    transition: opacity 0.1s;
+  /* Ensure proper touch feedback */
+  @media (hover: none) {
+    button:active, a:active, [role="button"]:active {
+      opacity: 0.9;
+      transition: opacity 0.1s;
+    }
+    
+    button:not(:active), a:not(:active), [role="button"]:not(:active) {
+      opacity: 1;
+      transition: opacity 0.1s;
+    }
   }
   
   #root {
@@ -155,4 +202,3 @@
     @apply bg-location-light/20 text-location-dark px-2 py-1 rounded-full text-sm flex items-center gap-1;
   }
 }
-
