@@ -65,7 +65,6 @@ const LoginWaitlistDialog: React.FC<LoginWaitlistDialogProps> = ({ isOpen, onClo
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full"
                 required
-                autoFocus={!isMobile}
               />
               <p className="text-xs text-muted-foreground">
                 Vi delar aldrig din e-postadress med någon annan.
