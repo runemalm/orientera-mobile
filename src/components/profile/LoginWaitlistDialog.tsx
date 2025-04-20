@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { CheckCircle } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface LoginWaitlistDialogProps {
   isOpen: boolean;
@@ -13,6 +14,7 @@ interface LoginWaitlistDialogProps {
 const LoginWaitlistDialog: React.FC<LoginWaitlistDialogProps> = ({ isOpen, onClose }) => {
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const isMobile = useIsMobile();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,6 +65,7 @@ const LoginWaitlistDialog: React.FC<LoginWaitlistDialogProps> = ({ isOpen, onClo
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full"
                 required
+                autoFocus={!isMobile}
               />
               <p className="text-xs text-muted-foreground">
                 Vi delar aldrig din e-postadress med någon annan.
