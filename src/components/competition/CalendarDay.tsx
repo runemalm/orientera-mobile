@@ -21,6 +21,13 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
 }) => {
   const hasCompetitions = competitions.length > 0;
 
+  // Format date with month, e.g., "mån 21/4"
+  const formattedDate = date.toLocaleDateString('sv-SE', { 
+    weekday: 'short', 
+    day: 'numeric', 
+    month: 'numeric' 
+  }).replace(',', '/');
+
   return (
     <div 
       className={cn(
@@ -36,7 +43,7 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
           isPast ? 'text-gray-400' : 'text-gray-600',
           isWeekend ? 'font-medium' : ''
         )}>
-          {date.toLocaleDateString('sv-SE', { weekday: 'short', day: 'numeric' })}
+          {formattedDate}
         </div>
         
         <div className="flex-1 py-1 pr-2 min-w-0 overflow-hidden">
@@ -58,3 +65,4 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
 };
 
 export default CalendarDay;
+
