@@ -65,7 +65,7 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
         <Tabs value={viewMode} onValueChange={handleTabChange} className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="calendar">Kalender</TabsTrigger>
-            <TabsTrigger value="list">Lista</TabsTrigger>
+            <TabsTrigger value="list">Nära mig</TabsTrigger>
           </TabsList>
         </Tabs>
       </div>
