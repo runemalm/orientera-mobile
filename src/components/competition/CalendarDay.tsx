@@ -39,7 +39,7 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
     >
       <div className="flex min-h-[2.5rem] w-full">
         <div className={cn(
-          "w-[4.5rem] pt-3 px-2 text-sm shrink-0 self-start",
+          "w-[5rem] pt-3 px-2 text-sm shrink-0 self-start whitespace-nowrap overflow-hidden text-ellipsis",
           isPast ? 'text-gray-400' : 'text-gray-600',
           isWeekend ? 'font-medium' : ''
         )}>
@@ -65,4 +65,3 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
 };
 
 export default CalendarDay;
-
