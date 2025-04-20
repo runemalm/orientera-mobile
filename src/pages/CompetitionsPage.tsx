@@ -19,14 +19,22 @@ interface Filter {
   districts: string[];
   disciplines: string[];
   competitionTypes: string[];
+  dateRange: {
+    from: Date | null;
+    to: Date | null;
+  };
 }
 
 const DEFAULT_FILTERS: Filter = {
-  useLocationFilter: true,
+  useLocationFilter: false,
   maxDistanceKm: 100,
   districts: [],
   disciplines: [],
-  competitionTypes: []
+  competitionTypes: [],
+  dateRange: {
+    from: null,
+    to: null
+  }
 };
 
 const CompetitionsPage: React.FC = () => {
@@ -44,10 +52,13 @@ const CompetitionsPage: React.FC = () => {
     setIsLoadingCompetitions(true);
     setError(null);
     
-    const fromDate = startOfWeek(new Date(), { weekStartsOn: 1 });
-    
-    const toDate = new Date();
-    toDate.setMonth(toDate.getMonth() + 1);
+    // Use date range from filters if set, otherwise use default date range
+    const fromDate = filters.dateRange.from || startOfWeek(new Date(), { weekStartsOn: 1 });
+    const toDate = filters.dateRange.to || (() => {
+      const date = new Date();
+      date.setMonth(date.getMonth() + 1);
+      return date;
+    })();
     
     try {
       const result = await getNearbyCompetitions(
@@ -103,11 +114,13 @@ const CompetitionsPage: React.FC = () => {
       );
     }
 
-    // Using startOfWeek instead of daysBack for fromDate
-    const fromDate = startOfWeek(new Date(), { weekStartsOn: 1 });
-    
-    const toDate = new Date();
-    toDate.setMonth(toDate.getMonth() + 1);
+    // Use date range from filters if set, otherwise use default date range
+    const fromDate = filters.dateRange.from || startOfWeek(new Date(), { weekStartsOn: 1 });
+    const toDate = filters.dateRange.to || (() => {
+      const date = new Date();
+      date.setMonth(date.getMonth() + 1);
+      return date;
+    })();
 
     return (
       <div className="px-4 pt-2 pb-24">
