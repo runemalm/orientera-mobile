@@ -141,14 +141,14 @@ const CalendarList: React.FC<CalendarListProps> = ({
           </h2>
 
           {month.weeks.map((week, weekIndex) => (
-            <div key={`week-${monthIndex}-${weekIndex}`} className="space-y-1">
+            <div key={`week-${monthIndex}-${weekIndex}`} className="space-y-0.5">
               {/* Week header */}
               <div className="flex items-center gap-2 px-1 py-1 bg-muted/50 rounded">
                 <span className="text-sm font-medium text-muted-foreground">Vecka {week.weekNumber}</span>
               </div>
 
               {/* Days */}
-              <div className="space-y-0.5">
+              <div className="space-y-[1px] border border-gray-100 rounded-md overflow-hidden">
                 {week.days.map((day) => {
                   const hasCompetitions = day.competitions.length > 0;
                   const today = new Date();
@@ -163,6 +163,7 @@ const CalendarList: React.FC<CalendarListProps> = ({
                         ${isToday ? 'border-l-primary bg-primary/5' : 'border-l-transparent'} 
                         ${day.isWeekend ? 'bg-muted/30' : 'bg-gray-50/30'}
                         hover:bg-gray-100/50 transition-colors
+                        border-b border-gray-100 last:border-b-0
                       `}
                     >
                       <div className="flex min-h-[2.5rem] items-start w-full">
@@ -186,7 +187,7 @@ const CalendarList: React.FC<CalendarListProps> = ({
                             </div>
                           ) : (
                             <div className="h-8 flex items-center">
-                              <span className="text-muted-foreground/70 text-sm">Inga tävlingar</span>
+                              {/* Empty state - no text */}
                             </div>
                           )}
                         </div>
