@@ -1,3 +1,4 @@
+
 import React, { useMemo } from 'react';
 import { CompetitionSummary } from '../../types';
 import { UserLocation } from '../../hooks/useUserLocation';
@@ -165,9 +166,9 @@ const CalendarList: React.FC<CalendarListProps> = ({
                         border-b border-gray-100/50
                       `}
                     >
-                      <div className="flex min-h-[2.5rem] items-center w-full">
+                      <div className="flex min-h-[2.5rem] w-full">
                         <div className={`
-                          w-[4.5rem] py-2 px-2 text-sm shrink-0
+                          w-[4.5rem] py-2 px-2 text-sm shrink-0 self-start
                           ${isPast ? 'text-gray-400' : ''}
                           ${isToday ? 'text-primary font-medium' : 'text-gray-600'}
                           ${day.isWeekend ? 'font-medium' : ''}
@@ -178,10 +179,11 @@ const CalendarList: React.FC<CalendarListProps> = ({
                         <div className="flex-1 py-1 pr-2 min-w-0 overflow-hidden">
                           {hasCompetitions && (
                             <div className="space-y-1">
-                              {day.competitions.map(competition => (
+                              {day.competitions.map((competition, index) => (
                                 <CalendarCompetitionItem
                                   key={competition.id}
                                   competition={competition}
+                                  className={index === 0 ? 'first:self-center' : ''}
                                 />
                               ))}
                             </div>
@@ -208,3 +210,4 @@ const CalendarList: React.FC<CalendarListProps> = ({
 };
 
 export default CalendarList;
+

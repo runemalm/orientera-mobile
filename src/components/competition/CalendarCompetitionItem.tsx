@@ -7,9 +7,13 @@ import { cn } from '@/lib/utils';
 
 interface CalendarCompetitionItemProps {
   competition: CompetitionSummary;
+  className?: string;
 }
 
-const CalendarCompetitionItem: React.FC<CalendarCompetitionItemProps> = ({ competition }) => {
+const CalendarCompetitionItem: React.FC<CalendarCompetitionItemProps> = ({ 
+  competition,
+  className = '' 
+}) => {
   const navigate = useNavigate();
   const [favorites, setFavorites] = useLocalStorage<string[]>('favoriteCompetitions', []);
   
@@ -34,7 +38,7 @@ const CalendarCompetitionItem: React.FC<CalendarCompetitionItemProps> = ({ compe
   return (
     <div 
       onClick={handleClick}
-      className="px-2 py-1.5 rounded border border-gray-100/50 hover:bg-white/50 transition-all cursor-pointer flex items-center gap-2 w-full"
+      className={`px-2 py-1.5 rounded border border-gray-100/50 hover:bg-white/50 transition-all cursor-pointer flex items-center gap-2 w-full ${className}`}
     >
       <div className="flex-1 min-w-0 overflow-hidden">
         <div className="text-sm font-medium text-gray-700 truncate">{competition.name}</div>
