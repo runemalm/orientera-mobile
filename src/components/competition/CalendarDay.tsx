@@ -32,16 +32,17 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
     <div 
       className={cn(
         "border-l-2 transition-colors duration-200",
-        'border-l-transparent',
+        isToday ? 'border-l-primary' : 'border-l-transparent',
         isWeekend ? 'bg-red-100/60' : 'bg-white/40',
-        ''
+        isToday && 'bg-primary/5'
       )}
     >
       <div className="flex min-h-[2.5rem] w-full">
         <div className={cn(
           "w-[5rem] pt-3 px-2 text-sm shrink-0 self-start whitespace-nowrap overflow-hidden text-ellipsis",
           isPast ? 'text-gray-400' : 'text-gray-600',
-          isWeekend ? 'font-medium' : ''
+          isWeekend ? 'font-medium' : '',
+          isToday && 'font-semibold text-primary'
         )}>
           {formattedDate}
         </div>
@@ -65,3 +66,4 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
 };
 
 export default CalendarDay;
+
