@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Button } from '@/components/ui/button';
@@ -53,7 +52,7 @@ interface Filter {
 }
 
 const DEFAULT_FILTERS: Filter = {
-  useLocationFilter: false,  // Changed from true to false
+  useLocationFilter: false,
   maxDistanceKm: 100,
   districts: [],
   disciplines: [],
@@ -71,34 +70,39 @@ const CompetitionFilterPage = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [filters, setFilters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
 
-  // Date range collapsible state - initialize based on filter values safely
-  const [dateRangeCollapsibleOpen, setDateRangeCollapsibleOpen] = useState(
-    Boolean(filters?.dateRange?.from || filters?.dateRange?.to)
-  );
+  const hasDateFilter = Boolean(filters?.dateRange?.from || filters?.dateRange?.to);
 
-  // Branch selection
+  const [dateRangeCollapsibleOpen, setDateRangeCollapsibleOpen] = useState(hasDateFilter);
+
   const allBranches = Object.values(Branch);
   const [branchCollapsibleOpen, setBranchCollapsibleOpen] = useState(
     Array.isArray(filters?.branches) && filters.branches.length > 0
   );
   
-  // Districts selection
   const allDistricts = Object.values(OrienteeringDistrict);
   const [districtCollapsibleOpen, setDistrictCollapsibleOpen] = useState(
     Array.isArray(filters?.districts) && filters.districts.length > 0
   );
   
-  // Disciplines selection
   const allDisciplines = Object.values(Discipline);
   const [disciplineCollapsibleOpen, setDisciplineCollapsibleOpen] = useState(
     Array.isArray(filters?.disciplines) && filters.disciplines.length > 0
   );
 
-  // Competition types selection
   const allCompetitionTypes = Object.values(CompetitionType);
   const [competitionTypeCollapsibleOpen, setCompetitionTypeCollapsibleOpen] = useState(
     Array.isArray(filters?.competitionTypes) && filters.competitionTypes.length > 0
   );
+
+  useEffect(() => {
+    const hasDateFilter = Boolean(filters?.dateRange?.from || filters?.dateRange?.to);
+    setDateRangeCollapsibleOpen(hasDateFilter);
+    
+    setBranchCollapsibleOpen(Array.isArray(filters?.branches) && filters.branches.length > 0);
+    setDistrictCollapsibleOpen(Array.isArray(filters?.districts) && filters.districts.length > 0);
+    setDisciplineCollapsibleOpen(Array.isArray(filters?.disciplines) && filters.disciplines.length > 0);
+    setCompetitionTypeCollapsibleOpen(Array.isArray(filters?.competitionTypes) && filters.competitionTypes.length > 0);
+  }, [filters]);
 
   const handleUpdateLocation = (location: { city: string; latitude: number; longitude: number }) => {
     updateUserLocation(location);
@@ -161,9 +165,7 @@ const CompetitionFilterPage = () => {
     }
   };
 
-  // Ensure we're safely handling the date range
   const handleDateRangeChange = (date: Date | undefined, type: 'from' | 'to') => {
-    // Make sure we're working with a valid filters object that has dateRange
     const currentDateRange = filters?.dateRange || { from: null, to: null };
     
     setFilters({
@@ -243,7 +245,6 @@ const CompetitionFilterPage = () => {
     >
       <div className="p-4 pb-24">
         <div className="space-y-6">
-          {/* Date Range Filter */}
           <Collapsible
             open={dateRangeCollapsibleOpen}
             onOpenChange={setDateRangeCollapsibleOpen}
@@ -256,7 +257,7 @@ const CompetitionFilterPage = () => {
               <CollapsibleTrigger asChild>
                 <Button variant="ghost" size="sm" className="p-1">
                   <span className="text-xs">
-                    {(filters?.dateRange?.from || filters?.dateRange?.to)
+                    {hasDateFilter
                       ? 'Aktivt filter' 
                       : 'Visa alla'}
                   </span>
@@ -292,7 +293,6 @@ const CompetitionFilterPage = () => {
             </CollapsibleContent>
           </Collapsible>
 
-          {/* Location Filter */}
           <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
             <div className="flex items-center gap-2 text-forest mb-3">
               <MapPin className="h-5 w-5" />
@@ -350,7 +350,6 @@ const CompetitionFilterPage = () => {
             )}
           </div>
 
-          {/* Branch Filter */}
           <Collapsible
             open={branchCollapsibleOpen}
             onOpenChange={setBranchCollapsibleOpen}
@@ -390,7 +389,6 @@ const CompetitionFilterPage = () => {
             </CollapsibleContent>
           </Collapsible>
 
-          {/* District Filter */}
           <Collapsible
             open={districtCollapsibleOpen}
             onOpenChange={setDistrictCollapsibleOpen}
@@ -430,7 +428,6 @@ const CompetitionFilterPage = () => {
             </CollapsibleContent>
           </Collapsible>
           
-          {/* Discipline Filter */}
           <Collapsible
             open={disciplineCollapsibleOpen}
             onOpenChange={setDisciplineCollapsibleOpen}
@@ -470,7 +467,6 @@ const CompetitionFilterPage = () => {
             </CollapsibleContent>
           </Collapsible>
           
-          {/* Competition Type Filter */}
           <Collapsible
             open={competitionTypeCollapsibleOpen}
             onOpenChange={setCompetitionTypeCollapsibleOpen}
@@ -510,7 +506,6 @@ const CompetitionFilterPage = () => {
             </CollapsibleContent>
           </Collapsible>
           
-          {/* Action Buttons */}
           <div className="flex items-center gap-4 pt-2">
             <Button 
               variant="outline" 
