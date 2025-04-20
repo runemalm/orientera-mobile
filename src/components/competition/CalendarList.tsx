@@ -1,3 +1,4 @@
+
 import React, { useMemo } from 'react';
 import { CompetitionSummary } from '../../types';
 import { UserLocation } from '../../hooks/useUserLocation';
@@ -159,13 +160,17 @@ const CalendarList: React.FC<CalendarListProps> = ({
                     <div 
                       key={day.date.toISOString()} 
                       className={`
-                        border-l-4 bg-gray-50/50
-                        ${isToday ? 'border-l-primary' : 'border-l-transparent'} 
-                        ${day.isWeekend ? 'bg-muted/30' : ''}
+                        border-l-4
+                        ${isToday ? 'border-l-primary bg-primary/5' : 'border-l-transparent'} 
+                        ${day.isWeekend ? 'bg-muted/30' : 'bg-gray-50/50'}
                       `}
                     >
                       <div className="flex min-h-[2.5rem] items-start w-full">
-                        <div className={`w-[4.5rem] py-2 px-2 text-sm font-medium shrink-0 ${isPast ? 'text-muted-foreground' : ''}`}>
+                        <div className={`
+                          w-[4.5rem] py-2 px-2 text-sm font-medium shrink-0
+                          ${isPast ? 'text-muted-foreground' : ''}
+                          ${isToday ? 'text-primary' : ''}
+                        `}>
                           {format(day.date, 'EEE d', { locale: sv })}
                         </div>
                         
