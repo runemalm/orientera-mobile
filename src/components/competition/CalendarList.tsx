@@ -135,16 +135,16 @@ const CalendarList: React.FC<CalendarListProps> = ({
     <div className="space-y-6 max-w-full overflow-hidden">
       {calendarStructure.map((month, monthIndex) => (
         <div key={`month-${monthIndex}`} className="space-y-2">
-          {/* Month header */}
           <h2 className="text-lg font-semibold capitalize px-1 text-gray-700">
             {month.monthName}
           </h2>
 
-          <div className="space-y-[1px] bg-soft-gray/50 rounded-lg border border-gray-100">
+          <div className="space-y-2 rounded-lg">
             {/* Days */}
-            <div className="space-y-[1px] rounded-lg overflow-hidden">
-              {month.weeks.flatMap((week) => 
-                week.days.map((day) => {
+            <div className="space-y-2 rounded-lg overflow-hidden">
+              {month.weeks.flatMap((week, weekIndex) => [
+                // Add week's days
+                ...week.days.map((day) => {
                   const hasCompetitions = day.competitions.length > 0;
                   const today = new Date();
                   const isToday = isSameDay(day.date, toZonedTime(today, SWEDISH_TIMEZONE));
@@ -162,7 +162,7 @@ const CalendarList: React.FC<CalendarListProps> = ({
                           : hasCompetitions ? 'bg-soft-green/10' : 'bg-white/40'}
                         ${!hasCompetitions ? 'opacity-50' : ''}
                         hover:bg-soft-purple/10
-                        border-b border-gray-100/50 last:border-b-0
+                        border-b border-gray-100/50
                       `}
                     >
                       <div className="flex min-h-[2.5rem] items-start w-full">
@@ -190,8 +190,15 @@ const CalendarList: React.FC<CalendarListProps> = ({
                       </div>
                     </div>
                   );
-                })
-              )}
+                }),
+                // Add week separator if not the last week
+                weekIndex < month.weeks.length - 1 ? (
+                  <div 
+                    key={`week-separator-${monthIndex}-${weekIndex}`}
+                    className="h-[3px] bg-gray-100 rounded-full mx-1"
+                  />
+                ) : null
+              ])}
             </div>
           </div>
         </div>
