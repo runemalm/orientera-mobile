@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -7,9 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { CompetitionSummary } from '../types';
 import { getNearbyCompetitions } from '../services/api';
-import CompetitionList from '../components/competition/CompetitionList';
 import CalendarList from '../components/competition/CalendarList';
-import ViewToggle, { ViewMode } from '../components/competition/ViewToggle';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 
 let cachedCompetitions: CompetitionSummary[] = [];
@@ -39,7 +36,6 @@ const CompetitionsPage: React.FC = () => {
   const initialFetchCompleted = useRef(false);
   const [daysBack] = useLocalStorage<number>('competitionsDaysBack', 1);
   const [filters, setFilters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
-  const [viewMode, setViewMode] = useLocalStorage<ViewMode>('competitionsViewMode', 'list');
 
   const fetchCompetitions = useCallback(async () => {
     if (!userLocation) return;
@@ -85,13 +81,6 @@ const CompetitionsPage: React.FC = () => {
     }
   }, [userLocation, fetchCompetitions]);
 
-  // Refetch when filters change
-  useEffect(() => {
-    if (initialFetchCompleted.current && userLocation) {
-      fetchCompetitions();
-    }
-  }, [filters, fetchCompetitions, userLocation]);
-
   const handleFilterClick = () => {
     navigate('/competitions/filter', { state: { transition: 'slide' } });
   };
@@ -114,7 +103,6 @@ const CompetitionsPage: React.FC = () => {
       );
     }
 
-    // Calculate from and to dates for the calendar view
     const fromDate = new Date();
     fromDate.setDate(fromDate.getDate() - daysBack);
     
@@ -123,22 +111,12 @@ const CompetitionsPage: React.FC = () => {
 
     return (
       <div className="px-4 pt-2 pb-24">
-        <ViewToggle currentView={viewMode} onChange={setViewMode} />
-        
-        {viewMode === 'list' ? (
-          <CompetitionList 
-            competitions={competitions} 
-            userLocation={userLocation}
-            showFavorites={false}
-          />
-        ) : (
-          <CalendarList 
-            competitions={competitions} 
-            userLocation={userLocation}
-            fromDate={fromDate}
-            toDate={toDate}
-          />
-        )}
+        <CalendarList 
+          competitions={competitions} 
+          userLocation={userLocation}
+          fromDate={fromDate}
+          toDate={toDate}
+        />
       </div>
     );
   };
