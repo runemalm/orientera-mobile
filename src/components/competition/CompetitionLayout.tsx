@@ -5,7 +5,6 @@ import { UserLocation } from '../../hooks/useUserLocation';
 import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 import CalendarList from './CalendarList';
 import CompetitionList from './CompetitionList';
-import ViewToggle, { ViewMode } from './ViewToggle';
 
 interface CompetitionLayoutProps {
   competitions: CompetitionSummary[];
@@ -59,4 +58,3 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
 };
 
 export default CompetitionLayout;
-
