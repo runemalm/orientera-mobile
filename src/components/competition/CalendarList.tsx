@@ -148,7 +148,7 @@ const CalendarList: React.FC<CalendarListProps> = ({
               </div>
 
               {/* Days */}
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 {week.days.map((day) => {
                   const hasCompetitions = day.competitions.length > 0;
                   const today = new Date();
@@ -159,19 +159,19 @@ const CalendarList: React.FC<CalendarListProps> = ({
                     <div 
                       key={day.date.toISOString()} 
                       className={`
-                        border-l-4 
+                        border-l-4 bg-gray-50/50
                         ${isToday ? 'border-l-primary' : 'border-l-transparent'} 
                         ${day.isWeekend ? 'bg-muted/30' : ''}
                       `}
                     >
-                      <div className="flex items-center min-h-[3rem] px-2 py-1">
-                        <div className={`w-10 text-sm font-medium ${isPast ? 'text-muted-foreground' : ''}`}>
+                      <div className="flex min-h-[2.5rem] items-start">
+                        <div className={`w-20 py-2 px-2 text-sm font-medium shrink-0 ${isPast ? 'text-muted-foreground' : ''}`}>
                           {format(day.date, 'EEE d', { locale: sv })}
                         </div>
                         
-                        <div className="flex-1">
+                        <div className="flex-1 py-1 pr-2">
                           {hasCompetitions ? (
-                            <div className="space-y-1.5">
+                            <div className="space-y-1">
                               {day.competitions.map(competition => (
                                 <CalendarCompetitionItem
                                   key={competition.id}
@@ -180,7 +180,7 @@ const CalendarList: React.FC<CalendarListProps> = ({
                               ))}
                             </div>
                           ) : (
-                            <div className="h-6 flex items-center">
+                            <div className="h-8 flex items-center">
                               <span className="text-muted-foreground text-sm">Inga tävlingar</span>
                             </div>
                           )}
