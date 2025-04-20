@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { CompetitionSummary } from '../../types';
 import CalendarCompetitionItem from './CalendarCompetitionItem';
@@ -25,9 +26,7 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
       className={cn(
         "border-l-2 transition-colors duration-200",
         'border-l-transparent',
-        isWeekend ? 
-          (hasCompetitions ? 'bg-red-100/30' : 'bg-red-100/20') 
-          : hasCompetitions ? 'bg-soft-green/10' : 'bg-white/40',
+        isWeekend ? 'bg-red-100/30' : (hasCompetitions ? 'bg-soft-green/10' : 'bg-white/40'),
         !hasCompetitions ? 'opacity-50' : '',
         'hover:bg-soft-purple/10'
       )}
