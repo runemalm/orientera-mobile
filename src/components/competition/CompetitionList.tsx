@@ -1,9 +1,8 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Star } from 'lucide-react';
 import { CompetitionSummary } from '../../types';
 import CompetitionCard from '../CompetitionCard';
-import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { UserLocation } from '../../hooks/useUserLocation';
 
 interface CompetitionListProps {
@@ -17,14 +16,25 @@ const CompetitionList: React.FC<CompetitionListProps> = ({
   userLocation,
   showFavorites = false 
 }) => {
-  const [favorites] = useLocalStorage<string[]>('favoriteCompetitions', []);
+  const [favorites, setFavorites] = useState<string[]>([]);
   
-  // Safety check - ensure favorites is array
-  const safetyFavorites = Array.isArray(favorites) ? favorites : [];
+  // Load favorites directly from localStorage
+  useEffect(() => {
+    const storedFavoritesStr = window.localStorage.getItem('favoriteCompetitions');
+    if (storedFavoritesStr) {
+      try {
+        const parsed = JSON.parse(storedFavoritesStr);
+        setFavorites(Array.isArray(parsed) ? parsed : []);
+      } catch (error) {
+        console.error('Error parsing favorites:', error);
+        setFavorites([]);
+      }
+    }
+  }, []);
 
   // Only filter by favorites if showFavorites is true, otherwise show all competitions passed in
   const filteredCompetitions = showFavorites
-    ? competitions.filter(comp => safetyFavorites.includes(comp.id))
+    ? competitions.filter(comp => favorites.includes(comp.id))
     : competitions;
     
   if (filteredCompetitions.length === 0) {

@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { useUserLocation } from '../hooks/useUserLocation';
-import { useLocalStorage } from '../hooks/useLocalStorage';
 import CompetitionList from '../components/competition/CompetitionList';
 import { Star, Loader2 } from 'lucide-react';
 import { CompetitionSummary } from '../types';
@@ -10,10 +9,26 @@ import { getNearbyCompetitions } from '../services/api';
 
 const FavoritesPage: React.FC = () => {
   const { userLocation } = useUserLocation();
-  const [favorites] = useLocalStorage<string[]>('favoriteCompetitions', []);
+  const [favorites, setFavorites] = useState<string[]>([]);
   const [competitions, setCompetitions] = useState<CompetitionSummary[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Load favorites directly from localStorage
+  useEffect(() => {
+    const storedFavoritesStr = window.localStorage.getItem('favoriteCompetitions');
+    if (storedFavoritesStr) {
+      try {
+        const parsed = JSON.parse(storedFavoritesStr);
+        setFavorites(Array.isArray(parsed) ? parsed : []);
+      } catch (error) {
+        console.error('Error parsing favorites:', error);
+        setFavorites([]);
+      }
+    } else {
+      setFavorites([]);
+    }
+  }, []);
 
   const fetchCompetitions = useCallback(async () => {
     if (!userLocation) return;
@@ -54,7 +69,7 @@ const FavoritesPage: React.FC = () => {
   }, [userLocation, fetchCompetitions]);
 
   const favoriteCompetitions = competitions.filter(comp => 
-    Array.isArray(favorites) && favorites.includes(comp.id)
+    favorites.includes(comp.id)
   );
 
   console.log('FavoritesPage - Favorites IDs:', favorites);

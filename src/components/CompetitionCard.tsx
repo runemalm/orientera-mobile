@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { CompetitionSummary } from '../types';
 import { Clock, MapPin, Navigation, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -7,7 +8,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { getDaysRemaining } from '../utils/dateUtils';
 import { calculateDistance, formatDistance } from '../utils/distanceUtils';
-import { useLocalStorage } from '../hooks/useLocalStorage';
 
 interface CompetitionCardProps {
   competition: CompetitionSummary;
@@ -16,36 +16,65 @@ interface CompetitionCardProps {
 
 const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition, userLocation }) => {
   const navigate = useNavigate();
-  const [favorites, setFavorites] = useLocalStorage<string[]>('favoriteCompetitions', []);
+  const [isFavorite, setIsFavorite] = useState(false);
+  
+  // Load favorite status on mount
+  useEffect(() => {
+    const storedFavoritesStr = window.localStorage.getItem('favoriteCompetitions');
+    if (storedFavoritesStr) {
+      try {
+        const storedFavorites = JSON.parse(storedFavoritesStr);
+        if (Array.isArray(storedFavorites)) {
+          setIsFavorite(storedFavorites.includes(competition.id));
+        }
+      } catch (error) {
+        console.error('Error parsing favorites from localStorage:', error);
+      }
+    }
+  }, [competition.id]);
   
   const handleCardClick = () => {
     navigate(`/competition/${competition.id}`);
   };
 
-  const isFavorite = Array.isArray(favorites) && favorites.includes(competition.id);
-
   const toggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
     
-    const safeCurrentFavorites = Array.isArray(favorites) ? [...favorites] : [];
+    // Get current favorites directly from localStorage
+    const storedFavoritesStr = window.localStorage.getItem('favoriteCompetitions');
+    let currentFavorites: string[] = [];
+    
+    if (storedFavoritesStr) {
+      try {
+        const parsed = JSON.parse(storedFavoritesStr);
+        currentFavorites = Array.isArray(parsed) ? parsed : [];
+      } catch (error) {
+        console.error('Error parsing favorites:', error);
+      }
+    }
     
     let newFavorites: string[];
-    const isCurrentlyFavorite = safeCurrentFavorites.includes(competition.id);
     
-    if (isCurrentlyFavorite) {
-      newFavorites = safeCurrentFavorites.filter(id => id !== competition.id);
+    if (isFavorite) {
+      // Remove from favorites
+      newFavorites = currentFavorites.filter(id => id !== competition.id);
     } else {
-      newFavorites = [...safeCurrentFavorites, competition.id];
+      // Add to favorites
+      newFavorites = [...currentFavorites, competition.id];
     }
     
     console.log('Toggling favorite:', {
       competitionId: competition.id,
-      wasInFavorites: isCurrentlyFavorite,
-      oldFavorites: safeCurrentFavorites,
+      wasInFavorites: isFavorite,
+      oldFavorites: currentFavorites,
       newFavorites: newFavorites
     });
     
-    setFavorites(newFavorites);
+    // Update localStorage
+    window.localStorage.setItem('favoriteCompetitions', JSON.stringify(newFavorites));
+    
+    // Update local state
+    setIsFavorite(!isFavorite);
   };
 
   const daysRemaining = getDaysRemaining(competition.date);

@@ -1,9 +1,8 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { CompetitionSummary } from '../../types';
 import { Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { cn } from '@/lib/utils';
 
 interface CalendarCompetitionItemProps {
@@ -16,7 +15,22 @@ const CalendarCompetitionItem: React.FC<CalendarCompetitionItemProps> = ({
   className = '' 
 }) => {
   const navigate = useNavigate();
-  const [favorites, setFavorites] = useLocalStorage<string[]>('favoriteCompetitions', []);
+  const [isFavorite, setIsFavorite] = useState(false);
+  
+  // Load favorite status on mount
+  useEffect(() => {
+    const storedFavoritesStr = window.localStorage.getItem('favoriteCompetitions');
+    if (storedFavoritesStr) {
+      try {
+        const storedFavorites = JSON.parse(storedFavoritesStr);
+        if (Array.isArray(storedFavorites)) {
+          setIsFavorite(storedFavorites.includes(competition.id));
+        }
+      } catch (error) {
+        console.error('Error parsing favorites from localStorage:', error);
+      }
+    }
+  }, [competition.id]);
   
   const handleClick = () => {
     navigate(`/competition/${competition.id}`);
@@ -25,20 +39,35 @@ const CalendarCompetitionItem: React.FC<CalendarCompetitionItemProps> = ({
   const toggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
     
-    // Ensure we always use the latest favorites from state
-    const safeCurrentFavorites = Array.isArray(favorites) ? [...favorites] : [];
-    const isFavorite = safeCurrentFavorites.includes(competition.id);
+    // Get current favorites directly from localStorage
+    const storedFavoritesStr = window.localStorage.getItem('favoriteCompetitions');
+    let currentFavorites: string[] = [];
     
-    const newFavorites = isFavorite
-      ? safeCurrentFavorites.filter(id => id !== competition.id)
-      : [...safeCurrentFavorites, competition.id];
+    if (storedFavoritesStr) {
+      try {
+        const parsed = JSON.parse(storedFavoritesStr);
+        currentFavorites = Array.isArray(parsed) ? parsed : [];
+      } catch (error) {
+        console.error('Error parsing favorites:', error);
+      }
+    }
     
-    // Use the state updater function - this will trigger the useEffect in useLocalStorage
-    setFavorites(newFavorites);
+    let newFavorites: string[];
+    
+    if (isFavorite) {
+      // Remove from favorites
+      newFavorites = currentFavorites.filter(id => id !== competition.id);
+    } else {
+      // Add to favorites
+      newFavorites = [...currentFavorites, competition.id];
+    }
+    
+    // Update localStorage
+    window.localStorage.setItem('favoriteCompetitions', JSON.stringify(newFavorites));
+    
+    // Update local state
+    setIsFavorite(!isFavorite);
   };
-
-  // Check favorite status directly from current state
-  const isFavorite = Array.isArray(favorites) && favorites.includes(competition.id);
 
   return (
     <div 
