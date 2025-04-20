@@ -1,8 +1,10 @@
 
 import React from 'react';
 import { CompetitionSummary } from '../../types';
-import { MapPin } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { cn } from '@/lib/utils';
 
 interface CalendarCompetitionItemProps {
   competition: CompetitionSummary;
@@ -10,10 +12,25 @@ interface CalendarCompetitionItemProps {
 
 const CalendarCompetitionItem: React.FC<CalendarCompetitionItemProps> = ({ competition }) => {
   const navigate = useNavigate();
+  const [favorites, setFavorites] = useLocalStorage<string[]>('favoriteCompetitions', []);
   
   const handleClick = () => {
     navigate(`/competition/${competition.id}`);
   };
+
+  const toggleFavorite = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const safeCurrentFavorites = Array.isArray(favorites) ? [...favorites] : [];
+    const isFavorite = safeCurrentFavorites.includes(competition.id);
+    
+    const newFavorites = isFavorite
+      ? safeCurrentFavorites.filter(id => id !== competition.id)
+      : [...safeCurrentFavorites, competition.id];
+    
+    setFavorites(newFavorites);
+  };
+
+  const isFavorite = Array.isArray(favorites) && favorites.includes(competition.id);
 
   return (
     <div 
@@ -23,10 +40,22 @@ const CalendarCompetitionItem: React.FC<CalendarCompetitionItemProps> = ({ compe
       <div className="flex-1 min-w-0 overflow-hidden">
         <div className="text-sm font-medium truncate">{competition.name}</div>
       </div>
-      <div className="text-xs text-gray-600 flex items-center gap-1 shrink-0 min-w-[100px] max-w-[100px]">
-        <MapPin size={10} className="text-forest shrink-0" />
+      <div className="text-xs text-gray-600 flex items-center gap-1 shrink-0 w-[100px] max-w-[100px]">
         <span className="truncate">{competition.club}</span>
       </div>
+      <button 
+        onClick={toggleFavorite}
+        className="p-1 hover:bg-gray-100 rounded-full transition-colors shrink-0"
+        aria-label={isFavorite ? "Ta bort från favoriter" : "Lägg till i favoriter"}
+      >
+        <Star
+          size={16}
+          className={cn(
+            "transition-colors",
+            isFavorite ? "fill-yellow-400 text-yellow-400" : "text-gray-400"
+          )}
+        />
+      </button>
     </div>
   );
 };
