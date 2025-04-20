@@ -53,7 +53,7 @@ interface Filter {
 }
 
 const DEFAULT_FILTERS: Filter = {
-  useLocationFilter: true,
+  useLocationFilter: false,  // Changed from true to false
   maxDistanceKm: 100,
   districts: [],
   disciplines: [],
