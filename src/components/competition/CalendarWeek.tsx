@@ -1,8 +1,10 @@
+
 import React from 'react';
 import { CompetitionSummary } from '../../types';
 import CalendarDay from './CalendarDay';
 import { Separator } from '../ui/separator';
 import { isSameDay } from 'date-fns';
+import { cn } from '@/lib/utils';
 
 interface CalendarWeekProps {
   days: {
@@ -17,7 +19,12 @@ const CalendarWeek: React.FC<CalendarWeekProps> = ({ days, weekNumber }) => {
   const today = new Date();
 
   return (
-    <div className="space-y-[1px]">
+    <div 
+      className={cn(
+        "space-y-[1px] border border-cool-gray/30 rounded-lg overflow-hidden my-2",
+        "shadow-sm hover:shadow-md transition-shadow duration-200"
+      )}
+    >
       {days.map((day, dayIndex) => (
         <React.Fragment key={day.date.toISOString()}>
           <CalendarDay
