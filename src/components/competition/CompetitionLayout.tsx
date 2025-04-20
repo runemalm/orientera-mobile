@@ -23,7 +23,7 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
 
   return (
     <div className="flex flex-col h-full">
-      <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 py-2 px-2 border-b">
+      <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 pt-3 pb-2 px-2">
         <Tabs defaultValue="calendar" onValueChange={(value) => setViewMode(value as 'calendar' | 'list')}>
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="calendar">Kalender</TabsTrigger>
@@ -34,7 +34,7 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
 
       <div className="flex-1 overflow-auto">
         {viewMode === 'calendar' ? (
-          <div className="px-2 pt-2 pb-24">
+          <div className="px-2 pt-0 pb-4">
             <CalendarList
               competitions={competitions}
               userLocation={userLocation}
@@ -43,7 +43,7 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
             />
           </div>
         ) : (
-          <div className="px-4 pt-2 pb-24">
+          <div className="px-2 pt-0 pb-4">
             {userLocation && (
               <CompetitionList
                 competitions={competitions}

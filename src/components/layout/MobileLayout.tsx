@@ -39,7 +39,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
         }`}
         style={{
           paddingTop: '4rem', // Height of TopNavBar
-          paddingBottom: !hideBottomTabs ? 'calc(5rem + var(--safe-area-inset-bottom))' : '1rem'
+          paddingBottom: !hideBottomTabs ? 'calc(4rem + var(--safe-area-inset-bottom))' : '1rem'
         }}
       >
         {children}
