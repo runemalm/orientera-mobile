@@ -269,6 +269,23 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
             </div>
           </Link>
 
+          {hasValidCoordinates(competition.latitude, competition.longitude) && (
+            <Link 
+              to={`/competition/${competition.id}/map`}
+              className="flex items-center justify-between p-4"
+            >
+              <div className="flex items-center gap-3">
+                <Map size={20} className="text-forest" />
+                <span className="font-medium">Visa på karta</span>
+              </div>
+              <div className="text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m9 18 6-6-6-6"/>
+                </svg>
+              </div>
+            </Link>
+          )}
+
           {directionsUrl && (
             <a
               href={directionsUrl}
@@ -278,7 +295,7 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
             >
               <div className="flex items-center gap-3">
                 <Navigation size={20} className="text-forest" />
-                <span className="font-medium">Vägbeskrivning</span>
+                <span className="font-medium">Vägbeskrivning i Google Maps</span>
               </div>
               <div className="text-gray-400">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -286,23 +303,6 @@ const CompetitionDetails: React.FC<CompetitionDetailsProps> = ({ competition }) 
                 </svg>
               </div>
             </a>
-          )}
-
-          {hasValidCoordinates(competition.latitude, competition.longitude) && (
-            <Link 
-              to={`/competition/${competition.id}/map`}
-              className="flex items-center justify-between p-4"
-            >
-              <div className="flex items-center gap-3">
-                <Map size={20} className="text-forest" />
-                <span className="font-medium">Visa arenan på kartan</span>
-              </div>
-              <div className="text-gray-400">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="m9 18 6-6-6-6"/>
-                </svg>
-              </div>
-            </Link>
           )}
 
           {otherResources && otherResources.map((resource) => (
