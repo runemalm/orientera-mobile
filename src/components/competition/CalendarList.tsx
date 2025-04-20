@@ -1,4 +1,3 @@
-
 import React, { useMemo } from 'react';
 import { CompetitionSummary } from '../../types';
 import { UserLocation } from '../../hooks/useUserLocation';
@@ -137,44 +136,49 @@ const CalendarList: React.FC<CalendarListProps> = ({
       {calendarStructure.map((month, monthIndex) => (
         <div key={`month-${monthIndex}`} className="space-y-2">
           {/* Month header */}
-          <h2 className="text-lg font-semibold capitalize px-1">
+          <h2 className="text-lg font-semibold capitalize px-1 text-gray-700">
             {month.monthName}
           </h2>
 
           {month.weeks.map((week, weekIndex) => (
-            <div key={`week-${monthIndex}-${weekIndex}`} className="space-y-0.5">
+            <div 
+              key={`week-${monthIndex}-${weekIndex}`} 
+              className="space-y-0.5 bg-soft-gray/50 rounded-lg border border-gray-100"
+            >
               {/* Week header */}
-              <div className="flex items-center gap-2 px-1 py-1 bg-muted/50 rounded">
-                <span className="text-sm font-medium text-muted-foreground">Vecka {week.weekNumber}</span>
+              <div className="flex items-center gap-2 px-2 py-1.5 bg-soft-purple/30 rounded-t-lg">
+                <span className="text-sm font-medium text-gray-600">Vecka {week.weekNumber}</span>
               </div>
 
               {/* Days */}
-              <div className="space-y-[1px] border border-gray-100 rounded-md overflow-hidden">
+              <div className="space-y-[1px] rounded-b-lg overflow-hidden">
                 {week.days.map((day) => {
                   const hasCompetitions = day.competitions.length > 0;
                   const today = new Date();
                   const isToday = isSameDay(day.date, toZonedTime(today, SWEDISH_TIMEZONE));
-                  const isPast = differenceInCalendarDays(day.date, toZonedTime(today, SWEDISH_TIMEZONE)) < 0;
+                  const isPast = day.date < today;
                   
                   return (
                     <div 
                       key={day.date.toISOString()} 
                       className={`
-                        border-l-4
-                        ${isToday ? 'border-l-primary bg-primary/5' : 'border-l-transparent'} 
-                        ${day.isWeekend && !hasCompetitions ? 'bg-[#F1F0FB]' : ''}
-                        ${day.isWeekend ? 'bg-muted/30' : 'bg-gray-50/30'}
-                        ${!hasCompetitions ? 'opacity-60' : ''}
-                        hover:bg-gray-100/50 transition-colors
+                        border-l-4 
+                        transition-colors duration-200
+                        ${isToday ? 'border-l-primary bg-primary/5' : 'border-l-transparent'}
+                        ${day.isWeekend ? 
+                          (hasCompetitions ? 'bg-soft-purple/10' : 'bg-soft-gray') 
+                          : 'bg-white'}
+                        ${!hasCompetitions ? 'opacity-50' : ''}
+                        hover:bg-soft-purple/20
                         border-b border-gray-100 last:border-b-0
                       `}
                     >
                       <div className="flex min-h-[2.5rem] items-start w-full">
                         <div className={`
                           w-[4.5rem] py-2 px-2 text-sm shrink-0
-                          ${isPast ? 'text-muted-foreground/70' : ''}
-                          ${isToday ? 'text-primary font-medium' : 'text-muted-foreground/90'}
-                          ${day.isWeekend && !hasCompetitions ? 'italic' : ''}
+                          ${isPast ? 'text-gray-400' : ''}
+                          ${isToday ? 'text-primary font-medium' : 'text-gray-600'}
+                          ${day.isWeekend && !hasCompetitions ? 'italic text-gray-500' : ''}
                         `}>
                           {format(day.date, 'EEE d', { locale: sv })}
                         </div>
