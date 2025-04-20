@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { CompetitionSummary } from '../../types';
 import { Star } from 'lucide-react';
@@ -35,17 +34,17 @@ const CalendarCompetitionItem: React.FC<CalendarCompetitionItemProps> = ({ compe
   return (
     <div 
       onClick={handleClick}
-      className="px-2 py-1.5 bg-white rounded border border-gray-100 shadow-sm hover:shadow transition-shadow cursor-pointer flex items-center gap-2 w-full"
+      className="px-2 py-1.5 rounded border border-gray-100/50 hover:bg-white/50 transition-all cursor-pointer flex items-center gap-2 w-full"
     >
       <div className="flex-1 min-w-0 overflow-hidden">
-        <div className="text-sm font-medium truncate">{competition.name}</div>
+        <div className="text-sm font-medium text-gray-700 truncate">{competition.name}</div>
       </div>
-      <div className="text-xs text-gray-600 flex items-center gap-1 shrink-0 w-[100px] max-w-[100px]">
+      <div className="text-xs text-gray-500 flex items-center gap-1 shrink-0 w-[100px] max-w-[100px]">
         <span className="truncate">{competition.club}</span>
       </div>
       <button 
         onClick={toggleFavorite}
-        className="p-1 hover:bg-gray-100 rounded-full transition-colors shrink-0"
+        className="p-1 hover:bg-gray-100/50 rounded-full transition-colors shrink-0"
         aria-label={isFavorite ? "Ta bort från favoriter" : "Lägg till i favoriter"}
       >
         <Star
@@ -61,4 +60,3 @@ const CalendarCompetitionItem: React.FC<CalendarCompetitionItemProps> = ({ compe
 };
 
 export default CalendarCompetitionItem;
-

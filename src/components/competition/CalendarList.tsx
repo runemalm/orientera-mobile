@@ -143,10 +143,10 @@ const CalendarList: React.FC<CalendarListProps> = ({
           {month.weeks.map((week, weekIndex) => (
             <div 
               key={`week-${monthIndex}-${weekIndex}`} 
-              className="space-y-0.5 bg-soft-gray/50 rounded-lg border border-gray-100"
+              className="space-y-[1px] bg-soft-gray/50 rounded-lg border border-gray-100"
             >
               {/* Week header */}
-              <div className="flex items-center gap-2 px-2 py-1.5 bg-soft-purple/30 rounded-t-lg">
+              <div className="flex items-center gap-2 px-2 py-1.5 bg-soft-purple/20 rounded-t-lg">
                 <span className="text-sm font-medium text-gray-600">Vecka {week.weekNumber}</span>
               </div>
 
@@ -162,15 +162,15 @@ const CalendarList: React.FC<CalendarListProps> = ({
                     <div 
                       key={day.date.toISOString()} 
                       className={`
-                        border-l-4 
+                        border-l-2 
                         transition-colors duration-200
                         ${isToday ? 'border-l-primary bg-primary/5' : 'border-l-transparent'}
                         ${day.isWeekend ? 
-                          (hasCompetitions ? 'bg-soft-purple/10' : 'bg-soft-gray') 
-                          : 'bg-white'}
+                          (hasCompetitions ? 'bg-soft-purple/5' : 'bg-soft-gray/80') 
+                          : hasCompetitions ? 'bg-soft-green/10' : 'bg-white/40'}
                         ${!hasCompetitions ? 'opacity-50' : ''}
-                        hover:bg-soft-purple/20
-                        border-b border-gray-100 last:border-b-0
+                        hover:bg-soft-purple/10
+                        border-b border-gray-100/50 last:border-b-0
                       `}
                     >
                       <div className="flex min-h-[2.5rem] items-start w-full">
@@ -184,7 +184,7 @@ const CalendarList: React.FC<CalendarListProps> = ({
                         </div>
                         
                         <div className="flex-1 py-1 pr-2 min-w-0 overflow-hidden">
-                          {hasCompetitions ? (
+                          {hasCompetitions && (
                             <div className="space-y-1">
                               {day.competitions.map(competition => (
                                 <CalendarCompetitionItem
@@ -193,8 +193,6 @@ const CalendarList: React.FC<CalendarListProps> = ({
                                 />
                               ))}
                             </div>
-                          ) : (
-                            <div className="h-8"></div>
                           )}
                         </div>
                       </div>
