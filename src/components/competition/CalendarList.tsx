@@ -8,18 +8,14 @@ import {
   eachDayOfInterval, 
   isWeekend,
   getWeek,
-  getMonth,
-  isSameMonth,
-  isSameWeek,
   isMonday,
   compareAsc,
   isSameDay,
-  format
 } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { SWEDISH_TIMEZONE } from '../../utils/dateUtils';
 import { toZonedTime } from 'date-fns-tz';
-import CalendarMonth from './CalendarMonth';
+import CalendarFlow from './CalendarFlow';
 
 interface CalendarListProps {
   competitions: CompetitionSummary[];
@@ -56,25 +52,19 @@ const CalendarList: React.FC<CalendarListProps> = ({
   }, [fromDate, toDate]);
 
   const calendarStructure = useMemo(() => {
-    const structure: {
-      month: number;
-      monthName: string;
-      weeks: {
-        weekNumber: number;
-        days: {
-          date: Date;
-          isWeekend: boolean;
-          competitions: CompetitionSummary[];
-        }[]
-      }[]
+    const weeks: {
+      weekNumber: number;
+      days: {
+        date: Date;
+        isWeekend: boolean;
+        competitions: CompetitionSummary[];
+      }[];
     }[] = [];
 
-    let currentMonth: typeof structure[0] | null = null;
-    let currentWeek: typeof structure[0]['weeks'][0] | null = null;
+    let currentWeek: typeof weeks[0] | null = null;
 
     days.forEach(day => {
       const zonedDay = toZonedTime(day, SWEDISH_TIMEZONE);
-      const month = getMonth(zonedDay);
       const weekNumber = getWeek(zonedDay, { weekStartsOn: 1, firstWeekContainsDate: 4 });
       const isWeekendDay = isWeekend(zonedDay);
       
@@ -82,22 +72,12 @@ const CalendarList: React.FC<CalendarListProps> = ({
         isSameDay(new Date(comp.date), zonedDay)
       );
 
-      if (!currentMonth || !isSameMonth(zonedDay, toZonedTime(days[days.indexOf(day) - 1] || day, SWEDISH_TIMEZONE))) {
-        currentMonth = {
-          month,
-          monthName: format(zonedDay, 'MMMM yyyy', { locale: sv }),
-          weeks: []
-        };
-        structure.push(currentMonth);
-        currentWeek = null;
-      }
-
-      if (!currentWeek || !isSameWeek(zonedDay, toZonedTime(days[days.indexOf(day) - 1] || day, SWEDISH_TIMEZONE), { weekStartsOn: 1 })) {
+      if (!currentWeek || currentWeek.weekNumber !== weekNumber) {
         currentWeek = {
           weekNumber,
           days: []
         };
-        currentMonth.weeks.push(currentWeek);
+        weeks.push(currentWeek);
       }
 
       currentWeek.days.push({
@@ -107,7 +87,7 @@ const CalendarList: React.FC<CalendarListProps> = ({
       });
     });
 
-    return structure;
+    return weeks;
   }, [days, sortedCompetitions]);
 
   if (calendarStructure.length === 0) {
@@ -120,13 +100,7 @@ const CalendarList: React.FC<CalendarListProps> = ({
 
   return (
     <div className="space-y-6 max-w-full overflow-hidden">
-      {calendarStructure.map((month, monthIndex) => (
-        <CalendarMonth
-          key={`month-${monthIndex}`}
-          monthName={month.monthName}
-          weeks={month.weeks}
-        />
-      ))}
+      <CalendarFlow weeks={calendarStructure} />
     </div>
   );
 };
