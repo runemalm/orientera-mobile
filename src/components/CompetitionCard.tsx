@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { CompetitionSummary } from '../types';
 import { Clock, MapPin, Navigation, Star } from 'lucide-react';
@@ -13,14 +12,9 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 interface CompetitionCardProps {
   competition: CompetitionSummary;
   userLocation: { latitude: number | null; longitude: number | null };
-  compact?: boolean;
 }
 
-const CompetitionCard: React.FC<CompetitionCardProps> = ({ 
-  competition, 
-  userLocation,
-  compact = false 
-}) => {
+const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition, userLocation }) => {
   const navigate = useNavigate();
   const [favorites, setFavorites] = useLocalStorage<string[]>('favoriteCompetitions', []);
   
@@ -28,21 +22,17 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({
     navigate(`/competition/${competition.id}`);
   };
 
-  // Ensure favorites is always an array
   const safetyFavorites = Array.isArray(favorites) ? [...favorites] : [];
   const isFavorite = safetyFavorites.includes(competition.id);
 
   const toggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
     
-    // Get the current favorites directly from localStorage to ensure we have the most up-to-date list
     const storedFavoritesString = window.localStorage.getItem('favoriteCompetitions');
-    // Parse stored favorites or default to empty array if null/invalid
     const currentFavorites = storedFavoritesString ? 
       (JSON.parse(storedFavoritesString) || []) : 
       [];
     
-    // Ensure we're working with an array
     const safeCurrentFavorites = Array.isArray(currentFavorites) ? currentFavorites : [];
     
     let newFavorites: string[];
@@ -61,7 +51,6 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({
       newFavorites: newFavorites
     });
     
-    // Update localStorage and state
     setFavorites(newFavorites);
   };
 
@@ -105,38 +94,6 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({
   };
 
   const status = getStatusInfo();
-
-  // Adjust layout based on compact prop
-  if (compact) {
-    return (
-      <div 
-        className="bg-white border border-gray-100 rounded p-2 cursor-pointer hover:shadow-sm transition-shadow" 
-        onClick={handleCardClick}
-      >
-        <div className="flex items-center gap-2">
-          <div className="flex-grow">
-            <div className="font-medium text-sm line-clamp-1">{competition.name}</div>
-            <div className="text-xs text-gray-600 flex items-center gap-1">
-              <MapPin size={10} className="text-forest" />
-              <span className="line-clamp-1">{competition.club}</span>
-            </div>
-          </div>
-          <button 
-            onClick={toggleFavorite}
-            className="p-1 hover:bg-gray-100 rounded-full transition-colors"
-          >
-            <Star
-              size={14}
-              className={cn(
-                "transition-colors",
-                isFavorite ? "fill-yellow-400 text-yellow-400" : "text-gray-400"
-              )}
-            />
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <Card 

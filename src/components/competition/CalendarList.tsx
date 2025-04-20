@@ -1,4 +1,3 @@
-
 import React, { useMemo } from 'react';
 import { CompetitionSummary } from '../../types';
 import { UserLocation } from '../../hooks/useUserLocation';
@@ -24,6 +23,7 @@ import { SWEDISH_TIMEZONE, formatSwedishDate } from '../../utils/dateUtils';
 import { toZonedTime } from 'date-fns-tz';
 import CompetitionCard from '../../components/CompetitionCard';
 import { Card } from '@/components/ui/card';
+import CalendarCompetitionItem from './CalendarCompetitionItem';
 
 interface CalendarListProps {
   competitions: CompetitionSummary[];
@@ -164,19 +164,18 @@ const CalendarList: React.FC<CalendarListProps> = ({
                         ${day.isWeekend ? 'bg-muted/30' : ''}
                       `}
                     >
-                      <div className="flex items-center px-2 py-1">
+                      <div className="flex items-center min-h-[3rem] px-2 py-1">
                         <div className={`w-10 text-sm font-medium ${isPast ? 'text-muted-foreground' : ''}`}>
                           {format(day.date, 'EEE d', { locale: sv })}
                         </div>
                         
                         <div className="flex-1">
                           {hasCompetitions ? (
-                            <div className="space-y-2">
+                            <div className="space-y-1.5">
                               {day.competitions.map(competition => (
-                                <CompetitionCard 
+                                <CalendarCompetitionItem
                                   key={competition.id}
                                   competition={competition}
-                                  userLocation={userLocation}
                                 />
                               ))}
                             </div>
