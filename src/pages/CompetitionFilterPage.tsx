@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Button } from '@/components/ui/button';
@@ -72,27 +72,11 @@ const CompetitionFilterPage = () => {
 
   const hasDateFilter = Boolean(filters?.dateRange?.from || filters?.dateRange?.to);
 
-  const [dateRangeCollapsibleOpen, setDateRangeCollapsibleOpen] = useState(hasDateFilter);
-
-  const allBranches = Object.values(Branch);
-  const [branchCollapsibleOpen, setBranchCollapsibleOpen] = useState(
-    Array.isArray(filters?.branches) && filters.branches.length > 0
-  );
-  
-  const allDistricts = Object.values(OrienteeringDistrict);
-  const [districtCollapsibleOpen, setDistrictCollapsibleOpen] = useState(
-    Array.isArray(filters?.districts) && filters.districts.length > 0
-  );
-  
-  const allDisciplines = Object.values(Discipline);
-  const [disciplineCollapsibleOpen, setDisciplineCollapsibleOpen] = useState(
-    Array.isArray(filters?.disciplines) && filters.disciplines.length > 0
-  );
-
-  const allCompetitionTypes = Object.values(CompetitionType);
-  const [competitionTypeCollapsibleOpen, setCompetitionTypeCollapsibleOpen] = useState(
-    Array.isArray(filters?.competitionTypes) && filters.competitionTypes.length > 0
-  );
+  const [dateRangeCollapsibleOpen, setDateRangeCollapsibleOpen] = useState(false);
+  const [branchCollapsibleOpen, setBranchCollapsibleOpen] = useState(false);
+  const [districtCollapsibleOpen, setDistrictCollapsibleOpen] = useState(false);
+  const [disciplineCollapsibleOpen, setDisciplineCollapsibleOpen] = useState(false);
+  const [competitionTypeCollapsibleOpen, setCompetitionTypeCollapsibleOpen] = useState(false);
 
   useEffect(() => {
     const hasDateFilter = Boolean(filters?.dateRange?.from || filters?.dateRange?.to);
