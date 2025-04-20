@@ -52,9 +52,13 @@ const CompetitionsPage: React.FC = () => {
     setIsLoadingCompetitions(true);
     setError(null);
     
+    // Ensure we have a valid filters object with dateRange
+    const safeFilters = filters || DEFAULT_FILTERS;
+    const dateRange = safeFilters.dateRange || { from: null, to: null };
+    
     // Use date range from filters if set, otherwise use default date range
-    const fromDate = filters.dateRange.from || startOfWeek(new Date(), { weekStartsOn: 1 });
-    const toDate = filters.dateRange.to || (() => {
+    const fromDate = dateRange.from || startOfWeek(new Date(), { weekStartsOn: 1 });
+    const toDate = dateRange.to || (() => {
       const date = new Date();
       date.setMonth(date.getMonth() + 1);
       return date;
@@ -68,10 +72,10 @@ const CompetitionsPage: React.FC = () => {
           from: fromDate,
           to: toDate,
           limit: 50,
-          maxDistanceKm: filters.useLocationFilter ? filters.maxDistanceKm : undefined,
-          districts: filters.districts.length > 0 ? filters.districts : undefined,
-          disciplines: filters.disciplines.length > 0 ? filters.disciplines : undefined,
-          competitionTypes: filters.competitionTypes.length > 0 ? filters.competitionTypes : undefined
+          maxDistanceKm: safeFilters.useLocationFilter ? safeFilters.maxDistanceKm : undefined,
+          districts: safeFilters.districts.length > 0 ? safeFilters.districts : undefined,
+          disciplines: safeFilters.disciplines.length > 0 ? safeFilters.disciplines : undefined,
+          competitionTypes: safeFilters.competitionTypes.length > 0 ? safeFilters.competitionTypes : undefined
         }
       );
       
@@ -114,9 +118,13 @@ const CompetitionsPage: React.FC = () => {
       );
     }
 
+    // Ensure we have a valid filters object with dateRange
+    const safeFilters = filters || DEFAULT_FILTERS;
+    const dateRange = safeFilters.dateRange || { from: null, to: null };
+    
     // Use date range from filters if set, otherwise use default date range
-    const fromDate = filters.dateRange.from || startOfWeek(new Date(), { weekStartsOn: 1 });
-    const toDate = filters.dateRange.to || (() => {
+    const fromDate = dateRange.from || startOfWeek(new Date(), { weekStartsOn: 1 });
+    const toDate = dateRange.to || (() => {
       const date = new Date();
       date.setMonth(date.getMonth() + 1);
       return date;

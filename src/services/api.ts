@@ -32,14 +32,14 @@ export const getNearbyCompetitions = async (
     let filteredCompetitions = [...mockCompetitions];
     
     if (options?.from) {
-      const fromDate = options.from.toISOString().split('T')[0];
+      const fromDate = options.from instanceof Date ? options.from.toISOString().split('T')[0] : options.from;
       filteredCompetitions = filteredCompetitions.filter(comp => 
         comp.date >= fromDate
       );
     }
     
     if (options?.to) {
-      const toDate = options.to.toISOString().split('T')[0];
+      const toDate = options.to instanceof Date ? options.to.toISOString().split('T')[0] : options.to;
       filteredCompetitions = filteredCompetitions.filter(comp => 
         comp.date <= toDate
       );
@@ -92,12 +92,12 @@ export const getNearbyCompetitions = async (
     params.append('latitude', latitude.toString());
     params.append('longitude', longitude.toString());
     
-    // Only add date filters if they are provided
-    if (options?.from) {
+    // Only add date filters if they are provided, ensuring they're valid dates
+    if (options?.from instanceof Date) {
       params.append('from', options.from.toISOString().split('T')[0]);
     }
     
-    if (options?.to) {
+    if (options?.to instanceof Date) {
       params.append('to', options.to.toISOString().split('T')[0]);
     }
     
