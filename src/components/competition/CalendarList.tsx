@@ -38,7 +38,6 @@ const CalendarList: React.FC<CalendarListProps> = ({
   fromDate,
   toDate
 }) => {
-  // Sort competitions by date
   const sortedCompetitions = useMemo(() => {
     return [...competitions].sort((a, b) => {
       const dateA = new Date(a.date);
@@ -47,14 +46,11 @@ const CalendarList: React.FC<CalendarListProps> = ({
     });
   }, [competitions]);
 
-  // Generate all days between fromDate and toDate
   const days = useMemo(() => {
-    // Make sure we start on a Monday by finding the Monday of the week containing fromDate
     const adjustedFromDate = isMonday(fromDate) 
       ? fromDate 
       : startOfWeek(fromDate, { weekStartsOn: 1 });
     
-    // Make sure we end on a Sunday
     const adjustedToDate = endOfWeek(toDate, { weekStartsOn: 1 });
     
     return eachDayOfInterval({
@@ -63,7 +59,6 @@ const CalendarList: React.FC<CalendarListProps> = ({
     });
   }, [fromDate, toDate]);
 
-  // Group days by month and week
   const calendarStructure = useMemo(() => {
     const structure: {
       month: number;
@@ -87,12 +82,10 @@ const CalendarList: React.FC<CalendarListProps> = ({
       const weekNumber = getWeek(zonedDay, { weekStartsOn: 1, firstWeekContainsDate: 4 });
       const isWeekendDay = isWeekend(zonedDay);
       
-      // Filter competitions for this day
       const dayCompetitions = sortedCompetitions.filter(comp => 
         isSameDay(new Date(comp.date), zonedDay)
       );
 
-      // Check if we need to create a new month
       if (!currentMonth || !isSameMonth(zonedDay, toZonedTime(days[days.indexOf(day) - 1] || day, SWEDISH_TIMEZONE))) {
         currentMonth = {
           month,
@@ -103,7 +96,6 @@ const CalendarList: React.FC<CalendarListProps> = ({
         currentWeek = null;
       }
 
-      // Check if we need to create a new week
       if (!currentWeek || !isSameWeek(zonedDay, toZonedTime(days[days.indexOf(day) - 1] || day, SWEDISH_TIMEZONE), { weekStartsOn: 1 })) {
         currentWeek = {
           weekNumber,
@@ -112,7 +104,6 @@ const CalendarList: React.FC<CalendarListProps> = ({
         currentMonth.weeks.push(currentWeek);
       }
 
-      // Add the day to the current week
       currentWeek.days.push({
         date: zonedDay,
         isWeekend: isWeekendDay,
@@ -140,14 +131,16 @@ const CalendarList: React.FC<CalendarListProps> = ({
           </h2>
 
           <div className="space-y-2 rounded-lg">
-            {/* Days */}
             <div className="rounded-lg overflow-hidden">
-              {month.weeks.flatMap((week) => 
+              {month.weeks.flatMap((week, weekIndex) => 
                 week.days.map((day, dayIndex, daysArray) => {
                   const hasCompetitions = day.competitions.length > 0;
                   const today = new Date();
                   const isToday = isSameDay(day.date, toZonedTime(today, SWEDISH_TIMEZONE));
                   const isPast = day.date < today;
+                  const isWeekend = isWeekend(day.date);
+                  const isMonday = day.date.getDay() === 1;
+                  const isSunday = day.date.getDay() === 0;
                   
                   return (
                     <React.Fragment key={day.date.toISOString()}>
@@ -156,8 +149,8 @@ const CalendarList: React.FC<CalendarListProps> = ({
                           border-l-2 
                           transition-colors duration-200
                           ${isToday ? 'border-l-primary bg-primary/5' : 'border-l-transparent'}
-                          ${day.isWeekend ? 
-                            (hasCompetitions ? 'bg-soft-purple/20' : 'bg-soft-purple/10') 
+                          ${isWeekend ? 
+                            (hasCompetitions ? 'bg-red-100/30' : 'bg-red-100/20') 
                             : hasCompetitions ? 'bg-soft-green/10' : 'bg-white/40'}
                           ${!hasCompetitions ? 'opacity-50' : ''}
                           hover:bg-soft-purple/10
@@ -168,7 +161,7 @@ const CalendarList: React.FC<CalendarListProps> = ({
                             w-[4.5rem] py-2 px-2 text-sm shrink-0 self-start
                             ${isPast ? 'text-gray-400' : ''}
                             ${isToday ? 'text-primary font-medium' : 'text-gray-600'}
-                            ${day.isWeekend ? 'font-medium' : ''}
+                            ${isWeekend ? 'font-medium' : ''}
                           `}>
                             {format(day.date, 'EEE d', { locale: sv })}
                           </div>
@@ -188,9 +181,11 @@ const CalendarList: React.FC<CalendarListProps> = ({
                           </div>
                         </div>
                       </div>
-                      {/* Add separator between days, except for the last day */}
-                      {dayIndex < daysArray.length - 1 && (
-                        <div className="h-[3px] bg-gray-100 rounded-full mx-1" />
+                      {(isSunday || (dayIndex === daysArray.length - 1 && isMonday)) && (
+                        <div className="h-[3px] bg-gray-100 rounded-full mx-1 my-1" />
+                      )}
+                      {dayIndex < daysArray.length - 1 && dayIndex !== daysArray.length - 2 && (
+                        <div className="h-[1px] bg-gray-100 rounded-full mx-1" />
                       )}
                     </React.Fragment>
                   );
