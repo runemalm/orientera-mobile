@@ -2,6 +2,7 @@
 import React from 'react';
 import { CompetitionSummary } from '../../types';
 import CalendarDay from './CalendarDay';
+import CalendarWeekHeader from './CalendarWeekHeader';
 import { Separator } from '../ui/separator';
 import { isSameDay } from 'date-fns';
 import { cn } from '@/lib/utils';
@@ -25,6 +26,7 @@ const CalendarWeek: React.FC<CalendarWeekProps> = ({ days, weekNumber }) => {
         "shadow-sm transition-shadow duration-200"
       )}
     >
+      <CalendarWeekHeader weekNumber={weekNumber} startDate={days[0].date} />
       {days.map((day, dayIndex) => (
         <React.Fragment key={day.date.toISOString()}>
           <CalendarDay
