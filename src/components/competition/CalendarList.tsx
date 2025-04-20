@@ -1,4 +1,3 @@
-
 import React, { useMemo } from 'react';
 import { CompetitionSummary } from '../../types';
 import { UserLocation } from '../../hooks/useUserLocation';
@@ -22,8 +21,9 @@ import {
 import { sv } from 'date-fns/locale';
 import { SWEDISH_TIMEZONE, formatSwedishDate } from '../../utils/dateUtils';
 import { toZonedTime } from 'date-fns-tz';
-import CompetitionCard from '../../components/CompetitionCard';
+import { Calendar, ChevronDown } from 'lucide-react';
 import { Card } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import CalendarCompetitionItem from './CalendarCompetitionItem';
 
 interface CalendarListProps {
@@ -81,7 +81,7 @@ const CalendarList: React.FC<CalendarListProps> = ({
       const zonedDay = toZonedTime(day, SWEDISH_TIMEZONE);
       const month = getMonth(zonedDay);
       const weekNumber = getWeek(zonedDay, { weekStartsOn: 1, firstWeekContainsDate: 4 });
-      const isWeekendDay = isWeekend(zonedDay);
+      const dayIsWeekend = isWeekend(zonedDay);
       
       const dayCompetitions = sortedCompetitions.filter(comp => 
         isSameDay(new Date(comp.date), zonedDay)
@@ -107,7 +107,7 @@ const CalendarList: React.FC<CalendarListProps> = ({
 
       currentWeek.days.push({
         date: zonedDay,
-        isWeekend: isWeekendDay,
+        isWeekend: dayIsWeekend,
         competitions: dayCompetitions
       });
     });
@@ -124,75 +124,80 @@ const CalendarList: React.FC<CalendarListProps> = ({
   }
 
   return (
-    <div className="space-y-6 max-w-full overflow-hidden">
+    <div className="space-y-8 max-w-full overflow-hidden">
       {calendarStructure.map((month, monthIndex) => (
-        <div key={`month-${monthIndex}`} className="space-y-2">
-          <h2 className="text-lg font-semibold capitalize px-1 text-gray-700">
-            {month.monthName}
-          </h2>
+        <div key={`month-${monthIndex}`} className="space-y-4">
+          <div className="bg-white sticky top-16 z-10 pt-2 pb-2">
+            <div className="flex items-center gap-2 px-2">
+              <Calendar className="h-5 w-5 text-primary" />
+              <h2 className="text-lg font-semibold capitalize text-primary">
+                {month.monthName}
+              </h2>
+            </div>
+            <Separator className="mt-2 bg-gray-100" />
+          </div>
 
-          <div className="space-y-2 rounded-lg">
-            <div className="rounded-lg overflow-hidden">
-              {month.weeks.flatMap((week, weekIndex) => 
-                week.days.map((day, dayIndex, daysArray) => {
-                  const hasCompetitions = day.competitions.length > 0;
-                  const today = new Date();
-                  const isToday = isSameDay(day.date, toZonedTime(today, SWEDISH_TIMEZONE));
-                  const isPast = day.date < today;
-                  const dayIsWeekend = day.isWeekend;
-                  const isMonday = day.date.getDay() === 1;
-                  const isSunday = day.date.getDay() === 0;
-                  
-                  return (
-                    <React.Fragment key={day.date.toISOString()}>
-                      <div 
-                        className={`
-                          border-l-2 
-                          transition-colors duration-200
-                          ${isToday ? 'border-l-primary bg-primary/5' : 'border-l-transparent'}
-                          ${dayIsWeekend ? 
-                            (hasCompetitions ? 'bg-red-100/30' : 'bg-red-100/20') 
-                            : hasCompetitions ? 'bg-soft-green/10' : 'bg-white/40'}
-                          ${!hasCompetitions ? 'opacity-50' : ''}
-                          hover:bg-soft-purple/10
-                        `}
-                      >
-                        <div className="flex min-h-[2.5rem] w-full">
-                          <div className={`
-                            w-[4.5rem] py-2 px-2 text-sm shrink-0 self-start
-                            ${isPast ? 'text-gray-400' : ''}
-                            ${isToday ? 'text-primary font-medium' : 'text-gray-600'}
-                            ${dayIsWeekend ? 'font-medium' : ''}
-                          `}>
-                            {format(day.date, 'EEE d', { locale: sv })}
-                          </div>
-                          
-                          <div className="flex-1 py-1 pr-2 min-w-0 overflow-hidden">
-                            {hasCompetitions && (
-                              <div className="space-y-1">
-                                {day.competitions.map((competition, index) => (
-                                  <CalendarCompetitionItem
-                                    key={competition.id}
-                                    competition={competition}
-                                    className={index === 0 ? 'first:self-center' : ''}
-                                  />
-                                ))}
-                              </div>
-                            )}
-                          </div>
+          <div className="space-y-1 rounded-lg">
+            {month.weeks.flatMap((week, weekIndex) => 
+              week.days.map((day, dayIndex, daysArray) => {
+                const hasCompetitions = day.competitions.length > 0;
+                const today = new Date();
+                const isToday = isSameDay(day.date, toZonedTime(today, SWEDISH_TIMEZONE));
+                const isPast = day.date < today;
+                const dayIsWeekend = day.isWeekend;
+                const isMonday = day.date.getDay() === 1;
+                const isSunday = day.date.getDay() === 0;
+                
+                return (
+                  <React.Fragment key={day.date.toISOString()}>
+                    <div 
+                      className={`
+                        rounded-lg overflow-hidden
+                        transition-all duration-200 hover:shadow-sm
+                        ${isToday ? 'ring-1 ring-primary shadow-sm' : ''}
+                        ${dayIsWeekend ? 
+                          (hasCompetitions ? 'bg-red-50' : 'bg-red-50/60') 
+                          : hasCompetitions ? 'bg-primary/5' : 'bg-white'}
+                        ${hasCompetitions ? '' : 'opacity-80 hover:opacity-100'}
+                      `}
+                    >
+                      <div className="flex min-h-[2.5rem] w-full">
+                        <div className={`
+                          w-[4rem] py-2 px-3 shrink-0 self-start flex flex-col items-center justify-center
+                          ${isToday ? 'bg-primary text-white font-medium rounded-l-lg' : dayIsWeekend ? 'bg-red-100/40' : 'bg-gray-50'}
+                        `}>
+                          <span className={`text-xs uppercase ${isToday ? 'text-white/80' : 'text-gray-500'}`}>
+                            {format(day.date, 'EEE', { locale: sv })}
+                          </span>
+                          <span className={`text-lg ${isToday ? 'text-white' : isPast ? 'text-gray-400' : dayIsWeekend ? 'text-red-600' : 'text-gray-700'}`}>
+                            {format(day.date, 'd', { locale: sv })}
+                          </span>
+                        </div>
+                        
+                        <div className="flex-1 py-2 px-3 min-w-0">
+                          {hasCompetitions ? (
+                            <div className="space-y-1.5">
+                              {day.competitions.map((competition, index) => (
+                                <CalendarCompetitionItem
+                                  key={competition.id}
+                                  competition={competition}
+                                  className={`${index === 0 ? 'first:self-center' : ''} ${isToday ? 'border-primary/20' : ''}`}
+                                />
+                              ))}
+                            </div>
+                          ) : (
+                            <div className="h-full flex items-center justify-center">
+                              <p className="text-sm text-gray-400">Inga tävlingar</p>
+                            </div>
+                          )}
                         </div>
                       </div>
-                      {(isSunday || (dayIndex === daysArray.length - 1 && isMonday)) && (
-                        <div className="h-[3px] bg-gray-100 rounded-full mx-1 my-1" />
-                      )}
-                      {dayIndex < daysArray.length - 1 && dayIndex !== daysArray.length - 2 && (
-                        <div className="h-[1px] bg-gray-100 rounded-full mx-1" />
-                      )}
-                    </React.Fragment>
-                  );
-                })
-              )}
-            </div>
+                    </div>
+                    <Separator className="my-1.5 h-px bg-gray-100" />
+                  </React.Fragment>
+                );
+              })
+            )}
           </div>
         </div>
       ))}

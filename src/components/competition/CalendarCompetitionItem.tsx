@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { CompetitionSummary } from '../../types';
 import { Star } from 'lucide-react';
@@ -38,7 +39,10 @@ const CalendarCompetitionItem: React.FC<CalendarCompetitionItemProps> = ({
   return (
     <div 
       onClick={handleClick}
-      className={`px-2 py-1.5 rounded border border-gray-100/50 hover:bg-white/50 transition-all cursor-pointer flex items-center gap-2 w-full ${className}`}
+      className={cn(
+        "px-3 py-1.5 rounded-md border border-gray-100 hover:bg-white transition-all cursor-pointer flex items-center gap-2 w-full",
+        className
+      )}
     >
       <div className="flex-1 min-w-0 overflow-hidden">
         <div className="text-sm font-medium text-gray-700 truncate">{competition.name}</div>
@@ -48,7 +52,7 @@ const CalendarCompetitionItem: React.FC<CalendarCompetitionItemProps> = ({
       </div>
       <button 
         onClick={toggleFavorite}
-        className="p-1 hover:bg-gray-100/50 rounded-full transition-colors shrink-0"
+        className="p-1 hover:bg-gray-100 rounded-full transition-colors shrink-0"
         aria-label={isFavorite ? "Ta bort från favoriter" : "Lägg till i favoriter"}
       >
         <Star
