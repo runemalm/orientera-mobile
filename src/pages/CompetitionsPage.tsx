@@ -8,6 +8,7 @@ import { CompetitionSummary } from '../types';
 import { getNearbyCompetitions } from '../services/api';
 import CalendarList from '../components/competition/CalendarList';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import { startOfWeek } from 'date-fns';
 
 let cachedCompetitions: CompetitionSummary[] = [];
 
@@ -34,7 +35,6 @@ const CompetitionsPage: React.FC = () => {
   const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(cachedCompetitions.length === 0);
   const [error, setError] = useState<string | null>(null);
   const initialFetchCompleted = useRef(false);
-  const [daysBack] = useLocalStorage<number>('competitionsDaysBack', 1);
   const [filters, setFilters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
 
   const fetchCompetitions = useCallback(async () => {
@@ -43,8 +43,7 @@ const CompetitionsPage: React.FC = () => {
     setIsLoadingCompetitions(true);
     setError(null);
     
-    const fromDate = new Date();
-    fromDate.setDate(fromDate.getDate() - daysBack);
+    const fromDate = startOfWeek(new Date(), { weekStartsOn: 1 });
     
     const toDate = new Date();
     toDate.setMonth(toDate.getMonth() + 1);
@@ -72,7 +71,7 @@ const CompetitionsPage: React.FC = () => {
     } finally {
       setIsLoadingCompetitions(false);
     }
-  }, [userLocation, daysBack, filters]);
+  }, [userLocation, filters]);
 
   useEffect(() => {
     if (userLocation && (!initialFetchCompleted.current || cachedCompetitions.length === 0)) {
