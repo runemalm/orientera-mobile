@@ -1,3 +1,4 @@
+
 import React, { useMemo } from 'react';
 import { CompetitionSummary } from '../../types';
 import { UserLocation } from '../../hooks/useUserLocation';
@@ -12,6 +13,8 @@ import {
   isSameWeek,
   isMonday,
   compareAsc,
+  isSameDay,
+  format
 } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { SWEDISH_TIMEZONE } from '../../utils/dateUtils';

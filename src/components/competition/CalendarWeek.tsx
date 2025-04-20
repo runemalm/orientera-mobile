@@ -1,8 +1,8 @@
-
 import React from 'react';
 import { CompetitionSummary } from '../../types';
 import CalendarDay from './CalendarDay';
 import { Separator } from '../ui/separator';
+import { isSameDay } from 'date-fns';
 
 interface CalendarWeekProps {
   days: {
