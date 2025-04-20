@@ -165,7 +165,7 @@ const CalendarList: React.FC<CalendarListProps> = ({
                         border-b border-gray-100/50
                       `}
                     >
-                      <div className="flex min-h-[2.5rem] items-start w-full">
+                      <div className="flex min-h-[2.5rem] items-center w-full">
                         <div className={`
                           w-[4.5rem] py-2 px-2 text-sm shrink-0
                           ${isPast ? 'text-gray-400' : ''}
