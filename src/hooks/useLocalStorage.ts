@@ -9,6 +9,24 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T)
       // Check if item exists and is not undefined or null before parsing
       if (item) {
         const parsedItem = JSON.parse(item);
+        
+        // If this is a filter object with dates, convert date strings back to Date objects
+        if (parsedItem && 
+            typeof parsedItem === 'object' && 
+            parsedItem.dateRange && 
+            typeof parsedItem.dateRange === 'object') {
+          
+          // Convert dateRange.from string to Date if it exists
+          if (parsedItem.dateRange.from) {
+            parsedItem.dateRange.from = new Date(parsedItem.dateRange.from);
+          }
+          
+          // Convert dateRange.to string to Date if it exists
+          if (parsedItem.dateRange.to) {
+            parsedItem.dateRange.to = new Date(parsedItem.dateRange.to);
+          }
+        }
+        
         // Make sure we return initialValue if parsedItem is null or undefined
         return parsedItem !== null && parsedItem !== undefined ? parsedItem : initialValue;
       }
