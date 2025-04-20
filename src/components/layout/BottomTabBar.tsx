@@ -1,6 +1,7 @@
+
 import React, { useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { CalendarSearch, Home, Settings, Star, UserRound } from 'lucide-react';
+import { CalendarSearch, Home, Star, UserRound } from 'lucide-react';
 import { TabName } from '../../types';
 
 const BottomTabBar: React.FC = () => {
