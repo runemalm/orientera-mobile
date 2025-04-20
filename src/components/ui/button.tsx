@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -42,10 +43,37 @@ export interface ButtonProps
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button"
+    
+    // Event handlers to fix stuck active states on mobile
+    const touchStartRef = React.useRef(false);
+    
+    const handleTouchStart = (e: React.TouchEvent<HTMLButtonElement>) => {
+      touchStartRef.current = true;
+      if (props.onTouchStart) {
+        props.onTouchStart(e);
+      }
+    };
+    
+    const handleTouchEnd = (e: React.TouchEvent<HTMLButtonElement>) => {
+      if (touchStartRef.current) {
+        touchStartRef.current = false;
+        // Force blur to remove any stuck active/focus states
+        if (e.currentTarget) {
+          e.currentTarget.blur();
+        }
+      }
+      if (props.onTouchEnd) {
+        props.onTouchEnd(e);
+      }
+    };
+
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchEnd} // Also handle touch cancel events
         {...props}
       />
     )
@@ -54,3 +82,4 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 Button.displayName = "Button"
 
 export { Button, buttonVariants }
+

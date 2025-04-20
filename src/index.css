@@ -61,6 +61,30 @@
     max-width: 100vw;
     overflow-x: hidden;
     position: relative;
+    
+    /* Prevent element selection when tapping */
+    -webkit-tap-highlight-color: transparent;
+    
+    /* Prevent scroll bounce effects on iOS */
+    overscroll-behavior: none;
+  }
+  
+  /* Fix for buttons, links and interactive elements to prevent stuck states */
+  button, a, [role="button"], .interactive {
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  
+  /* Force all focused elements to reset on next interaction to prevent stuck states */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+  
+  /* Add a specific active state that properly resets */
+  button:active, a:active, [role="button"]:active {
+    opacity: 0.9;
+    transition: opacity 0.1s;
   }
   
   #root {
@@ -131,3 +155,4 @@
     @apply bg-location-light/20 text-location-dark px-2 py-1 rounded-full text-sm flex items-center gap-1;
   }
 }
+
