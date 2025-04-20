@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { CompetitionSummary } from '../../types';
 import { Star } from 'lucide-react';
@@ -23,6 +24,8 @@ const CalendarCompetitionItem: React.FC<CalendarCompetitionItemProps> = ({
 
   const toggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
+    
+    // Ensure we always use the latest favorites from state
     const safeCurrentFavorites = Array.isArray(favorites) ? [...favorites] : [];
     const isFavorite = safeCurrentFavorites.includes(competition.id);
     
@@ -30,9 +33,11 @@ const CalendarCompetitionItem: React.FC<CalendarCompetitionItemProps> = ({
       ? safeCurrentFavorites.filter(id => id !== competition.id)
       : [...safeCurrentFavorites, competition.id];
     
+    // Use the state updater function - this will trigger the useEffect in useLocalStorage
     setFavorites(newFavorites);
   };
 
+  // Check favorite status directly from current state
   const isFavorite = Array.isArray(favorites) && favorites.includes(competition.id);
 
   return (
