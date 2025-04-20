@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -56,8 +55,12 @@ const CompetitionsPage: React.FC = () => {
     const safeFilters = filters || DEFAULT_FILTERS;
     const dateRange = safeFilters.dateRange || { from: null, to: null };
     
-    // Use date range from filters if set, otherwise use default date range
-    const fromDate = dateRange.from || startOfWeek(new Date(), { weekStartsOn: 1 });
+    // If from date is explicitly set in the filter, use exactly that date
+    // Otherwise use the Monday of the current week
+    const fromDate = dateRange.from 
+      ? dateRange.from 
+      : startOfWeek(new Date(), { weekStartsOn: 1 });
+    
     const toDate = dateRange.to || (() => {
       const date = new Date();
       date.setMonth(date.getMonth() + 1);
@@ -122,8 +125,12 @@ const CompetitionsPage: React.FC = () => {
     const safeFilters = filters || DEFAULT_FILTERS;
     const dateRange = safeFilters.dateRange || { from: null, to: null };
     
-    // Use date range from filters if set, otherwise use default date range
-    const fromDate = dateRange.from || startOfWeek(new Date(), { weekStartsOn: 1 });
+    // If from date is explicitly set in the filter, use exactly that date
+    // Otherwise use the Monday of the current week
+    const fromDate = dateRange.from 
+      ? dateRange.from 
+      : startOfWeek(new Date(), { weekStartsOn: 1 });
+    
     const toDate = dateRange.to || (() => {
       const date = new Date();
       date.setMonth(date.getMonth() + 1);
