@@ -1,4 +1,3 @@
-
 import React, { useMemo } from 'react';
 import { CompetitionSummary } from '../../types';
 import { UserLocation } from '../../hooks/useUserLocation';
@@ -6,25 +5,18 @@ import {
   startOfWeek,
   endOfWeek, 
   eachDayOfInterval, 
-  isSameDay, 
   isWeekend,
-  format,
   getWeek,
   getMonth,
   isSameMonth,
   isSameWeek,
-  addDays,
   isMonday,
-  startOfDay,
   compareAsc,
-  differenceInCalendarDays
 } from 'date-fns';
 import { sv } from 'date-fns/locale';
-import { SWEDISH_TIMEZONE, formatSwedishDate } from '../../utils/dateUtils';
+import { SWEDISH_TIMEZONE } from '../../utils/dateUtils';
 import { toZonedTime } from 'date-fns-tz';
-import CompetitionCard from '../../components/CompetitionCard';
-import { Card } from '@/components/ui/card';
-import CalendarCompetitionItem from './CalendarCompetitionItem';
+import CalendarMonth from './CalendarMonth';
 
 interface CalendarListProps {
   competitions: CompetitionSummary[];
@@ -126,75 +118,11 @@ const CalendarList: React.FC<CalendarListProps> = ({
   return (
     <div className="space-y-6 max-w-full overflow-hidden">
       {calendarStructure.map((month, monthIndex) => (
-        <div key={`month-${monthIndex}`} className="space-y-2">
-          <h2 className="text-lg font-semibold capitalize px-1 text-gray-700">
-            {month.monthName}
-          </h2>
-
-          <div className="space-y-2 rounded-lg">
-            <div className="rounded-lg overflow-hidden">
-              {month.weeks.flatMap((week, weekIndex) => 
-                week.days.map((day, dayIndex, daysArray) => {
-                  const hasCompetitions = day.competitions.length > 0;
-                  const today = new Date();
-                  const isToday = isSameDay(day.date, toZonedTime(today, SWEDISH_TIMEZONE));
-                  const isPast = day.date < today;
-                  const dayIsWeekend = day.isWeekend;
-                  const isMonday = day.date.getDay() === 1;
-                  const isSunday = day.date.getDay() === 0;
-                  
-                  return (
-                    <React.Fragment key={day.date.toISOString()}>
-                      <div 
-                        className={`
-                          border-l-2 
-                          transition-colors duration-200
-                          ${isToday ? 'border-l-primary bg-primary/5' : 'border-l-transparent'}
-                          ${dayIsWeekend ? 
-                            (hasCompetitions ? 'bg-red-100/30' : 'bg-red-100/20') 
-                            : hasCompetitions ? 'bg-soft-green/10' : 'bg-white/40'}
-                          ${!hasCompetitions ? 'opacity-50' : ''}
-                          hover:bg-soft-purple/10
-                        `}
-                      >
-                        <div className="flex min-h-[2.5rem] w-full">
-                          <div className={`
-                            w-[4.5rem] py-2 px-2 text-sm shrink-0 self-start
-                            ${isPast ? 'text-gray-400' : ''}
-                            ${isToday ? 'text-primary font-medium' : 'text-gray-600'}
-                            ${dayIsWeekend ? 'font-medium' : ''}
-                          `}>
-                            {format(day.date, 'EEE d', { locale: sv })}
-                          </div>
-                          
-                          <div className="flex-1 py-1 pr-2 min-w-0 overflow-hidden">
-                            {hasCompetitions && (
-                              <div className="space-y-1">
-                                {day.competitions.map((competition, index) => (
-                                  <CalendarCompetitionItem
-                                    key={competition.id}
-                                    competition={competition}
-                                    className={index === 0 ? 'first:self-center' : ''}
-                                  />
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                      {(isSunday || (dayIndex === daysArray.length - 1 && isMonday)) && (
-                        <div className="h-[3px] bg-gray-100 rounded-full mx-1 my-1" />
-                      )}
-                      {dayIndex < daysArray.length - 1 && dayIndex !== daysArray.length - 2 && (
-                        <div className="h-[1px] bg-gray-100 rounded-full mx-1" />
-                      )}
-                    </React.Fragment>
-                  );
-                })
-              )}
-            </div>
-          </div>
-        </div>
+        <CalendarMonth
+          key={`month-${monthIndex}`}
+          monthName={month.monthName}
+          weeks={month.weeks}
+        />
       ))}
     </div>
   );
