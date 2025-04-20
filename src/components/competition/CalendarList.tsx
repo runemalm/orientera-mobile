@@ -140,19 +140,11 @@ const CalendarList: React.FC<CalendarListProps> = ({
             {month.monthName}
           </h2>
 
-          {month.weeks.map((week, weekIndex) => (
-            <div 
-              key={`week-${monthIndex}-${weekIndex}`} 
-              className="space-y-[1px] bg-soft-gray/50 rounded-lg border border-gray-100"
-            >
-              {/* Week header */}
-              <div className="flex items-center gap-2 px-2 py-1.5 bg-soft-purple/20 rounded-t-lg">
-                <span className="text-sm font-medium text-gray-600">Vecka {week.weekNumber}</span>
-              </div>
-
-              {/* Days */}
-              <div className="space-y-[1px] rounded-b-lg overflow-hidden">
-                {week.days.map((day) => {
+          <div className="space-y-[1px] bg-soft-gray/50 rounded-lg border border-gray-100">
+            {/* Days */}
+            <div className="space-y-[1px] rounded-lg overflow-hidden">
+              {month.weeks.flatMap((week) => 
+                week.days.map((day) => {
                   const hasCompetitions = day.competitions.length > 0;
                   const today = new Date();
                   const isToday = isSameDay(day.date, toZonedTime(today, SWEDISH_TIMEZONE));
@@ -166,7 +158,7 @@ const CalendarList: React.FC<CalendarListProps> = ({
                         transition-colors duration-200
                         ${isToday ? 'border-l-primary bg-primary/5' : 'border-l-transparent'}
                         ${day.isWeekend ? 
-                          (hasCompetitions ? 'bg-soft-purple/5' : 'bg-soft-gray/80') 
+                          (hasCompetitions ? 'bg-soft-purple/20' : 'bg-soft-purple/10') 
                           : hasCompetitions ? 'bg-soft-green/10' : 'bg-white/40'}
                         ${!hasCompetitions ? 'opacity-50' : ''}
                         hover:bg-soft-purple/10
@@ -178,7 +170,7 @@ const CalendarList: React.FC<CalendarListProps> = ({
                           w-[4.5rem] py-2 px-2 text-sm shrink-0
                           ${isPast ? 'text-gray-400' : ''}
                           ${isToday ? 'text-primary font-medium' : 'text-gray-600'}
-                          ${day.isWeekend && !hasCompetitions ? 'italic text-gray-500' : ''}
+                          ${day.isWeekend ? 'font-medium' : ''}
                         `}>
                           {format(day.date, 'EEE d', { locale: sv })}
                         </div>
@@ -198,10 +190,10 @@ const CalendarList: React.FC<CalendarListProps> = ({
                       </div>
                     </div>
                   );
-                })}
-              </div>
+                })
+              )}
             </div>
-          ))}
+          </div>
         </div>
       ))}
     </div>
