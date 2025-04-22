@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { Competition } from '@/types';
-import { Users, Car, Map, Navigation } from 'lucide-react';
+import { Competition, ResourceType } from '@/types';
+import { Users, Car, Map, Navigation, FileText } from 'lucide-react';
 import CompetitionSection from '../details/CompetitionSection';
 import CompetitionSectionItem from '../details/CompetitionSectionItem';
 import { hasValidCoordinates } from '@/utils/locationUtils';
@@ -19,13 +19,23 @@ const CompetitionParticipantsSection: React.FC<CompetitionParticipantsSectionPro
     }
   });
 
+  const startList = competition.resources?.find(r => r.type === ResourceType.StartList);
+
   const directionsUrl = hasValidCoordinates(competition.latitude, competition.longitude)
     ? `https://www.google.com/maps/dir/?api=1&destination=${competition.latitude},${competition.longitude}`
     : null;
 
   return (
     <CompetitionSection icon={Users} title="Deltagare och samåkning">
-      
+      {startList && (
+        <CompetitionSectionItem
+          icon={FileText}
+          title="Startlista"
+          href={startList.url}
+          count={startList.count}
+        />
+      )}
+
       <CompetitionSectionItem
         icon={Car}
         title="Samåkning"
