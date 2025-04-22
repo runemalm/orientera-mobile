@@ -20,6 +20,7 @@ const CompetitionParticipantsSection: React.FC<CompetitionParticipantsSectionPro
   });
 
   const startList = competition.resources?.find(r => r.type === ResourceType.StartList);
+  const entryList = competition.resources?.find(r => r.type === ResourceType.EntryList);
 
   const directionsUrl = hasValidCoordinates(competition.latitude, competition.longitude)
     ? `https://www.google.com/maps/dir/?api=1&destination=${competition.latitude},${competition.longitude}`
@@ -27,6 +28,14 @@ const CompetitionParticipantsSection: React.FC<CompetitionParticipantsSectionPro
 
   return (
     <CompetitionSection icon={Users} title="Deltagare och samåkning">
+      {entryList && (
+        <CompetitionSectionItem
+          icon={FileText}
+          title={entryList.name}
+          href={entryList.url}
+          count={entryList.count}
+        />
+      )}
       {startList && (
         <CompetitionSectionItem
           icon={FileText}

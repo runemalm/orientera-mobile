@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Competition, Resource, ResourceType, ResourceFormat } from '@/types';
 import { CircleAlert, FileText, Image } from 'lucide-react';
@@ -19,9 +18,8 @@ const getResourceIcon = (resource: Resource) => {
 const CompetitionInfoSection: React.FC<CompetitionInfoSectionProps> = ({ competition }) => {
   const invitation = competition.resources?.find(r => r.type === ResourceType.Invitation);
   const pm = competition.resources?.find(r => r.type === ResourceType.PM);
-  const entryList = competition.resources?.find(r => r.type === ResourceType.EntryList);
 
-  if (!invitation && !pm && !entryList) return null;
+  if (!invitation && !pm) return null;
 
   return (
     <CompetitionSection icon={CircleAlert} title="Tävlingsinformation">
@@ -39,14 +37,6 @@ const CompetitionInfoSection: React.FC<CompetitionInfoSectionProps> = ({ competi
           title={pm.name}
           href={pm.url}
           count={pm.count}
-        />
-      )}
-      {entryList && (
-        <CompetitionSectionItem
-          icon={getResourceIcon(entryList)}
-          title={entryList.name}
-          href={entryList.url}
-          count={entryList.count}
         />
       )}
     </CompetitionSection>
