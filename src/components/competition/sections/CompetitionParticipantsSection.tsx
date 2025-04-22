@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Competition, ResourceType } from '@/types';
-import { Users, Car, Map, Navigation, FileText } from 'lucide-react';
+import { Users, Car, Map, Navigation, FileText, ListOrdered } from 'lucide-react';
 import CompetitionSection from '../details/CompetitionSection';
 import CompetitionSectionItem from '../details/CompetitionSectionItem';
 import { hasValidCoordinates } from '@/utils/locationUtils';
@@ -27,6 +27,13 @@ const CompetitionParticipantsSection: React.FC<CompetitionParticipantsSectionPro
 
   return (
     <CompetitionSection icon={Users} title="Deltagare och samåkning">
+      <CompetitionSectionItem
+        icon={ListOrdered}
+        title="Alla anmälda"
+        to={`/competition/${competition.id}/participants`}
+        count={competition.participantCount}
+      />
+
       {startList && (
         <CompetitionSectionItem
           icon={FileText}
@@ -63,3 +70,4 @@ const CompetitionParticipantsSection: React.FC<CompetitionParticipantsSectionPro
 };
 
 export default CompetitionParticipantsSection;
+
