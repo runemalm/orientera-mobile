@@ -1,3 +1,4 @@
+
 // Enums to match backend C# models
 export enum Branch {
   FootO = 'FootO',    // Orienteringslöpning
@@ -130,6 +131,7 @@ export interface Resource {
   format: ResourceFormat;
   url: string;
   uploadDate: string;
+  count?: number; // Added count property as optional
 }
 
 // Add new interface for favorites
