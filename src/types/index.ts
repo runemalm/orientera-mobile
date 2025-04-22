@@ -53,12 +53,16 @@ export enum OrienteeringDistrict {
 }
 
 export enum ResourceType {
-  StartList = 'StartList',
-  ClubStartList = 'ClubStartList',  // Added new resource type
-  Results = 'Results',
-  Splits = 'Splits',
   Invitation = 'Invitation',
   PM = 'PM',
+  MapSample = 'MapSample',
+  EntryList = 'EntryList',
+  StartList = 'StartList',
+  LiveResults = 'LiveResults',
+  Results = 'Results',
+  Splits = 'Splits',
+  PressResults = 'PressResults',
+  Livelox = 'Livelox',
   Other = 'Other'
 }
 
