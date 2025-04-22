@@ -2,7 +2,8 @@
 import React from 'react';
 import { Competition, Resource, ResourceType } from '@/types';
 import { CircleAlert, FileText } from 'lucide-react';
-import LinkListItem from '../LinkListItem';
+import CompetitionSection from '../details/CompetitionSection';
+import CompetitionSectionItem from '../details/CompetitionSectionItem';
 
 interface CompetitionInfoSectionProps {
   competition: Competition;
@@ -15,30 +16,22 @@ const CompetitionInfoSection: React.FC<CompetitionInfoSectionProps> = ({ competi
   if (!invitation && !pm) return null;
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-100">
-      <div className="p-4 border-b border-gray-100">
-        <div className="flex items-center gap-2">
-          <CircleAlert className="text-forest" size={20} />
-          <h3 className="font-semibold">Tävlingsinformation</h3>
-        </div>
-      </div>
-      <div className="divide-y divide-gray-100">
-        {invitation && (
-          <LinkListItem
-            icon={FileText}
-            title={invitation.name}
-            href={invitation.url}
-          />
-        )}
-        {pm && (
-          <LinkListItem
-            icon={FileText}
-            title={pm.name}
-            href={pm.url}
-          />
-        )}
-      </div>
-    </div>
+    <CompetitionSection icon={CircleAlert} title="Tävlingsinformation">
+      {invitation && (
+        <CompetitionSectionItem
+          icon={FileText}
+          title={invitation.name}
+          href={invitation.url}
+        />
+      )}
+      {pm && (
+        <CompetitionSectionItem
+          icon={FileText}
+          title={pm.name}
+          href={pm.url}
+        />
+      )}
+    </CompetitionSection>
   );
 };
 

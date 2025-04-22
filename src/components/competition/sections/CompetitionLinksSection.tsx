@@ -2,7 +2,8 @@
 import React from 'react';
 import { Competition, Resource, ResourceType, ResourceFormat } from '@/types';
 import { ExternalLink, FileText, Link2 } from 'lucide-react';
-import LinkListItem from '../LinkListItem';
+import CompetitionSection from '../details/CompetitionSection';
+import CompetitionSectionItem from '../details/CompetitionSectionItem';
 
 interface CompetitionLinksSectionProps {
   competition: Competition;
@@ -16,31 +17,23 @@ const CompetitionLinksSection: React.FC<CompetitionLinksSectionProps> = ({ compe
   if (!otherResources?.length && !competition.eventorLink) return null;
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-100">
-      <div className="p-4 border-b border-gray-100">
-        <div className="flex items-center gap-2">
-          <Link2 className="text-forest" size={20} />
-          <h3 className="font-semibold">Övriga dokument och länkar</h3>
-        </div>
-      </div>
-      <div className="divide-y divide-gray-100">
-        {otherResources?.map((resource) => (
-          <LinkListItem
-            key={resource.id}
-            icon={resource.format === ResourceFormat.Link ? ExternalLink : FileText}
-            title={resource.name}
-            href={resource.url}
-          />
-        ))}
-        {competition.eventorLink && (
-          <LinkListItem
-            icon={ExternalLink}
-            title="Visa tävling på Eventor"
-            href={competition.eventorLink}
-          />
-        )}
-      </div>
-    </div>
+    <CompetitionSection icon={Link2} title="Övriga dokument och länkar">
+      {otherResources?.map((resource) => (
+        <CompetitionSectionItem
+          key={resource.id}
+          icon={resource.format === ResourceFormat.Link ? ExternalLink : FileText}
+          title={resource.name}
+          href={resource.url}
+        />
+      ))}
+      {competition.eventorLink && (
+        <CompetitionSectionItem
+          icon={ExternalLink}
+          title="Visa tävling på Eventor"
+          href={competition.eventorLink}
+        />
+      )}
+    </CompetitionSection>
   );
 };
 

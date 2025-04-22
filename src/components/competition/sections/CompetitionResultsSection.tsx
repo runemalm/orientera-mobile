@@ -1,8 +1,9 @@
 
 import React from 'react';
 import { Competition, Resource, ResourceType } from '@/types';
-import { BarChart2, ExternalLink, FileText } from 'lucide-react';
-import LinkListItem from '../LinkListItem';
+import { BarChart2, FileText, ExternalLink } from 'lucide-react';
+import CompetitionSection from '../details/CompetitionSection';
+import CompetitionSectionItem from '../details/CompetitionSectionItem';
 
 interface CompetitionResultsSectionProps {
   competition: Competition;
@@ -17,31 +18,23 @@ const CompetitionResultsSection: React.FC<CompetitionResultsSectionProps> = ({ c
   if (!results?.length && !competition.liveloxLink) return null;
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-100">
-      <div className="p-4 border-b border-gray-100">
-        <div className="flex items-center gap-2">
-          <BarChart2 className="text-forest" size={20} />
-          <h3 className="font-semibold">Resultat och analys</h3>
-        </div>
-      </div>
-      <div className="divide-y divide-gray-100">
-        {results?.map((result) => (
-          <LinkListItem
-            key={result.id}
-            icon={FileText}
-            title={result.name}
-            href={result.url}
-          />
-        ))}
-        {competition.liveloxLink && (
-          <LinkListItem
-            icon={ExternalLink}
-            title="Banor och rutter på Livelox"
-            href={competition.liveloxLink}
-          />
-        )}
-      </div>
-    </div>
+    <CompetitionSection icon={BarChart2} title="Resultat och analys">
+      {results?.map((result) => (
+        <CompetitionSectionItem
+          key={result.id}
+          icon={FileText}
+          title={result.name}
+          href={result.url}
+        />
+      ))}
+      {competition.liveloxLink && (
+        <CompetitionSectionItem
+          icon={ExternalLink}
+          title="Banor och rutter på Livelox"
+          href={competition.liveloxLink}
+        />
+      )}
+    </CompetitionSection>
   );
 };
 
