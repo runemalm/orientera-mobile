@@ -12,7 +12,8 @@ interface CompetitionResultsSectionProps {
 const CompetitionResultsSection: React.FC<CompetitionResultsSectionProps> = ({ competition }) => {
   const results = competition.resources?.filter(r => 
     r.type === ResourceType.Results || 
-    r.type === ResourceType.Splits
+    r.type === ResourceType.Splits ||
+    r.type === ResourceType.PressResults
   );
 
   if (!results?.length && !competition.liveloxLink) return null;
