@@ -23,10 +23,14 @@ const FileItem: React.FC<FileItemProps> = ({ file, className }) => {
     switch (type) {
       case ResourceType.Results: return 'Resultat';
       case ResourceType.StartList: return 'Startlista';
-      case ResourceType.ClubStartList: return 'Klubbstartlista';
+      case ResourceType.EntryList: return 'Anmälningslista';
       case ResourceType.Splits: return 'Sträcktider';
       case ResourceType.Invitation: return 'Inbjudan';
       case ResourceType.PM: return 'PM';
+      case ResourceType.LiveResults: return 'Liveresultat';
+      case ResourceType.MapSample: return 'Kartprov';
+      case ResourceType.PressResults: return 'Pressresultat';
+      case ResourceType.Livelox: return 'Livelox';
       default: return 'Dokument';
     }
   };
@@ -50,7 +54,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, className }) => {
       case ResourceType.Results:
         return <FileSpreadsheet className="text-blue-500" size={20} />;
       case ResourceType.StartList:
-      case ResourceType.ClubStartList:
+      case ResourceType.EntryList:
         return <FileText className="text-green-500" size={20} />;
       case ResourceType.Splits:
         return <FileSpreadsheet className="text-purple-500" size={20} />;
@@ -89,4 +93,3 @@ const FileItem: React.FC<FileItemProps> = ({ file, className }) => {
 };
 
 export default FileItem;
-

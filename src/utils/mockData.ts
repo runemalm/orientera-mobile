@@ -146,7 +146,7 @@ export const mockCompetitionDetails: Record<string, Competition> = {
         id: "file-4",
         eventorId: "doc-237",
         name: "Klubbstartlista.pdf",
-        type: ResourceType.ClubStartList,
+        type: ResourceType.EntryList,
         format: ResourceFormat.Pdf,
         url: "https://eventor.orientering.se/Documents/Event/108121/3/Klubbstartlista",
         uploadDate: "2025-04-14"
