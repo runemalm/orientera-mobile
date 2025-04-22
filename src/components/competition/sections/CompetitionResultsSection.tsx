@@ -25,6 +25,7 @@ const CompetitionResultsSection: React.FC<CompetitionResultsSectionProps> = ({ c
           icon={FileText}
           title={result.name}
           href={result.url}
+          count={result.count}
         />
       ))}
       {competition.liveloxLink && (
