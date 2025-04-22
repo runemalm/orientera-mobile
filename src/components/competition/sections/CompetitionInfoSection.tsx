@@ -25,13 +25,6 @@ const CompetitionInfoSection: React.FC<CompetitionInfoSectionProps> = ({ competi
           href={invitation.url}
         />
       )}
-      {entryList && (
-        <CompetitionSectionItem
-          icon={FileText}
-          title={entryList.name}
-          href={entryList.url}
-        />
-      )}
       {pm && (
         <CompetitionSectionItem
           icon={FileText}
@@ -39,8 +32,16 @@ const CompetitionInfoSection: React.FC<CompetitionInfoSectionProps> = ({ competi
           href={pm.url}
         />
       )}
+      {entryList && (
+        <CompetitionSectionItem
+          icon={FileText}
+          title={entryList.name}
+          href={entryList.url}
+        />
+      )}
     </CompetitionSection>
   );
 };
 
 export default CompetitionInfoSection;
+
