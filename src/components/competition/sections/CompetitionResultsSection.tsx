@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Competition, Resource, ResourceType } from '@/types';
-import { BarChart2, ExternalLink } from 'lucide-react';
+import { BarChart2, ExternalLink, FileText } from 'lucide-react';
 import LinkListItem from '../LinkListItem';
 
 interface CompetitionResultsSectionProps {
