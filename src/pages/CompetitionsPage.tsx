@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -39,7 +38,7 @@ const DEFAULT_FILTERS: Filter = {
 
 const CompetitionsPage: React.FC = () => {
   const navigate = useNavigate();
-  const { userLocation } = useUserLocation();
+  const { userLocation, fallbackLocation, locationWasEverSet } = useUserLocation();
   const [competitions, setCompetitions] = useState<CompetitionSummary[]>(cachedCompetitions);
   const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(cachedCompetitions.length === 0);
   const [error, setError] = useState<string | null>(null);
@@ -47,42 +46,66 @@ const CompetitionsPage: React.FC = () => {
   const [filters, setFilters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
 
   const fetchCompetitions = useCallback(async () => {
-    if (!userLocation) return;
-    
+    let lat = null;
+    let lng = null;
+    if (filters?.useLocationFilter && userLocation) {
+      lat = userLocation.latitude;
+      lng = userLocation.longitude;
+    } else if (filters?.useLocationFilter && !userLocation) {
+      lat = fallbackLocation.latitude;
+      lng = fallbackLocation.longitude;
+    } else if (!filters?.useLocationFilter) {
+      lat = null;
+      lng = null;
+    }
+
     setIsLoadingCompetitions(true);
     setError(null);
-    
-    // Ensure we have a valid filters object with dateRange
+
     const safeFilters = filters || DEFAULT_FILTERS;
     const dateRange = safeFilters.dateRange || { from: null, to: null };
-    
-    // If from date is explicitly set in the filter, use exactly that date
-    // Otherwise use the Monday of the current week
-    const fromDate = dateRange.from 
-      ? dateRange.from 
+
+    const fromDate = dateRange.from
+      ? dateRange.from
       : startOfWeek(new Date(), { weekStartsOn: 1 });
-    
+
     const toDate = dateRange.to || (() => {
       const date = new Date();
       date.setMonth(date.getMonth() + 1);
       return date;
     })();
-    
+
     try {
-      const result = await getNearbyCompetitions(
-        userLocation.latitude, 
-        userLocation.longitude,
-        {
-          from: fromDate,
-          to: toDate,
-          limit: 50,
-          maxDistanceKm: safeFilters.useLocationFilter ? safeFilters.maxDistanceKm : undefined,
-          districts: safeFilters.districts.length > 0 ? safeFilters.districts : undefined,
-          disciplines: safeFilters.disciplines.length > 0 ? safeFilters.disciplines : undefined,
-          competitionTypes: safeFilters.competitionTypes.length > 0 ? safeFilters.competitionTypes : undefined
-        }
-      );
-      
+      let result: CompetitionSummary[] = [];
+
+      if (lat !== null && lng !== null) {
+        result = await getNearbyCompetitions(
+          lat, lng,
+          {
+            from: fromDate,
+            to: toDate,
+            limit: 50,
+            maxDistanceKm: safeFilters.useLocationFilter ? safeFilters.maxDistanceKm : undefined,
+            districts: safeFilters.districts.length > 0 ? safeFilters.districts : undefined,
+            disciplines: safeFilters.disciplines.length > 0 ? safeFilters.disciplines : undefined,
+            competitionTypes: safeFilters.competitionTypes.length > 0 ? safeFilters.competitionTypes : undefined
+          }
+        );
+      } else {
+        result = await getNearbyCompetitions(
+          fallbackLocation.latitude,
+          fallbackLocation.longitude,
+          {
+            from: fromDate,
+            to: toDate,
+            limit: 50,
+            districts: safeFilters.districts.length > 0 ? safeFilters.districts : undefined,
+            disciplines: safeFilters.disciplines.length > 0 ? safeFilters.disciplines : undefined,
+            competitionTypes: safeFilters.competitionTypes.length > 0 ? safeFilters.competitionTypes : undefined
+          }
+        );
+      }
+
       setCompetitions(result);
       cachedCompetitions = result;
     } catch (err) {
@@ -91,14 +114,14 @@ const CompetitionsPage: React.FC = () => {
     } finally {
       setIsLoadingCompetitions(false);
     }
-  }, [userLocation, filters]);
+  }, [userLocation, fallbackLocation, filters]);
 
   useEffect(() => {
-    if (userLocation && (!initialFetchCompleted.current || cachedCompetitions.length === 0)) {
+    if (!initialFetchCompleted.current || cachedCompetitions.length === 0) {
       fetchCompetitions();
       initialFetchCompleted.current = true;
     }
-  }, [userLocation, fetchCompetitions]);
+  }, [userLocation, filters, fetchCompetitions]);
 
   const handleFilterClick = () => {
     navigate('/competitions/filter', { state: { transition: 'slide' } });
@@ -122,26 +145,25 @@ const CompetitionsPage: React.FC = () => {
       );
     }
 
-    // Ensure we have a valid filters object with dateRange
     const safeFilters = filters || DEFAULT_FILTERS;
     const dateRange = safeFilters.dateRange || { from: null, to: null };
-    
-    // If from date is explicitly set in the filter, use exactly that date
-    // Otherwise use the Monday of the current week
-    const fromDate = dateRange.from 
-      ? dateRange.from 
+
+    const fromDate = dateRange.from
+      ? dateRange.from
       : startOfWeek(new Date(), { weekStartsOn: 1 });
-    
+
     const toDate = dateRange.to || (() => {
       const date = new Date();
       date.setMonth(date.getMonth() + 1);
       return date;
     })();
 
+    const mapUserLocation = userLocation || fallbackLocation;
+
     return (
       <CompetitionLayout
         competitions={competitions}
-        userLocation={userLocation}
+        userLocation={mapUserLocation}
         fromDate={fromDate}
         toDate={toDate}
       />
@@ -149,11 +171,11 @@ const CompetitionsPage: React.FC = () => {
   };
 
   return (
-    <MobileLayout 
-      title="Hitta Tävlingar" 
+    <MobileLayout
+      title="Hitta Tävlingar"
       action={
-        <Button 
-          variant="ghost" 
+        <Button
+          variant="ghost"
           size="icon"
           onClick={handleFilterClick}
         >
@@ -168,4 +190,3 @@ const CompetitionsPage: React.FC = () => {
 };
 
 export default CompetitionsPage;
-
