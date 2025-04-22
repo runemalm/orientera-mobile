@@ -12,8 +12,9 @@ interface CompetitionInfoSectionProps {
 const CompetitionInfoSection: React.FC<CompetitionInfoSectionProps> = ({ competition }) => {
   const invitation = competition.resources?.find(r => r.type === ResourceType.Invitation);
   const pm = competition.resources?.find(r => r.type === ResourceType.PM);
+  const entryList = competition.resources?.find(r => r.type === ResourceType.EntryList);
 
-  if (!invitation && !pm) return null;
+  if (!invitation && !pm && !entryList) return null;
 
   return (
     <CompetitionSection icon={CircleAlert} title="Tävlingsinformation">
@@ -22,6 +23,13 @@ const CompetitionInfoSection: React.FC<CompetitionInfoSectionProps> = ({ competi
           icon={FileText}
           title={invitation.name}
           href={invitation.url}
+        />
+      )}
+      {entryList && (
+        <CompetitionSectionItem
+          icon={FileText}
+          title={entryList.name}
+          href={entryList.url}
         />
       )}
       {pm && (
