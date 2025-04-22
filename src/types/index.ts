@@ -69,7 +69,10 @@ export enum ResourceType {
 export enum ResourceFormat {
   Link = 'Link',
   Pdf = 'Pdf',
-  Png = 'Png'
+  Png = 'Png',
+  Jpeg = 'Jpeg',
+  Gif = 'Gif',
+  Other = 'Other'
 }
 
 // Update the TabName type to include 'settings'
