@@ -25,20 +25,6 @@ const CompetitionParticipantsSection: React.FC<CompetitionParticipantsSectionPro
 
   return (
     <CompetitionSection icon={Users} title="Deltagare och samåkning">
-      <CompetitionSectionItem
-        icon={Users}
-        title="Anmälda deltagare"
-        to={`/competition/${competition.id}/participants`}
-        count={competition.participantCount || 0}
-      />
-      
-      <CompetitionSectionItem
-        icon={Users}
-        title="Klubbanmälda"
-        to={`/competition/${competition.id}/club-participants`}
-        count={competition.clubParticipantCount || 0}
-        iconClassName="text-blue-600"
-      />
       
       <CompetitionSectionItem
         icon={Car}
