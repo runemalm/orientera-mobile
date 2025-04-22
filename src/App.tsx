@@ -1,9 +1,10 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import CompetitionsPage from './pages/CompetitionsPage';
 import HomePage from './pages/HomePage';
 import LandingPage from './pages/LandingPage';
-import LocationOnboarding from './components/LocationOnboarding';
+// Removed LocationOnboarding import
 import { useLocalStorage } from './hooks/useLocalStorage';
 import CompetitionDetailsPage from './pages/CompetitionDetailsPage';
 import ParticipantsPage from './pages/ParticipantsPage';
@@ -17,12 +18,11 @@ import CompetitionFilterPage from './pages/CompetitionFilterPage';
 import ProfilePage from './pages/ProfilePage';
 
 const App = () => {
-  const [hasLocation, setHasLocation] = useLocalStorage<boolean>('userLocation', false);
-
+  // Removed onboarding logic
   return (
     <Router>
       <Routes>
-        <Route path="/" element={hasLocation ? <Navigate to="/home" /> : <LocationOnboarding isOpen={!hasLocation} onComplete={() => setHasLocation(true)} />} />
+        <Route path="/" element={<Navigate to="/home" />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/landing" element={<LandingPage />} />
         <Route path="/competitions" element={<CompetitionsPage />} />
