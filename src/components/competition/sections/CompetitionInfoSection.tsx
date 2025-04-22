@@ -1,13 +1,20 @@
 
 import React from 'react';
-import { Competition, Resource, ResourceType } from '@/types';
-import { CircleAlert, FileText } from 'lucide-react';
+import { Competition, Resource, ResourceType, ResourceFormat } from '@/types';
+import { CircleAlert, FileText, Image } from 'lucide-react';
 import CompetitionSection from '../details/CompetitionSection';
 import CompetitionSectionItem from '../details/CompetitionSectionItem';
 
 interface CompetitionInfoSectionProps {
   competition: Competition;
 }
+
+const getResourceIcon = (resource: Resource) => {
+  if ([ResourceFormat.Png, ResourceFormat.Jpeg, ResourceFormat.Gif].includes(resource.format)) {
+    return Image;
+  }
+  return FileText;
+};
 
 const CompetitionInfoSection: React.FC<CompetitionInfoSectionProps> = ({ competition }) => {
   const invitation = competition.resources?.find(r => r.type === ResourceType.Invitation);
@@ -20,7 +27,7 @@ const CompetitionInfoSection: React.FC<CompetitionInfoSectionProps> = ({ competi
     <CompetitionSection icon={CircleAlert} title="Tävlingsinformation">
       {invitation && (
         <CompetitionSectionItem
-          icon={FileText}
+          icon={getResourceIcon(invitation)}
           title={invitation.name}
           href={invitation.url}
           count={invitation.count}
@@ -28,7 +35,7 @@ const CompetitionInfoSection: React.FC<CompetitionInfoSectionProps> = ({ competi
       )}
       {pm && (
         <CompetitionSectionItem
-          icon={FileText}
+          icon={getResourceIcon(pm)}
           title={pm.name}
           href={pm.url}
           count={pm.count}
@@ -36,7 +43,7 @@ const CompetitionInfoSection: React.FC<CompetitionInfoSectionProps> = ({ competi
       )}
       {entryList && (
         <CompetitionSectionItem
-          icon={FileText}
+          icon={getResourceIcon(entryList)}
           title={entryList.name}
           href={entryList.url}
           count={entryList.count}

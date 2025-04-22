@@ -1,9 +1,16 @@
 
 import React from 'react';
-import { Competition, Resource, ResourceType } from '@/types';
-import { BarChart2, FileText, ExternalLink } from 'lucide-react';
+import { Competition, Resource, ResourceType, ResourceFormat } from '@/types';
+import { BarChart2, FileText, ExternalLink, Image } from 'lucide-react';
 import CompetitionSection from '../details/CompetitionSection';
 import CompetitionSectionItem from '../details/CompetitionSectionItem';
+
+const getResourceIcon = (resource: Resource) => {
+  if ([ResourceFormat.Png, ResourceFormat.Jpeg, ResourceFormat.Gif].includes(resource.format)) {
+    return Image;
+  }
+  return FileText;
+};
 
 interface CompetitionResultsSectionProps {
   competition: Competition;
@@ -23,7 +30,7 @@ const CompetitionResultsSection: React.FC<CompetitionResultsSectionProps> = ({ c
       {results?.map((result) => (
         <CompetitionSectionItem
           key={result.id}
-          icon={FileText}
+          icon={getResourceIcon(result)}
           title={result.name}
           href={result.url}
           count={result.count}

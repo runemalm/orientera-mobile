@@ -1,9 +1,16 @@
 
 import React from 'react';
 import { Competition, Resource, ResourceType, ResourceFormat } from '@/types';
-import { ExternalLink, FileText, Link2 } from 'lucide-react';
+import { ExternalLink, FileText, Link2, Image } from 'lucide-react';
 import CompetitionSection from '../details/CompetitionSection';
 import CompetitionSectionItem from '../details/CompetitionSectionItem';
+
+const getResourceIcon = (resource: Resource) => {
+  if ([ResourceFormat.Png, ResourceFormat.Jpeg, ResourceFormat.Gif].includes(resource.format)) {
+    return Image;
+  }
+  return FileText;
+};
 
 interface CompetitionLinksSectionProps {
   competition: Competition;
@@ -21,7 +28,7 @@ const CompetitionLinksSection: React.FC<CompetitionLinksSectionProps> = ({ compe
       {otherResources?.map((resource) => (
         <CompetitionSectionItem
           key={resource.id}
-          icon={resource.format === ResourceFormat.Link ? ExternalLink : FileText}
+          icon={resource.format === ResourceFormat.Link ? ExternalLink : getResourceIcon(resource)}
           title={resource.name}
           href={resource.url}
         />
