@@ -45,7 +45,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, className }) => {
       return <FileIcon className="text-red-500" size={20} />;
     }
     
-    if ([ResourceFormat.Png, ResourceFormat.Jpeg, ResourceFormat.Gif].includes(file.format)) {
+    if (file.format === ResourceFormat.Png) {
       return <Image className="text-purple-500" size={20} />;
     }
 
@@ -93,4 +93,3 @@ const FileItem: React.FC<FileItemProps> = ({ file, className }) => {
 };
 
 export default FileItem;
-
