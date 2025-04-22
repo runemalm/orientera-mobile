@@ -2,7 +2,7 @@
 import React from 'react';
 import { Competition, Resource, ResourceType } from '@/types';
 import { BarChart2, ExternalLink } from 'lucide-react';
-import FileItem from '../../FileItem';
+import LinkListItem from '../LinkListItem';
 
 interface CompetitionResultsSectionProps {
   competition: Competition;
@@ -26,27 +26,19 @@ const CompetitionResultsSection: React.FC<CompetitionResultsSectionProps> = ({ c
       </div>
       <div className="divide-y divide-gray-100">
         {results?.map((result) => (
-          <div key={result.id}>
-            <FileItem file={result} />
-          </div>
+          <LinkListItem
+            key={result.id}
+            icon={FileText}
+            title={result.name}
+            href={result.url}
+          />
         ))}
         {competition.liveloxLink && (
-          <a
+          <LinkListItem
+            icon={ExternalLink}
+            title="Banor och rutter på Livelox"
             href={competition.liveloxLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-between p-4"
-          >
-            <div className="flex items-center gap-3">
-              <ExternalLink size={20} className="text-forest" />
-              <span className="font-medium">Banor och rutter på Livelox</span>
-            </div>
-            <div className="text-gray-400">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m9 18 6-6-6-6"/>
-              </svg>
-            </div>
-          </a>
+          />
         )}
       </div>
     </div>

@@ -2,6 +2,7 @@
 import React from 'react';
 import { Competition, Resource, ResourceType, ResourceFormat } from '@/types';
 import { ExternalLink, FileText, Link2 } from 'lucide-react';
+import LinkListItem from '../LinkListItem';
 
 interface CompetitionLinksSectionProps {
   competition: Competition;
@@ -24,45 +25,19 @@ const CompetitionLinksSection: React.FC<CompetitionLinksSectionProps> = ({ compe
       </div>
       <div className="divide-y divide-gray-100">
         {otherResources?.map((resource) => (
-          <a
+          <LinkListItem
             key={resource.id}
+            icon={resource.format === ResourceFormat.Link ? ExternalLink : FileText}
+            title={resource.name}
             href={resource.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-between p-4"
-          >
-            <div className="flex items-center gap-3">
-              {resource.format === ResourceFormat.Link ? (
-                <ExternalLink size={20} className="text-forest" />
-              ) : (
-                <FileText size={20} className="text-forest" />
-              )}
-              <span className="font-medium">{resource.name}</span>
-            </div>
-            <div className="text-gray-400">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m9 18 6-6-6-6"/>
-              </svg>
-            </div>
-          </a>
+          />
         ))}
         {competition.eventorLink && (
-          <a
+          <LinkListItem
+            icon={ExternalLink}
+            title="Visa tävling på Eventor"
             href={competition.eventorLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-between p-4"
-          >
-            <div className="flex items-center gap-3">
-              <ExternalLink size={20} className="text-forest" />
-              <span className="font-medium">Visa tävling på Eventor</span>
-            </div>
-            <div className="text-gray-400">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m9 18 6-6-6-6"/>
-              </svg>
-            </div>
-          </a>
+          />
         )}
       </div>
     </div>
