@@ -23,6 +23,7 @@ const CompetitionInfoSection: React.FC<CompetitionInfoSectionProps> = ({ competi
           icon={FileText}
           title={invitation.name}
           href={invitation.url}
+          count={invitation.count}
         />
       )}
       {pm && (
@@ -30,6 +31,7 @@ const CompetitionInfoSection: React.FC<CompetitionInfoSectionProps> = ({ competi
           icon={FileText}
           title={pm.name}
           href={pm.url}
+          count={pm.count}
         />
       )}
       {entryList && (
@@ -37,6 +39,7 @@ const CompetitionInfoSection: React.FC<CompetitionInfoSectionProps> = ({ competi
           icon={FileText}
           title={entryList.name}
           href={entryList.url}
+          count={entryList.count}
         />
       )}
     </CompetitionSection>
@@ -44,4 +47,3 @@ const CompetitionInfoSection: React.FC<CompetitionInfoSectionProps> = ({ competi
 };
 
 export default CompetitionInfoSection;
-
