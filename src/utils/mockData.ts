@@ -227,9 +227,9 @@ export const mockCompetitionDetails: Record<string, Competition> = {
       {
         id: "file-10",
         eventorId: "doc-243",
-        name: "Arenaskiss.jpeg",
+        name: "Arenaskiss.png",
         type: ResourceType.Other,
-        format: ResourceFormat.Jpeg,
+        format: ResourceFormat.Png,
         url: "https://eventor.orientering.se/Documents/Event/109123/6/Arenaskiss",
         uploadDate: "2025-04-25"
       }

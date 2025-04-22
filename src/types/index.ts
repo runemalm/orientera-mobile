@@ -1,11 +1,55 @@
+// Enums to match backend C# models
+export enum Branch {
+  FootO = 'FootO',    // Orienteringslöpning
+  PreO = 'PreO',     // Precisionsorientering
+  MTBO = 'MTBO',     // Mountainbikeorientering
+  SkiO = 'SkiO',     // Skidorientering
+  TrailO = 'TrailO'   // Trail-O
+}
 
-export enum ResourceFormat {
-  Link = 'Link',
-  Pdf = 'Pdf',
-  Png = 'Png',
-  Jpeg = 'Jpeg',
-  Gif = 'Gif',
-  Other = 'Other'
+export enum CompetitionType {
+  Championship = 'Championship',
+  National = 'National',
+  Regional = 'Regional',
+  Near = 'Near',
+  Club = 'Club',
+  Weekly = 'Weekly'
+}
+
+export enum Discipline {
+  Sprint = 'Sprint',
+  Middle = 'Middle',
+  Long = 'Long',
+  Night = 'Night',
+  Relay = 'Relay',
+  UltraLong = 'UltraLong',
+  PreO = 'PreO',
+  TempO = 'TempO'
+}
+
+export enum OrienteeringDistrict {
+  Blekinge = 'Blekinge OF',
+  Bohuslan = 'Bohuslän-Dals OF',
+  Dalarna = 'Dalarnas OF',
+  Gotland = 'Gotlands OF',
+  Gavleborg = 'Gävleborgs OF',
+  Halland = 'Hallands OF',
+  Haninge = 'Haninge SOK',
+  Jamtland = 'Jämtland-Härjedalens OF',
+  Jonkoping = 'Jönköpings läns OF',
+  Norrbotten = 'Norrbottens OF',
+  Skane = 'Skånes OF',
+  Smaland = 'SmålandsOF',  // Updated to match API format (no space)
+  Stockholm = 'Stockholms OF',
+  Sodermanland = 'Södermanlands OF',
+  Uppland = 'Upplands OF',
+  Varmland = 'Värmlands OF',
+  Vasterbotten = 'Västerbottens OF',
+  Vastergotland = 'Västergötlands OF',
+  Vasternorrland = 'Västernorrlands OF',
+  Vastmanland = 'Västmanlands OF',
+  Orebro = 'Örebro Läns OF',
+  Ostergotland = 'Östergötlands OF'
 }
 
 export enum ResourceType {
@@ -22,60 +66,59 @@ export enum ResourceType {
   Other = 'Other'
 }
 
-export enum Branch {
-  FootO = 'FootO',
-  SkiO = 'SkiO',
-  MTBO = 'MTBO',
-  TrailO = 'TrailO',
-  Other = 'Other'
+export enum ResourceFormat {
+  Link = 'Link',
+  Pdf = 'Pdf',
+  Png = 'Png'
 }
 
-export enum CompetitionType {
-  World = 'World',
-  International = 'International',
-  Championship = 'Championship',
-  National = 'National',
-  District = 'District',
-  Near = 'Near'
+// Update the TabName type to include 'settings'
+export type TabName = 'home' | 'competitions' | 'favorites' | 'profile' | 'settings';
+
+// CompetitionSummary for list views
+export interface CompetitionSummary {
+  id: string;
+  name: string;
+  date: string;
+  location: string;
+  club: string;
+  description: string;
+  discipline: Discipline;
+  competitionType: CompetitionType;
+  district: OrienteeringDistrict;
+  latitude: number | null; // Updated to allow null
+  longitude: number | null; // Updated to allow null
+  isFavorite?: boolean;
+  participantCount?: number; // Added to match Competition interface
+  clubParticipantCount?: number; // Added to match Competition interface
 }
 
-export enum Discipline {
-  Sprint = 'Sprint',
-  Middle = 'Middle',
-  Long = 'Long',
-  UltraLong = 'UltraLong',
-  Relay = 'Relay',
-  Night = 'Night',
-  Other = 'Other'
+// Competition class to match the backend C# model
+export interface Competition {
+  id: string;
+  eventorId: string;
+  name: string;
+  date: string;
+  location: string;
+  club: string;
+  description: string;
+  discipline: Discipline;
+  competitionType: CompetitionType;
+  district: OrienteeringDistrict;
+  branch: Branch;
+  latitude: number | null; // Updated to allow null
+  longitude: number | null; // Updated to allow null
+  registrationDeadline: string | null; // Updated to allow null
+  startTime: string | null; // Updated to allow null
+  contact: string;
+  eventorLink?: string | null; // Updated to allow null
+  liveloxLink?: string | null; // Updated to allow null
+  resources: Resource[];
+  participantCount?: number; // Added property
+  clubParticipantCount?: number; // Added property
 }
 
-export enum OrienteeringDistrict {
-  Blekinge = 'Blekinge',
-  Bohuslan = 'Bohuslan',
-  Dalarna = 'Dalarna',
-  Gotland = 'Gotland',
-  Gavleborg = 'Gavleborg',
-  Halland = 'Halland',
-  Halsingland = 'Halsingland',
-  Jamtland = 'Jamtland',
-  Medelpad = 'Medelpad',
-  Norrbotten = 'Norrbotten',
-  Skane = 'Skane',
-  Smaland = 'Smaland',
-  Stockholm = 'Stockholm',
-  Sodermanland = 'Sodermanland',
-  Uppland = 'Uppland',
-  Varmland = 'Varmland',
-  Vasterbotten = 'Vasterbotten',
-  Vastergotland = 'Vastergotland',
-  Vastmanland = 'Vastmanland',
-  Angermanland = 'Angermanland',
-  Orebro = 'Orebro',
-  Ostergotland = 'Ostergotland'
-}
-
-export type TabName = 'home' | 'competitions' | 'favorites' | 'profile';
-
+// Resource interface matching backend C# model
 export interface Resource {
   id: string;
   eventorId?: string;
@@ -86,29 +129,7 @@ export interface Resource {
   uploadDate: string;
 }
 
-export interface CompetitionSummary {
-  id: string;
-  name: string;
-  date: string;
-  location: string;
-  club: string;
-  description?: string;
-  discipline: Discipline;
-  competitionType: CompetitionType;
-  district: OrienteeringDistrict;
-  latitude?: number;
-  longitude?: number;
-  participantCount?: number;
-  clubParticipantCount?: number;
-}
-
-export interface Competition extends CompetitionSummary {
-  eventorId?: string;
-  branch: Branch;
-  resources: Resource[];
-  registrationDeadline?: string;
-  startTime?: string;
-  contact?: string;
-  eventorLink?: string;
-  liveloxLink?: string;
+// Add new interface for favorites
+export interface UserFavorites {
+  competitions: string[]; // Array of competition IDs
 }

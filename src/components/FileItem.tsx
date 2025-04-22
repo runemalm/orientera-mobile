@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Resource, ResourceType, ResourceFormat } from '../types';
 import { 
@@ -8,11 +9,7 @@ import {
   ExternalLink, 
   FileIcon,
   Image,
-  Download,
-  FileVideo,
-  FileAudio,
-  FileArchive,
-  FileJson
+  Download
 } from 'lucide-react';
 
 interface FileItemProps {
@@ -40,17 +37,31 @@ const FileItem: React.FC<FileItemProps> = ({ file, className }) => {
 
   const getFileIcon = () => {
     // First determine by format
-    switch (file.format) {
-      case ResourceFormat.Link:
-        return <ExternalLink className="text-blue-500" size={20} />;
-      case ResourceFormat.Pdf:
-        return <FileIcon className="text-red-500" size={20} />;
-      case ResourceFormat.Png:
-      case ResourceFormat.Jpeg:
-      case ResourceFormat.Gif:
-        return <Image className="text-purple-500" size={20} />;
-      case ResourceFormat.Other:
-        return <Clock className="text-gray-500" size={20} />;
+    if (file.format === ResourceFormat.Link) {
+      return <ExternalLink className="text-blue-500" size={20} />;
+    }
+    
+    if (file.format === ResourceFormat.Pdf) {
+      return <FileIcon className="text-red-500" size={20} />;
+    }
+    
+    if (file.format === ResourceFormat.Png) {
+      return <Image className="text-purple-500" size={20} />;
+    }
+
+    // Then by type if format didn't determine
+    switch (file.type) {
+      case ResourceType.Results:
+        return <FileSpreadsheet className="text-blue-500" size={20} />;
+      case ResourceType.StartList:
+      case ResourceType.EntryList:
+        return <FileText className="text-green-500" size={20} />;
+      case ResourceType.Splits:
+        return <FileSpreadsheet className="text-purple-500" size={20} />;
+      case ResourceType.Invitation:
+        return <FileText className="text-amber-500" size={20} />;
+      case ResourceType.PM:
+        return <FileText className="text-red-500" size={20} />;
       default:
         return <Clock className="text-gray-500" size={20} />;
     }
