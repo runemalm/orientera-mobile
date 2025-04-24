@@ -8,6 +8,16 @@ interface ChatMessageProps {
 }
 
 const ChatMessage: React.FC<ChatMessageProps> = ({ message, isBot }) => {
+  // Dela upp meddelandet i rader och rendera dem
+  const renderMessage = () => {
+    return message.split('\n').map((line, index) => (
+      <React.Fragment key={index}>
+        {line}
+        <br />
+      </React.Fragment>
+    ));
+  };
+
   return (
     <div className={`flex gap-3 ${isBot ? 'items-start' : 'items-start flex-row-reverse'}`}>
       <div className={`flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border ${
@@ -18,7 +28,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isBot }) => {
       <div className={`flex-1 space-y-2 overflow-hidden rounded-md p-3 ${
         isBot ? 'bg-muted' : 'bg-primary text-primary-foreground'
       }`}>
-        <p className="leading-normal">{message}</p>
+        <p className="leading-normal whitespace-pre-wrap">{renderMessage()}</p>
       </div>
     </div>
   );
