@@ -14,11 +14,11 @@ export const useAssistantChat = () => {
     // Lägg till välkomstmeddelande när chatten initieras
     setMessages([
       {
-        content: "Hej! Jag är din tävlingsassistent. Jag kan hjälpa dig med att:\n\n" +
+        content: "Hej! Jag heter Nina, din personliga tävlingsassistent. Jag kan hjälpa dig med:\n\n" +
                  "• Söka information om tävlingar\n" +
                  "• Hantera dina tävlingsanmälningar\n" +
                  "• Svara på frågor om kommande tävlingar\n\n" +
-                 "Vad kan jag hjälpa dig med idag?",
+                 "Vilken typ av tävlingsinformation kan jag hjälpa dig med idag?",
         isBot: true
       }
     ]);
