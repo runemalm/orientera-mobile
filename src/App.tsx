@@ -16,6 +16,7 @@ import FavoritesPage from './pages/FavoritesPage';
 import NotFound from './pages/NotFound';
 import CompetitionFilterPage from './pages/CompetitionFilterPage';
 import ProfilePage from './pages/ProfilePage';
+import AssistantPage from './pages/AssistantPage';
 
 const App = () => {
   // Removed onboarding logic
@@ -35,6 +36,7 @@ const App = () => {
         <Route path="/favorites" element={<FavoritesPage />} />
         <Route path="/competitions/filter" element={<CompetitionFilterPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/assistant" element={<AssistantPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
