@@ -1,4 +1,3 @@
-
 // Enums to match backend C# models
 export enum Branch {
   FootO = 'FootO',    // Orienteringslöpning
@@ -76,8 +75,8 @@ export enum ResourceFormat {
   Other = 'Other'
 }
 
-// Update the TabName type to include 'settings'
-export type TabName = 'home' | 'competitions' | 'favorites' | 'profile' | 'settings';
+// Update the TabName type to include 'assistant'
+export type TabName = 'home' | 'competitions' | 'favorites' | 'profile' | 'settings' | 'assistant';
 
 // CompetitionSummary for list views
 export interface CompetitionSummary {
