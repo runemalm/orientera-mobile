@@ -15,30 +15,33 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isBot, avatar }) => 
     return message.split('\n').map((line, index) => (
       <React.Fragment key={index}>
         {line}
-        <br />
+        {index < message.split('\n').length - 1 && <br />}
       </React.Fragment>
     ));
   };
 
   return (
     <div className={`flex gap-3 ${isBot ? 'items-start' : 'items-start flex-row-reverse'}`}>
-      <div className={`flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-full`}>
+      <div className="flex-shrink-0 mt-0.5">
         {isBot ? (
-          <Avatar>
+          <Avatar className="h-8 w-8">
             <AvatarImage 
               src={avatar || "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"} 
               alt="Nina" 
+              className="object-cover"
             />
             <AvatarFallback>Nina</AvatarFallback>
           </Avatar>
         ) : (
-          <User className="h-8 w-8" />
+          <div className="bg-primary h-8 w-8 rounded-full flex items-center justify-center">
+            <User className="h-5 w-5 text-primary-foreground" />
+          </div>
         )}
       </div>
-      <div className={`flex-1 space-y-2 overflow-hidden rounded-md p-3 ${
+      <div className={`flex-1 space-y-2 overflow-hidden rounded-lg p-3 ${
         isBot ? 'bg-muted' : 'bg-primary text-primary-foreground'
       }`}>
-        <p className="leading-normal whitespace-pre-wrap">{renderMessage()}</p>
+        <p className="leading-relaxed whitespace-pre-wrap">{renderMessage()}</p>
       </div>
     </div>
   );
