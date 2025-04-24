@@ -23,16 +23,16 @@ const BottomTabBar: React.FC = () => {
       path: '/home'
     },
     {
-      name: 'competitions',
-      icon: <Calendar size={24} />,
-      label: 'Tävlingar',
-      path: '/competitions'
-    },
-    {
       name: 'assistant',
       icon: <MessageSquareCode size={24} />,
       label: 'Assistent',
       path: '/assistant'
+    },
+    {
+      name: 'competitions',
+      icon: <Calendar size={24} />,
+      label: 'Tävlingar',
+      path: '/competitions'
     },
     {
       name: 'favorites',
@@ -79,3 +79,4 @@ const BottomTabBar: React.FC = () => {
 };
 
 export default BottomTabBar;
+
