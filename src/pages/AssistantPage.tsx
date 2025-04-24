@@ -26,7 +26,7 @@ const AssistantPage = () => {
               key={index}
               message={message.content}
               isBot={message.isBot}
-              avatar="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
+              avatar="/agents/nina/nina_small.png"
             />
           ))}
         </div>
