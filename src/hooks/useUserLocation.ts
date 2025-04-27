@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 export interface UserLocation {
   city: string;
@@ -33,7 +33,6 @@ export const useUserLocation = () => {
         setIsFirstVisit(false);
       }
     } else {
-      // No saved location, use default
       setUserLocation(DEFAULT_LOCATION);
       localStorage.setItem('userLocation', JSON.stringify(DEFAULT_LOCATION));
       setIsFirstVisit(true);

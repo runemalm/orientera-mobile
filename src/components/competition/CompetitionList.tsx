@@ -1,22 +1,24 @@
+
 import React, { useState, useEffect } from 'react';
 import { Star } from 'lucide-react';
 import { CompetitionSummary } from '../../types';
 import CompetitionCard from '../CompetitionCard';
 import { UserLocation } from '../../hooks/useUserLocation';
 
-interface CompetitionsListViewProps {
+interface CompetitionListProps {
   competitions: CompetitionSummary[];
   userLocation: UserLocation;
   showFavorites?: boolean;
 }
 
-const CompetitionsListView: React.FC<CompetitionsListViewProps> = ({ 
+const CompetitionList: React.FC<CompetitionListProps> = ({ 
   competitions, 
   userLocation,
   showFavorites = false 
 }) => {
   const [favorites, setFavorites] = useState<string[]>([]);
   
+  // Load favorites directly from localStorage
   useEffect(() => {
     const storedFavoritesStr = window.localStorage.getItem('favoriteCompetitions');
     if (storedFavoritesStr) {
@@ -30,6 +32,7 @@ const CompetitionsListView: React.FC<CompetitionsListViewProps> = ({
     }
   }, []);
 
+  // Only filter by favorites if showFavorites is true, otherwise show all competitions passed in
   const filteredCompetitions = showFavorites
     ? competitions.filter(comp => favorites.includes(comp.id))
     : competitions;
@@ -60,4 +63,4 @@ const CompetitionsListView: React.FC<CompetitionsListViewProps> = ({
   );
 };
 
-export default CompetitionsListView;
+export default CompetitionList;

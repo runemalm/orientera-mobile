@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -9,7 +8,7 @@ import { CompetitionSummary } from '../types';
 import { getNearbyCompetitions } from '../services/api';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { startOfWeek } from 'date-fns';
-import TabbedCompetitionsView from '../components/competition/TabbedCompetitionsView';
+import CompetitionLayout from '../components/competition/CompetitionLayout';
 
 let cachedCompetitions: CompetitionSummary[] = [];
 
@@ -49,39 +48,27 @@ const CompetitionsPage: React.FC = () => {
   const [filters, setFilters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
 
   const fetchCompetitions = useCallback(async () => {
-    if (!userLocation) {
-      console.log('No user location available, skipping competition fetch');
-      return;
-    }
+    if (!userLocation) return;
     
     setIsLoadingCompetitions(true);
     setError(null);
     
-    // Ensure we have valid filters by using defaults if needed
+    // Ensure we have a valid filters object
     const safeFilters = filters || DEFAULT_FILTERS;
     
-    // Handle the date range safely
+    // If from date is explicitly set in the filter, use exactly that date
+    // Otherwise use the Monday of the current week
     const fromDate = safeFilters.dateRange?.from 
-      ? new Date(safeFilters.dateRange.from) 
+      ? safeFilters.dateRange.from 
       : startOfWeek(new Date(), { weekStartsOn: 1 });
     
-    const toDate = safeFilters.dateRange?.to 
-      ? new Date(safeFilters.dateRange.to)
-      : (() => {
-          const date = new Date();
-          date.setMonth(date.getMonth() + 1);
-          return date;
-        })();
+    const toDate = safeFilters.dateRange?.to || (() => {
+      const date = new Date();
+      date.setMonth(date.getMonth() + 1);
+      return date;
+    })();
     
     try {
-      console.log('Fetching competitions with params:', {
-        lat: userLocation.latitude,
-        lng: userLocation.longitude,
-        from: fromDate,
-        to: toDate,
-        filters: safeFilters
-      });
-
       const result = await getNearbyCompetitions(
         userLocation.latitude, 
         userLocation.longitude,
@@ -89,21 +76,21 @@ const CompetitionsPage: React.FC = () => {
           from: fromDate,
           to: toDate,
           limit: 50,
+          // Only include maxDistance if location filter is enabled
           maxDistanceKm: safeFilters.useLocationFilter ? safeFilters.maxDistanceKm : undefined,
-          districts: safeFilters.districts && safeFilters.districts.length > 0 ? safeFilters.districts : undefined,
-          disciplines: safeFilters.disciplines && safeFilters.disciplines.length > 0 ? safeFilters.disciplines : undefined,
-          competitionTypes: safeFilters.competitionTypes && safeFilters.competitionTypes.length > 0 ? safeFilters.competitionTypes : undefined,
-          branches: safeFilters.branches && safeFilters.branches.length > 0 ? safeFilters.branches : undefined
+          // Only include filter arrays if they have values
+          districts: safeFilters.districts.length > 0 ? safeFilters.districts : undefined,
+          disciplines: safeFilters.disciplines.length > 0 ? safeFilters.disciplines : undefined,
+          competitionTypes: safeFilters.competitionTypes.length > 0 ? safeFilters.competitionTypes : undefined,
+          branches: safeFilters.branches.length > 0 ? safeFilters.branches : undefined
         }
       );
       
-      console.log('Competitions fetched:', result);
-      setCompetitions(result || []);  // Ensure we always have an array
-      cachedCompetitions = result || [];
+      setCompetitions(result);
+      cachedCompetitions = result;
     } catch (err) {
       console.error('Error fetching competitions:', err);
       setError('Det gick inte att hämta tävlingar. Försök igen senare.');
-      setCompetitions([]);  // Set empty array on error
     } finally {
       setIsLoadingCompetitions(false);
     }
@@ -138,9 +125,12 @@ const CompetitionsPage: React.FC = () => {
       );
     }
 
+    // Ensure we have a valid filters object
     const safeFilters = filters || DEFAULT_FILTERS;
     const dateRange = safeFilters.dateRange || { from: null, to: null };
     
+    // If from date is explicitly set in the filter, use exactly that date
+    // Otherwise use the Monday of the current week
     const fromDate = dateRange.from 
       ? dateRange.from 
       : startOfWeek(new Date(), { weekStartsOn: 1 });
@@ -152,7 +142,7 @@ const CompetitionsPage: React.FC = () => {
     })();
 
     return (
-      <TabbedCompetitionsView
+      <CompetitionLayout
         competitions={competitions}
         userLocation={userLocation}
         fromDate={fromDate}

@@ -2,20 +2,20 @@ import React, { useRef, useEffect } from 'react';
 import { CompetitionSummary } from '../../types';
 import { UserLocation } from '../../hooks/useUserLocation';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../ui/tabs';
-import CompetitionsCalendarView from './CompetitionsCalendarView';
-import CompetitionsListView from './CompetitionsListView';
+import CalendarList from './CalendarList';
+import CompetitionList from './CompetitionList';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { ScrollArea } from '../ui/scroll-area';
 import { useNavigate } from 'react-router-dom';
 
-interface TabbedCompetitionsViewProps {
+interface CompetitionLayoutProps {
   competitions: CompetitionSummary[];
   userLocation: UserLocation | null;
   fromDate: Date;
   toDate: Date;
 }
 
-const TabbedCompetitionsView: React.FC<TabbedCompetitionsViewProps> = ({
+const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
   competitions,
   userLocation,
   fromDate,
@@ -30,6 +30,7 @@ const TabbedCompetitionsView: React.FC<TabbedCompetitionsViewProps> = ({
 
   const navigate = useNavigate();
 
+  // Save scroll position when tab changes or component unmounts
   const saveScrollPosition = () => {
     if (viewMode === 'calendar' && calendarScrollRef.current) {
       setCalendarScrollPosition(calendarScrollRef.current.scrollTop);
@@ -38,11 +39,13 @@ const TabbedCompetitionsView: React.FC<TabbedCompetitionsViewProps> = ({
     }
   };
 
+  // Handle tab change
   const handleTabChange = (value: string) => {
     saveScrollPosition();
     setViewMode(value as 'calendar' | 'list');
   };
 
+  // Navigate to filter page with current tab
   const handleFilterClick = () => {
     navigate('/competitions/filter', { 
       state: { 
@@ -52,6 +55,7 @@ const TabbedCompetitionsView: React.FC<TabbedCompetitionsViewProps> = ({
     });
   };
 
+  // Restore scroll position on mount and tab change
   useEffect(() => {
     const timer = setTimeout(() => {
       if (viewMode === 'calendar' && calendarScrollRef.current) {
@@ -59,7 +63,7 @@ const TabbedCompetitionsView: React.FC<TabbedCompetitionsViewProps> = ({
       } else if (viewMode === 'list' && listScrollRef.current) {
         listScrollRef.current.scrollTop = listScrollPosition;
       }
-    }, 50);
+    }, 50); // Small delay to ensure the DOM has updated
 
     return () => {
       clearTimeout(timer);
@@ -84,7 +88,7 @@ const TabbedCompetitionsView: React.FC<TabbedCompetitionsViewProps> = ({
           ref={calendarScrollRef}
         >
           <div className="px-2 pt-0 pb-4">
-            <CompetitionsCalendarView
+            <CalendarList
               competitions={competitions}
               userLocation={userLocation}
               fromDate={fromDate}
@@ -99,7 +103,7 @@ const TabbedCompetitionsView: React.FC<TabbedCompetitionsViewProps> = ({
         >
           <div className="px-2 pt-0 pb-4">
             {userLocation && (
-              <CompetitionsListView
+              <CompetitionList
                 competitions={competitions}
                 userLocation={userLocation}
               />
@@ -111,4 +115,4 @@ const TabbedCompetitionsView: React.FC<TabbedCompetitionsViewProps> = ({
   );
 };
 
-export default TabbedCompetitionsView;
+export default CompetitionLayout;
