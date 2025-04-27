@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -230,7 +231,7 @@ const CompetitionFilterPage = () => {
           size="sm"
           variant="outline"
           onClick={handleSaveFilters}
-          className="text-forest hover:text-forest-dark border-forest hover:border-forest-dark"
+          className="text-forest hover:text-forest-dark"
         >
           Spara
         </Button>
@@ -442,10 +443,10 @@ const CompetitionFilterPage = () => {
           <div className="flex items-center justify-center pt-2">
             <Button 
               variant="outline" 
-              className="text-forest hover:text-forest-dark border-forest hover:border-forest-dark"
+              className="text-forest hover:text-forest-dark"
               onClick={handleResetFilters}
             >
-              Rensa alla filter
+              Återställ alla filter
             </Button>
           </div>
         </div>
