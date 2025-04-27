@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect, useState } from 'react';
 import { CompetitionSummary } from '../../types';
 import { UserLocation } from '../../hooks/useUserLocation';
@@ -25,19 +26,17 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
   const [calendarScrollPosition, setCalendarScrollPosition] = useLocalStorage<number>('calendarScrollPosition', 0);
   const [listScrollPosition, setListScrollPosition] = useLocalStorage<number>('listScrollPosition', 0);
   
-  const [tapCount, setTapCount] = useState(0);
-  const [lastTapTime, setLastTapTime] = useState(0);
-  const [lastTappedTab, setLastTappedTab] = useState<string | null>(null);
-  
   const calendarScrollRef = useRef<HTMLDivElement>(null);
   const listScrollRef = useRef<HTMLDivElement>(null);
 
+  // Notify parent of initial view mode on mount
   useEffect(() => {
     if (onViewModeChange) {
       onViewModeChange(viewMode);
     }
   }, [onViewModeChange, viewMode]);
 
+  // Save scroll position when tab changes or component unmounts
   const saveScrollPosition = () => {
     if (viewMode === 'calendar' && calendarScrollRef.current) {
       setCalendarScrollPosition(calendarScrollRef.current.scrollTop);
@@ -46,46 +45,19 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
     }
   };
 
+  // Handle tab change
   const handleTabChange = (value: string) => {
     saveScrollPosition();
     const newViewMode = value as 'calendar' | 'list';
-    
-    if (newViewMode === 'list') {
-      const currentTime = new Date().getTime();
-      const timeSinceLastTap = currentTime - lastTapTime;
-      
-      console.log(`Tap detected. Current count: ${tapCount}, Time since last tap: ${timeSinceLastTap}ms`);
-      
-      // Reset tap count if too much time has passed or a different tab was tapped
-      if (timeSinceLastTap > 1000 || lastTappedTab !== 'list') {
-        console.log('Resetting tap count');
-        setTapCount(1);
-      } else {
-        const newTapCount = tapCount + 1;
-        setTapCount(newTapCount);
-        
-        console.log(`Updated tap count: ${newTapCount}`);
-        
-        // Check if we've reached 5 taps
-        if (newTapCount >= 5) {
-          console.log('Five taps detected! Resetting location and radius.');
-          localStorage.removeItem('userLocation');
-          localStorage.removeItem('searchRadius');
-          window.location.reload();
-        }
-      }
-      
-      setLastTapTime(currentTime);
-      setLastTappedTab('list');
-    }
-    
     setViewMode(newViewMode);
     
+    // Notify parent component about view mode change
     if (onViewModeChange) {
       onViewModeChange(newViewMode);
     }
   };
 
+  // Restore scroll position on mount and tab change
   useEffect(() => {
     const timer = setTimeout(() => {
       if (viewMode === 'calendar' && calendarScrollRef.current) {
@@ -93,7 +65,7 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
       } else if (viewMode === 'list' && listScrollRef.current) {
         listScrollRef.current.scrollTop = listScrollPosition;
       }
-    }, 50);
+    }, 50); // Small delay to ensure the DOM has updated
 
     return () => {
       clearTimeout(timer);
