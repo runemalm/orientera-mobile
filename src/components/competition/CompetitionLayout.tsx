@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect } from 'react';
 import { CompetitionSummary } from '../../types';
 import { UserLocation } from '../../hooks/useUserLocation';
@@ -34,7 +33,6 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
 
   const navigate = useNavigate();
 
-  // Save scroll position when tab changes or component unmounts
   const saveScrollPosition = () => {
     if (viewMode === 'calendar' && calendarScrollRef.current) {
       setCalendarScrollPosition(calendarScrollRef.current.scrollTop);
@@ -43,13 +41,11 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
     }
   };
 
-  // Handle tab change
   const handleTabChange = (value: string) => {
     saveScrollPosition();
     setViewMode(value as 'calendar' | 'list');
   };
 
-  // Navigate to filter page with current tab
   const handleFilterClick = () => {
     navigate('/competitions/filter', { 
       state: { 
@@ -59,7 +55,6 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
     });
   };
 
-  // Redirect to location setting page
   const handleSetLocationClick = () => {
     navigate('/competitions/filter', { 
       state: { 
@@ -69,7 +64,6 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
     });
   };
 
-  // Restore scroll position on mount and tab change
   useEffect(() => {
     const timer = setTimeout(() => {
       if (viewMode === 'calendar' && calendarScrollRef.current) {
@@ -77,7 +71,7 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
       } else if (viewMode === 'list' && listScrollRef.current) {
         listScrollRef.current.scrollTop = listScrollPosition;
       }
-    }, 50); // Small delay to ensure the DOM has updated
+    }, 50);
 
     return () => {
       clearTimeout(timer);
@@ -85,23 +79,22 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
     };
   }, [viewMode, calendarScrollPosition, listScrollPosition]);
 
-  // Render placeholder for list view when no location is set
   const renderListContent = () => {
     if (!userLocation) {
       return (
-        <div className="p-4 space-y-4">
-          <Alert 
-            variant="default" 
-            className="border-forest/50 bg-forest-100 text-forest"
-          >
-            <AlertTriangle className="h-4 w-4 text-forest" />
-            <AlertDescription className="text-forest">
-              Du behöver ange din plats för att se tävlingar i närheten
-            </AlertDescription>
-          </Alert>
+        <div className="px-4 py-8 text-center">
+          <div className="mb-6">
+            <div className="bg-gray-50 rounded-full p-4 w-16 h-16 mx-auto flex items-center justify-center">
+              <MapPin className="h-8 w-8 text-forest" />
+            </div>
+          </div>
+          <h3 className="text-lg font-medium mb-2">Hitta tävlingar nära dig</h3>
+          <p className="text-gray-500 mb-6 max-w-xs mx-auto">
+            För att se tävlingar i ditt närområde behöver du ange din plats
+          </p>
           <Button 
             onClick={handleSetLocationClick}
-            className="w-full bg-forest hover:bg-forest-dark"
+            className="w-full max-w-xs bg-forest hover:bg-forest-dark"
           >
             <MapPin className="mr-2 h-4 w-4" />
             Ange plats
