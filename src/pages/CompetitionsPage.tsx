@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -46,6 +47,7 @@ const CompetitionsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const initialFetchCompleted = useRef(false);
   const [filters, setFilters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
+  const [viewMode] = useLocalStorage<'calendar' | 'list'>('competitionViewMode', 'calendar');
 
   const fetchCompetitions = useCallback(async () => {
     if (!userLocation) return;
@@ -104,7 +106,12 @@ const CompetitionsPage: React.FC = () => {
   }, [userLocation, fetchCompetitions]);
 
   const handleFilterClick = () => {
-    navigate('/competitions/filter', { state: { transition: 'slide' } });
+    navigate('/competitions/filter', { 
+      state: { 
+        activeTab: viewMode,
+        transition: 'slide' 
+      }
+    });
   };
 
   const renderContent = () => {

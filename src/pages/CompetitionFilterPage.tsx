@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
@@ -37,10 +37,13 @@ interface RouteState {
 
 const CompetitionFilterPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { userLocation, updateUserLocation } = useUserLocation();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [filters, setFilters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
-  const state = window.history.state?.usr as RouteState;
+  
+  // Get the state from location instead of window.history
+  const state = location.state as RouteState;
   const activeTab = state?.activeTab || 'calendar';
 
   const handleUpdateLocation = (location: { city: string; latitude: number; longitude: number }) => {
