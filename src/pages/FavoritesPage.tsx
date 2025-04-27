@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { useUserLocation } from '../hooks/useUserLocation';
-import CompetitionList from '../components/competition/CompetitionList';
+import CompetitionsListView from '../components/competition/CompetitionsListView';
 import { Star, Loader2 } from 'lucide-react';
 import { CompetitionSummary } from '../types';
 import { getNearbyCompetitions } from '../services/api';
@@ -14,7 +13,6 @@ const FavoritesPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Load favorites directly from localStorage
   useEffect(() => {
     const storedFavoritesStr = window.localStorage.getItem('favoriteCompetitions');
     if (storedFavoritesStr) {
@@ -113,10 +111,10 @@ const FavoritesPage: React.FC = () => {
   return (
     <MobileLayout title="Favoriter">
       <div className="px-2 pt-4">
-        <CompetitionList
+        <CompetitionsListView
           competitions={favoriteCompetitions}
           userLocation={userLocation}
-          showFavorites={false}
+          showFavorites={true}
         />
       </div>
     </MobileLayout>
