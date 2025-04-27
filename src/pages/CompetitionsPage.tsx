@@ -47,6 +47,10 @@ const CompetitionsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const initialFetchCompleted = useRef(false);
   const [filters, setFilters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
+  const [currentViewMode, setCurrentViewMode] = useState<'calendar' | 'list'>(() => {
+    const stored = localStorage.getItem('competitionViewMode');
+    return stored ? JSON.parse(stored) : 'calendar';
+  });
 
   const fetchCompetitions = useCallback(async () => {
     if (!userLocation) return;
@@ -157,18 +161,18 @@ const CompetitionsPage: React.FC = () => {
         fromDate={fromDate}
         toDate={toDate}
         onViewModeChange={(viewMode) => {
-          renderFilterButton = viewMode !== 'list';
+          setCurrentViewMode(viewMode);
         }}
       />
     );
   };
 
-  let renderFilterButton = true;
+  const shouldShowFilterButton = currentViewMode === 'calendar';
 
   return (
     <MobileLayout 
       title="Hitta Tävlingar" 
-      action={renderFilterButton ? (
+      action={shouldShowFilterButton ? (
         <Button 
           variant="ghost" 
           onClick={handleFilterClick}

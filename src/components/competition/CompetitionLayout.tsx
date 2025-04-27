@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect, useState } from 'react';
 import { CompetitionSummary } from '../../types';
 import { UserLocation } from '../../hooks/useUserLocation';
@@ -27,6 +28,13 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
   
   const calendarScrollRef = useRef<HTMLDivElement>(null);
   const listScrollRef = useRef<HTMLDivElement>(null);
+
+  // Notify parent of initial view mode on mount
+  useEffect(() => {
+    if (onViewModeChange) {
+      onViewModeChange(viewMode);
+    }
+  }, [onViewModeChange, viewMode]);
 
   // Save scroll position when tab changes or component unmounts
   const saveScrollPosition = () => {
