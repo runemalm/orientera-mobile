@@ -121,37 +121,35 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
           />
           {isSearching && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
         </div>
-        {(isOpen || showEmpty) && (
-          <CommandList className="max-h-[300px] overflow-y-auto">
-            {showEmpty && results.length === 0 && !isSearching && (
-              <CommandEmpty>Inga resultat hittades</CommandEmpty>
-            )}
-            {results.length > 0 && (
-              <CommandGroup heading="Sökresultat">
-                {results.map((result, index) => (
-                  <CommandItem
-                    key={index}
-                    className="cursor-pointer py-2 px-2 text-sm"
-                    onSelect={() => {
-                      onLocationSelected({
-                        city: result.city,
-                        latitude: result.latitude,
-                        longitude: result.longitude,
-                      });
-                      setSearchTerm('');
-                      setResults([]);
-                      setShowEmpty(false);
-                      setIsOpen(false);
-                    }}
-                  >
-                    <MapPin className="mr-2 h-4 w-4" />
-                    <span className="truncate">{result.display_name}</span>
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            )}
-          </CommandList>
-        )}
+        
+        {/* Fix: Always render CommandList with emptry CommandGroup if no results */}
+        <CommandList className="max-h-[300px] overflow-y-auto">
+          {showEmpty && results.length === 0 && !isSearching && (
+            <CommandEmpty>Inga resultat hittades</CommandEmpty>
+          )}
+          <CommandGroup>
+            {results.map((result, index) => (
+              <CommandItem
+                key={index}
+                className="cursor-pointer py-2 px-2 text-sm"
+                onSelect={() => {
+                  onLocationSelected({
+                    city: result.city,
+                    latitude: result.latitude,
+                    longitude: result.longitude,
+                  });
+                  setSearchTerm('');
+                  setResults([]);
+                  setShowEmpty(false);
+                  setIsOpen(false);
+                }}
+              >
+                <MapPin className="mr-2 h-4 w-4" />
+                <span className="truncate">{result.display_name}</span>
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        </CommandList>
       </Command>
 
       <div className="grid grid-cols-3 gap-2">
