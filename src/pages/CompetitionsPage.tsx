@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -150,15 +149,6 @@ const CompetitionsPage: React.FC = () => {
   return (
     <MobileLayout 
       title="Hitta Tävlingar" 
-      action={
-        <Button 
-          variant="ghost" 
-          size="icon"
-          onClick={handleFilterClick}
-        >
-          <Filter className="h-[1.2rem] w-[1.2rem]" />
-        </Button>
-      }
       fullHeight
     >
       {renderContent()}
