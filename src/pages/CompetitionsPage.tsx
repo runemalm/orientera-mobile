@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
-import { Loader2, Settings2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { CompetitionSummary } from '../types';
@@ -20,7 +19,7 @@ interface Filter {
   districts: string[];
   disciplines: string[];
   competitionTypes: string[];
-  branches: string[];  // Added missing branches property
+  branches: string[];
   dateRange: {
     from: Date | null;
     to: Date | null;
@@ -33,7 +32,7 @@ const DEFAULT_FILTERS: Filter = {
   districts: [],
   disciplines: [],
   competitionTypes: [],
-  branches: [],  // Added empty array as default
+  branches: [],
   dateRange: {
     from: null,
     to: null
@@ -100,7 +99,6 @@ const CompetitionsPage: React.FC = () => {
     }
   }, [userLocation, fetchCompetitions]);
 
-  // Listen for location updates from child components
   useEffect(() => {
     const handleLocationUpdate = (e: CustomEvent) => {
       const newLocation = e.detail;
@@ -168,10 +166,9 @@ const CompetitionsPage: React.FC = () => {
       action={
         <Button 
           variant="ghost" 
-          size="icon"
           onClick={handleFilterClick}
         >
-          <Settings2 className="h-[1.2rem] w-[1.2rem]" />
+          Filter
         </Button>
       }
       fullHeight
@@ -182,4 +179,3 @@ const CompetitionsPage: React.FC = () => {
 };
 
 export default CompetitionsPage;
-
