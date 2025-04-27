@@ -1,6 +1,5 @@
 
 import React, { useState } from 'react';
-import { UserRound } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -12,38 +11,56 @@ const ProfilePage: React.FC = () => {
 
   return (
     <MobileLayout title="Profil">
-      <div className="flex flex-col items-center p-4 space-y-4">
-        {/* Compact profile header */}
-        <Card className="w-full border-none shadow-none bg-transparent">
-          <CardContent className="flex flex-col items-center pt-6 space-y-4">
-            <div className="w-16 h-16 bg-primary/5 rounded-full flex items-center justify-center">
-              <UserRound className="w-8 h-8 text-primary/70" />
+      <div className="flex flex-col items-center p-4 space-y-4 relative">
+        {/* Main profile card with elaborate skeleton */}
+        <Card className="w-full overflow-hidden">
+          <CardContent className="p-4 space-y-4">
+            <div className="flex items-center gap-4">
+              <Skeleton className="h-12 w-12 rounded-full" />
+              <div className="space-y-2 flex-1">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-3 w-32" />
+              </div>
             </div>
             
-            <div className="text-center">
-              <h2 className="text-lg font-medium text-foreground">Välkommen</h2>
+            <div className="space-y-2 pt-2">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-5/6" />
             </div>
           </CardContent>
         </Card>
 
-        {/* Simplified stats card */}
+        {/* Stats card */}
         <Card className="w-full overflow-hidden">
           <CardContent className="p-4">
-            <div className="space-y-2">
-              <Skeleton className="h-4 w-3/4" />
-              <Skeleton className="h-4 w-1/2" />
+            <div className="grid grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <Skeleton className="h-8 w-12 mx-auto" />
+                <Skeleton className="h-3 w-16 mx-auto" />
+              </div>
+              <div className="space-y-2">
+                <Skeleton className="h-8 w-12 mx-auto" />
+                <Skeleton className="h-3 w-16 mx-auto" />
+              </div>
+              <div className="space-y-2">
+                <Skeleton className="h-8 w-12 mx-auto" />
+                <Skeleton className="h-3 w-16 mx-auto" />
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Login button */}
-        <Button 
-          className="w-full" 
-          size="lg"
-          onClick={() => setShowLoginDialog(true)}
-        >
-          Logga in med Eventor
-        </Button>
+        {/* Login button overlapping the content */}
+        <div className="fixed bottom-20 left-0 right-0 px-4 z-10">
+          <Button 
+            className="w-full shadow-lg" 
+            size="lg"
+            onClick={() => setShowLoginDialog(true)}
+          >
+            Logga in med Eventor
+          </Button>
+        </div>
       </div>
 
       <LoginWaitlistDialog 
