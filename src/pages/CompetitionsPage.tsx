@@ -65,7 +65,7 @@ const CompetitionsPage: React.FC = () => {
       date.setMonth(date.getMonth() + 1);
       return date;
     })();
-    
+
     try {
       const result = await getNearbyCompetitions(
         userLocation.latitude, 
@@ -74,10 +74,10 @@ const CompetitionsPage: React.FC = () => {
           from: fromDate,
           to: toDate,
           limit: 50,
-          maxDistanceKm: safeFilters.useLocationFilter ? safeFilters.maxDistanceKm : undefined,
           districts: safeFilters.districts.length > 0 ? safeFilters.districts : undefined,
           disciplines: safeFilters.disciplines.length > 0 ? safeFilters.disciplines : undefined,
-          competitionTypes: safeFilters.competitionTypes.length > 0 ? safeFilters.competitionTypes : undefined
+          competitionTypes: safeFilters.competitionTypes.length > 0 ? safeFilters.competitionTypes : undefined,
+          branches: safeFilters.branches.length > 0 ? safeFilters.branches : undefined
         }
       );
       
@@ -180,3 +180,4 @@ const CompetitionsPage: React.FC = () => {
 };
 
 export default CompetitionsPage;
+
