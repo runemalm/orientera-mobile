@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
+import { Calendar } from '@/components/ui/calendar';
 import { 
   ArrowLeft, 
   Globe, 
