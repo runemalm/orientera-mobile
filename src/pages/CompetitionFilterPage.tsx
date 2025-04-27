@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -38,11 +37,10 @@ interface RouteState {
 const CompetitionFilterPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { userLocation, updateUserLocation } = useUserLocation();
+  const { userLocation, updateUserLocation, resetUserLocation } = useUserLocation();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [filters, setFilters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
   
-  // Get the state from location instead of window.history
   const state = location.state as RouteState;
   const activeTab = state?.activeTab || 'calendar';
 
@@ -50,7 +48,6 @@ const CompetitionFilterPage = () => {
     updateUserLocation(location);
     setDrawerOpen(false);
     
-    // Update filters to enable location filter when location is set
     setFilters({
       ...filters,
       useLocationFilter: true
@@ -65,6 +62,9 @@ const CompetitionFilterPage = () => {
   };
 
   const handleResetFilters = () => {
+    if (activeTab === 'list') {
+      resetUserLocation();
+    }
     setFilters(DEFAULT_FILTERS);
     toast.info('Filtren har återställts');
   };

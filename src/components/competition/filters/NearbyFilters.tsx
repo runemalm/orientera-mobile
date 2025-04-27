@@ -1,10 +1,11 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { MapPin } from 'lucide-react';
+import { MapPin, AlertTriangle } from 'lucide-react';
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
 import { Filter } from '../../../types';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface NearbyFiltersProps {
   filters: Filter;
@@ -19,6 +20,26 @@ const NearbyFilters: React.FC<NearbyFiltersProps> = ({
   onFiltersChange,
   onLocationChangeClick,
 }) => {
+  if (!userCity) {
+    return (
+      <div className="space-y-4">
+        <Alert variant="warning" className="border-forest/50">
+          <AlertTriangle className="h-4 w-4 text-forest" />
+          <AlertDescription className="text-forest">
+            Du behöver ange din plats för att se tävlingar i närheten
+          </AlertDescription>
+        </Alert>
+        <Button 
+          onClick={onLocationChangeClick}
+          className="w-full bg-forest hover:bg-forest-dark"
+        >
+          <MapPin className="mr-2 h-4 w-4" />
+          Ange plats
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
       <div className="flex items-center gap-2 text-forest mb-3">

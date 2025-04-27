@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 
 export interface UserLocation {
@@ -14,7 +13,7 @@ const DEFAULT_LOCATION = {
 };
 
 export const useUserLocation = () => {
-  const [userLocation, setUserLocation] = useState<UserLocation>(DEFAULT_LOCATION);
+  const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
   const [isFirstVisit, setIsFirstVisit] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -28,13 +27,12 @@ export const useUserLocation = () => {
         setIsFirstVisit(false);
       } catch (error) {
         console.error('Error parsing saved location:', error);
-        setUserLocation(DEFAULT_LOCATION);
-        localStorage.setItem('userLocation', JSON.stringify(DEFAULT_LOCATION));
-        setIsFirstVisit(false);
+        setUserLocation(null);
+        localStorage.removeItem('userLocation');
+        setIsFirstVisit(true);
       }
     } else {
-      setUserLocation(DEFAULT_LOCATION);
-      localStorage.setItem('userLocation', JSON.stringify(DEFAULT_LOCATION));
+      setUserLocation(null);
       setIsFirstVisit(true);
     }
     
@@ -49,8 +47,7 @@ export const useUserLocation = () => {
 
   const resetUserLocation = () => {
     localStorage.removeItem('userLocation');
-    setUserLocation(DEFAULT_LOCATION);
-    localStorage.setItem('userLocation', JSON.stringify(DEFAULT_LOCATION));
+    setUserLocation(null);
     setIsFirstVisit(true);
   };
 
