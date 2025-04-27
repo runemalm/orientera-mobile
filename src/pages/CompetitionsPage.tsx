@@ -154,11 +154,6 @@ const CompetitionsPage: React.FC = () => {
       <MobileLayout 
         title="Hitta Tävlingar" 
         fullHeight
-        action={
-          <Button variant="ghost" size="icon" onClick={() => setShowInfo(true)}>
-            <Info className="h-5 w-5" />
-          </Button>
-        }
       >
         {renderContent()}
       </MobileLayout>
