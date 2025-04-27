@@ -1,11 +1,10 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Button } from '@/components/ui/button';
 import { 
   X, 
-  Save, 
   Globe, 
   Activity, 
   Calendar as CalendarIcon,
@@ -59,25 +58,26 @@ const DEFAULT_FILTERS: Filter = {
 };
 
 const CompetitionFilterPage: React.FC = () => {
+  // Only execute hooks if we're in a component context
   const navigate = useNavigate();
   const { userLocation, updateUserLocation } = useUserLocation();
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [filters, setFilters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
 
   const hasDateFilter = Boolean(filters?.dateRange?.from || filters?.dateRange?.to);
 
-  const [dateRangeCollapsibleOpen, setDateRangeCollapsibleOpen] = useState(false);
-  const [branchCollapsibleOpen, setBranchCollapsibleOpen] = useState(false);
-  const [districtCollapsibleOpen, setDistrictCollapsibleOpen] = useState(false);
-  const [disciplineCollapsibleOpen, setDisciplineCollapsibleOpen] = useState(false);
-  const [competitionTypeCollapsibleOpen, setCompetitionTypeCollapsibleOpen] = useState(false);
+  const [dateRangeCollapsibleOpen, setDateRangeCollapsibleOpen] = React.useState(false);
+  const [branchCollapsibleOpen, setBranchCollapsibleOpen] = React.useState(false);
+  const [districtCollapsibleOpen, setDistrictCollapsibleOpen] = React.useState(false);
+  const [disciplineCollapsibleOpen, setDisciplineCollapsibleOpen] = React.useState(false);
+  const [competitionTypeCollapsibleOpen, setCompetitionTypeCollapsibleOpen] = React.useState(false);
 
   const allBranches = Object.values(Branch);
   const allDistricts = Object.values(OrienteeringDistrict);
   const allDisciplines = Object.values(Discipline);
   const allCompetitionTypes = Object.values(CompetitionType);
 
-  useEffect(() => {
+  React.useEffect(() => {
     setDateRangeCollapsibleOpen(false);
     setBranchCollapsibleOpen(false);
     setDistrictCollapsibleOpen(false);

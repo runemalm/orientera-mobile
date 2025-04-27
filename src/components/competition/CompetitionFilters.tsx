@@ -9,6 +9,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { format } from 'date-fns';
 import { sv } from 'date-fns/locale';
+import RadiusInputForm from '../RadiusInputForm';
 
 interface CompetitionFiltersProps {
   open: boolean;
@@ -50,15 +51,17 @@ const CompetitionFilters: React.FC<CompetitionFiltersProps> = ({
   onApplyFilters,
 }) => {
   const { userLocation, updateUserLocation } = useUserLocation();
-  const [showLocationInput, setShowLocationInput] = useState(false);
-  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showLocationInput, setShowLocationInput] = React.useState(false);
+  const [showRadiusInput, setShowRadiusInput] = React.useState(false);
+  const [showDatePicker, setShowDatePicker] = React.useState(false);
   const [filters, setFilters] = useLocalStorage<FilterState>('competitionFilters', DEFAULT_FILTERS);
-  const [dateRange, setDateRange] = useState<DateRange>(filters.dateRange || { from: null, to: null });
+  const [dateRange, setDateRange] = React.useState<DateRange>(filters.dateRange || { from: null, to: null });
   
   // Reset the state when drawer opens
   useEffect(() => {
     if (open) {
       setShowLocationInput(false);
+      setShowRadiusInput(false);
       setShowDatePicker(false);
       // Update dateRange state from filters when drawer opens
       setDateRange(filters.dateRange || { from: null, to: null });
@@ -68,6 +71,15 @@ const CompetitionFilters: React.FC<CompetitionFiltersProps> = ({
   const handleLocationUpdate = (location: { city: string; latitude: number; longitude: number }) => {
     updateUserLocation(location);
     setShowLocationInput(false);
+    onApplyFilters();
+  };
+
+  const handleRadiusUpdate = (radius: number) => {
+    setFilters({
+      ...filters,
+      maxDistanceKm: radius
+    });
+    setShowRadiusInput(false);
     onApplyFilters();
   };
 
@@ -148,6 +160,33 @@ const CompetitionFilters: React.FC<CompetitionFiltersProps> = ({
             <LocationInputForm 
               onLocationSelected={handleLocationUpdate}
               onCancel={() => setShowLocationInput(false)}
+            />
+          </div>
+        </DrawerContent>
+      </Drawer>
+    );
+  }
+
+  if (showRadiusInput) {
+    return (
+      <Drawer open={open} onOpenChange={onOpenChange}>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle>Ange avstånd</DrawerTitle>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="absolute right-4 top-4"
+              onClick={() => setShowRadiusInput(false)}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </DrawerHeader>
+          <div className="p-4">
+            <RadiusInputForm 
+              initialRadius={filters.maxDistanceKm}
+              onRadiusSelected={handleRadiusUpdate}
+              onCancel={() => setShowRadiusInput(false)}
             />
           </div>
         </DrawerContent>
@@ -249,18 +288,41 @@ const CompetitionFilters: React.FC<CompetitionFiltersProps> = ({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <MapPin className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">{userLocation?.city}</span>
+                  <span className="text-sm">{userLocation?.city || 'Ingen plats vald'}</span>
                 </div>
                 <Button 
                   variant="outline"
                   onClick={() => setShowLocationInput(true)}
                   className="text-forest hover:text-forest-dark border-forest hover:border-forest-dark"
                 >
-                  Byt plats
+                  {userLocation?.city ? 'Byt plats' : 'Välj plats'}
                 </Button>
               </div>
             </div>
           </div>
+
+          {userLocation && (
+            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 space-y-4">
+              <div className="flex items-center gap-2 text-forest">
+                <MapPin className="h-5 w-5" />
+                <h2 className="font-semibold">Max avstånd</h2>
+              </div>
+              <div className="bg-gray-50 rounded-lg p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm">{filters.maxDistanceKm} km</span>
+                  </div>
+                  <Button 
+                    variant="outline"
+                    onClick={() => setShowRadiusInput(true)}
+                    className="text-forest hover:text-forest-dark border-forest hover:border-forest-dark"
+                  >
+                    Ändra
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </DrawerContent>
     </Drawer>
