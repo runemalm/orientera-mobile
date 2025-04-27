@@ -11,14 +11,17 @@ export const useAssistantChat = () => {
   const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {
-    // Lägg till välkomstmeddelande när chatten initieras
     setMessages([
       {
-        content: "Hej! Jag heter Nina, din personliga tävlingsassistent. Jag kan hjälpa dig med:\n\n" +
-                 "• Söka information om tävlingar\n" +
-                 "• Hantera dina tävlingsanmälningar\n" +
-                 "• Svara på frågor om kommande tävlingar\n\n" +
-                 "Vilken typ av tävlingsinformation kan jag hjälpa dig med idag?",
+        content: "Hej! 👋\n\n" +
+                 "Jag är Nina, din personliga tävlingsassistent. Hur kan jag hjälpa dig idag?\n\n" +
+                 "Jag kan hjälpa dig med:\n" +
+                 "• Hitta och filtrera tävlingar som passar dig\n" +
+                 "• Svara på frågor om specifika tävlingar\n" +
+                 "• Förklara anmälningsprocessen\n" +
+                 "• Ge information om starttider och resultat\n" +
+                 "• Hjälpa till med andra tävlingsrelaterade frågor\n\n" +
+                 "Ställ gärna din fråga så ska jag göra mitt bästa för att hjälpa dig! 😊",
         isBot: true
       }
     ]);
@@ -27,14 +30,17 @@ export const useAssistantChat = () => {
   const sendMessage = async (message: string) => {
     if (!message.trim()) return;
 
-    // Lägg till användarens meddelande
     setMessages(prev => [...prev, { content: message, isBot: false }]);
 
-    // Här kan vi senare implementera koppling till en AI-tjänst
-    // För nu, svara med ett enkelt meddelande
+    // Simulera en mer support-orienterad respons
     setTimeout(() => {
       setMessages(prev => [...prev, {
-        content: "Jag förstår att du vill veta mer om tävlingar. Just nu håller vi på att utveckla min funktionalitet, men snart kommer jag kunna hjälpa dig med alla dina tävlingsrelaterade frågor!",
+        content: "Tack för din fråga! Jag förstår att du vill veta mer om " + 
+                "tävlingar. Just nu håller vi på att utveckla mina funktioner, " +
+                "men jag ska göra mitt bästa för att hjälpa dig.\n\n" +
+                "Kan du berätta lite mer specifikt vad du skulle vilja veta? " +
+                "Till exempel om du letar efter en specifik typ av tävling eller " +
+                "har frågor om en särskild tävling?",
         isBot: true
       }]);
     }, 1000);
