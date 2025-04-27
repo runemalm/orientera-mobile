@@ -52,7 +52,7 @@ const ProfilePage: React.FC = () => {
         </Card>
 
         {/* Login button positioned in the mobile container instead of fixed */}
-        <div className="w-full max-w-xs mx-auto mt-6">
+        <div className="w-full mx-auto mt-6">
           <Button 
             className="w-full shadow-lg" 
             size="lg"
