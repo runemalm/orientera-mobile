@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { MapPin, Settings } from 'lucide-react';
 import { Slider } from '@/components/ui/slider';
@@ -9,7 +10,7 @@ interface NearbyFiltersProps {
   filters: Filter;
   userCity?: string;
   onFiltersChange: (filters: Filter) => void;
-  onLocationChangeClick: () => void;
+  onLocationChangeClick: (location: { city: string; latitude: number; longitude: number; }) => void;
 }
 
 const NearbyFilters: React.FC<NearbyFiltersProps> = ({
