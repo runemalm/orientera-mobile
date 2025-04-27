@@ -114,6 +114,9 @@
       opacity: 1;
       transition: opacity 0.1s;
     }
+    
+    /* Prevent iOS highlighting */
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
   }
   
   /* Force all focused elements to reset */
@@ -131,6 +134,11 @@
     button:not(:active), a:not(:active), [role="button"]:not(:active) {
       opacity: 1;
       transition: opacity 0.1s;
+    }
+    
+    /* Reset focus state immediately after touch */
+    button:focus-visible, a:focus-visible, [role="button"]:focus-visible {
+      outline: none;
     }
   }
   

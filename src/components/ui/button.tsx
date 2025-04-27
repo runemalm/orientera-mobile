@@ -60,10 +60,37 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         // Force blur to remove any stuck active/focus states
         if (e.currentTarget) {
           e.currentTarget.blur();
+          
+          // Add a slight delay before removing any visual feedback
+          setTimeout(() => {
+            if (e.currentTarget) {
+              e.currentTarget.classList.remove('active', 'focus');
+              
+              // Try to force style update
+              e.currentTarget.style.backgroundColor = '';
+              e.currentTarget.style.backgroundColor = null as any;
+              
+              // Trigger reflow
+              void e.currentTarget.offsetHeight;
+            }
+          }, 10);
         }
       }
       if (props.onTouchEnd) {
         props.onTouchEnd(e);
+      }
+    };
+    
+    // Also handle touch cancel events
+    const handleTouchCancel = (e: React.TouchEvent<HTMLButtonElement>) => {
+      touchStartRef.current = false;
+      
+      if (e.currentTarget) {
+        e.currentTarget.blur();
+      }
+      
+      if (props.onTouchCancel) {
+        props.onTouchCancel(e);
       }
     };
 
@@ -73,7 +100,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
-        onTouchCancel={handleTouchEnd} // Also handle touch cancel events
+        onTouchCancel={handleTouchCancel}
         {...props}
       />
     )
@@ -82,4 +109,3 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 Button.displayName = "Button"
 
 export { Button, buttonVariants }
-
