@@ -26,9 +26,8 @@ const DEFAULT_FILTERS: Filter = {
 
 const CompetitionFilterPage = () => {
   const navigate = useNavigate();
-  const { userLocation, updateUserLocation, resetUserLocation } = useUserLocation();
+  const { userLocation, updateUserLocation } = useUserLocation();
   const [filters, setFilters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
-  const [viewMode] = useLocalStorage<'calendar' | 'list'>('competitionViewMode', 'calendar');
 
   const handleUpdateLocation = (location: { city: string; latitude: number; longitude: number }) => {
     // Update location and enable location filter
@@ -54,9 +53,6 @@ const CompetitionFilterPage = () => {
   };
 
   const handleResetFilters = () => {
-    if (viewMode === 'list') {
-      resetUserLocation();
-    }
     setFilters(DEFAULT_FILTERS);
     toast.info('Filtren har återställts');
     
@@ -85,19 +81,19 @@ const CompetitionFilterPage = () => {
       }
     >
       <div className="p-4 pb-24">
-        {viewMode === 'calendar' ? (
-          <CalendarFilters
-            filters={filters}
-            onFiltersChange={setFilters}
-          />
-        ) : (
+        <CalendarFilters
+          filters={filters}
+          onFiltersChange={setFilters}
+        />
+        
+        <div className="mt-6">
           <NearbyFilters
             filters={filters}
             userCity={userLocation?.city}
             onFiltersChange={setFilters}
             onLocationChangeClick={handleUpdateLocation}
           />
-        )}
+        </div>
 
         <div className="flex items-center gap-4 pt-6">
           <Button 

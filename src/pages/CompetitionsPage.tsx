@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -8,7 +9,7 @@ import { CompetitionSummary } from '../types';
 import { getNearbyCompetitions } from '../services/api';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { startOfWeek } from 'date-fns';
-import CompetitionLayout from '../components/competition/CompetitionLayout';
+import CalendarList from '../components/competition/CalendarList';
 
 let cachedCompetitions: CompetitionSummary[] = [];
 
@@ -46,7 +47,6 @@ const CompetitionsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const initialFetchCompleted = useRef(false);
   const [filters, setFilters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
-  const [viewMode] = useLocalStorage<'calendar' | 'list'>('competitionViewMode', 'calendar');
 
   const fetchCompetitions = useCallback(async () => {
     if (!userLocation) return;
@@ -67,6 +67,17 @@ const CompetitionsPage: React.FC = () => {
     })();
     
     try {
+      console.log('Fetching competitions with filters:', {
+        from: fromDate,
+        to: toDate,
+        useLocationFilter: safeFilters.useLocationFilter,
+        maxDistanceKm: safeFilters.useLocationFilter ? safeFilters.maxDistanceKm : undefined,
+        districts: safeFilters.districts,
+        disciplines: safeFilters.disciplines,
+        competitionTypes: safeFilters.competitionTypes,
+        branches: safeFilters.branches
+      });
+
       const result = await getNearbyCompetitions(
         userLocation.latitude, 
         userLocation.longitude,
@@ -82,6 +93,7 @@ const CompetitionsPage: React.FC = () => {
         }
       );
       
+      console.log('Competitions fetched:', result.length);
       setCompetitions(result);
       cachedCompetitions = result;
     } catch (err) {
@@ -100,6 +112,7 @@ const CompetitionsPage: React.FC = () => {
 
   useEffect(() => {
     if (userLocation && (!initialFetchCompleted.current || cachedCompetitions.length === 0)) {
+      console.log('Initial fetch triggered');
       fetchCompetitions();
       initialFetchCompleted.current = true;
     }
@@ -145,12 +158,14 @@ const CompetitionsPage: React.FC = () => {
     })();
 
     return (
-      <CompetitionLayout
-        competitions={competitions}
-        userLocation={userLocation}
-        fromDate={fromDate}
-        toDate={toDate}
-      />
+      <div className="px-2 pt-0 pb-4">
+        <CalendarList
+          competitions={competitions}
+          userLocation={userLocation}
+          fromDate={fromDate}
+          toDate={toDate}
+        />
+      </div>
     );
   };
 
