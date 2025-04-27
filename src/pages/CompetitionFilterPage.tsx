@@ -231,7 +231,7 @@ const CompetitionFilterPage = () => {
           onClick={handleSaveFilters}
           className="bg-forest hover:bg-forest-dark text-white"
         >
-          Filter
+          Spara
         </Button>
       }
       leftAction={
