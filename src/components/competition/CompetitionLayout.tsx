@@ -1,26 +1,25 @@
 
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { CompetitionSummary } from '../../types';
 import { UserLocation } from '../../hooks/useUserLocation';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../ui/tabs';
 import CalendarList from './CalendarList';
 import CompetitionList from './CompetitionList';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { ScrollArea } from '../ui/scroll-area';
 
 interface CompetitionLayoutProps {
   competitions: CompetitionSummary[];
   userLocation: UserLocation | null;
   fromDate: Date;
   toDate: Date;
-  onViewModeChange?: (viewMode: 'calendar' | 'list') => void;
 }
 
 const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
   competitions,
   userLocation,
   fromDate,
-  toDate,
-  onViewModeChange
+  toDate
 }) => {
   const [viewMode, setViewMode] = useLocalStorage<'calendar' | 'list'>('competitionViewMode', 'calendar');
   const [calendarScrollPosition, setCalendarScrollPosition] = useLocalStorage<number>('calendarScrollPosition', 0);
@@ -28,13 +27,6 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
   
   const calendarScrollRef = useRef<HTMLDivElement>(null);
   const listScrollRef = useRef<HTMLDivElement>(null);
-
-  // Notify parent of initial view mode on mount
-  useEffect(() => {
-    if (onViewModeChange) {
-      onViewModeChange(viewMode);
-    }
-  }, [onViewModeChange, viewMode]);
 
   // Save scroll position when tab changes or component unmounts
   const saveScrollPosition = () => {
@@ -48,13 +40,7 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
   // Handle tab change
   const handleTabChange = (value: string) => {
     saveScrollPosition();
-    const newViewMode = value as 'calendar' | 'list';
-    setViewMode(newViewMode);
-    
-    // Notify parent component about view mode change
-    if (onViewModeChange) {
-      onViewModeChange(newViewMode);
-    }
+    setViewMode(value as 'calendar' | 'list');
   };
 
   // Restore scroll position on mount and tab change
@@ -104,10 +90,12 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
           ref={listScrollRef}
         >
           <div className="px-2 pt-0 pb-4">
-            <CompetitionList
-              competitions={competitions}
-              userLocation={userLocation}
-            />
+            {userLocation && (
+              <CompetitionList
+                competitions={competitions}
+                userLocation={userLocation}
+              />
+            )}
           </div>
         </div>
       </div>

@@ -10,7 +10,6 @@ import { getNearbyCompetitions } from '../services/api';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { startOfWeek } from 'date-fns';
 import CompetitionLayout from '../components/competition/CompetitionLayout';
-import { toast } from 'sonner';
 
 let cachedCompetitions: CompetitionSummary[] = [];
 
@@ -20,7 +19,6 @@ interface Filter {
   districts: string[];
   disciplines: string[];
   competitionTypes: string[];
-  branches: string[];
   dateRange: {
     from: Date | null;
     to: Date | null;
@@ -33,7 +31,6 @@ const DEFAULT_FILTERS: Filter = {
   districts: [],
   disciplines: [],
   competitionTypes: [],
-  branches: [],
   dateRange: {
     from: null,
     to: null
@@ -42,16 +39,12 @@ const DEFAULT_FILTERS: Filter = {
 
 const CompetitionsPage: React.FC = () => {
   const navigate = useNavigate();
-  const { userLocation, updateUserLocation } = useUserLocation();
+  const { userLocation } = useUserLocation();
   const [competitions, setCompetitions] = useState<CompetitionSummary[]>(cachedCompetitions);
   const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(cachedCompetitions.length === 0);
   const [error, setError] = useState<string | null>(null);
   const initialFetchCompleted = useRef(false);
   const [filters, setFilters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
-  const [currentViewMode, setCurrentViewMode] = useState<'calendar' | 'list'>(() => {
-    const stored = localStorage.getItem('competitionViewMode');
-    return stored ? JSON.parse(stored) : 'calendar';
-  });
 
   const fetchCompetitions = useCallback(async () => {
     if (!userLocation) return;
@@ -59,9 +52,12 @@ const CompetitionsPage: React.FC = () => {
     setIsLoadingCompetitions(true);
     setError(null);
     
+    // Ensure we have a valid filters object with dateRange
     const safeFilters = filters || DEFAULT_FILTERS;
     const dateRange = safeFilters.dateRange || { from: null, to: null };
     
+    // If from date is explicitly set in the filter, use exactly that date
+    // Otherwise use the Monday of the current week
     const fromDate = dateRange.from 
       ? dateRange.from 
       : startOfWeek(new Date(), { weekStartsOn: 1 });
@@ -71,7 +67,7 @@ const CompetitionsPage: React.FC = () => {
       date.setMonth(date.getMonth() + 1);
       return date;
     })();
-
+    
     try {
       const result = await getNearbyCompetitions(
         userLocation.latitude, 
@@ -80,10 +76,10 @@ const CompetitionsPage: React.FC = () => {
           from: fromDate,
           to: toDate,
           limit: 50,
+          maxDistanceKm: safeFilters.useLocationFilter ? safeFilters.maxDistanceKm : undefined,
           districts: safeFilters.districts.length > 0 ? safeFilters.districts : undefined,
           disciplines: safeFilters.disciplines.length > 0 ? safeFilters.disciplines : undefined,
-          competitionTypes: safeFilters.competitionTypes.length > 0 ? safeFilters.competitionTypes : undefined,
-          branches: safeFilters.branches.length > 0 ? safeFilters.branches : undefined
+          competitionTypes: safeFilters.competitionTypes.length > 0 ? safeFilters.competitionTypes : undefined
         }
       );
       
@@ -103,22 +99,6 @@ const CompetitionsPage: React.FC = () => {
       initialFetchCompleted.current = true;
     }
   }, [userLocation, fetchCompetitions]);
-
-  useEffect(() => {
-    const handleLocationUpdate = (e: CustomEvent) => {
-      const newLocation = e.detail;
-      if (newLocation) {
-        updateUserLocation(newLocation);
-        toast.success(`Plats uppdaterad till ${newLocation.city}`);
-        fetchCompetitions();
-      }
-    };
-
-    window.addEventListener('locationUpdated', handleLocationUpdate as EventListener);
-    return () => {
-      window.removeEventListener('locationUpdated', handleLocationUpdate as EventListener);
-    };
-  }, [updateUserLocation, fetchCompetitions]);
 
   const handleFilterClick = () => {
     navigate('/competitions/filter', { state: { transition: 'slide' } });
@@ -142,9 +122,12 @@ const CompetitionsPage: React.FC = () => {
       );
     }
 
+    // Ensure we have a valid filters object with dateRange
     const safeFilters = filters || DEFAULT_FILTERS;
     const dateRange = safeFilters.dateRange || { from: null, to: null };
     
+    // If from date is explicitly set in the filter, use exactly that date
+    // Otherwise use the Monday of the current week
     const fromDate = dateRange.from 
       ? dateRange.from 
       : startOfWeek(new Date(), { weekStartsOn: 1 });
@@ -161,27 +144,22 @@ const CompetitionsPage: React.FC = () => {
         userLocation={userLocation}
         fromDate={fromDate}
         toDate={toDate}
-        onViewModeChange={(viewMode) => {
-          setCurrentViewMode(viewMode);
-        }}
       />
     );
   };
 
-  const shouldShowFilterButton = currentViewMode === 'calendar';
-
   return (
     <MobileLayout 
       title="Hitta Tävlingar" 
-      action={shouldShowFilterButton ? (
+      action={
         <Button 
           variant="ghost" 
           size="icon"
           onClick={handleFilterClick}
         >
-          <Filter className="h-5 w-5" />
+          <Filter className="h-[1.2rem] w-[1.2rem]" />
         </Button>
-      ) : undefined}
+      }
       fullHeight
     >
       {renderContent()}
@@ -190,3 +168,4 @@ const CompetitionsPage: React.FC = () => {
 };
 
 export default CompetitionsPage;
+

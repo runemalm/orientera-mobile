@@ -1,3 +1,4 @@
+
 import { Competition, CompetitionSummary } from "../types";
 import { mockCompetitions, mockCompetitionDetails } from "../utils/mockData";
 
@@ -20,8 +21,7 @@ export const getNearbyCompetitions = async (
     limit?: number,
     districts?: string[],
     disciplines?: string[],
-    competitionTypes?: string[],
-    branches?: string[]
+    competitionTypes?: string[]
   }
 ): Promise<CompetitionSummary[]> => {
   if (USE_MOCK_API) {
@@ -63,12 +63,7 @@ export const getNearbyCompetitions = async (
       );
     }
     
-    if (options?.branches && options.branches.length > 0) {
-      filteredCompetitions = filteredCompetitions.filter(comp => 
-        options.branches!.includes(comp.branch)
-      );
-    }
-    
+    // Apply distance filter if provided
     if (options?.maxDistanceKm) {
       // This is a simplified version, real distance calculation would be more complex
       filteredCompetitions = filteredCompetitions.filter(comp => {
@@ -133,12 +128,6 @@ export const getNearbyCompetitions = async (
       });
     }
     
-    if (options?.branches && options.branches.length > 0) {
-      options.branches.forEach(branch => {
-        params.append('branches', branch);
-      });
-    }
-    
     const response = await fetch(
       `${API_BASE_URL}/competitions/get-competition-summaries?${params.toString()}`,
       {
@@ -193,3 +182,4 @@ export const getCompetitionById = async (id: string): Promise<Competition | null
     throw error;
   }
 };
+

@@ -1,25 +1,28 @@
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Button } from '@/components/ui/button';
+import { Slider } from '@/components/ui/slider';
+import { Switch } from '@/components/ui/switch';
+import { Calendar } from '@/components/ui/calendar';
 import { 
-  X, 
+  ArrowLeft, 
+  MapPin, 
   Globe, 
   Activity, 
   Calendar as CalendarIcon,
-  CalendarRange 
+  CheckCircle,
+  CalendarRange
 } from 'lucide-react';
-import { toast } from 'sonner';
-import { Label } from '@/components/ui/label';
-import LocationInputForm from '../components/LocationInputForm';
-import { Calendar } from '@/components/ui/calendar';
-import { Checkbox } from '@/components/ui/checkbox';
-import {
+import { 
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { Checkbox } from "@/components/ui/checkbox";
+import { toast } from 'sonner';
+import { Label } from '@/components/ui/label';
+import LocationInputForm from '../components/LocationInputForm';
 import {
   Drawer,
   DrawerContent,
@@ -36,6 +39,8 @@ import { useUserLocation } from '../hooks/useUserLocation';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 
 interface Filter {
+  useLocationFilter: boolean;
+  maxDistanceKm: number;
   districts: OrienteeringDistrict[];
   disciplines: Discipline[];
   competitionTypes: CompetitionType[];
@@ -47,6 +52,8 @@ interface Filter {
 }
 
 const DEFAULT_FILTERS: Filter = {
+  useLocationFilter: false,
+  maxDistanceKm: 100,
   districts: [],
   disciplines: [],
   competitionTypes: [],
@@ -57,27 +64,26 @@ const DEFAULT_FILTERS: Filter = {
   }
 };
 
-const CompetitionFilterPage: React.FC = () => {
-  // Only execute hooks if we're in a component context
+const CompetitionFilterPage = () => {
   const navigate = useNavigate();
   const { userLocation, updateUserLocation } = useUserLocation();
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [filters, setFilters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
 
   const hasDateFilter = Boolean(filters?.dateRange?.from || filters?.dateRange?.to);
 
-  const [dateRangeCollapsibleOpen, setDateRangeCollapsibleOpen] = React.useState(false);
-  const [branchCollapsibleOpen, setBranchCollapsibleOpen] = React.useState(false);
-  const [districtCollapsibleOpen, setDistrictCollapsibleOpen] = React.useState(false);
-  const [disciplineCollapsibleOpen, setDisciplineCollapsibleOpen] = React.useState(false);
-  const [competitionTypeCollapsibleOpen, setCompetitionTypeCollapsibleOpen] = React.useState(false);
+  const [dateRangeCollapsibleOpen, setDateRangeCollapsibleOpen] = useState(false);
+  const [branchCollapsibleOpen, setBranchCollapsibleOpen] = useState(false);
+  const [districtCollapsibleOpen, setDistrictCollapsibleOpen] = useState(false);
+  const [disciplineCollapsibleOpen, setDisciplineCollapsibleOpen] = useState(false);
+  const [competitionTypeCollapsibleOpen, setCompetitionTypeCollapsibleOpen] = useState(false);
 
   const allBranches = Object.values(Branch);
   const allDistricts = Object.values(OrienteeringDistrict);
   const allDisciplines = Object.values(Discipline);
   const allCompetitionTypes = Object.values(CompetitionType);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setDateRangeCollapsibleOpen(false);
     setBranchCollapsibleOpen(false);
     setDistrictCollapsibleOpen(false);
@@ -170,17 +176,6 @@ const CompetitionFilterPage: React.FC = () => {
     toast.info('Filtren har återställts');
   };
 
-  const handleSaveFilters = () => {
-    navigate(-1);
-    toast.success('Filter inställningar sparade', {
-      description: 'Dina filterinställningar har uppdaterats'
-    });
-  };
-
-  const handleCancel = () => {
-    navigate(-1);
-  };
-
   const getBranchTranslation = (branch: Branch) => {
     const translations: Record<Branch, string> = {
       [Branch.FootO]: 'Orienteringslöpning',
@@ -225,24 +220,13 @@ const CompetitionFilterPage: React.FC = () => {
   return (
     <MobileLayout 
       title="Filter" 
-      showBackButton={false}
       action={
-        <Button 
-          size="sm"
-          variant="ghost"
-          onClick={handleSaveFilters}
-          className="text-forest hover:text-forest-dark"
-        >
-          Spara
-        </Button>
-      }
-      leftAction={
         <Button 
           variant="ghost" 
           size="icon"
-          onClick={handleCancel}
+          onClick={() => navigate(-1)}
         >
-          <X className="h-4 w-4" />
+          <ArrowLeft className="h-[1.2rem] w-[1.2rem]" />
         </Button>
       }
     >
@@ -253,16 +237,20 @@ const CompetitionFilterPage: React.FC = () => {
             onOpenChange={setDateRangeCollapsibleOpen}
             className="bg-white rounded-xl shadow-sm border border-gray-100"
           >
-            <CollapsibleTrigger className="w-full">
-              <div className="flex items-center gap-2 text-forest p-4">
-                <CalendarRange className="h-5 w-5" />
-                <h2 className="font-semibold">Datumintervall</h2>
-                <div className="flex-grow"></div>
-                <span className="text-xs">
-                  {hasDateFilter ? 'Aktivt filter' : 'Visa alla'}
-                </span>
-              </div>
-            </CollapsibleTrigger>
+            <div className="flex items-center gap-2 text-forest p-4">
+              <CalendarRange className="h-5 w-5" />
+              <h2 className="font-semibold">Datumintervall</h2>
+              <div className="flex-grow"></div>
+              <CollapsibleTrigger asChild>
+                <Button variant="ghost" size="sm" className="p-1">
+                  <span className="text-xs">
+                    {hasDateFilter
+                      ? 'Aktivt filter' 
+                      : 'Visa alla'}
+                  </span>
+                </Button>
+              </CollapsibleTrigger>
+            </div>
             
             <CollapsibleContent className="px-4 pb-4">
               <div className="space-y-4">
@@ -292,25 +280,84 @@ const CompetitionFilterPage: React.FC = () => {
             </CollapsibleContent>
           </Collapsible>
 
+          <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+            <div className="flex items-center gap-2 text-forest mb-3">
+              <MapPin className="h-5 w-5" />
+              <h2 className="font-semibold">Plats</h2>
+              <div className="flex-grow"></div>
+              <Switch 
+                id="location-filter"
+                checked={filters.useLocationFilter}
+                onCheckedChange={(checked) => setFilters({...filters, useLocationFilter: checked})}
+              />
+            </div>
+            
+            {filters.useLocationFilter && (
+              <div className="space-y-4 mt-2">
+                <div className="bg-gray-50 rounded-lg p-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <MapPin className="h-4 w-4 text-muted-foreground" />
+                      <span>{userLocation?.city}</span>
+                    </div>
+                    <Button 
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setDrawerOpen(true)}
+                      className="text-forest hover:text-forest-dark border-forest hover:border-forest-dark"
+                    >
+                      Byt plats
+                    </Button>
+                  </div>
+                </div>
+                
+                <div>
+                  <div className="flex justify-between mb-2">
+                    <Label htmlFor="distance-slider" className="text-sm text-gray-600">
+                      Maxavstånd: {filters.maxDistanceKm} km
+                    </Label>
+                  </div>
+                  <Slider
+                    id="distance-slider"
+                    defaultValue={[filters.maxDistanceKm]}
+                    min={5}
+                    max={500}
+                    step={5}
+                    onValueChange={([value]) => {
+                      setFilters({...filters, maxDistanceKm: value});
+                    }}
+                    className="py-4"
+                  />
+                  <div className="flex justify-between text-xs text-gray-400">
+                    <span>5 km</span>
+                    <span>500 km</span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
           <Collapsible
             open={branchCollapsibleOpen}
             onOpenChange={setBranchCollapsibleOpen}
             className="bg-white rounded-xl shadow-sm border border-gray-100"
           >
-            <CollapsibleTrigger className="w-full">
-              <div className="flex items-center gap-2 text-forest p-4">
-                <Activity className="h-5 w-5" />
-                <h2 className="font-semibold">Gren</h2>
-                <div className="flex-grow"></div>
-                <span className="text-xs">
-                  {filters?.branches?.length > 0 
-                    ? `${filters.branches.length} valda` 
-                    : "Visa alla"}
-                </span>
-              </div>
-            </CollapsibleTrigger>
+            <div className="flex items-center gap-2 text-forest p-4">
+              <Activity className="h-5 w-5" />
+              <h2 className="font-semibold">Gren</h2>
+              <div className="flex-grow"></div>
+              <CollapsibleTrigger asChild>
+                <Button variant="ghost" size="sm" className="p-1">
+                  <span className="text-xs">
+                    {filters?.branches?.length > 0 
+                      ? `${filters.branches.length} valda` 
+                      : "Visa alla"}
+                  </span>
+                </Button>
+              </CollapsibleTrigger>
+            </div>
             
-            <CollapsibleContent className="px-4 pb-4">
+            <CollapsibleContent className="px-4 pb-4 space-y-2">
               {allBranches.map((branch) => (
                 <div key={branch} className="flex items-center space-x-2">
                   <Checkbox 
@@ -334,20 +381,22 @@ const CompetitionFilterPage: React.FC = () => {
             onOpenChange={setDistrictCollapsibleOpen}
             className="bg-white rounded-xl shadow-sm border border-gray-100"
           >
-            <CollapsibleTrigger className="w-full">
-              <div className="flex items-center gap-2 text-forest p-4">
-                <Globe className="h-5 w-5" />
-                <h2 className="font-semibold">Distrikt</h2>
-                <div className="flex-grow"></div>
-                <span className="text-xs">
-                  {filters?.districts?.length > 0 
-                    ? `${filters.districts.length} valda` 
-                    : "Visa alla"}
-                </span>
-              </div>
-            </CollapsibleTrigger>
+            <div className="flex items-center gap-2 text-forest p-4">
+              <Globe className="h-5 w-5" />
+              <h2 className="font-semibold">Distrikt</h2>
+              <div className="flex-grow"></div>
+              <CollapsibleTrigger asChild>
+                <Button variant="ghost" size="sm" className="p-1">
+                  <span className="text-xs">
+                    {filters?.districts?.length > 0 
+                      ? `${filters.districts.length} valda` 
+                      : "Visa alla"}
+                  </span>
+                </Button>
+              </CollapsibleTrigger>
+            </div>
             
-            <CollapsibleContent className="px-4 pb-4">
+            <CollapsibleContent className="px-4 pb-4 space-y-2">
               {allDistricts.map((district) => (
                 <div key={district} className="flex items-center space-x-2">
                   <Checkbox 
@@ -371,20 +420,22 @@ const CompetitionFilterPage: React.FC = () => {
             onOpenChange={setDisciplineCollapsibleOpen}
             className="bg-white rounded-xl shadow-sm border border-gray-100"
           >
-            <CollapsibleTrigger className="w-full">
-              <div className="flex items-center gap-2 text-forest p-4">
-                <Activity className="h-5 w-5" />
-                <h2 className="font-semibold">Discipliner</h2>
-                <div className="flex-grow"></div>
-                <span className="text-xs">
-                  {filters?.disciplines?.length > 0 
-                    ? `${filters.disciplines.length} valda` 
-                    : "Visa alla"}
-                </span>
-              </div>
-            </CollapsibleTrigger>
+            <div className="flex items-center gap-2 text-forest p-4">
+              <Activity className="h-5 w-5" />
+              <h2 className="font-semibold">Discipliner</h2>
+              <div className="flex-grow"></div>
+              <CollapsibleTrigger asChild>
+                <Button variant="ghost" size="sm" className="p-1">
+                  <span className="text-xs">
+                    {filters?.disciplines?.length > 0 
+                      ? `${filters.disciplines.length} valda` 
+                      : "Visa alla"}
+                  </span>
+                </Button>
+              </CollapsibleTrigger>
+            </div>
             
-            <CollapsibleContent className="px-4 pb-4">
+            <CollapsibleContent className="px-4 pb-4 space-y-2">
               {allDisciplines.map((discipline) => (
                 <div key={discipline} className="flex items-center space-x-2">
                   <Checkbox 
@@ -408,20 +459,22 @@ const CompetitionFilterPage: React.FC = () => {
             onOpenChange={setCompetitionTypeCollapsibleOpen}
             className="bg-white rounded-xl shadow-sm border border-gray-100"
           >
-            <CollapsibleTrigger className="w-full">
-              <div className="flex items-center gap-2 text-forest p-4">
-                <CalendarIcon className="h-5 w-5" />
-                <h2 className="font-semibold">Tävlingstyper</h2>
-                <div className="flex-grow"></div>
-                <span className="text-xs">
-                  {filters?.competitionTypes?.length > 0 
-                    ? `${filters.competitionTypes.length} valda` 
-                    : "Visa alla"}
-                </span>
-              </div>
-            </CollapsibleTrigger>
+            <div className="flex items-center gap-2 text-forest p-4">
+              <CalendarIcon className="h-5 w-5" />
+              <h2 className="font-semibold">Tävlingstyper</h2>
+              <div className="flex-grow"></div>
+              <CollapsibleTrigger asChild>
+                <Button variant="ghost" size="sm" className="p-1">
+                  <span className="text-xs">
+                    {filters?.competitionTypes?.length > 0 
+                      ? `${filters.competitionTypes.length} valda` 
+                      : "Visa alla"}
+                  </span>
+                </Button>
+              </CollapsibleTrigger>
+            </div>
             
-            <CollapsibleContent className="px-4 pb-4">
+            <CollapsibleContent className="px-4 pb-4 space-y-2">
               {allCompetitionTypes.map((type) => (
                 <div key={type} className="flex items-center space-x-2">
                   <Checkbox 
@@ -440,13 +493,19 @@ const CompetitionFilterPage: React.FC = () => {
             </CollapsibleContent>
           </Collapsible>
           
-          <div className="flex items-center justify-center pt-2">
+          <div className="flex items-center gap-4 pt-2">
             <Button 
               variant="outline" 
-              className="text-forest hover:text-forest-dark"
+              className="flex-1"
               onClick={handleResetFilters}
             >
-              Återställ alla filter
+              Återställ
+            </Button>
+            <Button 
+              className="flex-1 bg-forest hover:bg-forest-dark"
+              onClick={handleApplyFilters}
+            >
+              Tillämpa filter
             </Button>
           </div>
         </div>

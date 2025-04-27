@@ -1,4 +1,3 @@
-
 import { CompetitionSummary, Competition, ResourceType, ResourceFormat, Resource, Branch, CompetitionType, Discipline, OrienteeringDistrict } from "../types";
 
 export const mockCompetitions: CompetitionSummary[] = [
@@ -12,7 +11,6 @@ export const mockCompetitions: CompetitionSummary[] = [
     discipline: Discipline.Middle, 
     competitionType: CompetitionType.National,
     district: OrienteeringDistrict.Smaland,
-    branch: Branch.FootO,  // Added branch property
     latitude: 56.9258,
     longitude: 16.4332,
     participantCount: 125,
@@ -28,7 +26,6 @@ export const mockCompetitions: CompetitionSummary[] = [
     discipline: Discipline.Long,
     competitionType: CompetitionType.National,
     district: OrienteeringDistrict.Smaland,
-    branch: Branch.FootO,  // Added branch property
     latitude: 57.6655,
     longitude: 15.8568
   },
@@ -42,7 +39,6 @@ export const mockCompetitions: CompetitionSummary[] = [
     discipline: Discipline.Long,
     competitionType: CompetitionType.Near,
     district: OrienteeringDistrict.Smaland,
-    branch: Branch.FootO,  // Added branch property
     latitude: 56.6633,
     longitude: 16.3569
   },
@@ -56,7 +52,6 @@ export const mockCompetitions: CompetitionSummary[] = [
     discipline: Discipline.Middle,
     competitionType: CompetitionType.Near,
     district: OrienteeringDistrict.Smaland,
-    branch: Branch.FootO,  // Added branch property
     latitude: 56.7512,
     longitude: 15.2722
   },
@@ -70,7 +65,6 @@ export const mockCompetitions: CompetitionSummary[] = [
     discipline: Discipline.Relay,
     competitionType: CompetitionType.Near,
     district: OrienteeringDistrict.Smaland,
-    branch: Branch.FootO,  // Added branch property
     latitude: 56.6313,
     longitude: 15.5359
   },
@@ -84,7 +78,6 @@ export const mockCompetitions: CompetitionSummary[] = [
     discipline: Discipline.Long,
     competitionType: CompetitionType.Near,
     district: OrienteeringDistrict.Smaland,
-    branch: Branch.FootO,  // Added branch property
     latitude: 56.7512,
     longitude: 15.2722
   },
@@ -98,7 +91,6 @@ export const mockCompetitions: CompetitionSummary[] = [
     discipline: Discipline.Long,
     competitionType: CompetitionType.Near,
     district: OrienteeringDistrict.Smaland,
-    branch: Branch.FootO,  // Added branch property
     latitude: 56.4108,
     longitude: 16.0030
   },
@@ -112,7 +104,6 @@ export const mockCompetitions: CompetitionSummary[] = [
     discipline: Discipline.Long,
     competitionType: CompetitionType.Near,
     district: OrienteeringDistrict.Smaland,
-    branch: Branch.FootO,  // Added branch property
     latitude: 56.4108,
     longitude: 16.0030
   },
