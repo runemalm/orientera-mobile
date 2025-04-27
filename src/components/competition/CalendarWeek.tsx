@@ -23,7 +23,10 @@ const CalendarWeek: React.FC<CalendarWeekProps> = ({
   
   return (
     <div className="mb-3 rounded-lg overflow-hidden shadow-sm">
-      <CalendarWeekHeader weekNumber={weekNumber} />
+      <CalendarWeekHeader 
+        weekNumber={weekNumber} 
+        startDate={days.length > 0 ? days[0].date : undefined} 
+      />
       
       <div>
         {days.map((day, index) => {

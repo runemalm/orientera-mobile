@@ -5,16 +5,16 @@ import { sv } from 'date-fns/locale';
 
 interface CalendarWeekHeaderProps {
   weekNumber: number;
-  startDate: Date;
+  startDate?: Date; // Make startDate optional
 }
 
 const CalendarWeekHeader: React.FC<CalendarWeekHeaderProps> = ({ weekNumber, startDate }) => {
-  const monthName = format(startDate, 'MMMM', { locale: sv });
+  const monthName = startDate ? format(startDate, 'MMMM', { locale: sv }) : '';
   
   return (
     <div className="flex justify-between items-center py-2 px-3 text-sm text-gray-600">
       <span>Vecka {weekNumber}</span>
-      <span className="capitalize">{monthName}</span>
+      {startDate && <span className="capitalize">{monthName}</span>}
     </div>
   );
 };
