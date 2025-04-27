@@ -88,6 +88,9 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
     };
   }, [searchTerm]);
 
+  // Force CommandList to always render when we have search results
+  const hasResults = results.length > 0;
+
   return (
     <div className="w-full">
       <Command className="rounded-lg border shadow-md">
@@ -103,30 +106,32 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
         </div>
         
         <CommandList className="max-h-[300px] overflow-y-auto">
-          {showEmpty && results.length === 0 && !isSearching && (
+          {showEmpty && results.length === 0 && !isSearching ? (
             <CommandEmpty>Inga resultat hittades</CommandEmpty>
+          ) : (
+            <CommandGroup>
+              {results.map((result, index) => (
+                <CommandItem
+                  key={`${result.city}-${index}`}
+                  className="cursor-pointer py-2 px-2 text-sm"
+                  onSelect={() => {
+                    onLocationSelected({
+                      city: result.city,
+                      latitude: result.latitude,
+                      longitude: result.longitude,
+                    });
+                    setSearchTerm('');
+                    setResults([]);
+                    setShowEmpty(false);
+                  }}
+                  value={result.display_name}
+                >
+                  <MapPin className="mr-2 h-4 w-4" />
+                  <span className="truncate">{result.display_name}</span>
+                </CommandItem>
+              ))}
+            </CommandGroup>
           )}
-          <CommandGroup>
-            {results.map((result, index) => (
-              <CommandItem
-                key={index}
-                className="cursor-pointer py-2 px-2 text-sm"
-                onSelect={() => {
-                  onLocationSelected({
-                    city: result.city,
-                    latitude: result.latitude,
-                    longitude: result.longitude,
-                  });
-                  setSearchTerm('');
-                  setResults([]);
-                  setShowEmpty(false);
-                }}
-              >
-                <MapPin className="mr-2 h-4 w-4" />
-                <span className="truncate">{result.display_name}</span>
-              </CommandItem>
-            ))}
-          </CommandGroup>
         </CommandList>
       </Command>
     </div>

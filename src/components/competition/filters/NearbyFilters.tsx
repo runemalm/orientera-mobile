@@ -66,6 +66,11 @@ const NearbyFilters: React.FC<NearbyFiltersProps> = ({
       </div>
       
       <div className="space-y-4 mt-2">
+        <div className="p-2 bg-gray-50 rounded-lg flex items-center">
+          <MapPin className="h-4 w-4 mr-2 text-gray-500" />
+          <span className="text-sm">{userCity}</span>
+        </div>
+        
         <LocationSearchInput 
           onLocationSelected={onLocationChangeClick}
           currentCity={userCity}
