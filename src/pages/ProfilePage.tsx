@@ -11,50 +11,50 @@ const ProfilePage: React.FC = () => {
 
   return (
     <MobileLayout title="Profil">
-      <div className="flex flex-col p-4 space-y-6">
-        {/* Main profile card with skeleton */}
-        <Card className="w-full">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-4 mb-6">
-              <Skeleton className="h-16 w-16 rounded-full" />
+      <div className="flex flex-col items-center p-4 space-y-4 relative">
+        {/* Main profile card with elaborate skeleton */}
+        <Card className="w-full overflow-hidden">
+          <CardContent className="p-4 space-y-4">
+            <div className="flex items-center gap-4">
+              <Skeleton className="h-12 w-12 rounded-full" />
               <div className="space-y-2 flex-1">
-                <Skeleton className="h-5 w-32" />
                 <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-3 w-32" />
               </div>
             </div>
             
-            <div className="space-y-3">
+            <div className="space-y-2 pt-2">
               <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-4/5" />
               <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-5/6" />
             </div>
           </CardContent>
         </Card>
 
         {/* Stats card */}
-        <Card className="w-full">
-          <CardContent className="py-6 px-4">
+        <Card className="w-full overflow-hidden">
+          <CardContent className="p-4">
             <div className="grid grid-cols-3 gap-4">
-              <div className="space-y-2 text-center">
-                <Skeleton className="h-10 w-16 mx-auto" />
-                <Skeleton className="h-4 w-20 mx-auto" />
+              <div className="space-y-2">
+                <Skeleton className="h-8 w-12 mx-auto" />
+                <Skeleton className="h-3 w-16 mx-auto" />
               </div>
-              <div className="space-y-2 text-center">
-                <Skeleton className="h-10 w-16 mx-auto" />
-                <Skeleton className="h-4 w-20 mx-auto" />
+              <div className="space-y-2">
+                <Skeleton className="h-8 w-12 mx-auto" />
+                <Skeleton className="h-3 w-16 mx-auto" />
               </div>
-              <div className="space-y-2 text-center">
-                <Skeleton className="h-10 w-16 mx-auto" />
-                <Skeleton className="h-4 w-20 mx-auto" />
+              <div className="space-y-2">
+                <Skeleton className="h-8 w-12 mx-auto" />
+                <Skeleton className="h-3 w-16 mx-auto" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Login button */}
-        <div className="flex justify-center">
+        {/* Login button positioned in the mobile container instead of fixed */}
+        <div className="w-full max-w-xs mx-auto mt-6">
           <Button 
-            className="shadow-lg px-8" 
+            className="w-full shadow-lg" 
             size="lg"
             onClick={() => setShowLoginDialog(true)}
           >
