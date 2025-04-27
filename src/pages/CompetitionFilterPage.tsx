@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Button } from '@/components/ui/button';
@@ -40,9 +41,19 @@ const CompetitionFilterPage = () => {
   const { userLocation, updateUserLocation, resetUserLocation } = useUserLocation();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [filters, setFilters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
+  // Store the current view mode
+  const [viewMode, setViewMode] = useLocalStorage<'calendar' | 'list'>('competitionViewMode', 'calendar');
   
   const state = location.state as RouteState;
-  const activeTab = state?.activeTab || 'calendar';
+  // Use the passed activeTab from route state, or fall back to the stored viewMode
+  const activeTab = state?.activeTab || viewMode;
+  
+  // Update the stored viewMode when activeTab changes
+  useEffect(() => {
+    if (state?.activeTab && state.activeTab !== viewMode) {
+      setViewMode(state.activeTab);
+    }
+  }, [state?.activeTab, viewMode, setViewMode]);
 
   const handleUpdateLocation = (location: { city: string; latitude: number; longitude: number }) => {
     updateUserLocation(location);
