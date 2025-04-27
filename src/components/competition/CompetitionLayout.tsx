@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect } from 'react';
 import { CompetitionSummary } from '../../types';
 import { UserLocation } from '../../hooks/useUserLocation';
@@ -7,6 +6,7 @@ import CalendarList from './CalendarList';
 import CompetitionList from './CompetitionList';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { ScrollArea } from '../ui/scroll-area';
+import { useNavigate } from 'react-router-dom';
 
 interface CompetitionLayoutProps {
   competitions: CompetitionSummary[];
@@ -28,6 +28,8 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
   const calendarScrollRef = useRef<HTMLDivElement>(null);
   const listScrollRef = useRef<HTMLDivElement>(null);
 
+  const navigate = useNavigate();
+
   // Save scroll position when tab changes or component unmounts
   const saveScrollPosition = () => {
     if (viewMode === 'calendar' && calendarScrollRef.current) {
@@ -41,6 +43,16 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
   const handleTabChange = (value: string) => {
     saveScrollPosition();
     setViewMode(value as 'calendar' | 'list');
+  };
+
+  // Navigate to filter page with current tab
+  const handleFilterClick = () => {
+    navigate('/competitions/filter', { 
+      state: { 
+        activeTab: viewMode,
+        transition: 'slide' 
+      }
+    });
   };
 
   // Restore scroll position on mount and tab change
