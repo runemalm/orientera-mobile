@@ -2,21 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Button } from '@/components/ui/button';
-import { Slider } from '@/components/ui/slider';
-import { Calendar } from '@/components/ui/calendar';
-import { 
-  ArrowLeft, 
-  Globe, 
-  Activity, 
-  Calendar as CalendarIcon,
-  CalendarRange
-} from 'lucide-react';
-import { 
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { Checkbox } from "@/components/ui/checkbox";
+import { X, Save } from 'lucide-react';
 import { toast } from 'sonner';
 import { Label } from '@/components/ui/label';
 import LocationInputForm from '../components/LocationInputForm';
@@ -169,6 +155,17 @@ const CompetitionFilterPage = () => {
     toast.info('Filtren har återställts');
   };
 
+  const handleSaveFilters = () => {
+    navigate(-1);
+    toast.success('Filter inställningar sparade', {
+      description: 'Dina filterinställningar har uppdaterats'
+    });
+  };
+
+  const handleCancel = () => {
+    navigate(-1);
+  };
+
   const getBranchTranslation = (branch: Branch) => {
     const translations: Record<Branch, string> = {
       [Branch.FootO]: 'Orienteringslöpning',
@@ -213,13 +210,24 @@ const CompetitionFilterPage = () => {
   return (
     <MobileLayout 
       title="Filter" 
+      showBackButton={false}
       action={
         <Button 
           variant="ghost" 
-          size="icon"
-          onClick={() => navigate(-1)}
+          size="sm"
+          onClick={handleSaveFilters}
+          className="text-forest hover:text-forest-dark"
         >
-          <ArrowLeft className="h-[1.2rem] w-[1.2rem]" />
+          <Save className="h-5 w-5" />
+        </Button>
+      }
+      leftAction={
+        <Button 
+          variant="ghost" 
+          size="sm"
+          onClick={handleCancel}
+        >
+          <X className="h-5 w-5" />
         </Button>
       }
     >
@@ -429,19 +437,13 @@ const CompetitionFilterPage = () => {
             </CollapsibleContent>
           </Collapsible>
           
-          <div className="flex items-center gap-4 pt-2">
+          <div className="flex items-center justify-center pt-2">
             <Button 
               variant="outline" 
-              className="flex-1"
+              className="text-forest hover:text-forest-dark border-forest hover:border-forest-dark"
               onClick={handleResetFilters}
             >
-              Återställ
-            </Button>
-            <Button 
-              className="flex-1 bg-forest hover:bg-forest-dark"
-              onClick={handleApplyFilters}
-            >
-              Tillämpa filter
+              Rensa filter
             </Button>
           </div>
         </div>
