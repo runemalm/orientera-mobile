@@ -228,8 +228,9 @@ const CompetitionFilterPage = () => {
       action={
         <Button 
           size="sm"
+          variant="outline"
           onClick={handleSaveFilters}
-          className="bg-forest hover:bg-forest-dark text-white"
+          className="text-forest hover:text-forest-dark border-forest hover:border-forest-dark"
         >
           Spara
         </Button>
@@ -237,10 +238,10 @@ const CompetitionFilterPage = () => {
       leftAction={
         <Button 
           variant="ghost" 
-          size="sm"
+          size="icon"
           onClick={handleCancel}
         >
-          Avbryt
+          <X className="h-4 w-4" />
         </Button>
       }
     >
