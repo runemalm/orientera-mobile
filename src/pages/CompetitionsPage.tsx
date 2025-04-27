@@ -53,11 +53,8 @@ const CompetitionsPage: React.FC = () => {
     setIsLoadingCompetitions(true);
     setError(null);
     
-    // Ensure we have a valid filters object
     const safeFilters = filters || DEFAULT_FILTERS;
     
-    // If from date is explicitly set in the filter, use exactly that date
-    // Otherwise use the Monday of the current week
     const fromDate = safeFilters.dateRange?.from 
       ? safeFilters.dateRange.from 
       : startOfWeek(new Date(), { weekStartsOn: 1 });
@@ -76,9 +73,7 @@ const CompetitionsPage: React.FC = () => {
           from: fromDate,
           to: toDate,
           limit: 50,
-          // Only include maxDistance if location filter is enabled
           maxDistanceKm: safeFilters.useLocationFilter ? safeFilters.maxDistanceKm : undefined,
-          // Only include filter arrays if they have values
           districts: safeFilters.districts.length > 0 ? safeFilters.districts : undefined,
           disciplines: safeFilters.disciplines.length > 0 ? safeFilters.disciplines : undefined,
           competitionTypes: safeFilters.competitionTypes.length > 0 ? safeFilters.competitionTypes : undefined,
@@ -125,12 +120,9 @@ const CompetitionsPage: React.FC = () => {
       );
     }
 
-    // Ensure we have a valid filters object
     const safeFilters = filters || DEFAULT_FILTERS;
     const dateRange = safeFilters.dateRange || { from: null, to: null };
     
-    // If from date is explicitly set in the filter, use exactly that date
-    // Otherwise use the Monday of the current week
     const fromDate = dateRange.from 
       ? dateRange.from 
       : startOfWeek(new Date(), { weekStartsOn: 1 });
