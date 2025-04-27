@@ -34,12 +34,12 @@ export const useAssistantChat = () => {
 
     setTimeout(() => {
       setMessages(prev => [...prev, {
-        content: "Tack för ditt meddelande! 🌟\n\n" + 
-                "Jag är jättehappy över att hjälpa dig hitta rätt tävling. " + 
-                "Ju mer specifik du kan vara, desto bättre kan jag skräddarsy informationen för dig.\n\n" +
-                "Berätta gärna mer! Letar du efter en viss typ av tävling? " +
-                "Är du intresserad av något specifikt distrikt eller några särskilda datum? " +
-                "Ju mer detaljer du kan ge, desto bättre kan jag guida dig! 🏃‍♀️🗺️",
+        content: "Hej! 👋\n\n" + 
+                "Tack för din fråga! Jag är faktiskt ganska ny här och håller fortfarande på att lära mig alla detaljer om tävlingarna. " +
+                "Just den här frågan känner jag mig tyvärr inte helt säker på än.\n\n" +
+                "Skulle du kunna testa att komma tillbaka om några dagar? Då hoppas jag att jag har hunnit sätta mig in i det bättre " +
+                "och kan ge dig ett mer hjälpsamt svar! 💪\n\n" +
+                "Under tiden, finns det något annat jag kan hjälpa till med? 😊",
         isBot: true
       }]);
     }, 1000);
