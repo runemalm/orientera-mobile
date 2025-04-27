@@ -1,4 +1,3 @@
-
 import { Competition, CompetitionSummary } from "../types";
 import { mockCompetitions, mockCompetitionDetails } from "../utils/mockData";
 
@@ -21,7 +20,8 @@ export const getNearbyCompetitions = async (
     limit?: number,
     districts?: string[],
     disciplines?: string[],
-    competitionTypes?: string[]
+    competitionTypes?: string[],
+    branches?: string[]
   }
 ): Promise<CompetitionSummary[]> => {
   if (USE_MOCK_API) {
@@ -62,8 +62,14 @@ export const getNearbyCompetitions = async (
         options.competitionTypes!.includes(comp.competitionType)
       );
     }
+
+    if (options?.branches && options.branches.length > 0) {
+      filteredCompetitions = filteredCompetitions.filter(comp => 
+        options.branches!.includes(comp.branch)
+      );
+    }
     
-    // Apply distance filter if provided
+    // Apply distance filter if provided and location filter is enabled
     if (options?.maxDistanceKm) {
       // This is a simplified version, real distance calculation would be more complex
       filteredCompetitions = filteredCompetitions.filter(comp => {
@@ -85,14 +91,12 @@ export const getNearbyCompetitions = async (
     return filteredCompetitions;
   }
   
-  // Real API call implementation
+  // Real API implementation
   try {
-    // Create URLSearchParams object for query parameters
     const params = new URLSearchParams();
     params.append('latitude', latitude.toString());
     params.append('longitude', longitude.toString());
     
-    // Only add date filters if they are provided, ensuring they're valid dates
     if (options?.from instanceof Date) {
       params.append('from', options.from.toISOString().split('T')[0]);
     }
@@ -109,7 +113,7 @@ export const getNearbyCompetitions = async (
       params.append('limit', options.limit.toString());
     }
     
-    // Add new filter parameters
+    // Add filter parameters
     if (options?.districts && options.districts.length > 0) {
       options.districts.forEach(district => {
         params.append('districts', district);
@@ -125,6 +129,12 @@ export const getNearbyCompetitions = async (
     if (options?.competitionTypes && options.competitionTypes.length > 0) {
       options.competitionTypes.forEach(type => {
         params.append('competitionTypes', type);
+      });
+    }
+
+    if (options?.branches && options.branches.length > 0) {
+      options.branches.forEach(branch => {
+        params.append('branches', branch);
       });
     }
     
@@ -182,4 +192,3 @@ export const getCompetitionById = async (id: string): Promise<Competition | null
     throw error;
   }
 };
-

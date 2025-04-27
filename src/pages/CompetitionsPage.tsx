@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -19,6 +18,7 @@ interface Filter {
   districts: string[];
   disciplines: string[];
   competitionTypes: string[];
+  branches: string[];
   dateRange: {
     from: Date | null;
     to: Date | null;
@@ -31,6 +31,7 @@ const DEFAULT_FILTERS: Filter = {
   districts: [],
   disciplines: [],
   competitionTypes: [],
+  branches: [],
   dateRange: {
     from: null,
     to: null
@@ -52,17 +53,16 @@ const CompetitionsPage: React.FC = () => {
     setIsLoadingCompetitions(true);
     setError(null);
     
-    // Ensure we have a valid filters object with dateRange
+    // Ensure we have a valid filters object
     const safeFilters = filters || DEFAULT_FILTERS;
-    const dateRange = safeFilters.dateRange || { from: null, to: null };
     
     // If from date is explicitly set in the filter, use exactly that date
     // Otherwise use the Monday of the current week
-    const fromDate = dateRange.from 
-      ? dateRange.from 
+    const fromDate = safeFilters.dateRange?.from 
+      ? safeFilters.dateRange.from 
       : startOfWeek(new Date(), { weekStartsOn: 1 });
     
-    const toDate = dateRange.to || (() => {
+    const toDate = safeFilters.dateRange?.to || (() => {
       const date = new Date();
       date.setMonth(date.getMonth() + 1);
       return date;
@@ -76,10 +76,13 @@ const CompetitionsPage: React.FC = () => {
           from: fromDate,
           to: toDate,
           limit: 50,
+          // Only include maxDistance if location filter is enabled
           maxDistanceKm: safeFilters.useLocationFilter ? safeFilters.maxDistanceKm : undefined,
+          // Only include filter arrays if they have values
           districts: safeFilters.districts.length > 0 ? safeFilters.districts : undefined,
           disciplines: safeFilters.disciplines.length > 0 ? safeFilters.disciplines : undefined,
-          competitionTypes: safeFilters.competitionTypes.length > 0 ? safeFilters.competitionTypes : undefined
+          competitionTypes: safeFilters.competitionTypes.length > 0 ? safeFilters.competitionTypes : undefined,
+          branches: safeFilters.branches.length > 0 ? safeFilters.branches : undefined
         }
       );
       
@@ -122,7 +125,7 @@ const CompetitionsPage: React.FC = () => {
       );
     }
 
-    // Ensure we have a valid filters object with dateRange
+    // Ensure we have a valid filters object
     const safeFilters = filters || DEFAULT_FILTERS;
     const dateRange = safeFilters.dateRange || { from: null, to: null };
     
@@ -168,4 +171,3 @@ const CompetitionsPage: React.FC = () => {
 };
 
 export default CompetitionsPage;
-
