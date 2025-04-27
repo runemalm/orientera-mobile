@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -48,24 +49,39 @@ const CompetitionsPage: React.FC = () => {
   const [filters, setFilters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
 
   const fetchCompetitions = useCallback(async () => {
-    if (!userLocation) return;
+    if (!userLocation) {
+      console.log('No user location available, skipping competition fetch');
+      return;
+    }
     
     setIsLoadingCompetitions(true);
     setError(null);
     
+    // Ensure we have valid filters by using defaults if needed
     const safeFilters = filters || DEFAULT_FILTERS;
     
+    // Handle the date range safely
     const fromDate = safeFilters.dateRange?.from 
-      ? safeFilters.dateRange.from 
+      ? new Date(safeFilters.dateRange.from) 
       : startOfWeek(new Date(), { weekStartsOn: 1 });
     
-    const toDate = safeFilters.dateRange?.to || (() => {
-      const date = new Date();
-      date.setMonth(date.getMonth() + 1);
-      return date;
-    })();
+    const toDate = safeFilters.dateRange?.to 
+      ? new Date(safeFilters.dateRange.to)
+      : (() => {
+          const date = new Date();
+          date.setMonth(date.getMonth() + 1);
+          return date;
+        })();
     
     try {
+      console.log('Fetching competitions with params:', {
+        lat: userLocation.latitude,
+        lng: userLocation.longitude,
+        from: fromDate,
+        to: toDate,
+        filters: safeFilters
+      });
+
       const result = await getNearbyCompetitions(
         userLocation.latitude, 
         userLocation.longitude,
@@ -74,18 +90,20 @@ const CompetitionsPage: React.FC = () => {
           to: toDate,
           limit: 50,
           maxDistanceKm: safeFilters.useLocationFilter ? safeFilters.maxDistanceKm : undefined,
-          districts: safeFilters.districts.length > 0 ? safeFilters.districts : undefined,
-          disciplines: safeFilters.disciplines.length > 0 ? safeFilters.disciplines : undefined,
-          competitionTypes: safeFilters.competitionTypes.length > 0 ? safeFilters.competitionTypes : undefined,
-          branches: safeFilters.branches.length > 0 ? safeFilters.branches : undefined
+          districts: safeFilters.districts && safeFilters.districts.length > 0 ? safeFilters.districts : undefined,
+          disciplines: safeFilters.disciplines && safeFilters.disciplines.length > 0 ? safeFilters.disciplines : undefined,
+          competitionTypes: safeFilters.competitionTypes && safeFilters.competitionTypes.length > 0 ? safeFilters.competitionTypes : undefined,
+          branches: safeFilters.branches && safeFilters.branches.length > 0 ? safeFilters.branches : undefined
         }
       );
       
-      setCompetitions(result);
-      cachedCompetitions = result;
+      console.log('Competitions fetched:', result);
+      setCompetitions(result || []);  // Ensure we always have an array
+      cachedCompetitions = result || [];
     } catch (err) {
       console.error('Error fetching competitions:', err);
       setError('Det gick inte att hämta tävlingar. Försök igen senare.');
+      setCompetitions([]);  // Set empty array on error
     } finally {
       setIsLoadingCompetitions(false);
     }
