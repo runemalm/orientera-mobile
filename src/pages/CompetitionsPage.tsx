@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -168,20 +169,19 @@ const CompetitionsPage: React.FC = () => {
             <DialogTitle>Om tävlingsvisning</DialogTitle>
             <DialogDescription className="space-y-3 pt-3">
               <p>
-                Här kan du se kommande orienteringstävlingar på två olika sätt:
+                Här kan du se kommande orienteringstävlingar som är relevanta för dig.
               </p>
-              <ul className="list-disc pl-4 space-y-2">
-                <li><strong>Kalender:</strong> Se tävlingar ordnade efter datum i ett kalenderformat.</li>
-                <li><strong>Nära mig:</strong> Se tävlingar sorterade efter avstånd från din plats.</li>
-              </ul>
               <p>
-                För att hitta specifika tävlingar kan du använda vår smarta assistent. Klicka på assistentikonen i menyn och ställ frågor som:
+                Du kan använda vår smarta assistent för att hitta specifika tävlingar. Klicka på assistentikonen i menyn och ställ frågor som:
               </p>
               <ul className="list-disc pl-4 space-y-2">
                 <li>"Visa tävlingar i Skåne"</li>
                 <li>"Hitta stafetter i juni"</li>
                 <li>"Visa medeldistanstävlingar nära Göteborg"</li>
               </ul>
+              <p>
+                Använd filtreringsalternativen för att anpassa dina sökresultat ännu mer.
+              </p>
             </DialogDescription>
           </DialogHeader>
         </DialogContent>
@@ -191,3 +191,4 @@ const CompetitionsPage: React.FC = () => {
 };
 
 export default CompetitionsPage;
+
