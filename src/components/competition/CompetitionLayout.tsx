@@ -8,6 +8,9 @@ import CompetitionList from './CompetitionList';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { ScrollArea } from '../ui/scroll-area';
 import { useNavigate } from 'react-router-dom';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { AlertTriangle, MapPin } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface CompetitionLayoutProps {
   competitions: CompetitionSummary[];
@@ -56,6 +59,16 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
     });
   };
 
+  // Redirect to location setting page
+  const handleSetLocationClick = () => {
+    navigate('/competitions/filter', { 
+      state: { 
+        activeTab: 'list',
+        transition: 'slide' 
+      }
+    });
+  };
+
   // Restore scroll position on mount and tab change
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -71,6 +84,39 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
       saveScrollPosition();
     };
   }, [viewMode, calendarScrollPosition, listScrollPosition]);
+
+  // Render placeholder for list view when no location is set
+  const renderListContent = () => {
+    if (!userLocation) {
+      return (
+        <div className="p-4 space-y-4">
+          <Alert 
+            variant="default" 
+            className="border-forest/50 bg-forest-100 text-forest"
+          >
+            <AlertTriangle className="h-4 w-4 text-forest" />
+            <AlertDescription className="text-forest">
+              Du behöver ange din plats för att se tävlingar i närheten
+            </AlertDescription>
+          </Alert>
+          <Button 
+            onClick={handleSetLocationClick}
+            className="w-full bg-forest hover:bg-forest-dark"
+          >
+            <MapPin className="mr-2 h-4 w-4" />
+            Ange plats
+          </Button>
+        </div>
+      );
+    }
+
+    return (
+      <CompetitionList
+        competitions={competitions}
+        userLocation={userLocation}
+      />
+    );
+  };
 
   return (
     <div className="flex flex-col h-full">
@@ -103,12 +149,7 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
           ref={listScrollRef}
         >
           <div className="px-2 pt-0 pb-4">
-            {userLocation && (
-              <CompetitionList
-                competitions={competitions}
-                userLocation={userLocation}
-              />
-            )}
+            {renderListContent()}
           </div>
         </div>
       </div>
