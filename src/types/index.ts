@@ -1,4 +1,3 @@
-
 // Enums to match backend C# models
 export enum Branch {
   FootO = 'FootO',    // Orienteringslöpning
@@ -78,6 +77,20 @@ export enum ResourceFormat {
 
 // Update the TabName type to include 'assistant'
 export type TabName = 'home' | 'competitions' | 'favorites' | 'profile' | 'settings' | 'assistant';
+
+// Add the Filter interface that was missing
+export interface Filter {
+  useLocationFilter: boolean;
+  maxDistanceKm: number;
+  districts: string[];
+  disciplines: string[];
+  competitionTypes: string[];
+  branches: string[];
+  dateRange: {
+    from: Date | null;
+    to: Date | null;
+  };
+}
 
 // CompetitionSummary for list views
 export interface CompetitionSummary {
