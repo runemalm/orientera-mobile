@@ -229,7 +229,7 @@ const CompetitionFilterPage = () => {
       action={
         <Button 
           size="sm"
-          variant="outline"
+          variant="ghost"
           onClick={handleSaveFilters}
           className="text-forest hover:text-forest-dark"
         >
