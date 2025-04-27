@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -5,7 +6,7 @@ import { Loader2 } from 'lucide-react';
 import { CompetitionSummary } from '../types';
 import { getNearbyCompetitions } from '../services/api';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import { startOfWeek } from 'date-fns';
+import { addMonths, startOfWeek, endOfWeek, isSameWeek } from 'date-fns';
 import CompetitionLayout from '../components/competition/CompetitionLayout';
 
 interface Filter {
@@ -47,20 +48,26 @@ const CompetitionsPage: React.FC = () => {
     
     const safeFilters = filters || DEFAULT_FILTERS;
     
-    const fromDate = safeFilters.dateRange?.from 
-      ? safeFilters.dateRange.from 
-      : startOfWeek(new Date(), { weekStartsOn: 1 });
+    // Get current date and day of week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+    const now = new Date();
+    const currentDay = now.getDay();
     
-    const toDate = safeFilters.dateRange?.to || (() => {
-      const date = new Date();
-      date.setMonth(date.getMonth() + 1);
-      return date;
-    })();
+    // If it's Monday (1), Tuesday (2), or Wednesday (3), start from previous week
+    const startDate = startOfWeek(
+      currentDay >= 1 && currentDay <= 3 
+        ? new Date(now.setDate(now.getDate() - 7)) // Previous week
+        : now, 
+      { weekStartsOn: 1 } // Week starts on Monday
+    );
+    
+    // End date is the end of the week 6 months from now
+    const sixMonthsFromNow = addMonths(now, 6);
+    const endDate = endOfWeek(sixMonthsFromNow, { weekStartsOn: 1 });
     
     try {
       console.log('Fetching competitions with filters:', {
-        from: fromDate,
-        to: toDate,
+        from: startDate,
+        to: endDate,
         districts: safeFilters.districts,
         disciplines: safeFilters.disciplines,
         competitionTypes: safeFilters.competitionTypes,
@@ -71,8 +78,8 @@ const CompetitionsPage: React.FC = () => {
         0, // Default latitude
         0, // Default longitude
         {
-          from: fromDate,
-          to: toDate,
+          from: startDate,
+          to: endDate,
           limit: 50,
           districts: safeFilters.districts.length > 0 ? safeFilters.districts : undefined,
           disciplines: safeFilters.disciplines.length > 0 ? safeFilters.disciplines : undefined,
@@ -148,3 +155,4 @@ const CompetitionsPage: React.FC = () => {
 };
 
 export default CompetitionsPage;
+
