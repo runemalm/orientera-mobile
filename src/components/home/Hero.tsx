@@ -33,7 +33,7 @@ const Hero: React.FC = () => {
     <div className="flex items-center justify-center w-full py-8">
       <div className="flex flex-col gap-8 items-center max-w-sm">
         <div 
-          className="relative cursor-pointer" 
+          className="relative"
           onClick={handleTap}
         >
           <div className="w-24 h-24 bg-gradient-to-br from-primary/20 to-primary/5 rounded-full flex items-center justify-center shrink-0">
