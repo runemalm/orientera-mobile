@@ -67,6 +67,13 @@ const CompetitionFilterPage = () => {
     }
     setFilters(DEFAULT_FILTERS);
     toast.info('Filtren har återställts');
+    
+    navigate('/competitions', { 
+      state: { 
+        activeTab,
+        transition: 'slide' 
+      }
+    });
   };
 
   return (
