@@ -58,7 +58,7 @@ const DEFAULT_FILTERS: Filter = {
   }
 };
 
-const CompetitionFilterPage = () => {
+const CompetitionFilterPage: React.FC = () => {
   const navigate = useNavigate();
   const { userLocation, updateUserLocation } = useUserLocation();
   const [drawerOpen, setDrawerOpen] = useState(false);
