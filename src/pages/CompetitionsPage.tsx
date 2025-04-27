@@ -1,12 +1,20 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Info } from 'lucide-react';
 import { CompetitionSummary } from '../types';
 import { getNearbyCompetitions } from '../services/api';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import { addMonths, startOfWeek, endOfWeek, isSameWeek } from 'date-fns';
+import { addMonths, startOfWeek, endOfWeek } from 'date-fns';
 import CompetitionLayout from '../components/competition/CompetitionLayout';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 interface Filter {
   useLocationFilter: boolean;
@@ -40,6 +48,7 @@ const CompetitionsPage: React.FC = () => {
   const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
+  const [showInfo, setShowInfo] = useState(false);
 
   const fetchCompetitions = useCallback(async () => {
     setIsLoadingCompetitions(true);
@@ -140,12 +149,44 @@ const CompetitionsPage: React.FC = () => {
   };
 
   return (
-    <MobileLayout 
-      title="Hitta Tävlingar" 
-      fullHeight
-    >
-      {renderContent()}
-    </MobileLayout>
+    <>
+      <MobileLayout 
+        title="Hitta Tävlingar" 
+        fullHeight
+        action={
+          <Button variant="ghost" size="icon" onClick={() => setShowInfo(true)}>
+            <Info className="h-5 w-5" />
+          </Button>
+        }
+      >
+        {renderContent()}
+      </MobileLayout>
+
+      <Dialog open={showInfo} onOpenChange={setShowInfo}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Om tävlingsvisning</DialogTitle>
+            <DialogDescription className="space-y-3 pt-3">
+              <p>
+                Här kan du se kommande orienteringstävlingar på två olika sätt:
+              </p>
+              <ul className="list-disc pl-4 space-y-2">
+                <li><strong>Kalender:</strong> Se tävlingar ordnade efter datum i ett kalenderformat.</li>
+                <li><strong>Nära mig:</strong> Se tävlingar sorterade efter avstånd från din plats.</li>
+              </ul>
+              <p>
+                För att hitta specifika tävlingar kan du använda vår smarta assistent. Klicka på assistentikonen i menyn och ställ frågor som:
+              </p>
+              <ul className="list-disc pl-4 space-y-2">
+                <li>"Visa tävlingar i Skåne"</li>
+                <li>"Hitta stafetter i juni"</li>
+                <li>"Visa medeldistanstävlingar nära Göteborg"</li>
+              </ul>
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 
