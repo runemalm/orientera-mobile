@@ -1,11 +1,12 @@
-
 import React, { useState, useEffect } from 'react';
-import { Star, MapPin } from 'lucide-react';
+import { Star, MapPin, Radius } from 'lucide-react';
 import { CompetitionSummary } from '../../types';
 import CompetitionCard from '../CompetitionCard';
 import { UserLocation } from '../../hooks/useUserLocation';
 import { Button } from '../ui/button';
 import LocationInputForm from '../LocationInputForm';
+import RadiusInputForm from '../RadiusInputForm';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 
 interface CompetitionListProps {
   competitions: CompetitionSummary[];
@@ -20,8 +21,9 @@ const CompetitionList: React.FC<CompetitionListProps> = ({
 }) => {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [isChangingLocation, setIsChangingLocation] = useState(false);
+  const [isChangingRadius, setIsChangingRadius] = useState(false);
+  const [searchRadius, setSearchRadius] = useLocalStorage<number>('searchRadius', 100);
   
-  // Load favorites directly from localStorage
   useEffect(() => {
     const storedFavoritesStr = window.localStorage.getItem('favoriteCompetitions');
     if (storedFavoritesStr) {
@@ -35,17 +37,20 @@ const CompetitionList: React.FC<CompetitionListProps> = ({
     }
   }, []);
 
-  // Only filter by favorites if showFavorites is true, otherwise show all competitions passed in
   const filteredCompetitions = showFavorites
     ? competitions.filter(comp => favorites.includes(comp.id))
     : competitions;
 
   const handleLocationSelected = (location: { city: string; latitude: number; longitude: number }) => {
-    // We'll update this in the parent component
     window.dispatchEvent(new CustomEvent('locationUpdated', { 
       detail: location 
     }));
     setIsChangingLocation(false);
+  };
+
+  const handleRadiusSelected = (radius: number) => {
+    setSearchRadius(radius);
+    setIsChangingRadius(false);
   };
   
   if (!userLocation) {
@@ -85,6 +90,28 @@ const CompetitionList: React.FC<CompetitionListProps> = ({
       </div>
     );
   }
+
+  if (isChangingRadius) {
+    return (
+      <div className="p-4 space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold">Ändra sökradie</h2>
+          <Button 
+            variant="ghost" 
+            size="sm"
+            onClick={() => setIsChangingRadius(false)}
+          >
+            Avbryt
+          </Button>
+        </div>
+        <RadiusInputForm 
+          initialRadius={searchRadius}
+          onRadiusSelected={handleRadiusSelected}
+          onCancel={() => setIsChangingRadius(false)}
+        />
+      </div>
+    );
+  }
     
   if (filteredCompetitions.length === 0) {
     return (
@@ -102,15 +129,26 @@ const CompetitionList: React.FC<CompetitionListProps> = ({
   return (
     <div>
       <div className="sticky top-0 pb-3 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-10">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setIsChangingLocation(true)}
-          className="flex items-center gap-1 border-dashed text-muted-foreground"
-        >
-          <MapPin className="h-3.5 w-3.5" />
-          <span>{userLocation.city}</span>
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIsChangingLocation(true)}
+            className="flex items-center gap-1 border-dashed text-muted-foreground"
+          >
+            <MapPin className="h-3.5 w-3.5" />
+            <span>{userLocation.city}</span>
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIsChangingRadius(true)}
+            className="flex items-center gap-1 border-dashed text-muted-foreground"
+          >
+            <Radius className="h-3.5 w-3.5" />
+            <span>{searchRadius} km</span>
+          </Button>
+        </div>
       </div>
       
       <div className="space-y-3">
