@@ -103,11 +103,12 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
             placeholder="Sök plats..."
             value={searchTerm}
             onValueChange={setSearchTerm}
+            className="flex-1"
           />
           {isSearching && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
         </div>
         <CommandList>
-          {showEmpty && results.length === 0 && (
+          {showEmpty && results.length === 0 && !isSearching && (
             <CommandEmpty>Inga resultat hittades</CommandEmpty>
           )}
           {results.length > 0 && (
@@ -115,6 +116,7 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
               {results.map((result, index) => (
                 <CommandItem
                   key={index}
+                  className="cursor-pointer"
                   onSelect={() => {
                     onLocationSelected({
                       city: result.city,
@@ -127,7 +129,7 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
                   }}
                 >
                   <MapPin className="mr-2 h-4 w-4" />
-                  {result.display_name}
+                  <span>{result.display_name}</span>
                 </CommandItem>
               ))}
             </CommandGroup>
