@@ -1,3 +1,4 @@
+
 // Enums to match backend C# models
 export enum Branch {
   FootO = 'FootO',    // Orienteringslöpning
@@ -89,6 +90,7 @@ export interface CompetitionSummary {
   discipline: Discipline;
   competitionType: CompetitionType;
   district: OrienteeringDistrict;
+  branch: Branch; // Added the branch property to fix the error
   latitude: number | null; // Updated to allow null
   longitude: number | null; // Updated to allow null
   isFavorite?: boolean;
