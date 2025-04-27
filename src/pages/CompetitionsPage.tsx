@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
-import { Loader2, FilterX } from 'lucide-react'; // Updated to import FilterX instead of Filter
+import { Loader2, Settings2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { CompetitionSummary } from '../types';
@@ -52,12 +51,9 @@ const CompetitionsPage: React.FC = () => {
     setIsLoadingCompetitions(true);
     setError(null);
     
-    // Ensure we have a valid filters object with dateRange
     const safeFilters = filters || DEFAULT_FILTERS;
     const dateRange = safeFilters.dateRange || { from: null, to: null };
     
-    // If from date is explicitly set in the filter, use exactly that date
-    // Otherwise use the Monday of the current week
     const fromDate = dateRange.from 
       ? dateRange.from 
       : startOfWeek(new Date(), { weekStartsOn: 1 });
@@ -122,12 +118,9 @@ const CompetitionsPage: React.FC = () => {
       );
     }
 
-    // Ensure we have a valid filters object with dateRange
     const safeFilters = filters || DEFAULT_FILTERS;
     const dateRange = safeFilters.dateRange || { from: null, to: null };
     
-    // If from date is explicitly set in the filter, use exactly that date
-    // Otherwise use the Monday of the current week
     const fromDate = dateRange.from 
       ? dateRange.from 
       : startOfWeek(new Date(), { weekStartsOn: 1 });
@@ -157,7 +150,7 @@ const CompetitionsPage: React.FC = () => {
           size="icon"
           onClick={handleFilterClick}
         >
-          <FilterX className="h-[1.2rem] w-[1.2rem]" /> {/* Updated icon */}
+          <Settings2 className="h-[1.2rem] w-[1.2rem]" />
         </Button>
       }
       fullHeight
@@ -168,4 +161,3 @@ const CompetitionsPage: React.FC = () => {
 };
 
 export default CompetitionsPage;
-
