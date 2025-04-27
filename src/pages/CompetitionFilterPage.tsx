@@ -1,17 +1,9 @@
-
-import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/components/ui/drawer";
 import { toast } from 'sonner';
-import LocationInputForm from '../components/LocationInputForm';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import CalendarFilters from '../components/competition/filters/CalendarFilters';
@@ -34,15 +26,11 @@ const DEFAULT_FILTERS: Filter = {
 const CompetitionFilterPage = () => {
   const navigate = useNavigate();
   const { userLocation, updateUserLocation, resetUserLocation } = useUserLocation();
-  const [drawerOpen, setDrawerOpen] = useState(false);
   const [filters, setFilters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
-  // Get the current view mode from localStorage
   const [viewMode] = useLocalStorage<'calendar' | 'list'>('competitionViewMode', 'calendar');
 
   const handleUpdateLocation = (location: { city: string; latitude: number; longitude: number }) => {
     updateUserLocation(location);
-    setDrawerOpen(false);
-    
     setFilters({
       ...filters,
       useLocationFilter: true
@@ -94,7 +82,7 @@ const CompetitionFilterPage = () => {
             filters={filters}
             userCity={userLocation?.city}
             onFiltersChange={setFilters}
-            onLocationChangeClick={() => setDrawerOpen(true)}
+            onLocationChangeClick={handleUpdateLocation}
           />
         )}
 
@@ -114,20 +102,6 @@ const CompetitionFilterPage = () => {
           </Button>
         </div>
       </div>
-
-      <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
-        <DrawerContent>
-          <DrawerHeader>
-            <DrawerTitle>Byt plats</DrawerTitle>
-          </DrawerHeader>
-          <div className="p-4">
-            <LocationInputForm 
-              onLocationSelected={handleUpdateLocation}
-              onCancel={() => setDrawerOpen(false)}
-            />
-          </div>
-        </DrawerContent>
-      </Drawer>
     </MobileLayout>
   );
 };

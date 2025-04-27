@@ -1,11 +1,9 @@
-
 import React from 'react';
-import { Button } from '@/components/ui/button';
-import { MapPin, Settings, AlertTriangle } from 'lucide-react';
+import { MapPin, Settings } from 'lucide-react';
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
 import { Filter } from '../../../types';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import LocationSearchInput from '../../LocationSearchInput';
 
 interface NearbyFiltersProps {
   filters: Filter;
@@ -29,25 +27,9 @@ const NearbyFilters: React.FC<NearbyFiltersProps> = ({
             <h2 className="font-semibold">Platsfilter</h2>
           </div>
           
-          <div className="bg-forest-50 rounded-lg p-4 mb-4 border border-forest/20">
-            <div className="flex items-start gap-3">
-              <AlertTriangle className="h-5 w-5 text-forest mt-0.5 flex-shrink-0" />
-              <div>
-                <p className="text-forest font-medium mb-1">Plats saknas</p>
-                <p className="text-forest-700 text-sm">
-                  För att filtrera tävlingar baserat på avstånd behöver du först ange din plats
-                </p>
-              </div>
-            </div>
-          </div>
-          
-          <Button 
-            onClick={onLocationChangeClick}
-            className="w-full bg-forest hover:bg-forest-dark"
-          >
-            <MapPin className="mr-2 h-4 w-4" />
-            Ange plats
-          </Button>
+          <LocationSearchInput 
+            onLocationSelected={onLocationChangeClick}
+          />
         </div>
         
         <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 opacity-50">
@@ -83,22 +65,10 @@ const NearbyFilters: React.FC<NearbyFiltersProps> = ({
       </div>
       
       <div className="space-y-4 mt-2">
-        <div className="bg-gray-50 rounded-lg p-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <MapPin className="h-4 w-4 text-muted-foreground" />
-              <span>{userCity}</span>
-            </div>
-            <Button 
-              variant="outline"
-              size="sm"
-              onClick={onLocationChangeClick}
-              className="text-forest hover:text-forest-dark border-forest hover:border-forest-dark"
-            >
-              Byt plats
-            </Button>
-          </div>
-        </div>
+        <LocationSearchInput 
+          onLocationSelected={onLocationChangeClick}
+          currentCity={userCity}
+        />
         
         <div>
           <div className="flex justify-between mb-2">

@@ -1,0 +1,146 @@
+
+import React, { useState, useEffect, useRef } from 'react';
+import { Command, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem } from '@/components/ui/command';
+import { Button } from '@/components/ui/button';
+import { MapPin, Loader2 } from 'lucide-react';
+
+interface LocationResult {
+  city: string;
+  latitude: number;
+  longitude: number;
+  display_name: string;
+}
+
+interface LocationSearchInputProps {
+  onLocationSelected: (location: { city: string; latitude: number; longitude: number }) => void;
+  currentCity?: string;
+}
+
+const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSelected, currentCity }) => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+  const [results, setResults] = useState<LocationResult[]>([]);
+  const searchTimeoutRef = useRef<NodeJS.Timeout>();
+
+  const handleSearch = async (term: string) => {
+    if (!term.trim()) {
+      setResults([]);
+      return;
+    }
+
+    setIsSearching(true);
+
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
+          term
+        )}&format=json&addressdetails=1&limit=5&countrycodes=se`,
+        {
+          headers: {
+            'Accept-Language': 'sv',
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Något gick fel vid sökning');
+      }
+
+      const data = await response.json();
+      
+      const formattedResults = data.map((item: any) => ({
+        city: item.address.city || item.address.town || item.address.village || item.display_name.split(',')[0],
+        latitude: parseFloat(item.lat),
+        longitude: parseFloat(item.lon),
+        display_name: item.display_name
+      }));
+
+      setResults(formattedResults);
+    } catch (err) {
+      console.error('Error searching locations:', err);
+      setResults([]);
+    }
+
+    setIsSearching(false);
+  };
+
+  useEffect(() => {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    if (searchTerm.length >= 2) {
+      searchTimeoutRef.current = setTimeout(() => {
+        handleSearch(searchTerm);
+      }, 500); // Debounce for 500ms
+    } else {
+      setResults([]);
+    }
+
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, [searchTerm]);
+
+  const popularCities = [
+    "Stockholm", "Göteborg", "Malmö", "Uppsala", "Kalmar", "Umeå"
+  ];
+
+  return (
+    <div className="space-y-4">
+      <Command className="rounded-lg border shadow-md">
+        <div className="flex items-center border-b px-3">
+          <MapPin className="mr-2 h-4 w-4 shrink-0 text-muted-foreground" />
+          <CommandInput
+            placeholder="Sök plats..."
+            value={searchTerm}
+            onValueChange={setSearchTerm}
+          />
+          {isSearching && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
+        </div>
+        <CommandList>
+          <CommandEmpty>Inga resultat hittades</CommandEmpty>
+          {results.length > 0 && (
+            <CommandGroup heading="Sökresultat">
+              {results.map((result, index) => (
+                <CommandItem
+                  key={index}
+                  onSelect={() => {
+                    onLocationSelected({
+                      city: result.city,
+                      latitude: result.latitude,
+                      longitude: result.longitude,
+                    });
+                    setSearchTerm('');
+                    setResults([]);
+                  }}
+                >
+                  <MapPin className="mr-2 h-4 w-4" />
+                  {result.display_name}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          )}
+        </CommandList>
+      </Command>
+
+      <div className="grid grid-cols-3 gap-2">
+        {popularCities.map((city) => (
+          <Button
+            key={city}
+            variant="outline"
+            size="sm"
+            onClick={() => handleSearch(city)}
+            className="justify-center"
+          >
+            {city}
+          </Button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default LocationSearchInput;
