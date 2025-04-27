@@ -5,10 +5,8 @@ import MobileLayout from '../components/layout/MobileLayout';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
-import { useUserLocation } from '../hooks/useUserLocation';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import CalendarFilters from '../components/competition/filters/CalendarFilters';
-import NearbyFilters from '../components/competition/filters/NearbyFilters';
 import { Filter } from '../types';
 
 const DEFAULT_FILTERS: Filter = {
@@ -26,24 +24,7 @@ const DEFAULT_FILTERS: Filter = {
 
 const CompetitionFilterPage = () => {
   const navigate = useNavigate();
-  const { userLocation, updateUserLocation } = useUserLocation();
   const [filters, setFilters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
-
-  const handleUpdateLocation = (location: { city: string; latitude: number; longitude: number }) => {
-    // Update location and enable location filter
-    updateUserLocation(location);
-    // Fix the TypeScript error by explicitly typing the updated filter object
-    const updatedFilters: Filter = {
-      ...filters,
-      useLocationFilter: true
-    };
-    setFilters(updatedFilters);
-    
-    // Show success toast for better UX
-    toast.success('Plats uppdaterad', {
-      description: `Din plats har ändrats till ${location.city}`
-    });
-  };
 
   const handleApplyFilters = () => {
     navigate(-1);
@@ -85,15 +66,6 @@ const CompetitionFilterPage = () => {
           filters={filters}
           onFiltersChange={setFilters}
         />
-        
-        <div className="mt-6">
-          <NearbyFilters
-            filters={filters}
-            userCity={userLocation?.city}
-            onFiltersChange={setFilters}
-            onLocationChangeClick={handleUpdateLocation}
-          />
-        </div>
 
         <div className="flex items-center gap-4 pt-6">
           <Button 

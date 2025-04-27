@@ -1,4 +1,3 @@
-
 import { Competition, CompetitionSummary } from "../types";
 import { mockCompetitions, mockCompetitionDetails } from "../utils/mockData";
 
@@ -9,7 +8,7 @@ const USE_MOCK_API = false; // Set to false to use real API
 const API_BASE_URL = 'https://orientera-backend.delightfulisland-78f87004.northeurope.azurecontainerapps.io/api';
 
 /**
- * Get nearby competitions based on location and optional filters
+ * Get nearby competitions based on filters
  */
 export const getNearbyCompetitions = async (
   latitude: number, 
@@ -17,7 +16,6 @@ export const getNearbyCompetitions = async (
   options?: {
     from?: Date,
     to?: Date,
-    maxDistanceKm?: number,
     limit?: number,
     districts?: string[],
     disciplines?: string[],
@@ -25,7 +23,7 @@ export const getNearbyCompetitions = async (
     branches?: string[]
   }
 ): Promise<CompetitionSummary[]> => {
-  console.log('API getNearbyCompetitions called with:', { latitude, longitude, options });
+  console.log('API getNearbyCompetitions called with options:', options);
   
   if (USE_MOCK_API) {
     // Simulate API latency
@@ -101,8 +99,6 @@ export const getNearbyCompetitions = async (
   try {
     console.log('Making real API request for competitions');
     const params = new URLSearchParams();
-    params.append('latitude', latitude.toString());
-    params.append('longitude', longitude.toString());
     
     if (options?.from instanceof Date) {
       params.append('from', options.from.toISOString().split('T')[0]);
@@ -110,11 +106,6 @@ export const getNearbyCompetitions = async (
     
     if (options?.to instanceof Date) {
       params.append('to', options.to.toISOString().split('T')[0]);
-    }
-    
-    if (options?.maxDistanceKm) {
-      params.append('maxDistanceKm', options.maxDistanceKm.toString());
-      console.log('Added maxDistanceKm to API request:', options.maxDistanceKm);
     }
     
     if (options?.limit) {

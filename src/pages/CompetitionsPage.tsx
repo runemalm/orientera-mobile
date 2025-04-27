@@ -1,17 +1,14 @@
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Loader2, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useUserLocation } from '../hooks/useUserLocation';
 import { CompetitionSummary } from '../types';
 import { getNearbyCompetitions } from '../services/api';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { startOfWeek } from 'date-fns';
 import CalendarList from '../components/competition/CalendarList';
-
-let cachedCompetitions: CompetitionSummary[] = [];
 
 interface Filter {
   useLocationFilter: boolean;
@@ -41,16 +38,12 @@ const DEFAULT_FILTERS: Filter = {
 
 const CompetitionsPage: React.FC = () => {
   const navigate = useNavigate();
-  const { userLocation, isLoading: isLoadingLocation } = useUserLocation();
-  const [competitions, setCompetitions] = useState<CompetitionSummary[]>(cachedCompetitions);
-  const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(cachedCompetitions.length === 0);
+  const [competitions, setCompetitions] = useState<CompetitionSummary[]>([]);
+  const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const initialFetchCompleted = useRef(false);
-  const [filters, setFilters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
+  const [filters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
 
   const fetchCompetitions = useCallback(async () => {
-    if (!userLocation) return;
-    
     setIsLoadingCompetitions(true);
     setError(null);
     
@@ -70,8 +63,6 @@ const CompetitionsPage: React.FC = () => {
       console.log('Fetching competitions with filters:', {
         from: fromDate,
         to: toDate,
-        useLocationFilter: safeFilters.useLocationFilter,
-        maxDistanceKm: safeFilters.useLocationFilter ? safeFilters.maxDistanceKm : undefined,
         districts: safeFilters.districts,
         disciplines: safeFilters.disciplines,
         competitionTypes: safeFilters.competitionTypes,
@@ -79,13 +70,12 @@ const CompetitionsPage: React.FC = () => {
       });
 
       const result = await getNearbyCompetitions(
-        userLocation.latitude, 
-        userLocation.longitude,
+        0, // Default latitude
+        0, // Default longitude
         {
           from: fromDate,
           to: toDate,
           limit: 50,
-          maxDistanceKm: safeFilters.useLocationFilter ? safeFilters.maxDistanceKm : undefined,
           districts: safeFilters.districts.length > 0 ? safeFilters.districts : undefined,
           disciplines: safeFilters.disciplines.length > 0 ? safeFilters.disciplines : undefined,
           competitionTypes: safeFilters.competitionTypes.length > 0 ? safeFilters.competitionTypes : undefined,
@@ -95,28 +85,18 @@ const CompetitionsPage: React.FC = () => {
       
       console.log('Competitions fetched:', result.length);
       setCompetitions(result);
-      cachedCompetitions = result;
     } catch (err) {
       console.error('Error fetching competitions:', err);
       setError('Det gick inte att hämta tävlingar. Försök igen senare.');
     } finally {
       setIsLoadingCompetitions(false);
     }
-  }, [userLocation, filters]);
+  }, [filters]);
 
   useEffect(() => {
-    if (!isLoadingLocation && !userLocation) {
-      setIsLoadingCompetitions(false);
-    }
-  }, [isLoadingLocation, userLocation]);
-
-  useEffect(() => {
-    if (userLocation && (!initialFetchCompleted.current || cachedCompetitions.length === 0)) {
-      console.log('Initial fetch triggered');
-      fetchCompetitions();
-      initialFetchCompleted.current = true;
-    }
-  }, [userLocation, fetchCompetitions]);
+    console.log('Initial fetch triggered');
+    fetchCompetitions();
+  }, [fetchCompetitions]);
 
   const handleFilterClick = () => {
     navigate('/competitions/filter', { 
@@ -127,7 +107,7 @@ const CompetitionsPage: React.FC = () => {
   };
 
   const renderContent = () => {
-    if ((isLoadingLocation || isLoadingCompetitions) && competitions.length === 0) {
+    if (isLoadingCompetitions && competitions.length === 0) {
       return (
         <div className="flex flex-col justify-center items-center h-[70vh]">
           <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
@@ -161,7 +141,6 @@ const CompetitionsPage: React.FC = () => {
       <div className="px-2 pt-0 pb-4">
         <CalendarList
           competitions={competitions}
-          userLocation={userLocation}
           fromDate={fromDate}
           toDate={toDate}
         />
