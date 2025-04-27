@@ -21,6 +21,7 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
   const [isSearching, setIsSearching] = useState(false);
   const [results, setResults] = useState<LocationResult[]>([]);
   const [showEmpty, setShowEmpty] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const searchTimeoutRef = useRef<NodeJS.Timeout>();
 
   const handleSearch = async (term: string) => {
@@ -32,6 +33,7 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
 
     setIsSearching(true);
     setShowEmpty(true);
+    setIsOpen(true);
 
     try {
       const response = await fetch(
@@ -59,6 +61,7 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
       }));
 
       setResults(formattedResults);
+      console.log("Search results:", formattedResults);
     } catch (err) {
       console.error('Error searching locations:', err);
       setResults([]);
@@ -79,6 +82,7 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
     } else if (searchTerm.length === 0) {
       setResults([]);
       setShowEmpty(false);
+      setIsOpen(false);
     } else {
       setResults([]);
     }
@@ -90,13 +94,20 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
     };
   }, [searchTerm]);
 
+  useEffect(() => {
+    // When results are available, ensure dropdown is shown
+    if (results.length > 0) {
+      setIsOpen(true);
+    }
+  }, [results]);
+
   const popularCities = [
     "Stockholm", "Göteborg", "Malmö", "Uppsala", "Kalmar", "Umeå"
   ];
 
   return (
     <div className="space-y-4">
-      <Command className="rounded-lg border shadow-md">
+      <Command className="rounded-lg border shadow-md overflow-visible">
         <div className="flex items-center border-b px-3">
           <MapPin className="mr-2 h-4 w-4 shrink-0 text-muted-foreground" />
           <CommandInput
@@ -104,37 +115,43 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
             value={searchTerm}
             onValueChange={setSearchTerm}
             className="flex-1"
+            onFocus={() => {
+              if (results.length > 0) setIsOpen(true);
+            }}
           />
           {isSearching && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
         </div>
-        <CommandList>
-          {showEmpty && results.length === 0 && !isSearching && (
-            <CommandEmpty>Inga resultat hittades</CommandEmpty>
-          )}
-          {results.length > 0 && (
-            <CommandGroup heading="Sökresultat">
-              {results.map((result, index) => (
-                <CommandItem
-                  key={index}
-                  className="cursor-pointer"
-                  onSelect={() => {
-                    onLocationSelected({
-                      city: result.city,
-                      latitude: result.latitude,
-                      longitude: result.longitude,
-                    });
-                    setSearchTerm('');
-                    setResults([]);
-                    setShowEmpty(false);
-                  }}
-                >
-                  <MapPin className="mr-2 h-4 w-4" />
-                  <span>{result.display_name}</span>
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          )}
-        </CommandList>
+        {(isOpen || showEmpty) && (
+          <CommandList className="max-h-[300px] overflow-y-auto">
+            {showEmpty && results.length === 0 && !isSearching && (
+              <CommandEmpty>Inga resultat hittades</CommandEmpty>
+            )}
+            {results.length > 0 && (
+              <CommandGroup heading="Sökresultat">
+                {results.map((result, index) => (
+                  <CommandItem
+                    key={index}
+                    className="cursor-pointer py-2 px-2 text-sm"
+                    onSelect={() => {
+                      onLocationSelected({
+                        city: result.city,
+                        latitude: result.latitude,
+                        longitude: result.longitude,
+                      });
+                      setSearchTerm('');
+                      setResults([]);
+                      setShowEmpty(false);
+                      setIsOpen(false);
+                    }}
+                  >
+                    <MapPin className="mr-2 h-4 w-4" />
+                    <span className="truncate">{result.display_name}</span>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
+          </CommandList>
+        )}
       </Command>
 
       <div className="grid grid-cols-3 gap-2">
