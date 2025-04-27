@@ -30,11 +30,11 @@ const FavoritesPage: React.FC = () => {
     }
   }, []);
 
-  // Fetch competitions when userLocation is available or favorites change
+  // Fetch competitions when favorites change
   useEffect(() => {
     const fetchCompetitions = async () => {
-      if (!userLocation || favorites.length === 0) {
-        // If no favorites or no location, stop loading
+      if (favorites.length === 0) {
+        // If no favorites, stop loading
         setIsLoading(false);
         return;
       }
@@ -50,8 +50,8 @@ const FavoritesPage: React.FC = () => {
       
       try {
         const result = await getNearbyCompetitions(
-          userLocation.latitude, 
-          userLocation.longitude,
+          0, // Pass 0 as coordinates to not filter by location
+          0,
           {
             from: fromDate,
             to: toDate,
@@ -69,7 +69,7 @@ const FavoritesPage: React.FC = () => {
     };
 
     fetchCompetitions();
-  }, [userLocation, favorites]); // Added favorites as dependency
+  }, [favorites]); // Only depend on favorites changing
 
   const favoriteCompetitions = competitions.filter(comp => 
     favorites.includes(comp.id)
