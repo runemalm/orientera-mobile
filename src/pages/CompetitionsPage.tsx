@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
-import { Loader2, Filter } from 'lucide-react';
+import { Loader2, FilterX } from 'lucide-react'; // Updated to import FilterX instead of Filter
 import { Button } from '@/components/ui/button';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { CompetitionSummary } from '../types';
@@ -157,7 +157,7 @@ const CompetitionsPage: React.FC = () => {
           size="icon"
           onClick={handleFilterClick}
         >
-          <Filter className="h-[1.2rem] w-[1.2rem]" />
+          <FilterX className="h-[1.2rem] w-[1.2rem]" /> {/* Updated icon */}
         </Button>
       }
       fullHeight
