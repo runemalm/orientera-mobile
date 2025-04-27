@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -16,6 +15,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { Link } from 'react-router-dom';
 
 interface Filter {
   useLocationFilter: boolean;
@@ -172,7 +172,7 @@ const CompetitionsPage: React.FC = () => {
                 Här kan du se kommande orienteringstävlingar som är relevanta för dig.
               </p>
               <p>
-                Du kan använda vår smarta assistent för att hitta specifika tävlingar. Klicka på assistentikonen i menyn och ställ frågor som:
+                Du kan använda vår smarta assistent för att hitta specifika tävlingar. 
               </p>
               <ul className="list-disc pl-4 space-y-2">
                 <li>"Visa tävlingar i Skåne"</li>
@@ -182,6 +182,15 @@ const CompetitionsPage: React.FC = () => {
               <p>
                 Använd filtreringsalternativen för att anpassa dina sökresultat ännu mer.
               </p>
+              <div className="mt-4 text-center">
+                <Link 
+                  to="/assistant" 
+                  className="text-primary hover:underline font-semibold"
+                  onClick={() => setShowInfo(false)}
+                >
+                  Öppna tävlingsassistenten
+                </Link>
+              </div>
             </DialogDescription>
           </DialogHeader>
         </DialogContent>
@@ -191,4 +200,3 @@ const CompetitionsPage: React.FC = () => {
 };
 
 export default CompetitionsPage;
-
