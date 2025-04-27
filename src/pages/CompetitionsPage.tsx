@@ -20,6 +20,7 @@ interface Filter {
   districts: string[];
   disciplines: string[];
   competitionTypes: string[];
+  branches: string[];  // Added missing branches property
   dateRange: {
     from: Date | null;
     to: Date | null;
@@ -32,6 +33,7 @@ const DEFAULT_FILTERS: Filter = {
   districts: [],
   disciplines: [],
   competitionTypes: [],
+  branches: [],  // Added empty array as default
   dateRange: {
     from: null,
     to: null
