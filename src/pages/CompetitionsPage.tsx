@@ -1,9 +1,7 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
-import { Loader2, Filter } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 import { CompetitionSummary } from '../types';
 import { getNearbyCompetitions } from '../services/api';
 import { useLocalStorage } from '../hooks/useLocalStorage';
@@ -98,14 +96,6 @@ const CompetitionsPage: React.FC = () => {
     fetchCompetitions();
   }, [fetchCompetitions]);
 
-  const handleFilterClick = () => {
-    navigate('/competitions/filter', { 
-      state: { 
-        transition: 'slide' 
-      }
-    });
-  };
-
   const renderContent = () => {
     if (isLoadingCompetitions && competitions.length === 0) {
       return (
@@ -150,15 +140,6 @@ const CompetitionsPage: React.FC = () => {
   return (
     <MobileLayout 
       title="Hitta Tävlingar" 
-      action={
-        <Button 
-          variant="ghost" 
-          size="icon"
-          onClick={handleFilterClick}
-        >
-          <Filter className="h-[1.2rem] w-[1.2rem]" />
-        </Button>
-      }
       fullHeight
     >
       {renderContent()}
