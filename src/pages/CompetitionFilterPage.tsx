@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -233,7 +232,7 @@ const CompetitionFilterPage = () => {
           onClick={handleSaveFilters}
           className="text-forest hover:text-forest-dark"
         >
-          <Save className="h-5 w-5" />
+          Spara
         </Button>
       }
       leftAction={
@@ -253,20 +252,16 @@ const CompetitionFilterPage = () => {
             onOpenChange={setDateRangeCollapsibleOpen}
             className="bg-white rounded-xl shadow-sm border border-gray-100"
           >
-            <div className="flex items-center gap-2 text-forest p-4">
-              <CalendarRange className="h-5 w-5" />
-              <h2 className="font-semibold">Datumintervall</h2>
-              <div className="flex-grow"></div>
-              <CollapsibleTrigger asChild>
-                <Button variant="ghost" size="sm" className="p-1">
-                  <span className="text-xs">
-                    {hasDateFilter
-                      ? 'Aktivt filter' 
-                      : 'Visa alla'}
-                  </span>
-                </Button>
-              </CollapsibleTrigger>
-            </div>
+            <CollapsibleTrigger className="w-full">
+              <div className="flex items-center gap-2 text-forest p-4">
+                <CalendarRange className="h-5 w-5" />
+                <h2 className="font-semibold">Datumintervall</h2>
+                <div className="flex-grow"></div>
+                <span className="text-xs">
+                  {hasDateFilter ? 'Aktivt filter' : 'Visa alla'}
+                </span>
+              </div>
+            </CollapsibleTrigger>
             
             <CollapsibleContent className="px-4 pb-4">
               <div className="space-y-4">
@@ -301,22 +296,20 @@ const CompetitionFilterPage = () => {
             onOpenChange={setBranchCollapsibleOpen}
             className="bg-white rounded-xl shadow-sm border border-gray-100"
           >
-            <div className="flex items-center gap-2 text-forest p-4">
-              <Activity className="h-5 w-5" />
-              <h2 className="font-semibold">Gren</h2>
-              <div className="flex-grow"></div>
-              <CollapsibleTrigger asChild>
-                <Button variant="ghost" size="sm" className="p-1">
-                  <span className="text-xs">
-                    {filters?.branches?.length > 0 
-                      ? `${filters.branches.length} valda` 
-                      : "Visa alla"}
-                  </span>
-                </Button>
-              </CollapsibleTrigger>
-            </div>
+            <CollapsibleTrigger className="w-full">
+              <div className="flex items-center gap-2 text-forest p-4">
+                <Activity className="h-5 w-5" />
+                <h2 className="font-semibold">Gren</h2>
+                <div className="flex-grow"></div>
+                <span className="text-xs">
+                  {filters?.branches?.length > 0 
+                    ? `${filters.branches.length} valda` 
+                    : "Visa alla"}
+                </span>
+              </div>
+            </CollapsibleTrigger>
             
-            <CollapsibleContent className="px-4 pb-4 space-y-2">
+            <CollapsibleContent className="px-4 pb-4">
               {allBranches.map((branch) => (
                 <div key={branch} className="flex items-center space-x-2">
                   <Checkbox 
@@ -340,22 +333,20 @@ const CompetitionFilterPage = () => {
             onOpenChange={setDistrictCollapsibleOpen}
             className="bg-white rounded-xl shadow-sm border border-gray-100"
           >
-            <div className="flex items-center gap-2 text-forest p-4">
-              <Globe className="h-5 w-5" />
-              <h2 className="font-semibold">Distrikt</h2>
-              <div className="flex-grow"></div>
-              <CollapsibleTrigger asChild>
-                <Button variant="ghost" size="sm" className="p-1">
-                  <span className="text-xs">
-                    {filters?.districts?.length > 0 
-                      ? `${filters.districts.length} valda` 
-                      : "Visa alla"}
-                  </span>
-                </Button>
-              </CollapsibleTrigger>
-            </div>
+            <CollapsibleTrigger className="w-full">
+              <div className="flex items-center gap-2 text-forest p-4">
+                <Globe className="h-5 w-5" />
+                <h2 className="font-semibold">Distrikt</h2>
+                <div className="flex-grow"></div>
+                <span className="text-xs">
+                  {filters?.districts?.length > 0 
+                    ? `${filters.districts.length} valda` 
+                    : "Visa alla"}
+                </span>
+              </div>
+            </CollapsibleTrigger>
             
-            <CollapsibleContent className="px-4 pb-4 space-y-2">
+            <CollapsibleContent className="px-4 pb-4">
               {allDistricts.map((district) => (
                 <div key={district} className="flex items-center space-x-2">
                   <Checkbox 
@@ -379,22 +370,20 @@ const CompetitionFilterPage = () => {
             onOpenChange={setDisciplineCollapsibleOpen}
             className="bg-white rounded-xl shadow-sm border border-gray-100"
           >
-            <div className="flex items-center gap-2 text-forest p-4">
-              <Activity className="h-5 w-5" />
-              <h2 className="font-semibold">Discipliner</h2>
-              <div className="flex-grow"></div>
-              <CollapsibleTrigger asChild>
-                <Button variant="ghost" size="sm" className="p-1">
-                  <span className="text-xs">
-                    {filters?.disciplines?.length > 0 
-                      ? `${filters.disciplines.length} valda` 
-                      : "Visa alla"}
-                  </span>
-                </Button>
-              </CollapsibleTrigger>
-            </div>
+            <CollapsibleTrigger className="w-full">
+              <div className="flex items-center gap-2 text-forest p-4">
+                <Activity className="h-5 w-5" />
+                <h2 className="font-semibold">Discipliner</h2>
+                <div className="flex-grow"></div>
+                <span className="text-xs">
+                  {filters?.disciplines?.length > 0 
+                    ? `${filters.disciplines.length} valda` 
+                    : "Visa alla"}
+                </span>
+              </div>
+            </CollapsibleTrigger>
             
-            <CollapsibleContent className="px-4 pb-4 space-y-2">
+            <CollapsibleContent className="px-4 pb-4">
               {allDisciplines.map((discipline) => (
                 <div key={discipline} className="flex items-center space-x-2">
                   <Checkbox 
@@ -418,22 +407,20 @@ const CompetitionFilterPage = () => {
             onOpenChange={setCompetitionTypeCollapsibleOpen}
             className="bg-white rounded-xl shadow-sm border border-gray-100"
           >
-            <div className="flex items-center gap-2 text-forest p-4">
-              <CalendarIcon className="h-5 w-5" />
-              <h2 className="font-semibold">Tävlingstyper</h2>
-              <div className="flex-grow"></div>
-              <CollapsibleTrigger asChild>
-                <Button variant="ghost" size="sm" className="p-1">
-                  <span className="text-xs">
-                    {filters?.competitionTypes?.length > 0 
-                      ? `${filters.competitionTypes.length} valda` 
-                      : "Visa alla"}
-                  </span>
-                </Button>
-              </CollapsibleTrigger>
-            </div>
+            <CollapsibleTrigger className="w-full">
+              <div className="flex items-center gap-2 text-forest p-4">
+                <CalendarIcon className="h-5 w-5" />
+                <h2 className="font-semibold">Tävlingstyper</h2>
+                <div className="flex-grow"></div>
+                <span className="text-xs">
+                  {filters?.competitionTypes?.length > 0 
+                    ? `${filters.competitionTypes.length} valda` 
+                    : "Visa alla"}
+                </span>
+              </div>
+            </CollapsibleTrigger>
             
-            <CollapsibleContent className="px-4 pb-4 space-y-2">
+            <CollapsibleContent className="px-4 pb-4">
               {allCompetitionTypes.map((type) => (
                 <div key={type} className="flex items-center space-x-2">
                   <Checkbox 
