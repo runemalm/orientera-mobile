@@ -30,7 +30,6 @@ const TabbedCompetitionsView: React.FC<TabbedCompetitionsViewProps> = ({
 
   const navigate = useNavigate();
 
-  // Save scroll position when tab changes or component unmounts
   const saveScrollPosition = () => {
     if (viewMode === 'calendar' && calendarScrollRef.current) {
       setCalendarScrollPosition(calendarScrollRef.current.scrollTop);
@@ -39,13 +38,11 @@ const TabbedCompetitionsView: React.FC<TabbedCompetitionsViewProps> = ({
     }
   };
 
-  // Handle tab change
   const handleTabChange = (value: string) => {
     saveScrollPosition();
     setViewMode(value as 'calendar' | 'list');
   };
 
-  // Navigate to filter page with current tab
   const handleFilterClick = () => {
     navigate('/competitions/filter', { 
       state: { 
@@ -55,7 +52,6 @@ const TabbedCompetitionsView: React.FC<TabbedCompetitionsViewProps> = ({
     });
   };
 
-  // Restore scroll position on mount and tab change
   useEffect(() => {
     const timer = setTimeout(() => {
       if (viewMode === 'calendar' && calendarScrollRef.current) {
@@ -63,7 +59,7 @@ const TabbedCompetitionsView: React.FC<TabbedCompetitionsViewProps> = ({
       } else if (viewMode === 'list' && listScrollRef.current) {
         listScrollRef.current.scrollTop = listScrollPosition;
       }
-    }, 50); // Small delay to ensure the DOM has updated
+    }, 50);
 
     return () => {
       clearTimeout(timer);

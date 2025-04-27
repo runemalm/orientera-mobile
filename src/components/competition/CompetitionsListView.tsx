@@ -17,7 +17,6 @@ const CompetitionsListView: React.FC<CompetitionsListViewProps> = ({
 }) => {
   const [favorites, setFavorites] = useState<string[]>([]);
   
-  // Load favorites directly from localStorage
   useEffect(() => {
     const storedFavoritesStr = window.localStorage.getItem('favoriteCompetitions');
     if (storedFavoritesStr) {
@@ -31,7 +30,6 @@ const CompetitionsListView: React.FC<CompetitionsListViewProps> = ({
     }
   }, []);
 
-  // Only filter by favorites if showFavorites is true, otherwise show all competitions passed in
   const filteredCompetitions = showFavorites
     ? competitions.filter(comp => favorites.includes(comp.id))
     : competitions;
