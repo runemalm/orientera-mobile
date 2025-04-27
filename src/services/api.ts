@@ -2,7 +2,7 @@ import { Competition, CompetitionSummary } from "../types";
 import { mockCompetitions, mockCompetitionDetails } from "../utils/mockData";
 
 // Configuration to determine whether to use mock data or real API
-const USE_MOCK_API = true; // Changed to true to ensure we get data regardless of backend availability
+const USE_MOCK_API = false; // Set to false to use real API
 
 // Base URL for the API
 const API_BASE_URL = 'https://orientera-backend.delightfulisland-78f87004.northeurope.azurecontainerapps.io/api';
@@ -24,8 +24,6 @@ export const getNearbyCompetitions = async (
     branches?: string[]
   }
 ): Promise<CompetitionSummary[]> => {
-  console.log("API call - getNearbyCompetitions", { latitude, longitude, options });
-  
   if (USE_MOCK_API) {
     // Simulate API latency
     await new Promise(resolve => setTimeout(resolve, 800));
@@ -90,7 +88,6 @@ export const getNearbyCompetitions = async (
       filteredCompetitions = filteredCompetitions.slice(0, options.limit);
     }
     
-    console.log("Returning mock data:", filteredCompetitions.length, "competitions");
     return filteredCompetitions;
   }
   
@@ -141,11 +138,8 @@ export const getNearbyCompetitions = async (
       });
     }
     
-    const url = `${API_BASE_URL}/competitions/get-competition-summaries?${params.toString()}`;
-    console.log("Making real API call to:", url);
-    
     const response = await fetch(
-      url,
+      `${API_BASE_URL}/competitions/get-competition-summaries?${params.toString()}`,
       {
         headers: {
           'Content-Type': 'application/json',
@@ -157,9 +151,7 @@ export const getNearbyCompetitions = async (
       throw new Error(`API error: ${response.status}`);
     }
     
-    const data = await response.json();
-    console.log("API returned", data.length, "competitions");
-    return data;
+    return await response.json();
   } catch (error) {
     console.error('Failed to fetch nearby competitions:', error);
     throw error;

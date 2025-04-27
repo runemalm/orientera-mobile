@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -68,8 +67,6 @@ const CompetitionsPage: React.FC = () => {
     })();
     
     try {
-      console.log("Fetching competitions with location:", userLocation.latitude, userLocation.longitude);
-      
       const result = await getNearbyCompetitions(
         userLocation.latitude, 
         userLocation.longitude,
@@ -85,7 +82,6 @@ const CompetitionsPage: React.FC = () => {
         }
       );
       
-      console.log("Fetched competitions:", result.length);
       setCompetitions(result);
       cachedCompetitions = result;
     } catch (err) {
@@ -96,35 +92,18 @@ const CompetitionsPage: React.FC = () => {
     }
   }, [userLocation, filters]);
 
-  // Effect to fetch competitions when location is available or filters change
-  useEffect(() => {
-    if (userLocation) {
-      console.log("User location available, fetching competitions");
-      fetchCompetitions();
-      initialFetchCompleted.current = true;
-    } else if (!isLoadingLocation) {
-      console.log("Location not available and not loading - should prompt for location");
-    }
-  }, [userLocation, fetchCompetitions, isLoadingLocation]);
-
-  // This effect handles the case when cached competitions exist but we should still refresh
-  useEffect(() => {
-    const shouldRefreshData = cachedCompetitions.length > 0 && userLocation && 
-      (!initialFetchCompleted.current || filters !== DEFAULT_FILTERS);
-    
-    if (shouldRefreshData) {
-      console.log("Refreshing competitions data");
-      fetchCompetitions();
-      initialFetchCompleted.current = true;
-    }
-  }, [filters, userLocation, fetchCompetitions]);
-
-  // Clear loading state if location is not available
   useEffect(() => {
     if (!isLoadingLocation && !userLocation) {
       setIsLoadingCompetitions(false);
     }
   }, [isLoadingLocation, userLocation]);
+
+  useEffect(() => {
+    if (userLocation && (!initialFetchCompleted.current || cachedCompetitions.length === 0)) {
+      fetchCompetitions();
+      initialFetchCompleted.current = true;
+    }
+  }, [userLocation, fetchCompetitions]);
 
   const handleFilterClick = () => {
     navigate('/competitions/filter', { 
