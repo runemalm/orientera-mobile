@@ -1,7 +1,7 @@
 
 import React, { useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { CalendarSearch, Calendar, Home, Star, UserRound, Sparkles } from 'lucide-react';
+import { Calendar, Home, UserRound, Sparkles } from 'lucide-react';
 import { TabName } from '../../types';
 
 const BottomTabBar: React.FC = () => {
@@ -33,12 +33,6 @@ const BottomTabBar: React.FC = () => {
       icon: <Calendar size={24} />,
       label: 'Tävlingar',
       path: '/competitions'
-    },
-    {
-      name: 'favorites',
-      icon: <Star size={24} />,
-      label: 'Favoriter',
-      path: '/favorites'
     },
     {
       name: 'profile',
