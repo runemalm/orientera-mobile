@@ -41,7 +41,7 @@ const DEFAULT_FILTERS: Filter = {
 
 const CompetitionsPage: React.FC = () => {
   const navigate = useNavigate();
-  const { userLocation } = useUserLocation();
+  const { userLocation, isLoading: isLoadingLocation } = useUserLocation();
   const [competitions, setCompetitions] = useState<CompetitionSummary[]>(cachedCompetitions);
   const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(cachedCompetitions.length === 0);
   const [error, setError] = useState<string | null>(null);
@@ -98,6 +98,13 @@ const CompetitionsPage: React.FC = () => {
     }
   }, [userLocation, filters]);
 
+  // Stop loading if location is fully loaded but doesn't exist
+  useEffect(() => {
+    if (!isLoadingLocation && !userLocation) {
+      setIsLoadingCompetitions(false);
+    }
+  }, [isLoadingLocation, userLocation]);
+
   useEffect(() => {
     if (userLocation && (!initialFetchCompleted.current || cachedCompetitions.length === 0)) {
       fetchCompetitions();
@@ -115,7 +122,8 @@ const CompetitionsPage: React.FC = () => {
   };
 
   const renderContent = () => {
-    if (isLoadingCompetitions && competitions.length === 0) {
+    // Only show loader if we're still loading location info OR loading competitions
+    if ((isLoadingLocation || isLoadingCompetitions) && competitions.length === 0) {
       return (
         <div className="flex flex-col justify-center items-center h-[70vh]">
           <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
