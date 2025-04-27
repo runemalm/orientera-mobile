@@ -51,8 +51,8 @@ const ProfilePage: React.FC = () => {
           </CardContent>
         </Card>
 
-        {/* Login button overlapping the content */}
-        <div className="fixed bottom-20 left-0 right-0 px-4 z-10">
+        {/* Login button positioned in the mobile container instead of fixed */}
+        <div className="w-full max-w-xs mx-auto mt-6">
           <Button 
             className="w-full shadow-lg" 
             size="lg"
