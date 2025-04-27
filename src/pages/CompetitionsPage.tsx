@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -48,11 +47,9 @@ const CompetitionsPage: React.FC = () => {
     
     const safeFilters = filters || DEFAULT_FILTERS;
     
-    // Get current date and day of week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
     const now = new Date();
     const currentDay = now.getDay();
     
-    // If it's Monday (1), Tuesday (2), or Wednesday (3), start from previous week
     const startDate = startOfWeek(
       currentDay >= 1 && currentDay <= 3 
         ? new Date(now.setDate(now.getDate() - 7)) // Previous week
@@ -60,7 +57,6 @@ const CompetitionsPage: React.FC = () => {
       { weekStartsOn: 1 } // Week starts on Monday
     );
     
-    // End date is the end of the week 6 months from now
     const sixMonthsFromNow = addMonths(now, 6);
     const endDate = endOfWeek(sixMonthsFromNow, { weekStartsOn: 1 });
     
@@ -80,7 +76,6 @@ const CompetitionsPage: React.FC = () => {
         {
           from: startDate,
           to: endDate,
-          limit: 50,
           districts: safeFilters.districts.length > 0 ? safeFilters.districts : undefined,
           disciplines: safeFilters.disciplines.length > 0 ? safeFilters.disciplines : undefined,
           competitionTypes: safeFilters.competitionTypes.length > 0 ? safeFilters.competitionTypes : undefined,
@@ -155,4 +150,3 @@ const CompetitionsPage: React.FC = () => {
 };
 
 export default CompetitionsPage;
-
