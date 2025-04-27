@@ -1,3 +1,4 @@
+
 import { Competition, CompetitionSummary } from "../types";
 import { mockCompetitions, mockCompetitionDetails } from "../utils/mockData";
 
@@ -71,19 +72,18 @@ export const getNearbyCompetitions = async (
       );
     }
     
-    // Apply distance filter if provided and location filter is enabled
-    if (options?.maxDistanceKm) {
-      console.log('Applying distance filter with max distance:', options.maxDistanceKm);
-      // This is a simplified version, real distance calculation would be more complex
+    // Apply location-based filtering if coordinates are provided
+    if (latitude !== 0 && longitude !== 0) {
+      console.log('Applying location filter with coordinates:', latitude, longitude);
+      // Simple distance calculation (this is not accurate for real-world use)
       filteredCompetitions = filteredCompetitions.filter(comp => {
         if (comp.latitude === null || comp.longitude === null) return true;
         
-        // Simple distance calculation (this is not accurate for real-world use)
         const latDiff = Math.abs(comp.latitude - latitude);
         const lonDiff = Math.abs(comp.longitude - longitude);
         const approxDistKm = Math.sqrt(latDiff * latDiff + lonDiff * lonDiff) * 111; // rough km conversion
         
-        return approxDistKm <= options.maxDistanceKm;
+        return true; // We're no longer filtering by distance
       });
     }
     
