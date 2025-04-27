@@ -20,6 +20,7 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
   const [isSearching, setIsSearching] = useState(false);
   const [results, setResults] = useState<LocationResult[]>([]);
   const [showResults, setShowResults] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
   const searchTimeoutRef = useRef<NodeJS.Timeout>();
   
   // Clear results when component is unmounted or when navigating
@@ -31,6 +32,7 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
       setResults([]);
       setSearchTerm('');
       setShowResults(false);
+      setHasSearched(false);
     };
   }, []);
 
@@ -38,12 +40,13 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
     if (!term.trim()) {
       setResults([]);
       setShowResults(false);
+      setHasSearched(false);
       return;
     }
 
     setIsSearching(true);
     setShowResults(true);
-
+    
     try {
       const response = await fetch(
         `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
@@ -75,13 +78,15 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
 
         console.log("Search results:", formattedResults);
         setResults(formattedResults);
-        // Ensure we show results even if the array is empty (to show the "No results" message)
+        setHasSearched(true);
+        // Ensure we show results even if the array is empty
         setShowResults(true);
       }
     } catch (err) {
       console.error('Error searching locations:', err);
       if (searchTerm === term) {
         setResults([]);
+        setHasSearched(true);
       }
     }
 
@@ -98,6 +103,7 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
     if (searchTerm.length < 2) {
       setResults([]);
       setShowResults(false);
+      setHasSearched(false);
       return;
     }
     
@@ -123,13 +129,18 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
             value={searchTerm}
             onValueChange={setSearchTerm}
             className="flex-1"
+            onFocus={() => {
+              if (results.length > 0 && searchTerm.length >= 2) {
+                setShowResults(true);
+              }
+            }}
           />
           {isSearching && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
         </div>
         
         <CommandList className="max-h-[300px] overflow-y-auto">
           {showResults && (
-            results.length === 0 && !isSearching ? (
+            hasSearched && results.length === 0 && !isSearching ? (
               <CommandEmpty>Inga resultat hittades</CommandEmpty>
             ) : (
               <CommandGroup>
@@ -146,6 +157,7 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
                       setSearchTerm('');
                       setResults([]);
                       setShowResults(false);
+                      setHasSearched(false);
                     }}
                     value={result.display_name}
                   >
