@@ -241,7 +241,7 @@ const CompetitionFilterPage = () => {
           size="sm"
           onClick={handleCancel}
         >
-          <X className="h-5 w-5" />
+          Avbryt
         </Button>
       }
     >
