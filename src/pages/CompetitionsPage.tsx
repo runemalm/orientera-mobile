@@ -8,7 +8,7 @@ import { CompetitionSummary } from '../types';
 import { getNearbyCompetitions } from '../services/api';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { startOfWeek } from 'date-fns';
-import CalendarList from '../components/competition/CalendarList';
+import CompetitionLayout from '../components/competition/CompetitionLayout';
 
 interface Filter {
   useLocationFilter: boolean;
@@ -138,13 +138,12 @@ const CompetitionsPage: React.FC = () => {
     })();
 
     return (
-      <div className="px-2 pt-0 pb-4">
-        <CalendarList
-          competitions={competitions}
-          fromDate={fromDate}
-          toDate={toDate}
-        />
-      </div>
+      <CompetitionLayout
+        competitions={competitions}
+        fromDate={fromDate}
+        toDate={toDate}
+        hideTabBar
+      />
     );
   };
 
