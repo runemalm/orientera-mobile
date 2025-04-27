@@ -32,15 +32,14 @@ export const useAssistantChat = () => {
 
     setMessages(prev => [...prev, { content: message, isBot: false }]);
 
-    // Simulera en mer support-orienterad respons
     setTimeout(() => {
       setMessages(prev => [...prev, {
-        content: "Tack för din fråga! Jag förstår att du vill veta mer om " + 
-                "tävlingar. Just nu håller vi på att utveckla mina funktioner, " +
-                "men jag ska göra mitt bästa för att hjälpa dig.\n\n" +
-                "Kan du berätta lite mer specifikt vad du skulle vilja veta? " +
-                "Till exempel om du letar efter en specifik typ av tävling eller " +
-                "har frågor om en särskild tävling?",
+        content: "Tack för ditt meddelande! 🌟\n\n" + 
+                "Jag är jättehappy över att hjälpa dig hitta rätt tävling. " + 
+                "Ju mer specifik du kan vara, desto bättre kan jag skräddarsy informationen för dig.\n\n" +
+                "Berätta gärna mer! Letar du efter en viss typ av tävling? " +
+                "Är du intresserad av något specifikt distrikt eller några särskilda datum? " +
+                "Ju mer detaljer du kan ge, desto bättre kan jag guida dig! 🏃‍♀️🗺️",
         isBot: true
       }]);
     }, 1000);
