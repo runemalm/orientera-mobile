@@ -21,6 +21,18 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
   const [results, setResults] = useState<LocationResult[]>([]);
   const [showEmpty, setShowEmpty] = useState(false);
   const searchTimeoutRef = useRef<NodeJS.Timeout>();
+  
+  // Clear results when component is unmounted or when navigating
+  useEffect(() => {
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+      setResults([]);
+      setSearchTerm('');
+      setShowEmpty(false);
+    };
+  }, []);
 
   const handleSearch = async (term: string) => {
     if (!term.trim()) {
@@ -41,6 +53,8 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
           headers: {
             'Accept-Language': 'sv',
           },
+          // Add cache control to prevent caching issues
+          cache: 'no-store',
         }
       );
 
@@ -50,36 +64,46 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
 
       const data = await response.json();
       
-      const formattedResults = data.map((item: any) => ({
-        city: item.address.city || item.address.town || item.address.village || item.display_name.split(',')[0],
-        latitude: parseFloat(item.lat),
-        longitude: parseFloat(item.lon),
-        display_name: item.display_name
-      }));
+      // Ensure we're only updating state if the search term still matches
+      // This prevents results from a previous search appearing for a new search
+      if (searchTerm === term) {
+        const formattedResults = data.map((item: any) => ({
+          city: item.address.city || item.address.town || item.address.village || item.display_name.split(',')[0],
+          latitude: parseFloat(item.lat),
+          longitude: parseFloat(item.lon),
+          display_name: item.display_name
+        }));
 
-      setResults(formattedResults);
-      console.log("Search results:", formattedResults);
+        setResults(formattedResults);
+        console.log("Search results:", formattedResults);
+      }
     } catch (err) {
       console.error('Error searching locations:', err);
-      setResults([]);
+      if (searchTerm === term) {
+        setResults([]);
+      }
     }
 
     setIsSearching(false);
   };
 
   useEffect(() => {
+    // Clear any pending search
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
     }
 
-    if (searchTerm.length >= 2) {
-      searchTimeoutRef.current = setTimeout(() => {
-        handleSearch(searchTerm);
-      }, 500); // Debounce for 500ms
-    } else if (searchTerm.length === 0) {
+    // Reset results when search term changes
+    if (searchTerm.length < 2) {
       setResults([]);
       setShowEmpty(false);
+      return;
     }
+    
+    // Debounce search to avoid making too many requests
+    searchTimeoutRef.current = setTimeout(() => {
+      handleSearch(searchTerm);
+    }, 500);
 
     return () => {
       if (searchTimeoutRef.current) {
@@ -87,9 +111,6 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
       }
     };
   }, [searchTerm]);
-
-  // Force CommandList to always render when we have search results
-  const hasResults = results.length > 0;
 
   return (
     <div className="w-full">
@@ -112,7 +133,7 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
             <CommandGroup>
               {results.map((result, index) => (
                 <CommandItem
-                  key={`${result.city}-${index}`}
+                  key={`${result.city}-${result.latitude}-${result.longitude}-${index}`}
                   className="cursor-pointer py-2 px-2 text-sm"
                   onSelect={() => {
                     onLocationSelected({

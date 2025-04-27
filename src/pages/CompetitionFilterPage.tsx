@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -30,10 +31,16 @@ const CompetitionFilterPage = () => {
   const [viewMode] = useLocalStorage<'calendar' | 'list'>('competitionViewMode', 'calendar');
 
   const handleUpdateLocation = (location: { city: string; latitude: number; longitude: number }) => {
+    // Update location and enable location filter
     updateUserLocation(location);
-    setFilters({
-      ...filters,
+    setFilters(prev => ({
+      ...prev,
       useLocationFilter: true
+    }));
+    
+    // Show success toast for better UX
+    toast.success('Plats uppdaterad', {
+      description: `Din plats har ändrats till ${location.city}`
     });
   };
 
@@ -58,6 +65,10 @@ const CompetitionFilterPage = () => {
     });
   };
 
+  const handleGoBack = () => {
+    navigate(-1);
+  };
+
   return (
     <MobileLayout 
       title="Filter" 
@@ -65,7 +76,7 @@ const CompetitionFilterPage = () => {
         <Button 
           variant="ghost" 
           size="icon"
-          onClick={() => navigate(-1)}
+          onClick={handleGoBack}
         >
           <ArrowLeft className="h-[1.2rem] w-[1.2rem]" />
         </Button>

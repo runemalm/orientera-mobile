@@ -58,6 +58,12 @@ const NearbyFilters: React.FC<NearbyFiltersProps> = ({
     );
   }
 
+  const handleLocationChange = (location: { city: string; latitude: number; longitude: number }) => {
+    // Update location and set the filter to use location
+    onLocationChangeClick(location);
+    onFiltersChange({...filters, useLocationFilter: true});
+  };
+
   return (
     <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
       <div className="flex items-center gap-2 text-forest mb-3">
@@ -72,7 +78,7 @@ const NearbyFilters: React.FC<NearbyFiltersProps> = ({
         </div>
         
         <LocationSearchInput 
-          onLocationSelected={onLocationChangeClick}
+          onLocationSelected={handleLocationChange}
           currentCity={userCity}
         />
         
