@@ -23,7 +23,10 @@ const NearbyFilters: React.FC<NearbyFiltersProps> = ({
   if (!userCity) {
     return (
       <div className="space-y-4">
-        <Alert variant="warning" className="border-forest/50">
+        <Alert 
+          variant="default" 
+          className="border-forest/50 bg-forest-100 text-forest"
+        >
           <AlertTriangle className="h-4 w-4 text-forest" />
           <AlertDescription className="text-forest">
             Du behöver ange din plats för att se tävlingar i närheten
