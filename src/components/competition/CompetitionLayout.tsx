@@ -17,7 +17,7 @@ interface CompetitionLayoutProps {
   userLocation?: UserLocation | null;
   fromDate: Date;
   toDate: Date;
-  hideTabBar?: boolean; // Added this prop
+  hideTabBar?: boolean;
 }
 
 const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
@@ -25,7 +25,7 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
   userLocation,
   fromDate,
   toDate,
-  hideTabBar = false // Default to false
+  hideTabBar = false
 }) => {
   const [viewMode, setViewMode] = useLocalStorage<'calendar' | 'list'>('competitionViewMode', 'calendar');
   const [calendarScrollPosition, setCalendarScrollPosition] = useLocalStorage<number>('calendarScrollPosition', 0);
@@ -114,7 +114,7 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full mt-4"> {/* Added mt-4 for top margin */}
       {!hideTabBar && (
         <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 pt-3 pb-2 px-2">
           <Tabs value={viewMode} onValueChange={handleTabChange} className="w-full">
