@@ -20,15 +20,18 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
   const [searchTerm, setSearchTerm] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [results, setResults] = useState<LocationResult[]>([]);
+  const [showEmpty, setShowEmpty] = useState(false);
   const searchTimeoutRef = useRef<NodeJS.Timeout>();
 
   const handleSearch = async (term: string) => {
     if (!term.trim()) {
       setResults([]);
+      setShowEmpty(false);
       return;
     }
 
     setIsSearching(true);
+    setShowEmpty(true);
 
     try {
       const response = await fetch(
@@ -73,6 +76,9 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
       searchTimeoutRef.current = setTimeout(() => {
         handleSearch(searchTerm);
       }, 500); // Debounce for 500ms
+    } else if (searchTerm.length === 0) {
+      setResults([]);
+      setShowEmpty(false);
     } else {
       setResults([]);
     }
@@ -101,7 +107,9 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
           {isSearching && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
         </div>
         <CommandList>
-          <CommandEmpty>Inga resultat hittades</CommandEmpty>
+          {showEmpty && results.length === 0 && (
+            <CommandEmpty>Inga resultat hittades</CommandEmpty>
+          )}
           {results.length > 0 && (
             <CommandGroup heading="Sökresultat">
               {results.map((result, index) => (
@@ -115,6 +123,7 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
                     });
                     setSearchTerm('');
                     setResults([]);
+                    setShowEmpty(false);
                   }}
                 >
                   <MapPin className="mr-2 h-4 w-4" />
