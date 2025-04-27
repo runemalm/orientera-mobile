@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useState } from 'react';
 import { CompetitionSummary } from '../../types';
 import { UserLocation } from '../../hooks/useUserLocation';
@@ -28,6 +27,7 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
   
   const [tapCount, setTapCount] = useState(0);
   const [lastTapTime, setLastTapTime] = useState(0);
+  const [lastTappedTab, setLastTappedTab] = useState<string | null>(null);
   
   const calendarScrollRef = useRef<HTMLDivElement>(null);
   const listScrollRef = useRef<HTMLDivElement>(null);
@@ -54,25 +54,29 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
       const currentTime = new Date().getTime();
       const timeSinceLastTap = currentTime - lastTapTime;
       
-      // Reset the tap count if it's been too long since the last tap
-      if (timeSinceLastTap > 1500) {
-        setTapCount(1); // Start at 1 for the current tap
+      console.log(`Tap detected. Current count: ${tapCount}, Time since last tap: ${timeSinceLastTap}ms`);
+      
+      // Reset tap count if too much time has passed or a different tab was tapped
+      if (timeSinceLastTap > 1000 || lastTappedTab !== 'list') {
+        console.log('Resetting tap count');
+        setTapCount(1);
       } else {
-        // Increment tap count
         const newTapCount = tapCount + 1;
         setTapCount(newTapCount);
         
+        console.log(`Updated tap count: ${newTapCount}`);
+        
         // Check if we've reached 5 taps
         if (newTapCount >= 5) {
-          // Reset local storage and reload
+          console.log('Five taps detected! Resetting location and radius.');
           localStorage.removeItem('userLocation');
           localStorage.removeItem('searchRadius');
-          console.log('Resetting location and radius via secret tap gesture');
           window.location.reload();
         }
       }
       
       setLastTapTime(currentTime);
+      setLastTappedTab('list');
     }
     
     setViewMode(newViewMode);
