@@ -1,11 +1,44 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Compass } from 'lucide-react';
 
 const Hero: React.FC = () => {
+  const [tapCount, setTapCount] = useState(0);
+  const [lastTapTime, setLastTapTime] = useState(0);
+
+  const handleTap = () => {
+    const currentTime = new Date().getTime();
+    const timeSinceLastTap = currentTime - lastTapTime;
+    
+    // If more than 1.5 seconds between taps, reset counter
+    if (timeSinceLastTap > 1500) {
+      setTapCount(1); // Start with 1 for this tap
+    } else {
+      // Only increment if it's a quick consecutive tap
+      setTapCount(prev => prev + 1);
+    }
+    
+    // Check for activation only on exact count of 5
+    const newCount = timeSinceLastTap <= 1500 ? tapCount + 1 : 1;
+    if (newCount === 5) {
+      // Clear location settings from localStorage
+      localStorage.removeItem('userLocation');
+      localStorage.removeItem('competitionFilters');
+      
+      // Reload the page
+      window.location.reload();
+      
+      // Reset counter after activation
+      setTapCount(0);
+    }
+    
+    // Always update the last tap time
+    setLastTapTime(currentTime);
+  };
+
   return (
-    <div className="flex items-center justify-center w-full py-8">
-      <div className="flex flex-col gap-8 items-center max-w-sm">
+    <div className="flex items-center justify-center w-full py-8" onClick={handleTap}>
+      <div className="flex flex-col gap-8 items-center max-w-sm select-none">
         <div className="relative">
           <div className="w-24 h-24 bg-gradient-to-br from-primary/20 to-primary/5 rounded-full flex items-center justify-center shrink-0">
             <Compass className="w-12 h-12 text-primary" />
