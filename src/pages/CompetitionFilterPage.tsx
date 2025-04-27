@@ -1,11 +1,26 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Button } from '@/components/ui/button';
-import { X, Save } from 'lucide-react';
+import { 
+  X, 
+  Save, 
+  Globe, 
+  Activity, 
+  Calendar as CalendarIcon,
+  CalendarRange 
+} from 'lucide-react';
 import { toast } from 'sonner';
 import { Label } from '@/components/ui/label';
 import LocationInputForm from '../components/LocationInputForm';
+import { Calendar } from '@/components/ui/calendar';
+import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import {
   Drawer,
   DrawerContent,

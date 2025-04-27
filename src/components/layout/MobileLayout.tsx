@@ -9,6 +9,7 @@ interface MobileLayoutProps {
   showBackButton?: boolean;
   hideBottomTabs?: boolean;
   action?: React.ReactNode;
+  leftAction?: React.ReactNode;
   fullHeight?: boolean;
 }
 
@@ -18,6 +19,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
   showBackButton = false, 
   hideBottomTabs = false,
   action,
+  leftAction,
   fullHeight = false
 }) => {
   const handleBack = () => {
@@ -31,6 +33,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
         showBackButton={showBackButton} 
         onBack={handleBack}
         action={action}
+        leftAction={leftAction}
       />
       
       <main 
