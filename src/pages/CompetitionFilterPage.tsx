@@ -33,10 +33,12 @@ const CompetitionFilterPage = () => {
   const handleUpdateLocation = (location: { city: string; latitude: number; longitude: number }) => {
     // Update location and enable location filter
     updateUserLocation(location);
-    setFilters(prev => ({
-      ...prev,
+    // Fix the TypeScript error by explicitly typing the updated filter object
+    const updatedFilters: Filter = {
+      ...filters,
       useLocationFilter: true
-    }));
+    };
+    setFilters(updatedFilters);
     
     // Show success toast for better UX
     toast.success('Plats uppdaterad', {

@@ -61,7 +61,12 @@ const NearbyFilters: React.FC<NearbyFiltersProps> = ({
   const handleLocationChange = (location: { city: string; latitude: number; longitude: number }) => {
     // Update location and set the filter to use location
     onLocationChangeClick(location);
-    onFiltersChange({...filters, useLocationFilter: true});
+    // Create a properly typed Filter object
+    const updatedFilters: Filter = {
+      ...filters,
+      useLocationFilter: true
+    };
+    onFiltersChange(updatedFilters);
   };
 
   return (
@@ -95,7 +100,12 @@ const NearbyFilters: React.FC<NearbyFiltersProps> = ({
             max={500}
             step={5}
             onValueChange={([value]) => {
-              onFiltersChange({...filters, maxDistanceKm: value});
+              // Create a properly typed Filter object
+              const updatedFilters: Filter = {
+                ...filters,
+                maxDistanceKm: value
+              };
+              onFiltersChange(updatedFilters);
             }}
             className="py-4"
           />
