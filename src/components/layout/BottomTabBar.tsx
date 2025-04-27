@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { CalendarSearch, Calendar, Home, Star, UserRound, MessageCircle } from 'lucide-react';
+import { CalendarSearch, Calendar, Home, Star, UserRound, MessagesSquare } from 'lucide-react';
 import { TabName } from '../../types';
 
 const BottomTabBar: React.FC = () => {
@@ -23,7 +23,7 @@ const BottomTabBar: React.FC = () => {
     },
     {
       name: 'assistant',
-      icon: <MessageCircle size={24} />,
+      icon: <MessagesSquare size={24} />,
       label: 'Assistent',
       path: '/assistant'
     },
