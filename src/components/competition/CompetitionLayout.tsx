@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect, useState } from 'react';
 import { CompetitionSummary } from '../../types';
 import { UserLocation } from '../../hooks/useUserLocation';
@@ -53,16 +54,22 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
       const currentTime = new Date().getTime();
       const timeSinceLastTap = currentTime - lastTapTime;
       
+      // Reset the tap count if it's been too long since the last tap
       if (timeSinceLastTap > 1500) {
-        setTapCount(1);
+        setTapCount(1); // Start at 1 for the current tap
       } else {
-        setTapCount(prev => prev + 1);
-      }
-      
-      if (timeSinceLastTap <= 1500 && tapCount === 4) {
-        localStorage.removeItem('userLocation');
-        localStorage.removeItem('searchRadius');
-        window.location.reload();
+        // Increment tap count
+        const newTapCount = tapCount + 1;
+        setTapCount(newTapCount);
+        
+        // Check if we've reached 5 taps
+        if (newTapCount >= 5) {
+          // Reset local storage and reload
+          localStorage.removeItem('userLocation');
+          localStorage.removeItem('searchRadius');
+          console.log('Resetting location and radius via secret tap gesture');
+          window.location.reload();
+        }
       }
       
       setLastTapTime(currentTime);
