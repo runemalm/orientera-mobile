@@ -227,10 +227,9 @@ const CompetitionFilterPage = () => {
       showBackButton={false}
       action={
         <Button 
-          variant="ghost" 
           size="sm"
           onClick={handleSaveFilters}
-          className="text-forest hover:text-forest-dark"
+          className="bg-forest hover:bg-forest-dark text-white"
         >
           Spara
         </Button>
@@ -445,7 +444,7 @@ const CompetitionFilterPage = () => {
               className="text-forest hover:text-forest-dark border-forest hover:border-forest-dark"
               onClick={handleResetFilters}
             >
-              Rensa filter
+              Rensa alla filter
             </Button>
           </div>
         </div>
