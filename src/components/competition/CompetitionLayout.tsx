@@ -12,13 +12,28 @@ interface CompetitionLayoutProps {
   userLocation: UserLocation | null;
   fromDate: Date;
   toDate: Date;
+  filters: {
+    useLocationFilter: boolean;
+    maxDistanceKm: number;
+    districts: string[];
+    disciplines: string[];
+    competitionTypes: string[];
+    branches: string[];
+    dateRange: {
+      from: Date | null;
+      to: Date | null;
+    };
+  };
+  onUpdateFilters: (filters: any) => void;
 }
 
 const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
   competitions,
   userLocation,
   fromDate,
-  toDate
+  toDate,
+  filters,
+  onUpdateFilters
 }) => {
   const [viewMode, setViewMode] = useLocalStorage<'calendar' | 'list'>('competitionViewMode', 'calendar');
   const [calendarScrollPosition, setCalendarScrollPosition] = useLocalStorage<number>('calendarScrollPosition', 0);
@@ -92,6 +107,8 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
             <CompetitionList
               competitions={competitions}
               userLocation={userLocation}
+              filters={filters}
+              onUpdateFilters={onUpdateFilters}
             />
           </div>
         </div>
