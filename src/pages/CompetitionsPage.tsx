@@ -11,8 +11,6 @@ import { startOfWeek } from 'date-fns';
 import CalendarList from '../components/competition/CalendarList';
 
 interface Filter {
-  useLocationFilter: boolean;
-  maxDistanceKm: number;
   districts: string[];
   disciplines: string[];
   competitionTypes: string[];
@@ -24,8 +22,6 @@ interface Filter {
 }
 
 const DEFAULT_FILTERS: Filter = {
-  useLocationFilter: false,
-  maxDistanceKm: 100,
   districts: [],
   disciplines: [],
   competitionTypes: [],
@@ -138,7 +134,7 @@ const CompetitionsPage: React.FC = () => {
     })();
 
     return (
-      <div className="px-2 pt-0 pb-4">
+      <div className="px-2 pt-0 pb-4 h-full overflow-auto">
         <CalendarList
           competitions={competitions}
           fromDate={fromDate}
@@ -160,9 +156,10 @@ const CompetitionsPage: React.FC = () => {
           <Filter className="h-[1.2rem] w-[1.2rem]" />
         </Button>
       }
-      fullHeight
     >
-      {renderContent()}
+      <div className="h-full overflow-auto">
+        {renderContent()}
+      </div>
     </MobileLayout>
   );
 };

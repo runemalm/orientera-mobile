@@ -25,7 +25,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
   };
 
   return (
-    <div className="flex flex-col fixed inset-0 bg-gray-50 overflow-hidden">
+    <div className="flex flex-col fixed inset-0 bg-gray-50">
       <TopNavBar 
         title={title} 
         showBackButton={showBackButton} 
@@ -34,9 +34,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
       />
       
       <main 
-        className={`flex-grow mobile-container relative ${
-          fullHeight ? 'h-full overflow-hidden' : 'overflow-y-auto'
-        }`}
+        className={`flex-grow overflow-auto`}
         style={{
           paddingTop: '4rem', // Height of TopNavBar
           paddingBottom: !hideBottomTabs ? 'calc(4rem + var(--safe-area-inset-bottom))' : '1rem'
