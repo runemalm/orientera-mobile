@@ -6,7 +6,6 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '../ui/tabs';
 import CalendarList from './CalendarList';
 import CompetitionPageFavorites from './CompetitionPageFavorites';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
-import { ScrollArea } from '../ui/scroll-area';
 import { useNavigate } from 'react-router-dom';
 
 interface CompetitionLayoutProps {
@@ -62,7 +61,7 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
   }, [viewMode, calendarScrollPosition, favoritesScrollPosition]);
 
   return (
-    <div className="flex flex-col h-full mt-4">
+    <div className="flex flex-col h-full mt-2">  {/* Reduced margin from mt-4 to mt-2 */}
       {!hideTabBar && (
         <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 pt-3 pb-2 px-2">
           <Tabs value={viewMode} onValueChange={handleTabChange} className="w-full">
