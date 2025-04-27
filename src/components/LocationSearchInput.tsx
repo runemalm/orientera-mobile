@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Command, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem } from '@/components/ui/command';
-import { Button } from '@/components/ui/button';
 import { MapPin, Loader2 } from 'lucide-react';
 
 interface LocationResult {
@@ -21,7 +20,6 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
   const [isSearching, setIsSearching] = useState(false);
   const [results, setResults] = useState<LocationResult[]>([]);
   const [showEmpty, setShowEmpty] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
   const searchTimeoutRef = useRef<NodeJS.Timeout>();
 
   const handleSearch = async (term: string) => {
@@ -33,7 +31,6 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
 
     setIsSearching(true);
     setShowEmpty(true);
-    setIsOpen(true);
 
     try {
       const response = await fetch(
@@ -82,9 +79,6 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
     } else if (searchTerm.length === 0) {
       setResults([]);
       setShowEmpty(false);
-      setIsOpen(false);
-    } else {
-      setResults([]);
     }
 
     return () => {
@@ -94,20 +88,9 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
     };
   }, [searchTerm]);
 
-  useEffect(() => {
-    // When results are available, ensure dropdown is shown
-    if (results.length > 0) {
-      setIsOpen(true);
-    }
-  }, [results]);
-
-  const popularCities = [
-    "Stockholm", "Göteborg", "Malmö", "Uppsala", "Kalmar", "Umeå"
-  ];
-
   return (
-    <div className="space-y-4">
-      <Command className="rounded-lg border shadow-md overflow-visible">
+    <div className="w-full">
+      <Command className="rounded-lg border shadow-md">
         <div className="flex items-center border-b px-3">
           <MapPin className="mr-2 h-4 w-4 shrink-0 text-muted-foreground" />
           <CommandInput
@@ -115,14 +98,10 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
             value={searchTerm}
             onValueChange={setSearchTerm}
             className="flex-1"
-            onFocus={() => {
-              if (results.length > 0) setIsOpen(true);
-            }}
           />
           {isSearching && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
         </div>
         
-        {/* Fix: Always render CommandList with emptry CommandGroup if no results */}
         <CommandList className="max-h-[300px] overflow-y-auto">
           {showEmpty && results.length === 0 && !isSearching && (
             <CommandEmpty>Inga resultat hittades</CommandEmpty>
@@ -141,7 +120,6 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
                   setSearchTerm('');
                   setResults([]);
                   setShowEmpty(false);
-                  setIsOpen(false);
                 }}
               >
                 <MapPin className="mr-2 h-4 w-4" />
@@ -151,20 +129,6 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
           </CommandGroup>
         </CommandList>
       </Command>
-
-      <div className="grid grid-cols-3 gap-2">
-        {popularCities.map((city) => (
-          <Button
-            key={city}
-            variant="outline"
-            size="sm"
-            onClick={() => handleSearch(city)}
-            className="justify-center"
-          >
-            {city}
-          </Button>
-        ))}
-      </div>
     </div>
   );
 };
