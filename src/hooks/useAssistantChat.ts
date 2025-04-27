@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 
 interface Message {
@@ -24,14 +25,33 @@ export const useAssistantChat = () => {
 
     setMessages(prev => [...prev, { content: message, isBot: false }]);
 
+    // Dynamically generate a response based on the first message
+    const firstMessageResponse = () => {
+      const lowercaseMessage = message.toLowerCase();
+      
+      if (lowercaseMessage.includes('tävling') || lowercaseMessage.includes('hitta')) {
+        return "Absolut! Jag kan hjälpa dig att hitta och filtrera tävlingar som passar just dig. " + 
+               "Vill du veta mer om kommande tävlingar i ditt område eller har du specifika önskemål?";
+      }
+
+      if (lowercaseMessage.includes('anmälan') || lowercaseMessage.includes('delta')) {
+        return "Anmälningsprocessen kan variera, men jag hjälper dig gärna! " + 
+               "Berätta mer om vilken tävling du är intresserad av, så guidar jag dig genom stegen.";
+      }
+
+      if (lowercaseMessage.includes('resultat') || lowercaseMessage.includes('placering')) {
+        return "Resultatsidor kan vara krångliga, men jag kan hjälpa dig att hitta rätt. " + 
+               "Har du en specifik tävling vars resultat du vill se?";
+      }
+
+      // Default fallback response
+      return "Tack för ditt meddelande! Jag är redo att hjälpa dig med det mesta som rör orienteringstävlingar. " + 
+             "Berätta mer om vad du funderar på så ser vi hur jag kan stödja dig.";
+    };
+
     setTimeout(() => {
       setMessages(prev => [...prev, {
-        content: "Hej! 👋\n\n" + 
-                "Tack för din fråga! Jag är faktiskt ganska ny här och håller fortfarande på att lära mig alla detaljer om tävlingarna. " +
-                "Just den här frågan känner jag mig tyvärr inte helt säker på än.\n\n" +
-                "Skulle du kunna testa att komma tillbaka om några dagar? Då hoppas jag att jag har hunnit sätta mig in i det bättre " +
-                "och kan ge dig ett mer hjälpsamt svar! 💪\n\n" +
-                "Under tiden, finns det något annat jag kan hjälpa till med? 😊",
+        content: firstMessageResponse(),
         isBot: true
       }]);
     }, 1000);
@@ -46,3 +66,4 @@ export const useAssistantChat = () => {
     sendMessage
   };
 };
+
