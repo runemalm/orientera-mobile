@@ -6,7 +6,6 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '../ui/tabs';
 import CalendarList from './CalendarList';
 import CompetitionList from './CompetitionList';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
-import { ScrollArea } from '../ui/scroll-area';
 
 interface CompetitionLayoutProps {
   competitions: CompetitionSummary[];
@@ -90,12 +89,10 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
           ref={listScrollRef}
         >
           <div className="px-2 pt-0 pb-4">
-            {userLocation && (
-              <CompetitionList
-                competitions={competitions}
-                userLocation={userLocation}
-              />
-            )}
+            <CompetitionList
+              competitions={competitions}
+              userLocation={userLocation}
+            />
           </div>
         </div>
       </div>

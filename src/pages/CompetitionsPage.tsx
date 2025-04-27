@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -9,6 +10,7 @@ import { getNearbyCompetitions } from '../services/api';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { startOfWeek } from 'date-fns';
 import CompetitionLayout from '../components/competition/CompetitionLayout';
+import { toast } from 'sonner';
 
 let cachedCompetitions: CompetitionSummary[] = [];
 
@@ -38,7 +40,7 @@ const DEFAULT_FILTERS: Filter = {
 
 const CompetitionsPage: React.FC = () => {
   const navigate = useNavigate();
-  const { userLocation } = useUserLocation();
+  const { userLocation, updateUserLocation } = useUserLocation();
   const [competitions, setCompetitions] = useState<CompetitionSummary[]>(cachedCompetitions);
   const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(cachedCompetitions.length === 0);
   const [error, setError] = useState<string | null>(null);
@@ -95,6 +97,23 @@ const CompetitionsPage: React.FC = () => {
       initialFetchCompleted.current = true;
     }
   }, [userLocation, fetchCompetitions]);
+
+  // Listen for location updates from child components
+  useEffect(() => {
+    const handleLocationUpdate = (e: CustomEvent) => {
+      const newLocation = e.detail;
+      if (newLocation) {
+        updateUserLocation(newLocation);
+        toast.success(`Plats uppdaterad till ${newLocation.city}`);
+        fetchCompetitions();
+      }
+    };
+
+    window.addEventListener('locationUpdated', handleLocationUpdate as EventListener);
+    return () => {
+      window.removeEventListener('locationUpdated', handleLocationUpdate as EventListener);
+    };
+  }, [updateUserLocation, fetchCompetitions]);
 
   const handleFilterClick = () => {
     navigate('/competitions/filter', { state: { transition: 'slide' } });
