@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { useUserLocation } from '../hooks/useUserLocation';
 import CompetitionList from '../components/competition/CompetitionList';
@@ -30,43 +30,46 @@ const FavoritesPage: React.FC = () => {
     }
   }, []);
 
-  const fetchCompetitions = useCallback(async () => {
-    if (!userLocation) return;
-    
-    setIsLoading(true);
-    setError(null);
-    
-    const fromDate = new Date();
-    fromDate.setDate(fromDate.getDate() - 20);
-    
-    const toDate = new Date();
-    toDate.setMonth(toDate.getMonth() + 3);
-    
-    try {
-      const result = await getNearbyCompetitions(
-        userLocation.latitude, 
-        userLocation.longitude,
-        {
-          from: fromDate,
-          to: toDate,
-          limit: 100
-        }
-      );
-      
-      setCompetitions(result);
-    } catch (err) {
-      console.error('Error fetching competitions for favorites:', err);
-      setError('Det gick inte att hämta tävlingar. Försök igen senare.');
-    } finally {
-      setIsLoading(false);
-    }
-  }, [userLocation]);
-
+  // Fetch competitions when userLocation is available or favorites change
   useEffect(() => {
-    if (userLocation) {
-      fetchCompetitions();
-    }
-  }, [userLocation, fetchCompetitions]);
+    const fetchCompetitions = async () => {
+      if (!userLocation || favorites.length === 0) {
+        // If no favorites or no location, stop loading
+        setIsLoading(false);
+        return;
+      }
+      
+      setIsLoading(true);
+      setError(null);
+      
+      const fromDate = new Date();
+      fromDate.setDate(fromDate.getDate() - 20);
+      
+      const toDate = new Date();
+      toDate.setMonth(toDate.getMonth() + 3);
+      
+      try {
+        const result = await getNearbyCompetitions(
+          userLocation.latitude, 
+          userLocation.longitude,
+          {
+            from: fromDate,
+            to: toDate,
+            limit: 100
+          }
+        );
+        
+        setCompetitions(result);
+      } catch (err) {
+        console.error('Error fetching competitions for favorites:', err);
+        setError('Det gick inte att hämta tävlingar. Försök igen senare.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCompetitions();
+  }, [userLocation, favorites]); // Added favorites as dependency
 
   const favoriteCompetitions = competitions.filter(comp => 
     favorites.includes(comp.id)
@@ -76,7 +79,8 @@ const FavoritesPage: React.FC = () => {
   console.log('FavoritesPage - All competitions count:', competitions.length);
   console.log('FavoritesPage - Filtered favorites count:', favoriteCompetitions.length);
 
-  if (isLoading) {
+  // Show loading only if we have favorites and we're still loading
+  if (isLoading && favorites.length > 0) {
     return (
       <MobileLayout title="Favoriter">
         <div className="flex flex-col justify-center items-center h-[70vh]">
