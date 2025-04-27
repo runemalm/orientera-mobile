@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useState } from 'react';
 import { CompetitionSummary } from '../../types';
 import { UserLocation } from '../../hooks/useUserLocation';
@@ -26,17 +25,18 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
   const [calendarScrollPosition, setCalendarScrollPosition] = useLocalStorage<number>('calendarScrollPosition', 0);
   const [listScrollPosition, setListScrollPosition] = useLocalStorage<number>('listScrollPosition', 0);
   
+  const [tapCount, setTapCount] = useState(0);
+  const [lastTapTime, setLastTapTime] = useState(0);
+  
   const calendarScrollRef = useRef<HTMLDivElement>(null);
   const listScrollRef = useRef<HTMLDivElement>(null);
 
-  // Notify parent of initial view mode on mount
   useEffect(() => {
     if (onViewModeChange) {
       onViewModeChange(viewMode);
     }
   }, [onViewModeChange, viewMode]);
 
-  // Save scroll position when tab changes or component unmounts
   const saveScrollPosition = () => {
     if (viewMode === 'calendar' && calendarScrollRef.current) {
       setCalendarScrollPosition(calendarScrollRef.current.scrollTop);
@@ -45,19 +45,36 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
     }
   };
 
-  // Handle tab change
   const handleTabChange = (value: string) => {
     saveScrollPosition();
     const newViewMode = value as 'calendar' | 'list';
+    
+    if (newViewMode === 'list') {
+      const currentTime = new Date().getTime();
+      const timeSinceLastTap = currentTime - lastTapTime;
+      
+      if (timeSinceLastTap > 1500) {
+        setTapCount(1);
+      } else {
+        setTapCount(prev => prev + 1);
+      }
+      
+      if (timeSinceLastTap <= 1500 && tapCount === 4) {
+        localStorage.removeItem('userLocation');
+        localStorage.removeItem('searchRadius');
+        window.location.reload();
+      }
+      
+      setLastTapTime(currentTime);
+    }
+    
     setViewMode(newViewMode);
     
-    // Notify parent component about view mode change
     if (onViewModeChange) {
       onViewModeChange(newViewMode);
     }
   };
 
-  // Restore scroll position on mount and tab change
   useEffect(() => {
     const timer = setTimeout(() => {
       if (viewMode === 'calendar' && calendarScrollRef.current) {
@@ -65,7 +82,7 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
       } else if (viewMode === 'list' && listScrollRef.current) {
         listScrollRef.current.scrollTop = listScrollPosition;
       }
-    }, 50); // Small delay to ensure the DOM has updated
+    }, 50);
 
     return () => {
       clearTimeout(timer);
