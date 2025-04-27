@@ -156,21 +156,26 @@ const CompetitionsPage: React.FC = () => {
         userLocation={userLocation}
         fromDate={fromDate}
         toDate={toDate}
+        onViewModeChange={(viewMode) => {
+          renderFilterButton = viewMode !== 'list';
+        }}
       />
     );
   };
 
+  let renderFilterButton = true;
+
   return (
     <MobileLayout 
       title="Hitta Tävlingar" 
-      action={
+      action={renderFilterButton ? (
         <Button 
           variant="ghost" 
           onClick={handleFilterClick}
         >
           Filter
         </Button>
-      }
+      ) : undefined}
       fullHeight
     >
       {renderContent()}

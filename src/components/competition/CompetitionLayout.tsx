@@ -1,5 +1,4 @@
-
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { CompetitionSummary } from '../../types';
 import { UserLocation } from '../../hooks/useUserLocation';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../ui/tabs';
@@ -12,13 +11,15 @@ interface CompetitionLayoutProps {
   userLocation: UserLocation | null;
   fromDate: Date;
   toDate: Date;
+  onViewModeChange?: (viewMode: 'calendar' | 'list') => void;
 }
 
 const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
   competitions,
   userLocation,
   fromDate,
-  toDate
+  toDate,
+  onViewModeChange
 }) => {
   const [viewMode, setViewMode] = useLocalStorage<'calendar' | 'list'>('competitionViewMode', 'calendar');
   const [calendarScrollPosition, setCalendarScrollPosition] = useLocalStorage<number>('calendarScrollPosition', 0);
@@ -39,7 +40,13 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
   // Handle tab change
   const handleTabChange = (value: string) => {
     saveScrollPosition();
-    setViewMode(value as 'calendar' | 'list');
+    const newViewMode = value as 'calendar' | 'list';
+    setViewMode(newViewMode);
+    
+    // Notify parent component about view mode change
+    if (onViewModeChange) {
+      onViewModeChange(newViewMode);
+    }
   };
 
   // Restore scroll position on mount and tab change
