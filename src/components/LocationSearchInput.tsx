@@ -19,7 +19,7 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
   const [searchTerm, setSearchTerm] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [results, setResults] = useState<LocationResult[]>([]);
-  const [showEmpty, setShowEmpty] = useState(false);
+  const [showResults, setShowResults] = useState(false);
   const searchTimeoutRef = useRef<NodeJS.Timeout>();
   
   // Clear results when component is unmounted or when navigating
@@ -30,19 +30,19 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
       }
       setResults([]);
       setSearchTerm('');
-      setShowEmpty(false);
+      setShowResults(false);
     };
   }, []);
 
   const handleSearch = async (term: string) => {
     if (!term.trim()) {
       setResults([]);
-      setShowEmpty(false);
+      setShowResults(false);
       return;
     }
 
     setIsSearching(true);
-    setShowEmpty(true);
+    setShowResults(true);
 
     try {
       const response = await fetch(
@@ -64,8 +64,7 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
 
       const data = await response.json();
       
-      // Ensure we're only updating state if the search term still matches
-      // This prevents results from a previous search appearing for a new search
+      // Only update results if this is still the current search term
       if (searchTerm === term) {
         const formattedResults = data.map((item: any) => ({
           city: item.address.city || item.address.town || item.address.village || item.display_name.split(',')[0],
@@ -74,8 +73,10 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
           display_name: item.display_name
         }));
 
-        setResults(formattedResults);
         console.log("Search results:", formattedResults);
+        setResults(formattedResults);
+        // Ensure we show results even if the array is empty (to show the "No results" message)
+        setShowResults(true);
       }
     } catch (err) {
       console.error('Error searching locations:', err);
@@ -93,10 +94,10 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
       clearTimeout(searchTimeoutRef.current);
     }
 
-    // Reset results when search term changes
+    // Reset results when search term is cleared
     if (searchTerm.length < 2) {
       setResults([]);
-      setShowEmpty(false);
+      setShowResults(false);
       return;
     }
     
@@ -127,31 +128,33 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ onLocationSel
         </div>
         
         <CommandList className="max-h-[300px] overflow-y-auto">
-          {showEmpty && results.length === 0 && !isSearching ? (
-            <CommandEmpty>Inga resultat hittades</CommandEmpty>
-          ) : (
-            <CommandGroup>
-              {results.map((result, index) => (
-                <CommandItem
-                  key={`${result.city}-${result.latitude}-${result.longitude}-${index}`}
-                  className="cursor-pointer py-2 px-2 text-sm"
-                  onSelect={() => {
-                    onLocationSelected({
-                      city: result.city,
-                      latitude: result.latitude,
-                      longitude: result.longitude,
-                    });
-                    setSearchTerm('');
-                    setResults([]);
-                    setShowEmpty(false);
-                  }}
-                  value={result.display_name}
-                >
-                  <MapPin className="mr-2 h-4 w-4" />
-                  <span className="truncate">{result.display_name}</span>
-                </CommandItem>
-              ))}
-            </CommandGroup>
+          {showResults && (
+            results.length === 0 && !isSearching ? (
+              <CommandEmpty>Inga resultat hittades</CommandEmpty>
+            ) : (
+              <CommandGroup>
+                {results.map((result, index) => (
+                  <CommandItem
+                    key={`${result.city}-${result.latitude}-${result.longitude}-${index}`}
+                    className="cursor-pointer py-2 px-2 text-sm"
+                    onSelect={() => {
+                      onLocationSelected({
+                        city: result.city,
+                        latitude: result.latitude,
+                        longitude: result.longitude,
+                      });
+                      setSearchTerm('');
+                      setResults([]);
+                      setShowResults(false);
+                    }}
+                    value={result.display_name}
+                  >
+                    <MapPin className="mr-2 h-4 w-4" />
+                    <span className="truncate">{result.display_name}</span>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )
           )}
         </CommandList>
       </Command>
