@@ -1,4 +1,3 @@
-
 import React, { useMemo } from 'react';
 import { CompetitionSummary } from '../../types';
 import { UserLocation } from '../../hooks/useUserLocation';
@@ -17,14 +16,14 @@ import { SWEDISH_TIMEZONE } from '../../utils/dateUtils';
 import { toZonedTime } from 'date-fns-tz';
 import CalendarFlow from './CalendarFlow';
 
-interface CalendarListProps {
+interface CompetitionsCalendarViewProps {
   competitions: CompetitionSummary[];
   userLocation: UserLocation | null;
   fromDate: Date;
   toDate: Date;
 }
 
-const CalendarList: React.FC<CalendarListProps> = ({
+const CompetitionsCalendarView: React.FC<CompetitionsCalendarViewProps> = ({
   competitions,
   userLocation,
   fromDate,
@@ -105,4 +104,4 @@ const CalendarList: React.FC<CalendarListProps> = ({
   );
 };
 
-export default CalendarList;
+export default CompetitionsCalendarView;

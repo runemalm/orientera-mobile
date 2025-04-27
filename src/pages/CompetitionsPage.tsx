@@ -8,7 +8,7 @@ import { CompetitionSummary } from '../types';
 import { getNearbyCompetitions } from '../services/api';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { startOfWeek } from 'date-fns';
-import CompetitionLayout from '../components/competition/CompetitionLayout';
+import TabbedCompetitionsView from '../components/competition/TabbedCompetitionsView';
 
 let cachedCompetitions: CompetitionSummary[] = [];
 
@@ -142,7 +142,7 @@ const CompetitionsPage: React.FC = () => {
     })();
 
     return (
-      <CompetitionLayout
+      <TabbedCompetitionsView
         competitions={competitions}
         userLocation={userLocation}
         fromDate={fromDate}

@@ -1,17 +1,16 @@
-
 import React, { useState, useEffect } from 'react';
 import { Star } from 'lucide-react';
 import { CompetitionSummary } from '../../types';
 import CompetitionCard from '../CompetitionCard';
 import { UserLocation } from '../../hooks/useUserLocation';
 
-interface CompetitionListProps {
+interface CompetitionsListViewProps {
   competitions: CompetitionSummary[];
   userLocation: UserLocation;
   showFavorites?: boolean;
 }
 
-const CompetitionList: React.FC<CompetitionListProps> = ({ 
+const CompetitionsListView: React.FC<CompetitionsListViewProps> = ({ 
   competitions, 
   userLocation,
   showFavorites = false 
@@ -63,4 +62,4 @@ const CompetitionList: React.FC<CompetitionListProps> = ({
   );
 };
 
-export default CompetitionList;
+export default CompetitionsListView;

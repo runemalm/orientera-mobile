@@ -2,20 +2,20 @@ import React, { useRef, useEffect } from 'react';
 import { CompetitionSummary } from '../../types';
 import { UserLocation } from '../../hooks/useUserLocation';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../ui/tabs';
-import CalendarList from './CalendarList';
-import CompetitionList from './CompetitionList';
+import CompetitionsCalendarView from './CompetitionsCalendarView';
+import CompetitionsListView from './CompetitionsListView';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { ScrollArea } from '../ui/scroll-area';
 import { useNavigate } from 'react-router-dom';
 
-interface CompetitionLayoutProps {
+interface TabbedCompetitionsViewProps {
   competitions: CompetitionSummary[];
   userLocation: UserLocation | null;
   fromDate: Date;
   toDate: Date;
 }
 
-const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
+const TabbedCompetitionsView: React.FC<TabbedCompetitionsViewProps> = ({
   competitions,
   userLocation,
   fromDate,
@@ -88,7 +88,7 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
           ref={calendarScrollRef}
         >
           <div className="px-2 pt-0 pb-4">
-            <CalendarList
+            <CompetitionsCalendarView
               competitions={competitions}
               userLocation={userLocation}
               fromDate={fromDate}
@@ -103,7 +103,7 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
         >
           <div className="px-2 pt-0 pb-4">
             {userLocation && (
-              <CompetitionList
+              <CompetitionsListView
                 competitions={competitions}
                 userLocation={userLocation}
               />
@@ -115,4 +115,4 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
   );
 };
 
-export default CompetitionLayout;
+export default TabbedCompetitionsView;
