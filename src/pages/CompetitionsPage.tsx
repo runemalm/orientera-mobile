@@ -115,6 +115,10 @@ const CompetitionsPage: React.FC = () => {
     };
   }, [updateUserLocation, fetchCompetitions]);
 
+  const handleFilterClick = () => {
+    navigate('/competitions/filter', { state: { transition: 'slide' } });
+  };
+
   const renderContent = () => {
     if (isLoadingCompetitions && competitions.length === 0) {
       return (
@@ -152,15 +156,21 @@ const CompetitionsPage: React.FC = () => {
         userLocation={userLocation}
         fromDate={fromDate}
         toDate={toDate}
-        filters={safeFilters}
-        onUpdateFilters={(newFilters) => setFilters(newFilters)}
       />
     );
   };
 
   return (
     <MobileLayout 
-      title="Hitta Tävlingar"
+      title="Hitta Tävlingar" 
+      action={
+        <Button 
+          variant="ghost" 
+          onClick={handleFilterClick}
+        >
+          Filter
+        </Button>
+      }
       fullHeight
     >
       {renderContent()}

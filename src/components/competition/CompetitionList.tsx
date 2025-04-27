@@ -6,38 +6,22 @@ import CompetitionCard from '../CompetitionCard';
 import { UserLocation } from '../../hooks/useUserLocation';
 import { Button } from '../ui/button';
 import LocationInputForm from '../LocationInputForm';
-import { Slider } from '../ui/slider';
 
 interface CompetitionListProps {
   competitions: CompetitionSummary[];
   userLocation: UserLocation | null;
   showFavorites?: boolean;
-  filters: {
-    maxDistanceKm: number;
-    useLocationFilter: boolean;
-    districts: string[];
-    disciplines: string[];
-    competitionTypes: string[];
-    branches: string[];
-    dateRange: {
-      from: Date | null;
-      to: Date | null;
-    };
-  };
-  onUpdateFilters: (filters: any) => void;
 }
 
 const CompetitionList: React.FC<CompetitionListProps> = ({ 
   competitions, 
   userLocation,
-  showFavorites = false,
-  filters,
-  onUpdateFilters
+  showFavorites = false 
 }) => {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [isChangingLocation, setIsChangingLocation] = useState(false);
   
-  // Load favorites from localStorage
+  // Load favorites directly from localStorage
   useEffect(() => {
     const storedFavoritesStr = window.localStorage.getItem('favoriteCompetitions');
     if (storedFavoritesStr) {
@@ -51,18 +35,17 @@ const CompetitionList: React.FC<CompetitionListProps> = ({
     }
   }, []);
 
+  // Only filter by favorites if showFavorites is true, otherwise show all competitions passed in
+  const filteredCompetitions = showFavorites
+    ? competitions.filter(comp => favorites.includes(comp.id))
+    : competitions;
+
   const handleLocationSelected = (location: { city: string; latitude: number; longitude: number }) => {
+    // We'll update this in the parent component
     window.dispatchEvent(new CustomEvent('locationUpdated', { 
       detail: location 
     }));
     setIsChangingLocation(false);
-  };
-
-  const handleRadiusChange = (value: number[]) => {
-    onUpdateFilters({
-      ...filters,
-      maxDistanceKm: value[0]
-    });
   };
   
   if (!userLocation) {
@@ -102,11 +85,6 @@ const CompetitionList: React.FC<CompetitionListProps> = ({
       </div>
     );
   }
-
-  // Filter competitions by radius if needed
-  const filteredCompetitions = showFavorites
-    ? competitions.filter(comp => favorites.includes(comp.id))
-    : competitions;
     
   if (filteredCompetitions.length === 0) {
     return (
@@ -123,7 +101,7 @@ const CompetitionList: React.FC<CompetitionListProps> = ({
 
   return (
     <div>
-      <div className="sticky top-0 pb-3 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-10 space-y-4">
+      <div className="sticky top-0 pb-3 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-10">
         <Button
           variant="outline"
           size="sm"
@@ -133,21 +111,6 @@ const CompetitionList: React.FC<CompetitionListProps> = ({
           <MapPin className="h-3.5 w-3.5" />
           <span>{userLocation.city}</span>
         </Button>
-
-        <div className="space-y-2 px-1">
-          <div className="flex justify-between text-sm text-muted-foreground">
-            <span>Maxavstånd</span>
-            <span>{filters.maxDistanceKm} km</span>
-          </div>
-          <Slider
-            value={[filters.maxDistanceKm]}
-            onValueChange={handleRadiusChange}
-            min={10}
-            max={500}
-            step={10}
-            className="w-full"
-          />
-        </div>
       </div>
       
       <div className="space-y-3">
