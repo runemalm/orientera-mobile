@@ -46,7 +46,7 @@ const CompetitionsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const initialFetchCompleted = useRef(false);
   const [filters, setFilters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
-  const [viewMode, setViewMode] = useLocalStorage<'calendar' | 'list'>('competitionViewMode', 'calendar');
+  const [viewMode] = useLocalStorage<'calendar' | 'list'>('competitionViewMode', 'calendar');
 
   const fetchCompetitions = useCallback(async () => {
     if (!userLocation) return;
@@ -54,11 +54,8 @@ const CompetitionsPage: React.FC = () => {
     setIsLoadingCompetitions(true);
     setError(null);
     
-    // Ensure we have a valid filters object
     const safeFilters = filters || DEFAULT_FILTERS;
     
-    // If from date is explicitly set in the filter, use exactly that date
-    // Otherwise use the Monday of the current week
     const fromDate = safeFilters.dateRange?.from 
       ? safeFilters.dateRange.from 
       : startOfWeek(new Date(), { weekStartsOn: 1 });
@@ -77,9 +74,7 @@ const CompetitionsPage: React.FC = () => {
           from: fromDate,
           to: toDate,
           limit: 50,
-          // Only include maxDistance if location filter is enabled
           maxDistanceKm: safeFilters.useLocationFilter ? safeFilters.maxDistanceKm : undefined,
-          // Only include filter arrays if they have values
           districts: safeFilters.districts.length > 0 ? safeFilters.districts : undefined,
           disciplines: safeFilters.disciplines.length > 0 ? safeFilters.disciplines : undefined,
           competitionTypes: safeFilters.competitionTypes.length > 0 ? safeFilters.competitionTypes : undefined,
@@ -97,7 +92,6 @@ const CompetitionsPage: React.FC = () => {
     }
   }, [userLocation, filters]);
 
-  // Stop loading if location is fully loaded but doesn't exist
   useEffect(() => {
     if (!isLoadingLocation && !userLocation) {
       setIsLoadingCompetitions(false);
@@ -112,17 +106,14 @@ const CompetitionsPage: React.FC = () => {
   }, [userLocation, fetchCompetitions]);
 
   const handleFilterClick = () => {
-    // Pass the current viewMode to the filter page
     navigate('/competitions/filter', { 
       state: { 
-        activeTab: viewMode,
         transition: 'slide' 
       }
     });
   };
 
   const renderContent = () => {
-    // Only show loader if we're still loading location info OR loading competitions
     if ((isLoadingLocation || isLoadingCompetitions) && competitions.length === 0) {
       return (
         <div className="flex flex-col justify-center items-center h-[70vh]">
@@ -140,12 +131,9 @@ const CompetitionsPage: React.FC = () => {
       );
     }
 
-    // Ensure we have a valid filters object
     const safeFilters = filters || DEFAULT_FILTERS;
     const dateRange = safeFilters.dateRange || { from: null, to: null };
     
-    // If from date is explicitly set in the filter, use exactly that date
-    // Otherwise use the Monday of the current week
     const fromDate = dateRange.from 
       ? dateRange.from 
       : startOfWeek(new Date(), { weekStartsOn: 1 });

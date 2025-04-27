@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Button } from '@/components/ui/button';
@@ -31,29 +31,13 @@ const DEFAULT_FILTERS: Filter = {
   }
 };
 
-interface RouteState {
-  activeTab?: 'calendar' | 'list';
-}
-
 const CompetitionFilterPage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const { userLocation, updateUserLocation, resetUserLocation } = useUserLocation();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [filters, setFilters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
-  // Store the current view mode
-  const [viewMode, setViewMode] = useLocalStorage<'calendar' | 'list'>('competitionViewMode', 'calendar');
-  
-  const state = location.state as RouteState;
-  // Use the passed activeTab from route state, or fall back to the stored viewMode
-  const activeTab = state?.activeTab || viewMode;
-  
-  // Update the stored viewMode when activeTab changes
-  useEffect(() => {
-    if (state?.activeTab && state.activeTab !== viewMode) {
-      setViewMode(state.activeTab);
-    }
-  }, [state?.activeTab, viewMode, setViewMode]);
+  // Get the current view mode from localStorage
+  const [viewMode] = useLocalStorage<'calendar' | 'list'>('competitionViewMode', 'calendar');
 
   const handleUpdateLocation = (location: { city: string; latitude: number; longitude: number }) => {
     updateUserLocation(location);
@@ -73,7 +57,7 @@ const CompetitionFilterPage = () => {
   };
 
   const handleResetFilters = () => {
-    if (activeTab === 'list') {
+    if (viewMode === 'list') {
       resetUserLocation();
     }
     setFilters(DEFAULT_FILTERS);
@@ -81,7 +65,6 @@ const CompetitionFilterPage = () => {
     
     navigate('/competitions', { 
       state: { 
-        activeTab,
         transition: 'slide' 
       }
     });
@@ -101,7 +84,7 @@ const CompetitionFilterPage = () => {
       }
     >
       <div className="p-4 pb-24">
-        {activeTab === 'calendar' ? (
+        {viewMode === 'calendar' ? (
           <CalendarFilters
             filters={filters}
             onFiltersChange={setFilters}

@@ -49,16 +49,15 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
   const handleFilterClick = () => {
     navigate('/competitions/filter', { 
       state: { 
-        activeTab: viewMode,
         transition: 'slide' 
       }
     });
   };
 
   const handleSetLocationClick = () => {
+    setViewMode('list');
     navigate('/competitions/filter', { 
       state: { 
-        activeTab: 'list',
         transition: 'slide' 
       }
     });
