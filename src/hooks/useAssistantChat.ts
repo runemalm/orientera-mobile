@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 
 interface Message {
@@ -13,15 +12,8 @@ export const useAssistantChat = () => {
   useEffect(() => {
     setMessages([
       {
-        content: "Hej! 👋\n\n" +
-                 "Jag är Nina, din personliga tävlingsassistent. Hur kan jag hjälpa dig idag?\n\n" +
-                 "Jag kan hjälpa dig med:\n" +
-                 "• Hitta och filtrera tävlingar som passar dig\n" +
-                 "• Svara på frågor om specifika tävlingar\n" +
-                 "• Förklara anmälningsprocessen\n" +
-                 "• Ge information om starttider och resultat\n" +
-                 "• Hjälpa till med andra tävlingsrelaterade frågor\n\n" +
-                 "Ställ gärna din fråga så ska jag göra mitt bästa för att hjälpa dig! 😊",
+        content: "Hej! 👋\n\nJag är Nina och jag hjälper dig med frågor om orienteringstävlingar. " + 
+                 "Vad vill du veta mer om?",
         isBot: true
       }
     ]);
