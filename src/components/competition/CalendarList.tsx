@@ -1,4 +1,3 @@
-
 import React, { useMemo } from 'react';
 import { CompetitionSummary } from '../../types';
 import { UserLocation } from '../../hooks/useUserLocation';
@@ -99,7 +98,7 @@ const CalendarList: React.FC<CalendarListProps> = ({
   }
 
   return (
-    <div className="space-y-6 max-w-full">
+    <div className="space-y-6 max-w-full overflow-hidden">
       <CalendarFlow weeks={calendarStructure} />
     </div>
   );
