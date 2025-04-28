@@ -10,14 +10,74 @@ interface ChatMessageProps {
 }
 
 const ChatMessage: React.FC<ChatMessageProps> = ({ message, isBot, avatar }) => {
-  // Dela upp meddelandet i rader och rendera dem
+  // Parse message to render links properly
   const renderMessage = () => {
-    return message.split('\n').map((line, index) => (
-      <React.Fragment key={index}>
-        {line}
-        {index < message.split('\n').length - 1 && <br />}
-      </React.Fragment>
-    ));
+    // Split the message into lines first
+    return message.split('\n').map((line, lineIndex) => {
+      // Regular expression to match markdown links: [text](url)
+      const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+      
+      // If no links in this line, just return the text with line break
+      if (!linkRegex.test(line)) {
+        return (
+          <React.Fragment key={lineIndex}>
+            {line}
+            {lineIndex < message.split('\n').length - 1 && <br />}
+          </React.Fragment>
+        );
+      }
+      
+      // If we have links, we need to split the text and render links properly
+      let lastIndex = 0;
+      const parts = [];
+      let match;
+      let partIndex = 0;
+      
+      // Reset regex to start from beginning
+      linkRegex.lastIndex = 0;
+      
+      while ((match = linkRegex.exec(line)) !== null) {
+        // Add text before the link
+        if (match.index > lastIndex) {
+          parts.push(
+            <span key={`${lineIndex}-${partIndex++}`}>
+              {line.substring(lastIndex, match.index)}
+            </span>
+          );
+        }
+        
+        // Add the link
+        parts.push(
+          <a 
+            key={`${lineIndex}-${partIndex++}`}
+            href={match[2]}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`underline ${isBot ? 'text-blue-600 hover:text-blue-800' : 'text-blue-300 hover:text-blue-100'}`}
+          >
+            {match[1]}
+          </a>
+        );
+        
+        lastIndex = match.index + match[0].length;
+      }
+      
+      // Add any remaining text after the last link
+      if (lastIndex < line.length) {
+        parts.push(
+          <span key={`${lineIndex}-${partIndex++}`}>
+            {line.substring(lastIndex)}
+          </span>
+        );
+      }
+      
+      return (
+        <React.Fragment key={lineIndex}>
+          {parts}
+          {lineIndex < message.split('\n').length - 1 && <br />}
+        </React.Fragment>
+      );
+    });
   };
 
   return (
