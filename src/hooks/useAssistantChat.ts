@@ -12,7 +12,7 @@ interface WebSocketMessage {
 }
 
 // Simplified WebSocket configuration
-const WEBSOCKET_URL = import.meta.env.VITE_WEBSOCKET_URL || 'https://mas.orientera.com/ws';
+const WEBSOCKET_BASE_URL = import.meta.env.VITE_WEBSOCKET_BASE_URL || 'https://mas.orientera.com/ws';
 
 export const useAssistantChat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -35,7 +35,7 @@ export const useAssistantChat = () => {
     const userId = getUserId();
     
     // Create WebSocket URL with user ID
-    const wsUrl = `${WEBSOCKET_URL}/${userId}`;
+    const wsUrl = `${WEBSOCKET_BASE_URL}/${userId}`;
     console.log('Connecting to WebSocket:', wsUrl);
     
     const ws = new WebSocket(wsUrl);
