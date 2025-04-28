@@ -12,6 +12,12 @@ const AssistantPage = () => {
   const { messages, inputValue, setInputValue, sendMessage, isConnected } = useAssistantChat();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Log VITE_WEBSOCKET_BASE_URL to console
+  useEffect(() => {
+    const websocketBaseUrl = import.meta.env.VITE_WEBSOCKET_BASE_URL || 'https://mas.orientera.com/ws';
+    console.log('Current VITE_WEBSOCKET_BASE_URL:', websocketBaseUrl);
+  }, []);
+
   // Auto-scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
