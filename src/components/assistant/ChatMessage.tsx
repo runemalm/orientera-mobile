@@ -145,21 +145,16 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isBot, avatar }) => 
         return linkParts;
       });
       
-      // Create properly keyed elements for the flattened array
-      const elements = [];
+      // Flatten the array and wrap in a fragment with proper key
       const flatResult = result.flat();
-      
-      flatResult.forEach((item, itemIdx) => {
-        if (React.isValidElement(item)) {
-          elements.push(item);
-        } else if (typeof item === 'string') {
-          elements.push(item);
-        }
-      });
       
       return (
         <React.Fragment key={lineIndex}>
-          {elements}
+          {flatResult.map((item, itemIdx) => (
+            <React.Fragment key={`item-${lineIndex}-${itemIdx}`}>
+              {item}
+            </React.Fragment>
+          ))}
           {lineIndex < message.split('\n').length - 1 && <br />}
         </React.Fragment>
       );
