@@ -11,12 +11,8 @@ interface WebSocketMessage {
   content: string;
 }
 
-// Configuration for WebSocket connections
-const WEBSOCKET_CONFIG = {
-  MOCK_ENABLED: import.meta.env.VITE_USE_MOCK_WS === 'true',
-  MOCK_BASE_URL: 'ws://localhost:8000/ws',
-  PRODUCTION_BASE_URL: 'https://mas.orientera.com/ws'
-};
+// Simplified WebSocket configuration
+const WEBSOCKET_URL = import.meta.env.VITE_WEBSOCKET_URL || 'https://mas.orientera.com/ws';
 
 export const useAssistantChat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -38,17 +34,8 @@ export const useAssistantChat = () => {
   useEffect(() => {
     const userId = getUserId();
     
-    // Determine WebSocket base URL based on configuration
-    let baseUrl: string;
-    
-    if (WEBSOCKET_CONFIG.MOCK_ENABLED) {
-      baseUrl = WEBSOCKET_CONFIG.MOCK_BASE_URL;
-      console.log('Using mock WebSocket server:', baseUrl);
-    } else {
-      baseUrl = WEBSOCKET_CONFIG.PRODUCTION_BASE_URL;
-    }
-    
-    const wsUrl = `${baseUrl}/${userId}`;
+    // Create WebSocket URL with user ID
+    const wsUrl = `${WEBSOCKET_URL}/${userId}`;
     console.log('Connecting to WebSocket:', wsUrl);
     
     const ws = new WebSocket(wsUrl);
