@@ -153,15 +153,15 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isBot, avatar }) => 
         if (React.isValidElement(item)) {
           elements.push(item);
         } else if (typeof item === 'string') {
-          elements.push(item);
+          elements.push(<span key={`text-${lineIndex}-${itemIdx}`}>{item}</span>);
         }
       });
       
       return (
-        <React.Fragment key={lineIndex}>
+        <span key={`line-${lineIndex}`} className="inline-block">
           {elements}
           {lineIndex < message.split('\n').length - 1 && <br />}
-        </React.Fragment>
+        </span>
       );
     });
   };
