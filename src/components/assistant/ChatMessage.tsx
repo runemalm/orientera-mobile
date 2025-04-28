@@ -10,15 +10,17 @@ interface ChatMessageProps {
 }
 
 const ChatMessage: React.FC<ChatMessageProps> = ({ message, isBot, avatar }) => {
-  // Parse message to render links properly
+  // Parse message to render links and formatting properly
   const renderMessage = () => {
     // Split the message into lines first
     return message.split('\n').map((line, lineIndex) => {
       // Regular expression to match markdown links: [text](url)
       const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+      // Regular expression to match bold text: **text**
+      const boldRegex = /\*\*([^*]+)\*\*/g;
       
-      // If no links in this line, just return the text with line break
-      if (!linkRegex.test(line)) {
+      // If no links or bold text in this line, just return the text with line break
+      if (!linkRegex.test(line) && !boldRegex.test(line)) {
         return (
           <React.Fragment key={lineIndex}>
             {line}
@@ -27,53 +29,128 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isBot, avatar }) => 
         );
       }
       
-      // If we have links, we need to split the text and render links properly
+      // Process the line to handle both links and bold text
       let lastIndex = 0;
       const parts = [];
-      let match;
       let partIndex = 0;
       
-      // Reset regex to start from beginning
-      linkRegex.lastIndex = 0;
+      // First process the line to extract and format links
+      let processedLine = line;
+      const linkMatches = [];
+      const placeholders = [];
       
-      while ((match = linkRegex.exec(line)) !== null) {
-        // Add text before the link
-        if (match.index > lastIndex) {
-          parts.push(
-            <span key={`${lineIndex}-${partIndex++}`}>
-              {line.substring(lastIndex, match.index)}
-            </span>
+      // Extract links and replace with placeholders
+      let linkMatch;
+      linkRegex.lastIndex = 0;
+      while ((linkMatch = linkRegex.exec(line)) !== null) {
+        linkMatches.push({
+          placeholder: `__LINK_${linkMatches.length}__`,
+          text: linkMatch[1],
+          url: linkMatch[2],
+          startIndex: linkMatch.index,
+          endIndex: linkMatch.index + linkMatch[0].length
+        });
+        
+        processedLine = processedLine.replace(
+          linkMatch[0], 
+          `__LINK_${linkMatches.length - 1}__`
+        );
+      }
+      
+      // Process the line for bold text
+      let processedWithBold = '';
+      lastIndex = 0;
+      let boldMatch;
+      boldRegex.lastIndex = 0;
+      
+      while ((boldMatch = boldRegex.exec(processedLine)) !== null) {
+        // Add text before the bold
+        processedWithBold += processedLine.substring(lastIndex, boldMatch.index);
+        
+        // Add placeholder for bold text
+        const boldPlaceholder = `__BOLD_${placeholders.length}__`;
+        placeholders.push({
+          type: 'bold',
+          content: boldMatch[1]
+        });
+        processedWithBold += boldPlaceholder;
+        
+        lastIndex = boldMatch.index + boldMatch[0].length;
+      }
+      
+      // Add any remaining text
+      processedWithBold += processedLine.substring(lastIndex);
+      
+      // Now build the final output with both links and bold text
+      const finalParts = [];
+      let currentText = processedWithBold;
+      
+      // Replace bold placeholders with actual JSX
+      placeholders.forEach((placeholder, idx) => {
+        const parts = currentText.split(`__BOLD_${idx}__`);
+        if (parts.length > 1) {
+          finalParts.push(parts[0]);
+          finalParts.push(
+            <strong key={`bold-${lineIndex}-${idx}`} className="font-bold">
+              {placeholder.content}
+            </strong>
           );
+          currentText = parts.slice(1).join(`__BOLD_${idx}__`);
+        }
+      });
+      finalParts.push(currentText);
+      
+      // Restore links
+      const result = finalParts.map((part, idx) => {
+        if (typeof part !== 'string') {
+          return part; // Already a React element (bold)
         }
         
-        // Add the link
-        parts.push(
-          <a 
-            key={`${lineIndex}-${partIndex++}`}
-            href={match[2]}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`underline ${isBot ? 'text-blue-600 hover:text-blue-800' : 'text-blue-300 hover:text-blue-100'}`}
-          >
-            {match[1]}
-          </a>
-        );
+        const linkParts = [];
+        let lastLinkIndex = 0;
         
-        lastIndex = match.index + match[0].length;
-      }
+        // Replace link placeholders with actual links
+        linkMatches.forEach((link, linkIdx) => {
+          const placeholder = `__LINK_${linkIdx}__`;
+          const placeholderIndex = part.indexOf(placeholder, lastLinkIndex);
+          
+          if (placeholderIndex !== -1) {
+            // Add text before the link
+            if (placeholderIndex > lastLinkIndex) {
+              linkParts.push(part.substring(lastLinkIndex, placeholderIndex));
+            }
+            
+            // Add the link
+            linkParts.push(
+              <a 
+                key={`link-${lineIndex}-${linkIdx}`}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`underline ${isBot ? 'text-blue-600 hover:text-blue-800' : 'text-blue-300 hover:text-blue-100'}`}
+              >
+                {link.text}
+              </a>
+            );
+            
+            lastLinkIndex = placeholderIndex + placeholder.length;
+          }
+        });
+        
+        // Add remaining text
+        if (lastLinkIndex < part.length) {
+          linkParts.push(part.substring(lastLinkIndex));
+        }
+        
+        return linkParts;
+      });
       
-      // Add any remaining text after the last link
-      if (lastIndex < line.length) {
-        parts.push(
-          <span key={`${lineIndex}-${partIndex++}`}>
-            {line.substring(lastIndex)}
-          </span>
-        );
-      }
+      // Flatten the array
+      const flatResult = result.flat();
       
       return (
         <React.Fragment key={lineIndex}>
-          {parts}
+          {flatResult}
           {lineIndex < message.split('\n').length - 1 && <br />}
         </React.Fragment>
       );
