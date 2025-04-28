@@ -42,7 +42,7 @@ const CompetitionPageFavorites: React.FC<CompetitionPageFavoritesProps> = ({ com
   }
 
   return (
-    <div className="px-2">
+    <div className="px-0">
       <CompetitionList
         competitions={favoriteCompetitions}
         userLocation={userLocation}
