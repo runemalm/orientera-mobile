@@ -1,69 +1,98 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 interface Message {
   content: string;
   isBot: boolean;
 }
 
+interface WebSocketMessage {
+  role: string;
+  content: string;
+}
+
 export const useAssistantChat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
+  const [isConnected, setIsConnected] = useState(false);
+  const wsRef = useRef<WebSocket | null>(null);
 
-  useEffect(() => {
-    setMessages([
-      {
-        content: "Hej! 👋\n\nJag är Nina och jag hjälper dig med frågor om orienteringstävlingar. " + 
-                 "Vad vill du veta mer om?",
-        isBot: true
-      }
-    ]);
+  // Generate a simple unique user ID if not already in localStorage
+  const getUserId = useCallback(() => {
+    let userId = localStorage.getItem('chat_user_id');
+    if (!userId) {
+      userId = 'user_' + Math.random().toString(36).substring(2, 15);
+      localStorage.setItem('chat_user_id', userId);
+    }
+    return userId;
   }, []);
 
-  const sendMessage = async (message: string) => {
-    if (!message.trim()) return;
+  // Setup WebSocket connection
+  useEffect(() => {
+    const userId = getUserId();
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsUrl = `${protocol}//${window.location.host}/ws/${userId}`;
+    
+    const ws = new WebSocket(wsUrl);
+    wsRef.current = ws;
 
-    setMessages(prev => [...prev, { content: message, isBot: false }]);
-
-    // Dynamically generate a response based on the first message
-    const firstMessageResponse = () => {
-      const lowercaseMessage = message.toLowerCase();
-      
-      if (lowercaseMessage.includes('tävling') || lowercaseMessage.includes('hitta')) {
-        return "Absolut! Jag kan hjälpa dig att hitta och filtrera tävlingar som passar just dig. " + 
-               "Vill du veta mer om kommande tävlingar i ditt område eller har du specifika önskemål?";
-      }
-
-      if (lowercaseMessage.includes('anmälan') || lowercaseMessage.includes('delta')) {
-        return "Anmälningsprocessen kan variera, men jag hjälper dig gärna! " + 
-               "Berätta mer om vilken tävling du är intresserad av, så guidar jag dig genom stegen.";
-      }
-
-      if (lowercaseMessage.includes('resultat') || lowercaseMessage.includes('placering')) {
-        return "Resultatsidor kan vara krångliga, men jag kan hjälpa dig att hitta rätt. " + 
-               "Har du en specifik tävling vars resultat du vill se?";
-      }
-
-      // Default fallback response
-      return "Tack för ditt meddelande! Jag är redo att hjälpa dig med det mesta som rör orienteringstävlingar. " + 
-             "Berätta mer om vad du funderar på så ser vi hur jag kan stödja dig.";
+    ws.onopen = () => {
+      console.log('Connected to chat server');
+      setIsConnected(true);
     };
 
-    setTimeout(() => {
-      setMessages(prev => [...prev, {
-        content: firstMessageResponse(),
-        isBot: true
-      }]);
-    }, 1000);
+    ws.onmessage = (event) => {
+      try {
+        const messagesFromServer: WebSocketMessage[] = JSON.parse(event.data);
+        
+        // Convert WebSocket messages to our Message format
+        const formattedMessages: Message[] = messagesFromServer.map(msg => ({
+          content: msg.content,
+          isBot: msg.role === 'assistant'
+        }));
 
+        setMessages(formattedMessages);
+      } catch (error) {
+        console.error('Error parsing message from server:', error);
+      }
+    };
+
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
+      setIsConnected(false);
+    };
+
+    ws.onclose = () => {
+      console.log('Disconnected from chat server');
+      setIsConnected(false);
+    };
+
+    // Cleanup on unmount
+    return () => {
+      if (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING) {
+        ws.close();
+      }
+    };
+  }, [getUserId]);
+
+  const sendMessage = useCallback((message: string) => {
+    if (!message.trim() || !wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
+      return;
+    }
+
+    // Add user message to UI immediately for better UX
+    setMessages(prev => [...prev, { content: message, isBot: false }]);
+    
+    // Send message to server
+    wsRef.current.send(message);
     setInputValue('');
-  };
+  }, []);
 
   return {
     messages,
     inputValue,
     setInputValue,
-    sendMessage
+    sendMessage,
+    isConnected
   };
 };
-
