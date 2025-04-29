@@ -32,7 +32,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isBot, avatar }) => 
       <div className={`flex-1 space-y-2 overflow-hidden rounded-lg p-3 ${
         isBot ? 'bg-muted' : 'bg-primary text-primary-foreground'
       }`}>
-        <div className="leading-relaxed markdown-content">
+        <div className="leading-relaxed prose prose-sm max-w-none markdown-content">
           <ReactMarkdown
             components={{
               a: ({ node, ...props }) => (
@@ -48,6 +48,32 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isBot, avatar }) => 
               ),
               p: ({ node, ...props }) => (
                 <p {...props} className="mb-2 last:mb-0" />
+              ),
+              ul: ({ node, ...props }) => (
+                <ul {...props} className="list-disc pl-5 mb-2" />
+              ),
+              ol: ({ node, ...props }) => (
+                <ol {...props} className="list-decimal pl-5 mb-2" />
+              ),
+              li: ({ node, ...props }) => (
+                <li {...props} className="mb-1" />
+              ),
+              h1: ({ node, ...props }) => (
+                <h1 {...props} className="text-lg font-bold mb-2" />
+              ),
+              h2: ({ node, ...props }) => (
+                <h2 {...props} className="text-base font-bold mb-2" />
+              ),
+              h3: ({ node, ...props }) => (
+                <h3 {...props} className="text-sm font-bold mb-1" />
+              ),
+              blockquote: ({ node, ...props }) => (
+                <blockquote {...props} className={`pl-3 border-l-2 ${isBot ? 'border-gray-400' : 'border-blue-300'} italic`} />
+              ),
+              code: ({ node, inline, ...props }) => (
+                inline ? 
+                  <code {...props} className={`px-1 py-0.5 rounded ${isBot ? 'bg-gray-200' : 'bg-blue-800'}`} /> : 
+                  <code {...props} className={`block p-2 rounded ${isBot ? 'bg-gray-200' : 'bg-blue-800'} whitespace-pre-wrap`} />
               )
             }}
           >
