@@ -10,6 +10,14 @@ interface ChatMessageProps {
   avatar?: string;
 }
 
+// Adding a type for the code element props from ReactMarkdown
+interface CodeProps {
+  node: any;
+  inline?: boolean;
+  className?: string;
+  children?: React.ReactNode;
+}
+
 const ChatMessage: React.FC<ChatMessageProps> = ({ message, isBot, avatar }) => {
   return (
     <div className={`flex gap-3 ${isBot ? 'items-start' : 'items-start flex-row-reverse'}`}>
@@ -70,7 +78,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isBot, avatar }) => 
               blockquote: ({ node, ...props }) => (
                 <blockquote {...props} className={`pl-3 border-l-2 ${isBot ? 'border-gray-400' : 'border-blue-300'} italic`} />
               ),
-              code: ({ node, inline, ...props }) => (
+              code: ({ node, inline, ...props }: CodeProps) => (
                 inline ? 
                   <code {...props} className={`px-1 py-0.5 rounded ${isBot ? 'bg-gray-200' : 'bg-blue-800'}`} /> : 
                   <code {...props} className={`block p-2 rounded ${isBot ? 'bg-gray-200' : 'bg-blue-800'} whitespace-pre-wrap`} />
