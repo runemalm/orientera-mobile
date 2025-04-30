@@ -7,8 +7,9 @@ interface Message {
 }
 
 interface WebSocketMessage {
-  role: string;
+  role: string;      // "user", "assistant", "info"
   content: string;
+  date: string;
 }
 
 // Simplified WebSocket configuration
@@ -16,6 +17,7 @@ const WEBSOCKET_BASE_URL = import.meta.env.VITE_WEBSOCKET_BASE_URL || 'https://m
 
 export const useAssistantChat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
+  const [infoMessage, setInfoMessage] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState('');
   const [isConnected, setIsConnected] = useState(false);
   const wsRef = useRef<WebSocket | null>(null);
@@ -49,9 +51,17 @@ export const useAssistantChat = () => {
     ws.onmessage = (event) => {
       try {
         const messagesFromServer: WebSocketMessage[] = JSON.parse(event.data);
-        
-        // Convert WebSocket messages to our Message format
-        const formattedMessages: Message[] = messagesFromServer.map(msg => ({
+
+        const info = messagesFromServer.find(m => m.role === 'info');
+        const chats = messagesFromServer.filter(m => m.role !== 'info');
+
+        if (info) {
+          setInfoMessage(info.content);
+        } else {
+          setInfoMessage(null);
+        }
+
+        const formattedMessages: Message[] = chats.map(msg => ({
           content: msg.content,
           isBot: msg.role === 'assistant'
         }));
@@ -98,6 +108,7 @@ export const useAssistantChat = () => {
     inputValue,
     setInputValue,
     sendMessage,
-    isConnected
+    isConnected,
+    infoMessage,
   };
 };

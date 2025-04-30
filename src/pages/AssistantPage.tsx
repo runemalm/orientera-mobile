@@ -9,7 +9,8 @@ import { Card, CardContent } from '../components/ui/card';
 import { toast } from 'sonner';
 
 const AssistantPage = () => {
-  const { messages, inputValue, setInputValue, sendMessage, isConnected } = useAssistantChat();
+  const { messages, inputValue, setInputValue, sendMessage, isConnected, infoMessage } = useAssistantChat();
+  const SHOW_INFO_MESSAGE = false;
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom when messages change
@@ -61,6 +62,13 @@ const AssistantPage = () => {
             </CardContent>
           </Card>
         )}
+
+        {SHOW_INFO_MESSAGE && infoMessage && (
+          <div className="mx-4 mt-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 p-3 text-sm rounded">
+            {infoMessage}
+          </div>
+        )}
+
 
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {messages.map((message, index) => (
