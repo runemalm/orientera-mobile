@@ -1,12 +1,17 @@
 
 import React, { useRef, useEffect } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
-import { Send, MessageSquare, WifiOff } from 'lucide-react';
+import { Send, MessageSquare, WifiOff, Info } from 'lucide-react';
 import ChatMessage from '../components/assistant/ChatMessage';
 import { useAssistantChat } from '../hooks/useAssistantChat';
 import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
 import { toast } from 'sonner';
+import { 
+  Popover, 
+  PopoverContent, 
+  PopoverTrigger 
+} from '../components/ui/popover';
 
 const AssistantPage = () => {
   const { messages, inputValue, setInputValue, sendMessage, isConnected, infoMessage } = useAssistantChat();
@@ -40,10 +45,36 @@ const AssistantPage = () => {
     sendMessage(inputValue);
   };
 
+  // Info button component to pass to MobileLayout as action
+  const InfoButton = () => (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button variant="ghost" size="icon">
+          <Info className="h-5 w-5" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-80 p-4">
+        <div className="space-y-3">
+          <div className="flex items-center gap-2 text-primary font-medium">
+            <MessageSquare className="h-5 w-5" />
+            <h2>Om assistenten</h2>
+          </div>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Nina är din personliga tävlingsassistent som hjälper dig hitta och förstå 
+            information om orienteringstävlingar. Hon kan svara på frågor om tävlingar, 
+            anmälningar, resultat och mycket annat. Nina är under utveckling och blir 
+            hela tiden bättre på att hjälpa dig.
+          </p>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+
   return (
     <MobileLayout 
       title="Tävlingsassistenten"
       fullHeight
+      action={<InfoButton />}
     >
       <div className="flex flex-col h-full">
         {messages.length === 0 && (
