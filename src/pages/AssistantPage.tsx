@@ -5,7 +5,6 @@ import { Send, MessageSquare, WifiOff, Info } from 'lucide-react';
 import ChatMessage from '../components/assistant/ChatMessage';
 import { useAssistantChat } from '../hooks/useAssistantChat';
 import { Button } from '../components/ui/button';
-import { Card, CardContent } from '../components/ui/card';
 import { toast } from 'sonner';
 import { 
   Popover, 
@@ -77,29 +76,11 @@ const AssistantPage = () => {
       action={<InfoButton />}
     >
       <div className="flex flex-col h-full">
-        {messages.length === 0 && (
-          <Card className="mx-4 mt-4 bg-primary/5 border-primary/20">
-            <CardContent className="p-4 space-y-3">
-              <div className="flex items-center gap-2 text-primary font-medium">
-                <MessageSquare className="h-5 w-5" />
-                <h2>Om assistenten</h2>
-              </div>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Nina är din personliga tävlingsassistent som hjälper dig hitta och förstå 
-                information om orienteringstävlingar. Hon kan svara på frågor om tävlingar, 
-                anmälningar, resultat och mycket annat. Nina är under utveckling och blir 
-                hela tiden bättre på att hjälpa dig.
-              </p>
-            </CardContent>
-          </Card>
-        )}
-
         {SHOW_INFO_MESSAGE && infoMessage && (
           <div className="mx-4 mt-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 p-3 text-sm rounded">
             {infoMessage}
           </div>
         )}
-
 
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {messages.map((message, index) => (
