@@ -35,8 +35,13 @@ const getUserId = () => {
   return userId;
 };
 
+// Last time we checked the connection status
+let lastConnectionCheck = 0;
+const CONNECTION_CHECK_THROTTLE = 2000; // Don't check more often than every 2 seconds
+
 // Function to establish WebSocket connection
 const establishConnection = () => {
+  // Only proceed if we don't already have a connection and we're not already connecting
   if (globalWsConnection && (globalWsConnection.readyState === WebSocket.OPEN || globalWsConnection.readyState === WebSocket.CONNECTING)) {
     return;
   }
@@ -44,6 +49,13 @@ const establishConnection = () => {
   if (isConnecting) {
     return;
   }
+
+  // Throttle connection attempts
+  const now = Date.now();
+  if (now - lastConnectionCheck < CONNECTION_CHECK_THROTTLE) {
+    return;
+  }
+  lastConnectionCheck = now;
 
   isConnecting = true;
   const userId = getUserId();
@@ -92,6 +104,11 @@ const establishConnection = () => {
   }
 };
 
+// Check if WebSocket is actually connected
+const isWebSocketConnected = () => {
+  return globalWsConnection && globalWsConnection.readyState === WebSocket.OPEN;
+};
+
 // Simulate human-like delay for assistant responses
 const simulateTypingDelay = (callback: () => void) => {
   // Generate a random delay between 500ms and 1500ms
@@ -105,8 +122,11 @@ if (typeof window !== 'undefined') {
 
   // Setup visibility change listener to reconnect when page becomes visible
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible' && (!globalWsConnection || globalWsConnection.readyState !== WebSocket.OPEN)) {
-      establishConnection();
+    if (document.visibilityState === 'visible') {
+      // Check if the connection is actually closed before reconnecting
+      if (!isWebSocketConnected()) {
+        establishConnection();
+      }
     }
   });
 }
@@ -120,6 +140,7 @@ export const useAssistantChat = () => {
   const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
   const [isThinking, setIsThinking] = useState(false);
   const listenerIdRef = useRef<number>(Date.now());
+  const toastShownRef = useRef(false);
 
   // Register this component as a listener
   useEffect(() => {
@@ -128,6 +149,18 @@ export const useAssistantChat = () => {
     const handleWebSocketEvent = (event: any) => {
       if (event.type === 'connection') {
         setIsConnected(event.status);
+        
+        // Only show reconnection toast if we actually disconnected and are now reconnecting
+        if (!event.status && !toastShownRef.current) {
+          toast.error("Anslutningen till assistenten bröts", {
+            description: "Försöker återansluta...",
+            duration: 3000
+          });
+          toastShownRef.current = true;
+        } else if (event.status) {
+          // Reset the toast flag when we're connected again
+          toastShownRef.current = false;
+        }
       } else if (event.type === 'message') {
         try {
           const messagesFromServer: WebSocketMessage[] = JSON.parse(event.data);
@@ -163,7 +196,7 @@ export const useAssistantChat = () => {
     wsListeners.push(handleWebSocketEvent);
     
     // Check connection status immediately
-    if (globalWsConnection && globalWsConnection.readyState === WebSocket.OPEN) {
+    if (isWebSocketConnected()) {
       setIsConnected(true);
     } else {
       setIsConnected(false);
@@ -193,7 +226,7 @@ export const useAssistantChat = () => {
     });
 
     // Ensure connection exists
-    if (!globalWsConnection || globalWsConnection.readyState !== WebSocket.OPEN) {
+    if (!isWebSocketConnected()) {
       establishConnection();
       toast.info("Ansluter till assistenten...", {
         description: "Ditt meddelande skickas så snart anslutningen är återupprättad.",
@@ -203,7 +236,9 @@ export const useAssistantChat = () => {
     }
     
     // Send message to server
-    globalWsConnection.send(message);
+    if (globalWsConnection) {
+      globalWsConnection.send(message);
+    }
     setInputValue('');
   }, [setMessages]);
 
