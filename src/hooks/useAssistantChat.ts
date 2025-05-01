@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { toast } from 'sonner';
 
@@ -91,6 +90,13 @@ const establishConnection = () => {
   }
 };
 
+// Simulate human-like delay for assistant responses
+const simulateTypingDelay = (callback: () => void) => {
+  // Random delay between 500ms and 1500ms to simulate thinking time
+  const thinkingDelay = Math.random() * 1000 + 500;
+  setTimeout(callback, thinkingDelay);
+};
+
 // Initialize connection when the module loads
 if (typeof window !== 'undefined') {
   establishConnection();
@@ -109,6 +115,7 @@ export const useAssistantChat = () => {
   const [inputValue, setInputValue] = useState('');
   const [isConnected, setIsConnected] = useState(false);
   const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
+  const [isThinking, setIsThinking] = useState(false); // New state for thinking simulation
   const listenerIdRef = useRef<number>(Date.now());
 
   // Register this component as a listener
@@ -136,11 +143,17 @@ export const useAssistantChat = () => {
             isBot: msg.role === 'assistant'
           }));
 
-          setMessages(formattedMessages);
-          setIsWaitingForResponse(false);
+          // Simulate thinking before showing typing indicator
+          setIsThinking(true);
+          simulateTypingDelay(() => {
+            setIsThinking(false);
+            setMessages(formattedMessages);
+            setIsWaitingForResponse(false);
+          });
         } catch (error) {
           console.error('Error parsing message from server:', error);
           setIsWaitingForResponse(false);
+          setIsThinking(false);
         }
       }
     };
@@ -196,5 +209,6 @@ export const useAssistantChat = () => {
     isConnected,
     infoMessage,
     isWaitingForResponse,
+    isThinking,
   };
 };

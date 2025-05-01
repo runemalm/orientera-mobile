@@ -20,7 +20,8 @@ const AssistantPage = () => {
     sendMessage, 
     isConnected, 
     infoMessage,
-    isWaitingForResponse 
+    isWaitingForResponse,
+    isThinking
   } = useAssistantChat();
   
   const SHOW_INFO_MESSAGE = false;
@@ -101,7 +102,7 @@ const AssistantPage = () => {
             />
           ))}
           
-          {isWaitingForResponse && (
+          {(isWaitingForResponse && !isThinking) && (
             <div className="flex items-start gap-3">
               <div className="flex-shrink-0 mt-0.5">
                 <div className="h-8 w-8 rounded-full overflow-hidden">
