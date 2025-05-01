@@ -1,5 +1,7 @@
+
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { toast } from 'sonner';
+import { useLocalStorage } from './useLocalStorage';
 
 interface Message {
   content: string;
@@ -110,7 +112,8 @@ if (typeof window !== 'undefined') {
 }
 
 export const useAssistantChat = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
+  // Use localStorage to persist messages instead of regular useState
+  const [messages, setMessages] = useLocalStorage<Message[]>('assistant_chat_messages', []);
   const [infoMessage, setInfoMessage] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState('');
   const [isConnected, setIsConnected] = useState(false);
@@ -170,7 +173,7 @@ export const useAssistantChat = () => {
     return () => {
       wsListeners = wsListeners.filter(listener => listener !== handleWebSocketEvent);
     };
-  }, []);
+  }, [setMessages]);
 
   const sendMessage = useCallback((message: string) => {
     if (!message.trim()) {
@@ -202,7 +205,7 @@ export const useAssistantChat = () => {
     // Send message to server
     globalWsConnection.send(message);
     setInputValue('');
-  }, []);
+  }, [setMessages]);
 
   return {
     messages,
