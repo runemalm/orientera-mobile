@@ -115,7 +115,7 @@ export const useAssistantChat = () => {
   const [inputValue, setInputValue] = useState('');
   const [isConnected, setIsConnected] = useState(false);
   const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
-  const [isThinking, setIsThinking] = useState(false); // New state for thinking simulation
+  const [isThinking, setIsThinking] = useState(false);
   const listenerIdRef = useRef<number>(Date.now());
 
   // Register this component as a listener
@@ -143,13 +143,12 @@ export const useAssistantChat = () => {
             isBot: msg.role === 'assistant'
           }));
 
-          // Simulate thinking before showing typing indicator
-          setIsThinking(true);
-          simulateTypingDelay(() => {
-            setIsThinking(false);
-            setMessages(formattedMessages);
-            setIsWaitingForResponse(false);
-          });
+          // Just show the messages directly when we receive them
+          setMessages(formattedMessages);
+          
+          // Now that we have the response, stop showing the waiting indicators
+          setIsThinking(false);
+          setIsWaitingForResponse(false);
         } catch (error) {
           console.error('Error parsing message from server:', error);
           setIsWaitingForResponse(false);
@@ -178,23 +177,27 @@ export const useAssistantChat = () => {
       return;
     }
 
+    // Add user message to UI immediately for better UX
+    setMessages(prev => [...prev, { content: message, isBot: false }]);
+    
     // Set waiting state to true when sending message
     setIsWaitingForResponse(true);
+    
+    // Show thinking state first for a short delay, then show typing indicator
+    setIsThinking(true);
+    simulateTypingDelay(() => {
+      setIsThinking(false);
+    });
 
     // Ensure connection exists
     if (!globalWsConnection || globalWsConnection.readyState !== WebSocket.OPEN) {
       establishConnection();
-      // Add message to UI but inform user that it will be sent once connected
-      setMessages(prev => [...prev, { content: message, isBot: false }]);
       toast.info("Ansluter till assistenten...", {
         description: "Ditt meddelande skickas så snart anslutningen är återupprättad.",
         duration: 3000
       });
       return;
     }
-
-    // Add user message to UI immediately for better UX
-    setMessages(prev => [...prev, { content: message, isBot: false }]);
     
     // Send message to server
     globalWsConnection.send(message);
