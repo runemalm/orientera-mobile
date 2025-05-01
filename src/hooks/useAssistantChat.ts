@@ -90,11 +90,10 @@ const establishConnection = () => {
   }
 };
 
-// Simulate human-like delay for assistant responses
+// Simulate human-like delay for assistant responses - now set to 0 (no delay)
 const simulateTypingDelay = (callback: () => void) => {
-  // Random delay between 500ms and 1500ms to simulate thinking time
-  const thinkingDelay = Math.random() * 1000 + 500;
-  setTimeout(callback, thinkingDelay);
+  // Zero delay - immediately execute the callback
+  callback();
 };
 
 // Initialize connection when the module loads
