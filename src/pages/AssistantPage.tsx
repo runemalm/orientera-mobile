@@ -1,9 +1,11 @@
+
 import React, { useRef, useEffect } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Send, MessageSquare, WifiOff, Info, LoaderCircle } from 'lucide-react';
 import ChatMessage from '../components/assistant/ChatMessage';
 import { useAssistantChat } from '../hooks/useAssistantChat';
 import { Button } from '../components/ui/button';
+import { toast } from 'sonner';
 import { 
   Popover, 
   PopoverContent, 
