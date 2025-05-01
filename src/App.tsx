@@ -17,11 +17,13 @@ import NotFound from './pages/NotFound';
 import CompetitionFilterPage from './pages/CompetitionFilterPage';
 import ProfilePage from './pages/ProfilePage';
 import AssistantPage from './pages/AssistantPage';
+import UpdateNotification from './components/UpdateNotification';
 
 const App = () => {
   // Removed onboarding logic
   return (
     <Router>
+      <UpdateNotification />
       <Routes>
         <Route path="/" element={<Navigate to="/home" />} />
         <Route path="/home" element={<HomePage />} />
