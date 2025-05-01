@@ -42,7 +42,7 @@ const AssistantPage = () => {
 
   return (
     <MobileLayout 
-      title="Tävlingsguiden Nina"
+      title="Tävlingsassistenten"
       fullHeight
     >
       <div className="flex flex-col h-full">
