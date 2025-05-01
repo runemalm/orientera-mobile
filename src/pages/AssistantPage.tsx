@@ -1,11 +1,9 @@
-
 import React, { useRef, useEffect } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Send, MessageSquare, WifiOff, Info, LoaderCircle } from 'lucide-react';
 import ChatMessage from '../components/assistant/ChatMessage';
 import { useAssistantChat } from '../hooks/useAssistantChat';
 import { Button } from '../components/ui/button';
-import { toast } from 'sonner';
 import { 
   Popover, 
   PopoverContent, 
@@ -26,23 +24,11 @@ const AssistantPage = () => {
   
   const SHOW_INFO_MESSAGE = false;
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const previousConnectionStatus = useRef(isConnected);
 
   // Auto-scroll to bottom when messages change or thinking/waiting status changes
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isWaitingForResponse, isThinking]);
-
-  // Show toast only when connection status actually changes from connected to disconnected
-  useEffect(() => {
-    if (previousConnectionStatus.current === true && !isConnected) {
-      toast.error("Anslutningen till assistenten bröts", {
-        description: "Försöker återansluta...",
-        duration: 3000
-      });
-    }
-    previousConnectionStatus.current = isConnected;
-  }, [isConnected]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

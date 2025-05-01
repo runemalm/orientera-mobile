@@ -140,7 +140,7 @@ export const useAssistantChat = () => {
   const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
   const [isThinking, setIsThinking] = useState(false);
   const listenerIdRef = useRef<number>(Date.now());
-  const toastShownRef = useRef(false);
+  // Remove toastShownRef since we don't want to track toast display anymore
 
   // Register this component as a listener
   useEffect(() => {
@@ -150,17 +150,8 @@ export const useAssistantChat = () => {
       if (event.type === 'connection') {
         setIsConnected(event.status);
         
-        // Only show reconnection toast if we actually disconnected and are now reconnecting
-        if (!event.status && !toastShownRef.current) {
-          toast.error("Anslutningen till assistenten bröts", {
-            description: "Försöker återansluta...",
-            duration: 3000
-          });
-          toastShownRef.current = true;
-        } else if (event.status) {
-          // Reset the toast flag when we're connected again
-          toastShownRef.current = false;
-        }
+        // No toast notifications for reconnection attempts
+        // We've removed the toast.error call here
       } else if (event.type === 'message') {
         try {
           const messagesFromServer: WebSocketMessage[] = JSON.parse(event.data);
@@ -228,10 +219,7 @@ export const useAssistantChat = () => {
     // Ensure connection exists
     if (!isWebSocketConnected()) {
       establishConnection();
-      toast.info("Ansluter till assistenten...", {
-        description: "Ditt meddelande skickas så snart anslutningen är återupprättad.",
-        duration: 3000
-      });
+      // Removed toast notification for reconnection
       return;
     }
     
