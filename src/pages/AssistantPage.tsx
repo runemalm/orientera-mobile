@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Send, MessageSquare, WifiOff, Info, LoaderCircle } from 'lucide-react';
@@ -27,10 +26,10 @@ const AssistantPage = () => {
   const SHOW_INFO_MESSAGE = false;
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to bottom when messages change
+  // Auto-scroll to bottom when messages change or thinking/waiting status changes
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isWaitingForResponse]);
+  }, [messages, isWaitingForResponse, isThinking]);
 
   // Show toast when connection status changes
   useEffect(() => {
