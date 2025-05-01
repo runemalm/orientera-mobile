@@ -90,10 +90,11 @@ const establishConnection = () => {
   }
 };
 
-// Simulate human-like delay for assistant responses - now set to 0 (no delay)
+// Simulate human-like delay for assistant responses
 const simulateTypingDelay = (callback: () => void) => {
-  // Zero delay - immediately execute the callback
-  callback();
+  // Generate a random delay between 500ms and 1500ms
+  const randomDelay = Math.floor(Math.random() * 1000) + 500;
+  setTimeout(callback, randomDelay);
 };
 
 // Initialize connection when the module loads
@@ -182,7 +183,7 @@ export const useAssistantChat = () => {
     // Set waiting state to true when sending message
     setIsWaitingForResponse(true);
     
-    // Show thinking state first for a short delay, then show typing indicator
+    // Show thinking state first for a random delay, then show typing indicator
     setIsThinking(true);
     simulateTypingDelay(() => {
       setIsThinking(false);
