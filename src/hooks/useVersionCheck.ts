@@ -41,35 +41,43 @@ export function useVersionCheck() {
         const currentHash = match[1];
         const storedHash = localStorage.getItem('app-version-hash');
         
+        console.log('Version check - current hash:', currentHash, 'stored hash:', storedHash);
+        
         if (storedHash && storedHash !== currentHash) {
           console.log('New version detected:', currentHash);
           setNewVersionAvailable(true);
         } else if (!storedHash) {
           // First time checking, store the hash
+          console.log('First time check, storing hash:', currentHash);
           localStorage.setItem('app-version-hash', currentHash);
         }
       }
-      
-      // Update last checked time but only after the check is complete
-      // to avoid triggering an immediate effect
-      setLastChecked(Date.now());
     } catch (error) {
       console.error('Error checking for app updates:', error);
     } finally {
+      // Update last checked time outside of the effect dependencies
+      const now = Date.now();
+      setLastChecked(now);
       checkingRef.current = false;
     }
   };
   
   // Function to update the app
   const updateApp = () => {
+    // Store the new hash before reloading
+    const storedHash = localStorage.getItem('app-version-hash-new');
+    if (storedHash) {
+      localStorage.setItem('app-version-hash', storedHash);
+    }
+    
     // Reload the page to get the latest version
     window.location.reload();
   };
   
+  // Single effect for initialization and interval setup
   useEffect(() => {
-    // Check on mount (only once)
+    // Initial check on mount only if enough time has passed
     const initialCheck = async () => {
-      // Check if enough time has passed since the last check
       const now = Date.now();
       if (now - lastChecked > CHECK_INTERVAL) {
         await checkForNewVersion();
@@ -82,7 +90,7 @@ export function useVersionCheck() {
     const interval = setInterval(checkForNewVersion, CHECK_INTERVAL);
     
     return () => clearInterval(interval);
-  }, []); // Remove lastChecked from dependencies
+  }, []); // No dependencies to avoid re-running effect
   
   return { newVersionAvailable, updateApp };
 }
