@@ -12,6 +12,12 @@ const UpdateNotification = () => {
     return null;
   }
   
+  // Create a handler that adapts the updateApp function to accept a MouseEvent
+  const handleUpdateClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    updateApp();
+  };
+  
   return (
     <div className="fixed top-0 inset-x-0 z-50 p-4 animate-in fade-in slide-in-from-top-5">
       <Alert variant="default" className="bg-primary text-primary-foreground border-primary/20">
@@ -20,7 +26,7 @@ const UpdateNotification = () => {
         <AlertDescription className="flex items-center justify-between">
           <span>En ny version av appen finns tillgänglig.</span>
           <Button 
-            onClick={updateApp}
+            onClick={handleUpdateClick}
             variant="secondary" 
             className="mt-2 bg-primary-foreground text-primary hover:bg-primary-foreground/90"
           >
