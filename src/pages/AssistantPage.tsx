@@ -1,5 +1,4 @@
-
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Send, MessageSquare, WifiOff, Info, LoaderCircle } from 'lucide-react';
 import ChatMessage from '../components/assistant/ChatMessage';
@@ -11,7 +10,6 @@ import {
   PopoverContent, 
   PopoverTrigger 
 } from '../components/ui/popover';
-import { ScrollArea } from '../components/ui/scroll-area';
 
 const AssistantPage = () => {
   const { 
@@ -27,21 +25,11 @@ const AssistantPage = () => {
   
   const SHOW_INFO_MESSAGE = false;
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const [shouldScrollToBottom, setShouldScrollToBottom] = useState(true);
 
-  // Track previous messages length to determine if we should scroll
-  const prevMessagesLengthRef = useRef<number>(0);
-  
-  // Only scroll when new messages are added or waiting/thinking status changes
+  // Auto-scroll to bottom when messages change or thinking/waiting status changes
   useEffect(() => {
-    const hasNewMessages = messages.length > prevMessagesLengthRef.current;
-    prevMessagesLengthRef.current = messages.length;
-
-    // Only scroll if we have new messages or waiting/thinking status changes
-    if ((hasNewMessages || isWaitingForResponse || isThinking) && shouldScrollToBottom) {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [messages, isWaitingForResponse, isThinking, shouldScrollToBottom]);
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, isWaitingForResponse, isThinking]);
 
   // Show toast when connection status changes
   useEffect(() => {
@@ -62,8 +50,6 @@ const AssistantPage = () => {
       });
       return;
     }
-    // Ensure we scroll to bottom when user sends a new message
-    setShouldScrollToBottom(true);
     sendMessage(inputValue);
   };
 
@@ -105,41 +91,39 @@ const AssistantPage = () => {
           </div>
         )}
 
-        <ScrollArea className="flex-1 p-4">
-          <div className="space-y-4">
-            {messages.map((message, index) => (
-              <ChatMessage
-                key={index}
-                message={message.content}
-                isBot={message.isBot}
-                avatar="/agents/nina/nina_small.png"
-              />
-            ))}
-            
-            {(isWaitingForResponse && !isThinking) && (
-              <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 mt-0.5">
-                  <div className="h-8 w-8 rounded-full overflow-hidden">
-                    <img 
-                      src="/agents/nina/nina_small.png" 
-                      alt="Nina" 
-                      className="object-cover h-full w-full"
-                    />
-                  </div>
-                </div>
-                <div className="flex-1 bg-muted rounded-lg p-3 min-w-[100px]">
-                  <div className="flex items-center space-x-2">
-                    <div className="h-2 w-2 bg-primary rounded-full animate-pulse"></div>
-                    <div className="h-2 w-2 bg-primary rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-                    <div className="h-2 w-2 bg-primary rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
-                  </div>
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {messages.map((message, index) => (
+            <ChatMessage
+              key={index}
+              message={message.content}
+              isBot={message.isBot}
+              avatar="/agents/nina/nina_small.png"
+            />
+          ))}
+          
+          {(isWaitingForResponse && !isThinking) && (
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0 mt-0.5">
+                <div className="h-8 w-8 rounded-full overflow-hidden">
+                  <img 
+                    src="/agents/nina/nina_small.png" 
+                    alt="Nina" 
+                    className="object-cover h-full w-full"
+                  />
                 </div>
               </div>
-            )}
-            
-            <div ref={messagesEndRef} />
-          </div>
-        </ScrollArea>
+              <div className="flex-1 bg-muted rounded-lg p-3 min-w-[100px]">
+                <div className="flex items-center space-x-2">
+                  <div className="h-2 w-2 bg-primary rounded-full animate-pulse"></div>
+                  <div className="h-2 w-2 bg-primary rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                  <div className="h-2 w-2 bg-primary rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          <div ref={messagesEndRef} />
+        </div>
 
         {!isConnected && (
           <div className="px-4 py-2 bg-destructive/10 text-destructive text-sm flex items-center justify-center gap-2">
