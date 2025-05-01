@@ -1,7 +1,7 @@
 
 import React, { useRef, useEffect } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
-import { Send, MessageSquare, WifiOff, Info } from 'lucide-react';
+import { Send, MessageSquare, WifiOff, Info, LoaderCircle } from 'lucide-react';
 import ChatMessage from '../components/assistant/ChatMessage';
 import { useAssistantChat } from '../hooks/useAssistantChat';
 import { Button } from '../components/ui/button';
@@ -13,14 +13,23 @@ import {
 } from '../components/ui/popover';
 
 const AssistantPage = () => {
-  const { messages, inputValue, setInputValue, sendMessage, isConnected, infoMessage } = useAssistantChat();
+  const { 
+    messages, 
+    inputValue, 
+    setInputValue, 
+    sendMessage, 
+    isConnected, 
+    infoMessage,
+    isWaitingForResponse 
+  } = useAssistantChat();
+  
   const SHOW_INFO_MESSAGE = false;
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  }, [messages, isWaitingForResponse]);
 
   // Show toast when connection status changes
   useEffect(() => {
@@ -91,6 +100,28 @@ const AssistantPage = () => {
               avatar="/agents/nina/nina_small.png"
             />
           ))}
+          
+          {isWaitingForResponse && (
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0 mt-0.5">
+                <div className="h-8 w-8 rounded-full overflow-hidden">
+                  <img 
+                    src="/agents/nina/nina_small.png" 
+                    alt="Nina" 
+                    className="object-cover h-full w-full"
+                  />
+                </div>
+              </div>
+              <div className="flex-1 bg-muted rounded-lg p-3 min-w-[100px]">
+                <div className="flex items-center space-x-2">
+                  <div className="h-2 w-2 bg-primary rounded-full animate-pulse"></div>
+                  <div className="h-2 w-2 bg-primary rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                  <div className="h-2 w-2 bg-primary rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+                </div>
+              </div>
+            </div>
+          )}
+          
           <div ref={messagesEndRef} />
         </div>
 
@@ -115,9 +146,13 @@ const AssistantPage = () => {
               type="submit"
               size="icon"
               className="rounded-full shadow-sm"
-              disabled={!inputValue.trim() || !isConnected}
+              disabled={!inputValue.trim() || !isConnected || isWaitingForResponse}
             >
-              <Send className="h-4 w-4" />
+              {isWaitingForResponse ? (
+                <LoaderCircle className="h-4 w-4 animate-spin" />
+              ) : (
+                <Send className="h-4 w-4" />
+              )}
             </Button>
           </div>
         </form>

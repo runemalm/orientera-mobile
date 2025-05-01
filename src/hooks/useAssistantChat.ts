@@ -108,6 +108,7 @@ export const useAssistantChat = () => {
   const [infoMessage, setInfoMessage] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState('');
   const [isConnected, setIsConnected] = useState(false);
+  const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
   const listenerIdRef = useRef<number>(Date.now());
 
   // Register this component as a listener
@@ -136,8 +137,10 @@ export const useAssistantChat = () => {
           }));
 
           setMessages(formattedMessages);
+          setIsWaitingForResponse(false);
         } catch (error) {
           console.error('Error parsing message from server:', error);
+          setIsWaitingForResponse(false);
         }
       }
     };
@@ -161,6 +164,9 @@ export const useAssistantChat = () => {
     if (!message.trim()) {
       return;
     }
+
+    // Set waiting state to true when sending message
+    setIsWaitingForResponse(true);
 
     // Ensure connection exists
     if (!globalWsConnection || globalWsConnection.readyState !== WebSocket.OPEN) {
@@ -189,5 +195,6 @@ export const useAssistantChat = () => {
     sendMessage,
     isConnected,
     infoMessage,
+    isWaitingForResponse,
   };
 };
