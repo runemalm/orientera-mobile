@@ -181,7 +181,7 @@ export const useAssistantChat = () => {
     }
 
     // Add user message to UI immediately for better UX
-    setMessages(prev => [...prev, { content: message, isBot: false }]);
+    setMessages((prev: Message[]) => [...prev, { content: message, isBot: false }]);
     
     // Set waiting state to true when sending message
     setIsWaitingForResponse(true);

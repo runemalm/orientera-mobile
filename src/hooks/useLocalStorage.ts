@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 
-export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T) => void] {
+export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T | ((prevValue: T) => T)) => void] {
   // Using a function in useState ensures the localStorage lookup only happens once on initial render
   const [storedValue, setStoredValue] = useState<T>(() => {
     try {
@@ -51,5 +51,17 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T)
     }
   }, [key, storedValue]);
 
-  return [storedValue, setStoredValue];
+  // Create a wrapper function for setStoredValue that handles both direct values and functions
+  const setValue = (value: T | ((prevValue: T) => T)) => {
+    try {
+      // Allow value to be a function so we have the same API as useState
+      const valueToStore =
+        value instanceof Function ? value(storedValue) : value;
+      setStoredValue(valueToStore);
+    } catch (error) {
+      console.error('Error setting localStorage value:', error);
+    }
+  };
+
+  return [storedValue, setValue];
 }
