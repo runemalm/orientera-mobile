@@ -33,23 +33,31 @@ export function useVersionCheck() {
       
       const html = await response.text();
       
-      // Extract build hash from the HTML
-      // Looking for something like src="/assets/index-[hash].js"
-      const match = html.match(/src="\/assets\/index-([a-zA-Z0-9]+)\.js"/);
+      // Extract version from the meta tag
+      const match = html.match(/<meta name="app-version" content="([^"]+)"/);
       
       if (match && match[1]) {
-        const currentHash = match[1];
-        const storedHash = localStorage.getItem('app-version-hash');
+        const currentVersion = match[1];
+        const storedVersion = localStorage.getItem('app-version');
         
-        console.log('Version check - current hash:', currentHash, 'stored hash:', storedHash);
+        console.log('Version check - current version:', currentVersion, 'stored version:', storedVersion);
         
-        if (storedHash && storedHash !== currentHash) {
-          console.log('New version detected:', currentHash);
+        // Check if we have a valid version (not a template)
+        if (currentVersion.includes('<%')) {
+          console.log('Skipping version check - template detected');
+          return;
+        }
+        
+        if (storedVersion && storedVersion !== currentVersion) {
+          console.log('New version detected:', currentVersion);
+          // Store the new version for use after reload
+          localStorage.setItem('app-version-new', currentVersion);
           setNewVersionAvailable(true);
-        } else if (!storedHash) {
-          // First time checking, store the hash
-          console.log('First time check, storing hash:', currentHash);
-          localStorage.setItem('app-version-hash', currentHash);
+          toast.info('A new version is available');
+        } else if (!storedVersion) {
+          // First time checking, store the version
+          console.log('First time check, storing version:', currentVersion);
+          localStorage.setItem('app-version', currentVersion);
         }
       }
     } catch (error) {
@@ -64,10 +72,10 @@ export function useVersionCheck() {
   
   // Function to update the app
   const updateApp = () => {
-    // Store the new hash before reloading
-    const storedHash = localStorage.getItem('app-version-hash-new');
-    if (storedHash) {
-      localStorage.setItem('app-version-hash', storedHash);
+    // Store the new version before reloading
+    const newVersion = localStorage.getItem('app-version-new');
+    if (newVersion) {
+      localStorage.setItem('app-version', newVersion);
     }
     
     // Reload the page to get the latest version
