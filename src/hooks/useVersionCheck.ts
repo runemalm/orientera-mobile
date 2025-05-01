@@ -44,7 +44,8 @@ export function useVersionCheck() {
         
         if (storedBuildHash && storedBuildHash !== currentBuildHash) {
           console.log('New version detected:', currentBuildHash);
-          setNewVersionAvailable(true);
+          // Instead of just setting state, automatically update
+          updateApp(currentBuildHash);
         } else if (!storedBuildHash) {
           // First time checking, store the hash
           console.log('First time check, storing version:', currentBuildHash);
@@ -61,16 +62,27 @@ export function useVersionCheck() {
   };
   
   // Function to update the app
-  const updateApp = () => {
+  const updateApp = (currentBuildHash?: string) => {
+    // Show a brief toast notification
+    toast.info("Uppdaterar till den senaste versionen...");
+    
     // Update stored hash before reload to prevent immediate update notification on reload
-    const html = document.documentElement.innerHTML;
-    const match = html.match(/<meta name="app-version" content="([^"]+)"/i);
-    if (match && match[1]) {
-      localStorage.setItem('app-version-hash', match[1]);
+    if (currentBuildHash) {
+      localStorage.setItem('app-version-hash', currentBuildHash);
+    } else {
+      // If currentBuildHash not provided, try to get it from the DOM
+      const html = document.documentElement.innerHTML;
+      const match = html.match(/<meta name="app-version" content="([^"]+)"/i);
+      if (match && match[1]) {
+        localStorage.setItem('app-version-hash', match[1]);
+      }
     }
     
-    // Reload the page to get the latest version
-    window.location.reload();
+    // Short timeout to allow toast to be visible before reload
+    setTimeout(() => {
+      // Reload the page to get the latest version
+      window.location.reload();
+    }, 1500);
   };
   
   useEffect(() => {
