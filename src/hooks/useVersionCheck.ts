@@ -33,43 +33,49 @@ export function useVersionCheck() {
       
       const html = await response.text();
       
-      // Extract build hash from the HTML
-      // Looking for something like src="/assets/index-[hash].js"
-      const match = html.match(/src="\/assets\/index-([a-zA-Z0-9]+)\.js"/);
+      // Extract build hash from meta tag
+      const match = html.match(/<meta name="app-version" content="([^"]+)"/i);
       
       if (match && match[1]) {
-        const currentHash = match[1];
-        const storedHash = localStorage.getItem('app-version-hash');
+        const currentBuildHash = match[1];
+        const storedBuildHash = localStorage.getItem('app-version-hash');
         
-        if (storedHash && storedHash !== currentHash) {
-          console.log('New version detected:', currentHash);
+        console.log('Version check - current version:', currentBuildHash, 'stored version:', storedBuildHash);
+        
+        if (storedBuildHash && storedBuildHash !== currentBuildHash) {
+          console.log('New version detected:', currentBuildHash);
           setNewVersionAvailable(true);
-        } else if (!storedHash) {
+        } else if (!storedBuildHash) {
           // First time checking, store the hash
-          localStorage.setItem('app-version-hash', currentHash);
+          console.log('First time check, storing version:', currentBuildHash);
+          localStorage.setItem('app-version-hash', currentBuildHash);
         }
       }
-      
-      // Update last checked time but only after the check is complete
-      // to avoid triggering an immediate effect
-      setLastChecked(Date.now());
     } catch (error) {
       console.error('Error checking for app updates:', error);
     } finally {
       checkingRef.current = false;
+      // Update last checked time
+      setLastChecked(Date.now());
     }
   };
   
   // Function to update the app
   const updateApp = () => {
+    // Update stored hash before reload to prevent immediate update notification on reload
+    const html = document.documentElement.innerHTML;
+    const match = html.match(/<meta name="app-version" content="([^"]+)"/i);
+    if (match && match[1]) {
+      localStorage.setItem('app-version-hash', match[1]);
+    }
+    
     // Reload the page to get the latest version
     window.location.reload();
   };
   
   useEffect(() => {
-    // Check on mount (only once)
+    // Check on mount if enough time has passed since last check
     const initialCheck = async () => {
-      // Check if enough time has passed since the last check
       const now = Date.now();
       if (now - lastChecked > CHECK_INTERVAL) {
         await checkForNewVersion();
@@ -82,7 +88,7 @@ export function useVersionCheck() {
     const interval = setInterval(checkForNewVersion, CHECK_INTERVAL);
     
     return () => clearInterval(interval);
-  }, []); // Remove lastChecked from dependencies
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   
   return { newVersionAvailable, updateApp };
 }
