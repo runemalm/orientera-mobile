@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import { useLocalStorage } from './useLocalStorage';
 
@@ -9,9 +9,15 @@ const CHECK_INTERVAL = 3 * 60 * 1000;
 export function useVersionCheck() {
   const [newVersionAvailable, setNewVersionAvailable] = useState(false);
   const [lastChecked, setLastChecked] = useLocalStorage<number>('last-version-check', 0);
+  const checkingRef = useRef(false);
   
   // Function to check for new version
   const checkForNewVersion = async () => {
+    // Prevent concurrent checks
+    if (checkingRef.current) return;
+    
+    checkingRef.current = true;
+    
     try {
       // Fetch the index.html to check for changes
       const response = await fetch('/index.html', {
@@ -44,10 +50,13 @@ export function useVersionCheck() {
         }
       }
       
-      // Update last checked time
+      // Update last checked time but only after the check is complete
+      // to avoid triggering an immediate effect
       setLastChecked(Date.now());
     } catch (error) {
       console.error('Error checking for app updates:', error);
+    } finally {
+      checkingRef.current = false;
     }
   };
   
@@ -58,19 +67,22 @@ export function useVersionCheck() {
   };
   
   useEffect(() => {
-    // Check on mount
-    checkForNewVersion();
+    // Check on mount (only once)
+    const initialCheck = async () => {
+      // Check if enough time has passed since the last check
+      const now = Date.now();
+      if (now - lastChecked > CHECK_INTERVAL) {
+        await checkForNewVersion();
+      }
+    };
+    
+    initialCheck();
     
     // Set up periodic checking
-    const now = Date.now();
-    if (now - lastChecked > CHECK_INTERVAL) {
-      checkForNewVersion();
-    }
-    
     const interval = setInterval(checkForNewVersion, CHECK_INTERVAL);
     
     return () => clearInterval(interval);
-  }, [lastChecked]);
+  }, []); // Remove lastChecked from dependencies
   
   return { newVersionAvailable, updateApp };
 }
