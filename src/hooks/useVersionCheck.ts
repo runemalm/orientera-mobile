@@ -33,59 +33,43 @@ export function useVersionCheck() {
       
       const html = await response.text();
       
-      // Extract version from the meta tag
-      const match = html.match(/<meta name="app-version" content="([^"]+)"/);
+      // Extract build hash from the HTML
+      // Looking for something like src="/assets/index-[hash].js"
+      const match = html.match(/src="\/assets\/index-([a-zA-Z0-9]+)\.js"/);
       
       if (match && match[1]) {
-        const currentVersion = match[1];
-        const storedVersion = localStorage.getItem('app-version');
+        const currentHash = match[1];
+        const storedHash = localStorage.getItem('app-version-hash');
         
-        console.log('Version check - current version:', currentVersion, 'stored version:', storedVersion);
-        
-        // Check if we have a valid version (not a template)
-        if (currentVersion.includes('<%')) {
-          console.log('Skipping version check - template detected');
-          return;
-        }
-        
-        if (storedVersion && storedVersion !== currentVersion) {
-          console.log('New version detected:', currentVersion);
-          // Store the new version for use after reload
-          localStorage.setItem('app-version-new', currentVersion);
+        if (storedHash && storedHash !== currentHash) {
+          console.log('New version detected:', currentHash);
           setNewVersionAvailable(true);
-          toast.info('A new version is available');
-        } else if (!storedVersion) {
-          // First time checking, store the version
-          console.log('First time check, storing version:', currentVersion);
-          localStorage.setItem('app-version', currentVersion);
+        } else if (!storedHash) {
+          // First time checking, store the hash
+          localStorage.setItem('app-version-hash', currentHash);
         }
       }
+      
+      // Update last checked time but only after the check is complete
+      // to avoid triggering an immediate effect
+      setLastChecked(Date.now());
     } catch (error) {
       console.error('Error checking for app updates:', error);
     } finally {
-      // Update last checked time outside of the effect dependencies
-      const now = Date.now();
-      setLastChecked(now);
       checkingRef.current = false;
     }
   };
   
   // Function to update the app
   const updateApp = () => {
-    // Store the new version before reloading
-    const newVersion = localStorage.getItem('app-version-new');
-    if (newVersion) {
-      localStorage.setItem('app-version', newVersion);
-    }
-    
     // Reload the page to get the latest version
     window.location.reload();
   };
   
-  // Single effect for initialization and interval setup
   useEffect(() => {
-    // Initial check on mount only if enough time has passed
+    // Check on mount (only once)
     const initialCheck = async () => {
+      // Check if enough time has passed since the last check
       const now = Date.now();
       if (now - lastChecked > CHECK_INTERVAL) {
         await checkForNewVersion();
@@ -98,7 +82,7 @@ export function useVersionCheck() {
     const interval = setInterval(checkForNewVersion, CHECK_INTERVAL);
     
     return () => clearInterval(interval);
-  }, []); // No dependencies to avoid re-running effect
+  }, []); // Remove lastChecked from dependencies
   
   return { newVersionAvailable, updateApp };
 }

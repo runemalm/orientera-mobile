@@ -8,7 +8,6 @@ import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 const UpdateNotification = () => {
   const { newVersionAvailable, updateApp } = useVersionCheck();
   
-  // Avoid rendering anything if no new version
   if (!newVersionAvailable) {
     return null;
   }

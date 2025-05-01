@@ -18,11 +18,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
     <!-- App version tracker - do not remove -->
-    <meta name="app-version" content="v1.0.0">
-    <script>
-      // Set dynamic app version on build
-      document.querySelector('meta[name="app-version"]').setAttribute('content', new Date().toISOString());
-    </script>
+    <meta name="app-version" content="<%- new Date().toISOString() %>">
 
     <!-- Primär metadata -->
     <title>Orientera.com – Framtidens app för svensk orientering</title>
