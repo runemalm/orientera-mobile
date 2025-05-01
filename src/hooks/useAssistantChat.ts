@@ -13,7 +13,7 @@ interface WebSocketMessage {
 }
 
 // Simplified WebSocket configuration
-const WEBSOCKET_BASE_URL = import.meta.env.VITE_WEBSOCKET_BASE_URL || 'https://mas.orientera.com/ws';
+const WEBSOCKET_BASE_URL = import.meta.env.VITE_WEBSOCKET_BASE_URL || 'https://orientera-mas.delightfulisland-78f87004.northeurope.azurecontainerapps.io/ws';
 
 export const useAssistantChat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
