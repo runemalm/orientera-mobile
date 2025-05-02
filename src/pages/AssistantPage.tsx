@@ -9,8 +9,7 @@ import { toast } from 'sonner';
 import { 
   Popover, 
   PopoverContent, 
-  PopoverTrigger,
-  PopoverClose 
+  PopoverTrigger
 } from '../components/ui/popover';
 
 const AssistantPage = () => {
@@ -74,9 +73,15 @@ const AssistantPage = () => {
             hela tiden bättre på att hjälpa dig.
           </p>
           <div className="pt-2 flex justify-between items-center">
-            <PopoverClose asChild>
-              <Button variant="outline" size="sm">Stäng</Button>
-            </PopoverClose>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => document.querySelector('[data-radix-popper-content-wrapper]')?.dispatchEvent(
+                new KeyboardEvent('keydown', { key: 'Escape' })
+              )}
+            >
+              Stäng
+            </Button>
             <Button 
               variant="destructive" 
               size="sm"
