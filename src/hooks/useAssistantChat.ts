@@ -140,9 +140,7 @@ export const useAssistantChat = () => {
   const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
   const [isThinking, setIsThinking] = useState(false);
   const listenerIdRef = useRef<number>(Date.now());
-  
-  // Flag to track if we've received the first message from server
-  const initialSyncRef = useRef<boolean>(false);
+  // Remove toastShownRef since we don't want to track toast display anymore
 
   // Register this component as a listener
   useEffect(() => {
@@ -151,6 +149,9 @@ export const useAssistantChat = () => {
     const handleWebSocketEvent = (event: any) => {
       if (event.type === 'connection') {
         setIsConnected(event.status);
+        
+        // No toast notifications for reconnection attempts
+        // We've removed the toast.error call here
       } else if (event.type === 'message') {
         try {
           const messagesFromServer: WebSocketMessage[] = JSON.parse(event.data);
@@ -171,9 +172,6 @@ export const useAssistantChat = () => {
 
           // Just show the messages directly when we receive them
           setMessages(formattedMessages);
-          
-          // Set the flag indicating we've synced with the server at least once
-          initialSyncRef.current = true;
           
           // Now that we have the response, stop showing the waiting indicators
           setIsThinking(false);
@@ -201,12 +199,6 @@ export const useAssistantChat = () => {
     };
   }, [setMessages]);
 
-  // Function to clear local chat history
-  const clearChatHistory = useCallback(() => {
-    setMessages([]);
-    console.log("Chat history cleared");
-  }, [setMessages]);
-
   const sendMessage = useCallback((message: string) => {
     if (!message.trim()) {
       return;
@@ -227,6 +219,7 @@ export const useAssistantChat = () => {
     // Ensure connection exists
     if (!isWebSocketConnected()) {
       establishConnection();
+      // Removed toast notification for reconnection
       return;
     }
     
@@ -246,6 +239,5 @@ export const useAssistantChat = () => {
     infoMessage,
     isWaitingForResponse,
     isThinking,
-    clearChatHistory, // Expose the clear function for potential UI usage
   };
 };
