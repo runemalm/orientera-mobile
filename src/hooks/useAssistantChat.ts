@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { toast } from 'sonner';
 import { useLocalStorage } from './useLocalStorage';
@@ -136,30 +135,20 @@ if (typeof window !== 'undefined') {
  * requiring a full reset instead of an append
  */
 const shouldResetMessages = (serverMessages: Message[], localMessages: Message[]): boolean => {
-  // Case 1: Server has no messages but local has some - server was cleared
-  if (serverMessages.length === 0 && localMessages.length > 0) {
-    console.log('Server has no messages but client does - resetting');
-    return true;
-  }
-
-  // Case 2: Server has fewer messages than local - likely server reset
+  // Case 1: Server has fewer messages than local - likely server reset
   if (serverMessages.length < localMessages.length) {
     console.log('Server has fewer messages than client - resetting');
     return true;
   }
 
-  // Case 3: If the first N messages don't match (where N is server message count)
-  // This means the conversation has diverged
-  const serverMsgCount = Math.min(serverMessages.length, 5); // Check up to first 5 messages
-  
-  for (let i = 0; i < serverMsgCount; i++) {
-    // If we're past the end of local messages or content doesn't match
+  // Case 2: If the first message doesn't match - conversation has been reset
+  // After reset, server will have at least the welcome message
+  if (serverMessages.length > 0 && localMessages.length > 0) {
     if (
-      i >= localMessages.length || 
-      serverMessages[i].content !== localMessages[i].content ||
-      serverMessages[i].isBot !== localMessages[i].isBot
+      serverMessages[0].content !== localMessages[0].content || 
+      serverMessages[0].isBot !== localMessages[0].isBot
     ) {
-      console.log('Early messages don\'t match - resetting');
+      console.log('Welcome message doesn\'t match - conversation was reset');
       return true;
     }
   }
