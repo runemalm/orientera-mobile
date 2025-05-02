@@ -1,7 +1,7 @@
 
 import React, { useRef, useEffect } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
-import { Send, MessageSquare, WifiOff, Info, LoaderCircle } from 'lucide-react';
+import { Send, MessageSquare, WifiOff, Info, LoaderCircle, Trash2 } from 'lucide-react';
 import ChatMessage from '../components/assistant/ChatMessage';
 import { useAssistantChat } from '../hooks/useAssistantChat';
 import { Button } from '../components/ui/button';
@@ -21,20 +21,30 @@ const AssistantPage = () => {
     isConnected, 
     infoMessage,
     isWaitingForResponse,
-    isThinking
+    isThinking,
+    clearChatHistory
   } = useAssistantChat();
   
   const SHOW_INFO_MESSAGE = false;
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // For debugging - log when messages change
+  useEffect(() => {
+    console.log('[AssistantPage] Messages updated, count:', messages.length);
+  }, [messages]);
+
   // Auto-scroll to bottom when messages change or thinking/waiting status changes
   useEffect(() => {
+    console.log('[AssistantPage] Scrolling to bottom');
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isWaitingForResponse, isThinking]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('[AssistantPage] Form submitted with message:', inputValue);
+    
     if (!isConnected) {
+      console.log('[AssistantPage] Cannot send message: not connected');
       toast.error("Kan inte skicka meddelande", { 
         description: "Anslutningen till assistenten saknas",
         duration: 3000
@@ -44,30 +54,51 @@ const AssistantPage = () => {
     sendMessage(inputValue);
   };
 
+  const handleClearHistory = () => {
+    console.log('[AssistantPage] Clearing chat history');
+    clearChatHistory();
+    toast.success("Chatthistorik rensad", { duration: 2000 });
+  };
+
   // Info button component to pass to MobileLayout as action
   const InfoButton = () => (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button variant="ghost" size="icon">
-          <Info className="h-5 w-5" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-80 p-4">
-        <div className="space-y-3">
-          <div className="flex items-center gap-2 text-primary font-medium">
-            <MessageSquare className="h-5 w-5" />
-            <h2>Om assistenten</h2>
+    <div className="flex items-center gap-2">
+      <Button 
+        variant="ghost" 
+        size="icon"
+        onClick={handleClearHistory}
+        title="Rensa chatthistorik"
+      >
+        <Trash2 className="h-5 w-5" />
+      </Button>
+      
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="ghost" size="icon">
+            <Info className="h-5 w-5" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-80 p-4">
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 text-primary font-medium">
+              <MessageSquare className="h-5 w-5" />
+              <h2>Om assistenten</h2>
+            </div>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Nina är din personliga tävlingsassistent som hjälper dig hitta och förstå 
+              information om orienteringstävlingar. Hon kan svara på frågor om tävlingar, 
+              anmälningar, resultat och mycket annat. Nina är under utveckling och blir 
+              hela tiden bättre på att hjälpa dig.
+            </p>
           </div>
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            Nina är din personliga tävlingsassistent som hjälper dig hitta och förstå 
-            information om orienteringstävlingar. Hon kan svara på frågor om tävlingar, 
-            anmälningar, resultat och mycket annat. Nina är under utveckling och blir 
-            hela tiden bättre på att hjälpa dig.
-          </p>
-        </div>
-      </PopoverContent>
-    </Popover>
+        </PopoverContent>
+      </Popover>
+    </div>
   );
+
+  console.log('[AssistantPage] Rendering with connection status:', isConnected);
+  console.log('[AssistantPage] Waiting for response:', isWaitingForResponse);
+  console.log('[AssistantPage] Thinking state:', isThinking);
 
   return (
     <MobileLayout 
@@ -83,14 +114,20 @@ const AssistantPage = () => {
         )}
 
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          {messages.map((message, index) => (
-            <ChatMessage
-              key={index}
-              message={message.content}
-              isBot={message.isBot}
-              avatar="/agents/nina/nina_small.png"
-            />
-          ))}
+          {messages.length === 0 ? (
+            <div className="flex h-full items-center justify-center text-muted-foreground">
+              <p>Ställ en fråga för att börja chatta</p>
+            </div>
+          ) : (
+            messages.map((message, index) => (
+              <ChatMessage
+                key={index}
+                message={message.content}
+                isBot={message.isBot}
+                avatar="/agents/nina/nina_small.png"
+              />
+            ))
+          )}
           
           {(isWaitingForResponse && !isThinking) && (
             <div className="flex items-start gap-3">
