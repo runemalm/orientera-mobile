@@ -82,7 +82,7 @@ const establishConnection = () => {
     };
 
     globalWsConnection.onmessage = (event) => {
-      console.log('[ChatDebug] Received message from server:', event.data.substring(0, 100) + '...');
+      console.log('[ChatDebug] Received message from server - Full data:', event.data);
       wsListeners.forEach(listener => listener({ type: 'message', data: event.data }));
     };
 
@@ -174,9 +174,9 @@ export const useAssistantChat = () => {
         setIsConnected(event.status);
       } else if (event.type === 'message') {
         try {
-          console.log('[ChatDebug] Processing message from server');
+          console.log('[ChatDebug] Processing message from server. Raw data:', event.data);
           const messagesFromServer: WebSocketMessage[] = JSON.parse(event.data);
-          console.log('[ChatDebug] Parsed messages from server:', messagesFromServer);
+          console.log('[ChatDebug] Parsed messages from server (full object):', JSON.stringify(messagesFromServer, null, 2));
 
           const info = messagesFromServer.find(m => m.role === 'info');
           const chats = messagesFromServer.filter(m => m.role !== 'info');
@@ -194,7 +194,8 @@ export const useAssistantChat = () => {
             isBot: msg.role === 'assistant'
           }));
 
-          console.log('[ChatDebug] Formatted messages to update localStorage:', formattedMessages);
+          console.log('[ChatDebug] Formatted messages to update localStorage (full object):', 
+            JSON.stringify(formattedMessages, null, 2));
           
           // Compare current messages with new messages for debugging
           if (messages.length !== formattedMessages.length) {
@@ -209,6 +210,7 @@ export const useAssistantChat = () => {
           setIsWaitingForResponse(false);
         } catch (error) {
           console.error('[ChatDebug] Error parsing message from server:', error);
+          console.error('[ChatDebug] Raw data that caused the error:', event.data);
           setIsWaitingForResponse(false);
           setIsThinking(false);
         }
@@ -276,7 +278,7 @@ export const useAssistantChat = () => {
     
     // Send message to server
     if (globalWsConnection) {
-      console.log('[ChatDebug] Sending message to WebSocket server');
+      console.log('[ChatDebug] Sending message to WebSocket server:', message);
       globalWsConnection.send(message);
     } else {
       console.error('[ChatDebug] Cannot send message, WebSocket connection is null');

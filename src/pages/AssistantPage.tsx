@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Send, MessageSquare, WifiOff, Info, LoaderCircle } from 'lucide-react';
@@ -27,9 +28,20 @@ const AssistantPage = () => {
   const SHOW_INFO_MESSAGE = false;
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // For debugging - log when messages change
+  // For debugging - log detailed message info when messages change
   useEffect(() => {
     console.log('[AssistantPage] Messages updated, count:', messages.length);
+    console.log('[AssistantPage] Full messages array:', JSON.stringify(messages, null, 2));
+    
+    if (messages.length > 0) {
+      // Log the latest message
+      const latestMsg = messages[messages.length - 1];
+      console.log('[AssistantPage] Latest message:', {
+        isBot: latestMsg.isBot,
+        contentLength: latestMsg.content.length,
+        contentPreview: latestMsg.content.substring(0, 100) + (latestMsg.content.length > 100 ? '...' : '')
+      });
+    }
   }, [messages]);
 
   // Auto-scroll to bottom when messages change or thinking/waiting status changes
