@@ -135,21 +135,68 @@ if (typeof window !== 'undefined') {
  * requiring a full reset instead of an append
  */
 const shouldResetMessages = (serverMessages: Message[], localMessages: Message[]): boolean => {
-  // Case 1: Server has fewer messages than local - likely server reset
-  if (serverMessages.length < localMessages.length) {
-    console.log('Server has fewer messages than client - resetting');
+  // If server has no messages but client does, server was reset
+  if (serverMessages.length === 0 && localMessages.length > 0) {
+    console.log('Server has no messages but client does - resetting');
     return true;
   }
 
-  // Case 2: If the first message doesn't match - conversation has been reset
-  // After reset, server will have at least the welcome message
+  // If server has fewer messages than local, it could be a reset or truncation
+  if (serverMessages.length < localMessages.length) {
+    // To differentiate between truncation and reset, check if the last server message
+    // exists somewhere in the local history. If it does, it's likely truncation.
+    if (serverMessages.length > 0) {
+      const lastServerMsg = serverMessages[serverMessages.length - 1];
+      
+      // Try to find this message in the local history
+      const foundInLocal = localMessages.some(localMsg => 
+        localMsg.content === lastServerMsg.content && 
+        localMsg.isBot === lastServerMsg.isBot
+      );
+      
+      if (!foundInLocal) {
+        console.log('Server has fewer messages and last message doesn\'t match any local - resetting');
+        return true;
+      } else {
+        console.log('Server likely truncated history - no need to reset');
+        return false;
+      }
+    }
+    
+    console.log('Server has no messages but client does - resetting');
+    return true;
+  }
+  
+  // Check if the most recent server message is completely unknown to local
+  // This would indicate diverged histories
   if (serverMessages.length > 0 && localMessages.length > 0) {
-    if (
-      serverMessages[0].content !== localMessages[0].content || 
-      serverMessages[0].isBot !== localMessages[0].isBot
-    ) {
-      console.log('Welcome message doesn\'t match - conversation was reset');
-      return true;
+    const lastServerMsg = serverMessages[serverMessages.length - 1];
+    const messageExists = localMessages.some(msg => 
+      msg.content === lastServerMsg.content && 
+      msg.isBot === lastServerMsg.isBot
+    );
+    
+    if (!messageExists) {
+      console.log('Server has new messages not found in local history - potential reset');
+      // Only reset if we can't find the last few server messages in our history
+      // This helps avoid false resets
+      const checkCount = Math.min(3, serverMessages.length);
+      let unmatchedCount = 0;
+      
+      for (let i = 1; i <= checkCount; i++) {
+        const serverMsg = serverMessages[serverMessages.length - i];
+        const exists = localMessages.some(msg => 
+          msg.content === serverMsg.content && 
+          msg.isBot === serverMsg.isBot
+        );
+        
+        if (!exists) {
+          unmatchedCount++;
+        }
+      }
+      
+      // If multiple recent messages don't match, reset
+      return unmatchedCount >= Math.min(2, checkCount);
     }
   }
   
