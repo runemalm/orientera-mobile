@@ -131,6 +131,42 @@ if (typeof window !== 'undefined') {
   });
 }
 
+/**
+ * Determines if server messages are significantly different from local messages
+ * requiring a full reset instead of an append
+ */
+const shouldResetMessages = (serverMessages: Message[], localMessages: Message[]): boolean => {
+  // Case 1: Server has no messages but local has some - server was cleared
+  if (serverMessages.length === 0 && localMessages.length > 0) {
+    console.log('Server has no messages but client does - resetting');
+    return true;
+  }
+
+  // Case 2: Server has fewer messages than local - likely server reset
+  if (serverMessages.length < localMessages.length) {
+    console.log('Server has fewer messages than client - resetting');
+    return true;
+  }
+
+  // Case 3: If the first N messages don't match (where N is server message count)
+  // This means the conversation has diverged
+  const serverMsgCount = Math.min(serverMessages.length, 5); // Check up to first 5 messages
+  
+  for (let i = 0; i < serverMsgCount; i++) {
+    // If we're past the end of local messages or content doesn't match
+    if (
+      i >= localMessages.length || 
+      serverMessages[i].content !== localMessages[i].content ||
+      serverMessages[i].isBot !== localMessages[i].isBot
+    ) {
+      console.log('Early messages don\'t match - resetting');
+      return true;
+    }
+  }
+  
+  return false;
+}
+
 export const useAssistantChat = () => {
   // Use localStorage to persist messages instead of regular useState
   const [messages, setMessages] = useLocalStorage<Message[]>('assistant_chat_messages', []);
@@ -140,7 +176,6 @@ export const useAssistantChat = () => {
   const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
   const [isThinking, setIsThinking] = useState(false);
   const listenerIdRef = useRef<number>(Date.now());
-  // Remove toastShownRef since we don't want to track toast display anymore
 
   // Register this component as a listener
   useEffect(() => {
@@ -149,9 +184,6 @@ export const useAssistantChat = () => {
     const handleWebSocketEvent = (event: any) => {
       if (event.type === 'connection') {
         setIsConnected(event.status);
-        
-        // No toast notifications for reconnection attempts
-        // We've removed the toast.error call here
       } else if (event.type === 'message') {
         try {
           const messagesFromServer: WebSocketMessage[] = JSON.parse(event.data);
@@ -165,13 +197,20 @@ export const useAssistantChat = () => {
             setInfoMessage(null);
           }
 
-          const formattedMessages: Message[] = chats.map(msg => ({
+          const serverFormattedMessages: Message[] = chats.map(msg => ({
             content: msg.content,
             isBot: msg.role === 'assistant'
           }));
 
-          // Just show the messages directly when we receive them
-          setMessages(formattedMessages);
+          // Apply our synchronization logic
+          if (shouldResetMessages(serverFormattedMessages, messages)) {
+            console.log('Resetting chat history to match server state');
+            setMessages(serverFormattedMessages);
+          } else if (serverFormattedMessages.length > messages.length) {
+            // If server has more messages, just update with the server version
+            console.log('Server has more messages, updating local state');
+            setMessages(serverFormattedMessages);
+          }
           
           // Now that we have the response, stop showing the waiting indicators
           setIsThinking(false);
@@ -197,7 +236,7 @@ export const useAssistantChat = () => {
     return () => {
       wsListeners = wsListeners.filter(listener => listener !== handleWebSocketEvent);
     };
-  }, [setMessages]);
+  }, [messages, setMessages]);
 
   const sendMessage = useCallback((message: string) => {
     if (!message.trim()) {
@@ -219,7 +258,6 @@ export const useAssistantChat = () => {
     // Ensure connection exists
     if (!isWebSocketConnected()) {
       establishConnection();
-      // Removed toast notification for reconnection
       return;
     }
     
