@@ -1,7 +1,6 @@
-
 import React, { useRef, useEffect } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
-import { Send, MessageSquare, WifiOff, Info, LoaderCircle, Trash2 } from 'lucide-react';
+import { Send, MessageSquare, WifiOff, Info, LoaderCircle } from 'lucide-react';
 import ChatMessage from '../components/assistant/ChatMessage';
 import { useAssistantChat } from '../hooks/useAssistantChat';
 import { Button } from '../components/ui/button';
@@ -63,14 +62,7 @@ const AssistantPage = () => {
   // Info button component to pass to MobileLayout as action
   const InfoButton = () => (
     <div className="flex items-center gap-2">
-      <Button 
-        variant="ghost" 
-        size="icon"
-        onClick={handleClearHistory}
-        title="Rensa chatthistorik"
-      >
-        <Trash2 className="h-5 w-5" />
-      </Button>
+      {/* Trash icon hidden as requested */}
       
       <Popover>
         <PopoverTrigger asChild>
