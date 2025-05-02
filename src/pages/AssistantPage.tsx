@@ -1,7 +1,7 @@
 
 import React, { useRef, useEffect } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
-import { Send, MessageSquare, WifiOff, Info, LoaderCircle } from 'lucide-react';
+import { Send, MessageSquare, WifiOff, Info, LoaderCircle, Trash2 } from 'lucide-react';
 import ChatMessage from '../components/assistant/ChatMessage';
 import { useAssistantChat } from '../hooks/useAssistantChat';
 import { Button } from '../components/ui/button';
@@ -9,7 +9,8 @@ import { toast } from 'sonner';
 import { 
   Popover, 
   PopoverContent, 
-  PopoverTrigger 
+  PopoverTrigger,
+  PopoverClose 
 } from '../components/ui/popover';
 
 const AssistantPage = () => {
@@ -21,7 +22,8 @@ const AssistantPage = () => {
     isConnected, 
     infoMessage,
     isWaitingForResponse,
-    isThinking
+    isThinking,
+    clearChatHistory
   } = useAssistantChat();
   
   const SHOW_INFO_MESSAGE = false;
@@ -44,6 +46,13 @@ const AssistantPage = () => {
     sendMessage(inputValue);
   };
 
+  const handleClearHistory = () => {
+    clearChatHistory();
+    toast.success("Chatthistorik rensad", {
+      duration: 3000
+    });
+  };
+
   // Info button component to pass to MobileLayout as action
   const InfoButton = () => (
     <Popover>
@@ -64,6 +73,20 @@ const AssistantPage = () => {
             anmälningar, resultat och mycket annat. Nina är under utveckling och blir 
             hela tiden bättre på att hjälpa dig.
           </p>
+          <div className="pt-2 flex justify-between items-center">
+            <PopoverClose asChild>
+              <Button variant="outline" size="sm">Stäng</Button>
+            </PopoverClose>
+            <Button 
+              variant="destructive" 
+              size="sm"
+              className="flex items-center gap-1"
+              onClick={handleClearHistory}
+            >
+              <Trash2 className="h-4 w-4" />
+              Rensa historik
+            </Button>
+          </div>
         </div>
       </PopoverContent>
     </Popover>
