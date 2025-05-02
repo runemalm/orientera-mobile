@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { toast } from 'sonner';
 import { useLocalStorage } from './useLocalStorage';
@@ -130,79 +131,6 @@ if (typeof window !== 'undefined') {
   });
 }
 
-/**
- * Determines if server messages are significantly different from local messages
- * requiring a full reset instead of an append
- */
-const shouldResetMessages = (serverMessages: Message[], localMessages: Message[]): boolean => {
-  // If server has no messages but client does, server was reset
-  if (serverMessages.length === 0 && localMessages.length > 0) {
-    console.log('Server has no messages but client does - resetting');
-    return true;
-  }
-
-  // If server has fewer messages than local, it could be a reset or truncation
-  if (serverMessages.length < localMessages.length) {
-    // To differentiate between truncation and reset, check if the last server message
-    // exists somewhere in the local history. If it does, it's likely truncation.
-    if (serverMessages.length > 0) {
-      const lastServerMsg = serverMessages[serverMessages.length - 1];
-      
-      // Try to find this message in the local history
-      const foundInLocal = localMessages.some(localMsg => 
-        localMsg.content === lastServerMsg.content && 
-        localMsg.isBot === lastServerMsg.isBot
-      );
-      
-      if (!foundInLocal) {
-        console.log('Server has fewer messages and last message doesn\'t match any local - resetting');
-        return true;
-      } else {
-        console.log('Server likely truncated history - no need to reset');
-        return false;
-      }
-    }
-    
-    console.log('Server has no messages but client does - resetting');
-    return true;
-  }
-  
-  // Check if the most recent server message is completely unknown to local
-  // This would indicate diverged histories
-  if (serverMessages.length > 0 && localMessages.length > 0) {
-    const lastServerMsg = serverMessages[serverMessages.length - 1];
-    const messageExists = localMessages.some(msg => 
-      msg.content === lastServerMsg.content && 
-      msg.isBot === lastServerMsg.isBot
-    );
-    
-    if (!messageExists) {
-      console.log('Server has new messages not found in local history - potential reset');
-      // Only reset if we can't find the last few server messages in our history
-      // This helps avoid false resets
-      const checkCount = Math.min(3, serverMessages.length);
-      let unmatchedCount = 0;
-      
-      for (let i = 1; i <= checkCount; i++) {
-        const serverMsg = serverMessages[serverMessages.length - i];
-        const exists = localMessages.some(msg => 
-          msg.content === serverMsg.content && 
-          msg.isBot === serverMsg.isBot
-        );
-        
-        if (!exists) {
-          unmatchedCount++;
-        }
-      }
-      
-      // If multiple recent messages don't match, reset
-      return unmatchedCount >= Math.min(2, checkCount);
-    }
-  }
-  
-  return false;
-}
-
 export const useAssistantChat = () => {
   // Use localStorage to persist messages instead of regular useState
   const [messages, setMessages] = useLocalStorage<Message[]>('assistant_chat_messages', []);
@@ -212,6 +140,7 @@ export const useAssistantChat = () => {
   const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
   const [isThinking, setIsThinking] = useState(false);
   const listenerIdRef = useRef<number>(Date.now());
+  // Remove toastShownRef since we don't want to track toast display anymore
 
   // Register this component as a listener
   useEffect(() => {
@@ -220,6 +149,9 @@ export const useAssistantChat = () => {
     const handleWebSocketEvent = (event: any) => {
       if (event.type === 'connection') {
         setIsConnected(event.status);
+        
+        // No toast notifications for reconnection attempts
+        // We've removed the toast.error call here
       } else if (event.type === 'message') {
         try {
           const messagesFromServer: WebSocketMessage[] = JSON.parse(event.data);
@@ -233,20 +165,13 @@ export const useAssistantChat = () => {
             setInfoMessage(null);
           }
 
-          const serverFormattedMessages: Message[] = chats.map(msg => ({
+          const formattedMessages: Message[] = chats.map(msg => ({
             content: msg.content,
             isBot: msg.role === 'assistant'
           }));
 
-          // Apply our synchronization logic
-          if (shouldResetMessages(serverFormattedMessages, messages)) {
-            console.log('Resetting chat history to match server state');
-            setMessages(serverFormattedMessages);
-          } else if (serverFormattedMessages.length > messages.length) {
-            // If server has more messages, just update with the server version
-            console.log('Server has more messages, updating local state');
-            setMessages(serverFormattedMessages);
-          }
+          // Just show the messages directly when we receive them
+          setMessages(formattedMessages);
           
           // Now that we have the response, stop showing the waiting indicators
           setIsThinking(false);
@@ -272,7 +197,7 @@ export const useAssistantChat = () => {
     return () => {
       wsListeners = wsListeners.filter(listener => listener !== handleWebSocketEvent);
     };
-  }, [messages, setMessages]);
+  }, [setMessages]);
 
   const sendMessage = useCallback((message: string) => {
     if (!message.trim()) {
@@ -294,6 +219,7 @@ export const useAssistantChat = () => {
     // Ensure connection exists
     if (!isWebSocketConnected()) {
       establishConnection();
+      // Removed toast notification for reconnection
       return;
     }
     
