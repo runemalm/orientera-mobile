@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Send, MessageSquare, WifiOff, Info, LoaderCircle, RefreshCw } from 'lucide-react';
@@ -55,9 +54,7 @@ const AssistantPage = () => {
     }
     
     resetChat();
-    toast.success("Chatten återställd", {
-      duration: 2000
-    });
+    // Remove toast notification when resetting chat
   };
 
   // Reset button component to pass to MobileLayout as leftAction

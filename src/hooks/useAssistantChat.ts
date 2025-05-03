@@ -147,9 +147,6 @@ export const useAssistantChat = () => {
     const handleWebSocketEvent = (event: any) => {
       if (event.type === 'connection') {
         setIsConnected(event.status);
-        
-        // No toast notifications for reconnection attempts
-        // We've removed the toast.error call here
       } else if (event.type === 'message') {
         try {
           const messagesFromServer: WebSocketMessage[] = JSON.parse(event.data);
@@ -206,16 +203,16 @@ export const useAssistantChat = () => {
     if (message !== "__RESET__") {
       // Add user message to UI immediately for better UX
       setMessages((prev: Message[]) => [...prev, { content: message, isBot: false }]);
+      
+      // Set waiting state to true when sending message
+      setIsWaitingForResponse(true);
+      
+      // Show thinking state first for a random delay, then show typing indicator
+      setIsThinking(true);
+      simulateTypingDelay(() => {
+        setIsThinking(false);
+      });
     }
-    
-    // Set waiting state to true when sending message
-    setIsWaitingForResponse(true);
-    
-    // Show thinking state first for a random delay, then show typing indicator
-    setIsThinking(true);
-    simulateTypingDelay(() => {
-      setIsThinking(false);
-    });
 
     // Ensure connection exists
     if (!isWebSocketConnected()) {
@@ -232,7 +229,7 @@ export const useAssistantChat = () => {
 
   // Add a dedicated reset function that sends __RESET__ without showing it in the chat
   const resetChat = useCallback(() => {
-    // Set waiting state
+    // Set waiting state, but don't show thinking animation
     setIsWaitingForResponse(true);
     
     // Ensure connection exists
