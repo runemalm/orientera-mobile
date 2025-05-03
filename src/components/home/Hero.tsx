@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Compass } from 'lucide-react';
-import { toast } from 'sonner';
 
 const Hero: React.FC = () => {
   const [tapCount, setTapCount] = useState(0);
@@ -33,11 +32,6 @@ const Hero: React.FC = () => {
       if (chatUserId) localStorage.setItem('chat_user_id', chatUserId);
       if (appVersionHash) localStorage.setItem('app-version-hash', appVersionHash);
       if (lastVersionCheck) localStorage.setItem('last-version-check', lastVersionCheck);
-      
-      // Show confirmation toast
-      toast.success('Inställningar har återställts', {
-        description: 'Appdata har återställts till standardvärden'
-      });
       
       // Reload the page
       window.location.reload();
