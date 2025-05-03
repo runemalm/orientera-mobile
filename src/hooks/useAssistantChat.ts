@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { toast } from 'sonner';
 import { useLocalStorage } from './useLocalStorage';
@@ -140,7 +139,6 @@ export const useAssistantChat = () => {
   const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
   const [isThinking, setIsThinking] = useState(false);
   const listenerIdRef = useRef<number>(Date.now());
-  // Remove toastShownRef since we don't want to track toast display anymore
 
   // Register this component as a listener
   useEffect(() => {
@@ -204,8 +202,11 @@ export const useAssistantChat = () => {
       return;
     }
 
-    // Add user message to UI immediately for better UX
-    setMessages((prev: Message[]) => [...prev, { content: message, isBot: false }]);
+    // For normal messages, add to UI
+    if (message !== "__RESET__") {
+      // Add user message to UI immediately for better UX
+      setMessages((prev: Message[]) => [...prev, { content: message, isBot: false }]);
+    }
     
     // Set waiting state to true when sending message
     setIsWaitingForResponse(true);
@@ -219,7 +220,6 @@ export const useAssistantChat = () => {
     // Ensure connection exists
     if (!isWebSocketConnected()) {
       establishConnection();
-      // Removed toast notification for reconnection
       return;
     }
     
@@ -230,11 +230,29 @@ export const useAssistantChat = () => {
     setInputValue('');
   }, [setMessages]);
 
+  // Add a dedicated reset function that sends __RESET__ without showing it in the chat
+  const resetChat = useCallback(() => {
+    // Set waiting state
+    setIsWaitingForResponse(true);
+    
+    // Ensure connection exists
+    if (!isWebSocketConnected()) {
+      establishConnection();
+      return;
+    }
+    
+    // Send reset command to server
+    if (globalWsConnection) {
+      globalWsConnection.send("__RESET__");
+    }
+  }, []);
+
   return {
     messages,
     inputValue,
     setInputValue,
     sendMessage,
+    resetChat,
     isConnected,
     infoMessage,
     isWaitingForResponse,

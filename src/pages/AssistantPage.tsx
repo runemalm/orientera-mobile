@@ -17,7 +17,8 @@ const AssistantPage = () => {
     messages, 
     inputValue, 
     setInputValue, 
-    sendMessage, 
+    sendMessage,
+    resetChat, 
     isConnected, 
     infoMessage,
     isWaitingForResponse,
@@ -53,7 +54,7 @@ const AssistantPage = () => {
       return;
     }
     
-    sendMessage("__RESET__");
+    resetChat();
     toast.success("Chatten återställd", {
       duration: 2000
     });
