@@ -52,6 +52,11 @@ const CompetitionsPage: React.FC = () => {
   const [filters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
   const [showInfo, setShowInfo] = useState(false);
 
+  // Force the calendar view by setting it directly in localStorage
+  useEffect(() => {
+    localStorage.setItem('competitionViewMode', 'calendar');
+  }, []);
+
   const fetchCompetitions = useCallback(async () => {
     setIsLoadingCompetitions(true);
     setError(null);
@@ -145,7 +150,7 @@ const CompetitionsPage: React.FC = () => {
         competitions={competitions}
         fromDate={fromDate}
         toDate={toDate}
-        // Removed hideTabBar prop to show tabs again
+        hideTabBar={true} // Hide the tabs
       />
     );
   };
