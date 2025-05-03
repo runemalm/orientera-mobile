@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { toast } from 'sonner';
 import { useLocalStorage } from './useLocalStorage';
@@ -40,9 +39,9 @@ let lastConnectionCheck = 0;
 const CONNECTION_CHECK_THROTTLE = 2000; // Don't check more often than every 2 seconds
 
 // Function to establish WebSocket connection
-const establishConnection = (forceRefresh = false) => {
+const establishConnection = () => {
   // Only proceed if we don't already have a connection and we're not already connecting
-  if (globalWsConnection && (globalWsConnection.readyState === WebSocket.OPEN || globalWsConnection.readyState === WebSocket.CONNECTING) && !forceRefresh) {
+  if (globalWsConnection && (globalWsConnection.readyState === WebSocket.OPEN || globalWsConnection.readyState === WebSocket.CONNECTING)) {
     return;
   }
 
@@ -50,15 +49,9 @@ const establishConnection = (forceRefresh = false) => {
     return;
   }
 
-  // If there's an existing connection and we need to force refresh, close it
-  if (globalWsConnection && forceRefresh) {
-    globalWsConnection.close();
-    globalWsConnection = null;
-  }
-
   // Throttle connection attempts
   const now = Date.now();
-  if (now - lastConnectionCheck < CONNECTION_CHECK_THROTTLE && !forceRefresh) {
+  if (now - lastConnectionCheck < CONNECTION_CHECK_THROTTLE) {
     return;
   }
   lastConnectionCheck = now;
@@ -124,15 +117,7 @@ const simulateTypingDelay = (callback: () => void) => {
 
 // Initialize connection when the module loads
 if (typeof window !== 'undefined') {
-  // Check if we should force a reconnect (after app reset)
-  const forceReconnect = sessionStorage.getItem('force_ws_reconnect') === 'true';
-  if (forceReconnect) {
-    // Clear the flag after reading it
-    sessionStorage.removeItem('force_ws_reconnect');
-  }
-  
-  // Establish connection, potentially forcing a refresh
-  establishConnection(forceReconnect);
+  establishConnection();
 
   // Setup visibility change listener to reconnect when page becomes visible
   document.addEventListener('visibilitychange', () => {
@@ -162,12 +147,6 @@ export const useAssistantChat = () => {
     const handleWebSocketEvent = (event: any) => {
       if (event.type === 'connection') {
         setIsConnected(event.status);
-        
-        // If we just connected and there's a reset flag, clear messages
-        if (event.status && sessionStorage.getItem('force_ws_reconnect') === 'true') {
-          setMessages([]);
-          sessionStorage.removeItem('force_ws_reconnect');
-        }
       } else if (event.type === 'message') {
         try {
           const messagesFromServer: WebSocketMessage[] = JSON.parse(event.data);
@@ -253,9 +232,6 @@ export const useAssistantChat = () => {
     // Set waiting state, but don't show thinking animation
     setIsWaitingForResponse(true);
     
-    // Clear local messages immediately
-    setMessages([]);
-    
     // Ensure connection exists
     if (!isWebSocketConnected()) {
       establishConnection();
@@ -266,7 +242,7 @@ export const useAssistantChat = () => {
     if (globalWsConnection) {
       globalWsConnection.send("__RESET__");
     }
-  }, [setMessages]);
+  }, []);
 
   return {
     messages,

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Compass } from 'lucide-react';
 
@@ -33,9 +32,6 @@ const Hero: React.FC = () => {
       if (chatUserId) localStorage.setItem('chat_user_id', chatUserId);
       if (appVersionHash) localStorage.setItem('app-version-hash', appVersionHash);
       if (lastVersionCheck) localStorage.setItem('last-version-check', lastVersionCheck);
-      
-      // Force WebSocket to reconnect with fresh state by setting a special flag
-      sessionStorage.setItem('force_ws_reconnect', 'true');
       
       // Reload the page
       window.location.reload();
