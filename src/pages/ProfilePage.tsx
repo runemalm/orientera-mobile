@@ -1,11 +1,9 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import MobileLayout from '../components/layout/MobileLayout';
 import LoginWaitlistDialog from '../components/profile/LoginWaitlistDialog';
 import { UserRound } from 'lucide-react';
-import { Skeleton } from '@/components/ui/skeleton';
 import SkeletonProfile from '../components/profile/SkeletonProfile';
 
 const ProfilePage: React.FC = () => {
@@ -14,11 +12,13 @@ const ProfilePage: React.FC = () => {
   return (
     <MobileLayout title="Profil">
       <div className="flex flex-col items-center p-4 space-y-6 relative">
-        {/* Skeleton UI */}
-        <SkeletonProfile />
+        {/* Skeleton UI in background */}
+        <div className="w-full opacity-40 pointer-events-none filter blur-[1px]">
+          <SkeletonProfile />
+        </div>
         
-        {/* Login CTA Overlay */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm p-4">
+        {/* Login CTA Overlay - centered and floating above skeleton */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-xs w-full text-center space-y-4">
             <div className="mx-auto h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center">
               <UserRound className="h-8 w-8 text-primary/60" />
