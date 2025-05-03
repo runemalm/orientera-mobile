@@ -1,6 +1,7 @@
+
 import React, { useRef, useEffect } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
-import { Send, MessageSquare, WifiOff, Info, LoaderCircle, RefreshCw } from 'lucide-react';
+import { Send, MessageSquare, WifiOff, Info, LoaderCircle, SquarePen } from 'lucide-react';
 import ChatMessage from '../components/assistant/ChatMessage';
 import { useAssistantChat } from '../hooks/useAssistantChat';
 import { Button } from '../components/ui/button';
@@ -65,7 +66,7 @@ const AssistantPage = () => {
       onClick={handleResetChat}
       disabled={!isConnected || isWaitingForResponse}
     >
-      <RefreshCw className="h-5 w-5" />
+      <SquarePen className="h-5 w-5" />
     </Button>
   );
 
