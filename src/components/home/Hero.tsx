@@ -1,6 +1,6 @@
-
 import React, { useState } from 'react';
 import { Compass } from 'lucide-react';
+import { toast } from 'sonner';
 
 const Hero: React.FC = () => {
   const [tapCount, setTapCount] = useState(0);
@@ -21,9 +21,23 @@ const Hero: React.FC = () => {
     // Check for activation only on exact count of 5
     const newCount = timeSinceLastTap <= 1500 ? tapCount + 1 : 1;
     if (newCount === 5) {
-      // Clear location settings from localStorage
-      localStorage.removeItem('userLocation');
-      localStorage.removeItem('competitionFilters');
+      // Save the items we want to keep
+      const chatUserId = localStorage.getItem('chat_user_id');
+      const appVersionHash = localStorage.getItem('app-version-hash');
+      const lastVersionCheck = localStorage.getItem('last-version-check');
+      
+      // Clear all of localStorage
+      localStorage.clear();
+      
+      // Restore the items we want to keep
+      if (chatUserId) localStorage.setItem('chat_user_id', chatUserId);
+      if (appVersionHash) localStorage.setItem('app-version-hash', appVersionHash);
+      if (lastVersionCheck) localStorage.setItem('last-version-check', lastVersionCheck);
+      
+      // Show confirmation toast
+      toast.success('Inställningar har återställts', {
+        description: 'Appdata har återställts till standardvärden'
+      });
       
       // Reload the page
       window.location.reload();
