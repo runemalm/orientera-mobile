@@ -1,7 +1,7 @@
 
 import React, { useRef, useEffect } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
-import { Send, MessageSquare, WifiOff, Info, LoaderCircle } from 'lucide-react';
+import { Send, MessageSquare, WifiOff, Info, LoaderCircle, RefreshCw } from 'lucide-react';
 import ChatMessage from '../components/assistant/ChatMessage';
 import { useAssistantChat } from '../hooks/useAssistantChat';
 import { Button } from '../components/ui/button';
@@ -44,6 +44,33 @@ const AssistantPage = () => {
     sendMessage(inputValue);
   };
 
+  const handleResetChat = () => {
+    if (!isConnected) {
+      toast.error("Kan inte återställa chatten", {
+        description: "Anslutningen till assistenten saknas",
+        duration: 3000
+      });
+      return;
+    }
+    
+    sendMessage("__RESET__");
+    toast.success("Chatten återställd", {
+      duration: 2000
+    });
+  };
+
+  // Reset button component to pass to MobileLayout as leftAction
+  const ResetButton = () => (
+    <Button 
+      variant="ghost" 
+      size="icon" 
+      onClick={handleResetChat}
+      disabled={!isConnected || isWaitingForResponse}
+    >
+      <RefreshCw className="h-5 w-5" />
+    </Button>
+  );
+
   // Info button component to pass to MobileLayout as action
   const InfoButton = () => (
     <Popover>
@@ -74,6 +101,7 @@ const AssistantPage = () => {
       title="Tävlingsassistenten"
       fullHeight
       action={<InfoButton />}
+      leftAction={<ResetButton />}
     >
       <div className="flex flex-col h-full">
         {SHOW_INFO_MESSAGE && infoMessage && (

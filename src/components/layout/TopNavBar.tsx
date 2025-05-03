@@ -8,9 +8,16 @@ interface TopNavBarProps {
   showBackButton?: boolean;
   onBack?: () => void;
   action?: React.ReactNode;
+  leftAction?: React.ReactNode; // Added leftAction prop
 }
 
-const TopNavBar: React.FC<TopNavBarProps> = ({ title, showBackButton = false, onBack, action }) => {
+const TopNavBar: React.FC<TopNavBarProps> = ({ 
+  title, 
+  showBackButton = false, 
+  onBack, 
+  action,
+  leftAction // Added leftAction prop
+}) => {
   const [tapCount, setTapCount] = useState(0);
   const [lastTapTime, setLastTapTime] = useState(0);
 
@@ -36,9 +43,9 @@ const TopNavBar: React.FC<TopNavBarProps> = ({ title, showBackButton = false, on
 
   return (
     <div className="top-nav flex items-center justify-between px-4">
-      {/* Left slot - Back button or empty */}
+      {/* Left slot - Back button, leftAction, or empty */}
       <div className="w-20">
-        {showBackButton && (
+        {showBackButton ? (
           <Button 
             variant="ghost" 
             size="icon"
@@ -47,7 +54,9 @@ const TopNavBar: React.FC<TopNavBarProps> = ({ title, showBackButton = false, on
           >
             <ChevronLeft className="h-6 w-6" />
           </Button>
-        )}
+        ) : leftAction ? (
+          leftAction
+        ) : null}
       </div>
 
       {/* Center slot - Title */}
