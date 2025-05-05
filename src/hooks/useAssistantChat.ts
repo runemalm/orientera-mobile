@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { toast } from 'sonner';
 import { useLocalStorage } from './useLocalStorage';
@@ -39,9 +40,13 @@ let lastConnectionCheck = 0;
 const CONNECTION_CHECK_THROTTLE = 2000; // Don't check more often than every 2 seconds
 
 // Function to establish WebSocket connection
-const establishConnection = () => {
+const establishConnection = (onConnected?: () => void) => {
   // Only proceed if we don't already have a connection and we're not already connecting
   if (globalWsConnection && (globalWsConnection.readyState === WebSocket.OPEN || globalWsConnection.readyState === WebSocket.CONNECTING)) {
+    // If we already have a connection and it's open, call the onConnected callback
+    if (globalWsConnection.readyState === WebSocket.OPEN && onConnected) {
+      onConnected();
+    }
     return;
   }
 
@@ -69,6 +74,11 @@ const establishConnection = () => {
       isConnecting = false;
       connectionAttempts = 0;
       wsListeners.forEach(listener => listener({ type: 'connection', status: true }));
+      
+      // Execute the onConnected callback if provided
+      if (onConnected) {
+        onConnected();
+      }
     };
 
     globalWsConnection.onmessage = (event) => {
@@ -115,20 +125,8 @@ const simulateTypingDelay = (callback: () => void) => {
   setTimeout(callback, randomDelay);
 };
 
-// Initialize connection when the module loads
-if (typeof window !== 'undefined') {
-  establishConnection();
-
-  // Setup visibility change listener to reconnect when page becomes visible
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') {
-      // Check if the connection is actually closed before reconnecting
-      if (!isWebSocketConnected()) {
-        establishConnection();
-      }
-    }
-  });
-}
+// We're removing the automatic connection initialization here
+// It will instead be established in the hook when listeners are ready
 
 export const useAssistantChat = () => {
   // Use localStorage to persist messages instead of regular useState
@@ -139,8 +137,9 @@ export const useAssistantChat = () => {
   const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
   const [isThinking, setIsThinking] = useState(false);
   const listenerIdRef = useRef<number>(Date.now());
+  const listenersRegisteredRef = useRef<boolean>(false);
 
-  // Register this component as a listener
+  // Register this component as a listener and establish connection afterward
   useEffect(() => {
     const listenerId = listenerIdRef.current;
     
@@ -179,20 +178,39 @@ export const useAssistantChat = () => {
       }
     };
 
+    // Add listener to the wsListeners array
     wsListeners.push(handleWebSocketEvent);
+    listenersRegisteredRef.current = true;
     
-    // Check connection status immediately
-    if (isWebSocketConnected()) {
-      setIsConnected(true);
-    } else {
-      setIsConnected(false);
-      establishConnection();
-    }
+    // Now establish the connection only AFTER we've registered the listeners
+    establishConnection(() => {
+      console.log('Connection established after listeners were registered');
+    });
 
     return () => {
+      // Remove the listener when the component unmounts
       wsListeners = wsListeners.filter(listener => listener !== handleWebSocketEvent);
+      listenersRegisteredRef.current = false;
     };
   }, [setMessages]);
+
+  // Effect to handle visibility changes
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        // Only reconnect if listeners are registered and connection is closed
+        if (listenersRegisteredRef.current && !isWebSocketConnected()) {
+          establishConnection();
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
 
   const sendMessage = useCallback((message: string) => {
     if (!message.trim()) {
@@ -216,11 +234,27 @@ export const useAssistantChat = () => {
 
     // Ensure connection exists
     if (!isWebSocketConnected()) {
+      // Register a one-time listener that will send the message once connected
+      const oneShotListener = (event: any) => {
+        if (event.type === 'connection' && event.status === true) {
+          // Connection is established, send the message
+          if (globalWsConnection) {
+            globalWsConnection.send(message);
+          }
+          // Remove this one-time listener
+          wsListeners = wsListeners.filter(listener => listener !== oneShotListener);
+        }
+      };
+      
+      // Add the one-time listener
+      wsListeners.push(oneShotListener);
+      
+      // Attempt to establish connection
       establishConnection();
       return;
     }
     
-    // Send message to server
+    // Send message to server if connection exists
     if (globalWsConnection) {
       globalWsConnection.send(message);
     }
@@ -234,6 +268,17 @@ export const useAssistantChat = () => {
     
     // Ensure connection exists
     if (!isWebSocketConnected()) {
+      // Similar approach as sendMessage - register a one-time listener
+      const oneShotListener = (event: any) => {
+        if (event.type === 'connection' && event.status === true) {
+          if (globalWsConnection) {
+            globalWsConnection.send("__RESET__");
+          }
+          wsListeners = wsListeners.filter(listener => listener !== oneShotListener);
+        }
+      };
+      
+      wsListeners.push(oneShotListener);
       establishConnection();
       return;
     }

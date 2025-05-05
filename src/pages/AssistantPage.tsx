@@ -55,7 +55,6 @@ const AssistantPage = () => {
     }
     
     resetChat();
-    // Remove toast notification when resetting chat
   };
 
   // Reset button component to pass to MobileLayout as leftAction
