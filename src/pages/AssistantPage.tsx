@@ -28,6 +28,17 @@ const AssistantPage = () => {
   const SHOW_INFO_MESSAGE = false;
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Check for the force reconnect flag from the reset action
+  useEffect(() => {
+    const forceReconnect = sessionStorage.getItem('force_ws_reconnect');
+    if (forceReconnect === 'true') {
+      // Clear the flag
+      sessionStorage.removeItem('force_ws_reconnect');
+      // Force a reload of the page to ensure a fresh WebSocket connection
+      window.location.reload();
+    }
+  }, []);
+
   // Auto-scroll to bottom when messages change or thinking/waiting status changes
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -55,7 +66,6 @@ const AssistantPage = () => {
     }
     
     resetChat();
-    // Remove toast notification when resetting chat
   };
 
   // Reset button component to pass to MobileLayout as leftAction
