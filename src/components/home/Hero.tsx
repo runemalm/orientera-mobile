@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Compass } from 'lucide-react';
 
@@ -25,7 +24,6 @@ const Hero: React.FC = () => {
       const chatUserId = localStorage.getItem('chat_user_id');
       const appVersionHash = localStorage.getItem('app-version-hash');
       const lastVersionCheck = localStorage.getItem('last-version-check');
-      const assistantChatMessages = localStorage.getItem('assistant_chat_messages');
       
       // Clear all of localStorage
       localStorage.clear();
@@ -34,10 +32,6 @@ const Hero: React.FC = () => {
       if (chatUserId) localStorage.setItem('chat_user_id', chatUserId);
       if (appVersionHash) localStorage.setItem('app-version-hash', appVersionHash);
       if (lastVersionCheck) localStorage.setItem('last-version-check', lastVersionCheck);
-      if (assistantChatMessages) localStorage.setItem('assistant_chat_messages', assistantChatMessages);
-      
-      // Set a flag to force WS reconnect on the assistant page
-      sessionStorage.setItem('force_ws_reconnect', 'true');
       
       // Reload the page
       window.location.reload();
