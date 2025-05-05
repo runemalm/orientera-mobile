@@ -118,6 +118,14 @@ const isWebSocketConnected = () => {
   return globalWsConnection && globalWsConnection.readyState === WebSocket.OPEN;
 };
 
+// Force close the connection - useful when we want to completely restart
+const forceCloseConnection = () => {
+  if (globalWsConnection) {
+    globalWsConnection.close();
+    globalWsConnection = null;
+  }
+};
+
 // Simulate human-like delay for assistant responses
 const simulateTypingDelay = (callback: () => void) => {
   // Generate a random delay between 500ms and 1500ms
@@ -138,12 +146,17 @@ export const useAssistantChat = () => {
   const [isThinking, setIsThinking] = useState(false);
   const listenerIdRef = useRef<number>(Date.now());
   const listenersRegisteredRef = useRef<boolean>(false);
+  const componentMountedRef = useRef<boolean>(false);
 
   // Register this component as a listener and establish connection afterward
   useEffect(() => {
+    componentMountedRef.current = true;
     const listenerId = listenerIdRef.current;
     
     const handleWebSocketEvent = (event: any) => {
+      // Only process events if component is still mounted
+      if (!componentMountedRef.current) return;
+      
       if (event.type === 'connection') {
         setIsConnected(event.status);
       } else if (event.type === 'message') {
@@ -182,6 +195,10 @@ export const useAssistantChat = () => {
     wsListeners.push(handleWebSocketEvent);
     listenersRegisteredRef.current = true;
     
+    // When component mounts, we should force close any existing connection
+    // to ensure we get a fresh connection with the server-sent initial messages
+    forceCloseConnection();
+    
     // Now establish the connection only AFTER we've registered the listeners
     establishConnection(() => {
       console.log('Connection established after listeners were registered');
@@ -191,6 +208,7 @@ export const useAssistantChat = () => {
       // Remove the listener when the component unmounts
       wsListeners = wsListeners.filter(listener => listener !== handleWebSocketEvent);
       listenersRegisteredRef.current = false;
+      componentMountedRef.current = false;
     };
   }, [setMessages]);
 
@@ -198,8 +216,10 @@ export const useAssistantChat = () => {
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
-        // Only reconnect if listeners are registered and connection is closed
-        if (listenersRegisteredRef.current && !isWebSocketConnected()) {
+        // Only reconnect if listeners are registered and component is mounted
+        if (componentMountedRef.current && listenersRegisteredRef.current) {
+          // Force close any existing connection to get a fresh start
+          forceCloseConnection();
           establishConnection();
         }
       }
@@ -249,6 +269,8 @@ export const useAssistantChat = () => {
       // Add the one-time listener
       wsListeners.push(oneShotListener);
       
+      // Force close any existing connection and establish a new one
+      forceCloseConnection();
       // Attempt to establish connection
       establishConnection();
       return;
@@ -279,6 +301,8 @@ export const useAssistantChat = () => {
       };
       
       wsListeners.push(oneShotListener);
+      // Force close any existing connection to get a fresh start
+      forceCloseConnection();
       establishConnection();
       return;
     }
