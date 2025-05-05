@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { toast } from 'sonner';
 import { useLocalStorage } from './useLocalStorage';
@@ -130,6 +131,12 @@ if (typeof window !== 'undefined') {
   });
 }
 
+// Default welcome message to show when no messages are available yet
+const DEFAULT_WELCOME_MESSAGE = {
+  content: "Hej! Jag är Nina, din personliga tävlingsassistent. Jag kan hjälpa dig med frågor om orienteringstävlingar. Vad vill du veta?",
+  isBot: true
+};
+
 export const useAssistantChat = () => {
   // Use localStorage to persist messages instead of regular useState
   const [messages, setMessages] = useLocalStorage<Message[]>('assistant_chat_messages', []);
@@ -139,6 +146,21 @@ export const useAssistantChat = () => {
   const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
   const [isThinking, setIsThinking] = useState(false);
   const listenerIdRef = useRef<number>(Date.now());
+  const initializedRef = useRef(false);
+  const hasProcessedFirstMessageRef = useRef(false);
+
+  // Check if we need to show the default welcome message
+  useEffect(() => {
+    // Only run this once when the component mounts
+    if (!initializedRef.current) {
+      initializedRef.current = true;
+      
+      // If there are no messages in storage, add the default welcome message
+      if (messages.length === 0) {
+        setMessages([DEFAULT_WELCOME_MESSAGE]);
+      }
+    }
+  }, [messages, setMessages]);
 
   // Register this component as a listener
   useEffect(() => {
@@ -147,9 +169,23 @@ export const useAssistantChat = () => {
     const handleWebSocketEvent = (event: any) => {
       if (event.type === 'connection') {
         setIsConnected(event.status);
+        
+        // If we've just connected and haven't processed the first message yet,
+        // we'll display the default welcome message if no messages arrive
+        if (event.status && !hasProcessedFirstMessageRef.current) {
+          // Give the server a moment to send the initial messages
+          setTimeout(() => {
+            if (!hasProcessedFirstMessageRef.current && messages.length === 0) {
+              setMessages([DEFAULT_WELCOME_MESSAGE]);
+            }
+          }, 2000); // Wait 2 seconds for messages to arrive
+        }
       } else if (event.type === 'message') {
         try {
           const messagesFromServer: WebSocketMessage[] = JSON.parse(event.data);
+          
+          // Mark that we've processed the first message
+          hasProcessedFirstMessageRef.current = true;
 
           const info = messagesFromServer.find(m => m.role === 'info');
           const chats = messagesFromServer.filter(m => m.role !== 'info');
@@ -165,8 +201,14 @@ export const useAssistantChat = () => {
             isBot: msg.role === 'assistant'
           }));
 
-          // Just show the messages directly when we receive them
-          setMessages(formattedMessages);
+          // Only update messages if we have actual messages from the server
+          if (formattedMessages.length > 0) {
+            // Just show the messages directly when we receive them
+            setMessages(formattedMessages);
+          } else if (messages.length === 0) {
+            // If the server returned no messages and we don't have any yet, show the default
+            setMessages([DEFAULT_WELCOME_MESSAGE]);
+          }
           
           // Now that we have the response, stop showing the waiting indicators
           setIsThinking(false);
@@ -175,6 +217,11 @@ export const useAssistantChat = () => {
           console.error('Error parsing message from server:', error);
           setIsWaitingForResponse(false);
           setIsThinking(false);
+          
+          // If there was an error and no messages, show the default
+          if (messages.length === 0) {
+            setMessages([DEFAULT_WELCOME_MESSAGE]);
+          }
         }
       }
     };
@@ -184,6 +231,15 @@ export const useAssistantChat = () => {
     // Check connection status immediately
     if (isWebSocketConnected()) {
       setIsConnected(true);
+      
+      // If we're connected but have no messages, try to request them
+      if (messages.length === 0 && !hasProcessedFirstMessageRef.current) {
+        // Send an empty message to trigger the server to send the initial history
+        if (globalWsConnection) {
+          // We'll use a special message that the server can interpret as "send me the history"
+          globalWsConnection.send("__GET_HISTORY__");
+        }
+      }
     } else {
       setIsConnected(false);
       establishConnection();
@@ -192,7 +248,7 @@ export const useAssistantChat = () => {
     return () => {
       wsListeners = wsListeners.filter(listener => listener !== handleWebSocketEvent);
     };
-  }, [setMessages]);
+  }, [setMessages, messages]);
 
   const sendMessage = useCallback((message: string) => {
     if (!message.trim()) {
