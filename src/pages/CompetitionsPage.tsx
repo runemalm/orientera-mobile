@@ -199,12 +199,8 @@ const CompetitionsPage: React.FC = () => {
           className="p-0 border-0 rounded-t-2xl max-h-fit"
           hideCloseButton
         >
-          <div className="flex flex-col w-full bg-white rounded-t-2xl">
-            <div className="flex justify-center py-3">
-              <div className="w-10 h-1 bg-gray-300 rounded-full" />
-            </div>
-            
-            <div className="mb-2 px-4">
+          <div className="flex flex-col w-full bg-white rounded-t-2xl p-4">            
+            <div className="mb-3">
               <Button 
                 onClick={handleAIFilterClick}
                 className="w-full justify-center py-6 bg-forest-light hover:bg-forest text-white rounded-xl flex items-center"
@@ -213,24 +209,13 @@ const CompetitionsPage: React.FC = () => {
               </Button>
             </div>
             
-            <div className="px-4 mb-4">
+            <div className="mb-3">
               <Button 
                 onClick={handleManualFilterClick}
-                className="w-full justify-center py-5 rounded-xl"
+                className="w-full justify-center py-6 rounded-xl"
                 variant="outline"
               >
                 <span>Filtrera manuellt</span>
-              </Button>
-            </div>
-            
-            <div className="px-4 pb-8 pt-2">
-              <Button
-                onClick={() => setShowFilterSheet(false)}
-                className="w-full py-4 rounded-xl"
-                variant="secondary"
-                style={{ backgroundColor: '#ea384c', color: 'white' }}
-              >
-                Avbryt
               </Button>
             </div>
           </div>
