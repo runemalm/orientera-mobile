@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Button } from '@/components/ui/button';
@@ -16,12 +15,20 @@ import {
   Filter 
 } from '../types';
 import { sv } from 'date-fns/locale';
+import { format } from 'date-fns';
 import { 
   CalendarRange, 
   Activity, 
   Globe, 
   Calendar as CalendarIcon 
 } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { formatSwedishDate } from '../utils/dateUtils';
 
 const DEFAULT_FILTERS: Filter = {
   useLocationFilter: false,
@@ -36,24 +43,36 @@ const DEFAULT_FILTERS: Filter = {
   }
 };
 
+type DatePickerType = 'from' | 'to' | null;
+
 const ManualFilterPage = () => {
   const navigate = useNavigate();
   const [filters, setFilters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
+  const [datePickerOpen, setDatePickerOpen] = useState(false);
+  const [datePickerType, setDatePickerType] = useState<DatePickerType>(null);
   
   const allBranches = Object.values(Branch);
   const allDistricts = Object.values(OrienteeringDistrict);
   const allDisciplines = Object.values(Discipline);
   const allCompetitionTypes = Object.values(CompetitionType);
 
-  const handleDateRangeChange = (date: Date | undefined, type: 'from' | 'to') => {
-    const currentDateRange = filters?.dateRange || { from: null, to: null };
-    setFilters({
-      ...filters,
-      dateRange: {
-        ...currentDateRange,
-        [type]: date || null
-      }
-    });
+  const handleOpenDatePicker = (type: DatePickerType) => {
+    setDatePickerType(type);
+    setDatePickerOpen(true);
+  };
+
+  const handleDateSelect = (date: Date | undefined) => {
+    if (datePickerType && date) {
+      const currentDateRange = filters?.dateRange || { from: null, to: null };
+      setFilters({
+        ...filters,
+        dateRange: {
+          ...currentDateRange,
+          [datePickerType]: date
+        }
+      });
+      setDatePickerOpen(false);
+    }
   };
 
   const handleBranchToggle = (branch: Branch) => {
@@ -166,6 +185,11 @@ const ManualFilterPage = () => {
       [CompetitionType.Weekly]: 'Veckotävling'
     };
     return translations[type] || type;
+  };
+
+  const getFormattedDate = (date: Date | null) => {
+    if (!date) return 'Välj datum';
+    return formatSwedishDate(date, 'PPP');
   };
 
   return (
@@ -285,41 +309,65 @@ const ManualFilterPage = () => {
             </div>
           </div>
           
-          {/* Date Range Section at the bottom */}
+          {/* Date Range Section at the bottom with new overlay implementation */}
           <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
             <div className="flex items-center gap-2 text-forest mb-4">
               <CalendarRange className="h-5 w-5" />
               <h2 className="font-semibold">Datumintervall</h2>
             </div>
             
-            <div className="space-y-6">
+            <div className="space-y-4">
               <div>
                 <Label className="mb-2 block">Från</Label>
-                <Calendar
-                  mode="single"
-                  selected={filters?.dateRange?.from || undefined}
-                  onSelect={(date) => handleDateRangeChange(date, 'from')}
-                  disabled={(date) => 
-                    filters?.dateRange?.to ? date > filters.dateRange.to : false
-                  }
-                  locale={sv}
-                />
+                <Button
+                  variant="outline"
+                  onClick={() => handleOpenDatePicker('from')}
+                  className="w-full justify-start text-left"
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {getFormattedDate(filters?.dateRange?.from)}
+                </Button>
               </div>
               <div>
                 <Label className="mb-2 block">Till</Label>
-                <Calendar
-                  mode="single"
-                  selected={filters?.dateRange?.to || undefined}
-                  onSelect={(date) => handleDateRangeChange(date, 'to')}
-                  disabled={(date) => 
-                    filters?.dateRange?.from ? date < filters.dateRange.from : false
-                  }
-                  locale={sv}
-                />
+                <Button
+                  variant="outline"
+                  onClick={() => handleOpenDatePicker('to')}
+                  className="w-full justify-start text-left"
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {getFormattedDate(filters?.dateRange?.to)}
+                </Button>
               </div>
             </div>
           </section>
         </div>
+
+        {/* Date picker dialog */}
+        <Dialog open={datePickerOpen} onOpenChange={setDatePickerOpen}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>
+                {datePickerType === 'from' ? 'Välj startdatum' : 'Välj slutdatum'}
+              </DialogTitle>
+            </DialogHeader>
+            <Calendar
+              mode="single"
+              selected={datePickerType === 'from' 
+                ? filters?.dateRange?.from || undefined 
+                : filters?.dateRange?.to || undefined
+              }
+              onSelect={handleDateSelect}
+              disabled={(date) => 
+                datePickerType === 'from'
+                  ? filters?.dateRange?.to ? date > filters.dateRange.to : false
+                  : filters?.dateRange?.from ? date < filters.dateRange.from : false
+              }
+              locale={sv}
+              className="mx-auto"
+            />
+          </DialogContent>
+        </Dialog>
 
         <div className="flex items-center gap-4 pt-6 fixed bottom-0 left-0 right-0 bg-white p-4 shadow-lg">
           <Button 
