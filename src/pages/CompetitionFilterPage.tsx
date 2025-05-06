@@ -1,9 +1,8 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Trash } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import CalendarFilters from '../components/competition/filters/CalendarFilters';
@@ -33,14 +32,20 @@ const CompetitionFilterPage = () => {
     });
   };
 
+  // Update the reset filters function to keep location settings but disable the checkbox
   const handleResetFilters = () => {
-    setFilters(DEFAULT_FILTERS);
-    toast.info('Filtren har återställts');
+    const currentLocationSettings = {
+      maxDistanceKm: filters.maxDistanceKm,
+      useLocationFilter: false // Disable the location filter
+    };
     
-    navigate('/competitions', { 
-      state: { 
-        transition: 'slide' 
-      }
+    setFilters({
+      ...DEFAULT_FILTERS,
+      ...currentLocationSettings
+    });
+    
+    toast.info('Filtren har återställts', {
+      description: 'Alla filterval har rensats förutom platsinformation'
     });
   };
 
@@ -52,6 +57,16 @@ const CompetitionFilterPage = () => {
     <MobileLayout 
       title="Filter" 
       action={
+        <Button 
+          variant="ghost" 
+          size="icon"
+          onClick={handleResetFilters}
+          className="text-muted-foreground"
+        >
+          <Trash className="h-[1.2rem] w-[1.2rem]" />
+        </Button>
+      }
+      leftAction={
         <Button 
           variant="ghost" 
           size="icon"

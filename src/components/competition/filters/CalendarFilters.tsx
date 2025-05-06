@@ -1,7 +1,8 @@
+
 import React from 'react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Button } from '@/components/ui/button';
-import { Footprints, CalendarRange, Calendar as CalendarIcon, Globe, Trophy } from 'lucide-react';
+import { Footprints, CalendarRange, Calendar as CalendarIcon, Globe, Trophy, Activity } from 'lucide-react';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Calendar } from '@/components/ui/calendar';
 import { Label } from '@/components/ui/label';
@@ -277,7 +278,7 @@ const CalendarFilters: React.FC<CalendarFiltersProps> = ({
         className="bg-white rounded-xl shadow-sm border border-gray-100"
       >
         <div className="flex items-center gap-2 text-forest p-4">
-          <Footprints className="h-5 w-5" />
+          <Activity className="h-5 w-5" />
           <h2 className="font-semibold">Discipliner</h2>
           <div className="flex-grow"></div>
           <CollapsibleTrigger asChild>

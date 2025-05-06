@@ -23,7 +23,9 @@ import {
   Calendar as CalendarIcon,
   MapPin,
   Navigation,
-  Trophy
+  Trophy,
+  Activity,
+  Trash
 } from 'lucide-react';
 import {
   Dialog,
@@ -85,6 +87,23 @@ const ManualFilterPage = () => {
   const allDistricts = Object.values(OrienteeringDistrict);
   const allDisciplines = Object.values(Discipline);
   const allCompetitionTypes = Object.values(CompetitionType);
+
+  // Add a new clearFilters function that keeps location data but disables the filter
+  const clearFilters = () => {
+    const currentLocationSettings = {
+      maxDistanceKm: filters.maxDistanceKm,
+      useLocationFilter: false // Disable the location filter
+    };
+    
+    setFilters({
+      ...DEFAULT_FILTERS,
+      ...currentLocationSettings
+    });
+    
+    toast.info('Filtren har återställts', {
+      description: 'Alla filterval har rensats förutom platsinformation'
+    });
+  };
 
   const handleOpenDatePicker = (type: DatePickerType) => {
     setDatePickerType(type);
@@ -254,6 +273,16 @@ const ManualFilterPage = () => {
       title="Filtrera" 
       showBackButton={true}
       subtitle={subtitle}
+      action={
+        <Button 
+          variant="ghost" 
+          size="icon"
+          onClick={clearFilters}
+          className="text-muted-foreground"
+        >
+          <Trash className="h-[1.2rem] w-[1.2rem]" />
+        </Button>
+      }
     >
       <div className="p-4 pb-24">
         <div className="space-y-8">
@@ -316,7 +345,7 @@ const ManualFilterPage = () => {
               {/* Discipline Section */}
               <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
                 <div className="flex items-center gap-2 text-forest mb-4">
-                  <Footprints className="h-5 w-5" />
+                  <Activity className="h-5 w-5" />
                   <h2 className="font-semibold">Discipliner</h2>
                 </div>
                 
@@ -400,7 +429,7 @@ const ManualFilterPage = () => {
             </div>
           </section>
 
-          {/* Location Filter Section - NEWLY ADDED */}
+          {/* Location Filter Section */}
           <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
             <div className="flex items-center gap-2 text-forest mb-4">
               <MapPin className="h-5 w-5" />
