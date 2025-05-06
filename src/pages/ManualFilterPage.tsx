@@ -18,7 +18,7 @@ import { sv } from 'date-fns/locale';
 import { format } from 'date-fns';
 import { 
   CalendarRange, 
-  FootPrints, 
+  Footprints, 
   Globe, 
   Calendar as CalendarIcon,
   MapPin,
@@ -290,7 +290,7 @@ const ManualFilterPage = () => {
               {/* Branch Section */}
               <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
                 <div className="flex items-center gap-2 text-forest mb-4">
-                  <FootPrints className="h-5 w-5" />
+                  <Footprints className="h-5 w-5" />
                   <h2 className="font-semibold">Gren</h2>
                 </div>
                 
@@ -316,7 +316,7 @@ const ManualFilterPage = () => {
               {/* Discipline Section */}
               <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
                 <div className="flex items-center gap-2 text-forest mb-4">
-                  <FootPrints className="h-5 w-5" />
+                  <Footprints className="h-5 w-5" />
                   <h2 className="font-semibold">Discipliner</h2>
                 </div>
                 
