@@ -64,6 +64,23 @@ const ManualFilterPage = () => {
   const [locationDialogOpen, setLocationDialogOpen] = useState(false);
   const { userLocation, updateUserLocation } = useUserLocation();
   
+  // Calculate number of active filters for the subtitle
+  const getActiveFiltersCount = () => {
+    let count = 0;
+    
+    if (filters.districts.length > 0) count++;
+    if (filters.disciplines.length > 0) count++;
+    if (filters.competitionTypes.length > 0) count++;
+    if (filters.branches.length > 0) count++;
+    if (filters.dateRange.from || filters.dateRange.to) count++;
+    if (filters.useLocationFilter) count++;
+    
+    return count;
+  };
+  
+  const activeFiltersCount = getActiveFiltersCount();
+  const subtitle = activeFiltersCount > 0 ? `${activeFiltersCount} aktiva filter` : undefined;
+  
   const allBranches = Object.values(Branch);
   const allDistricts = Object.values(OrienteeringDistrict);
   const allDisciplines = Object.values(Discipline);
@@ -234,8 +251,9 @@ const ManualFilterPage = () => {
 
   return (
     <MobileLayout 
-      title="Manuella filter" 
+      title="Filtrera" 
       showBackButton={true}
+      subtitle={subtitle}
     >
       <div className="p-4 pb-24">
         <div className="space-y-8">

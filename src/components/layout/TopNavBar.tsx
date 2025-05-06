@@ -8,7 +8,8 @@ interface TopNavBarProps {
   showBackButton?: boolean;
   onBack?: () => void;
   action?: React.ReactNode;
-  leftAction?: React.ReactNode; // Added leftAction prop
+  leftAction?: React.ReactNode;
+  subtitle?: string; // Added subtitle prop
 }
 
 const TopNavBar: React.FC<TopNavBarProps> = ({ 
@@ -16,7 +17,8 @@ const TopNavBar: React.FC<TopNavBarProps> = ({
   showBackButton = false, 
   onBack, 
   action,
-  leftAction // Added leftAction prop
+  leftAction,
+  subtitle // Added subtitle prop
 }) => {
   const [tapCount, setTapCount] = useState(0);
   const [lastTapTime, setLastTapTime] = useState(0);
@@ -59,12 +61,15 @@ const TopNavBar: React.FC<TopNavBarProps> = ({
         ) : null}
       </div>
 
-      {/* Center slot - Title */}
+      {/* Center slot - Title and optional subtitle */}
       <div 
-        className="flex-1 text-center cursor-default select-none" 
+        className="flex-1 text-center cursor-default select-none flex flex-col" 
         onClick={handleTitleTap}
       >
         <h1 className="text-lg font-semibold truncate">{title}</h1>
+        {subtitle && (
+          <span className="text-xs text-muted-foreground">{subtitle}</span>
+        )}
       </div>
 
       {/* Right slot - Action button or empty */}

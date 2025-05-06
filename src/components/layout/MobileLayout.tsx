@@ -9,8 +9,9 @@ interface MobileLayoutProps {
   showBackButton?: boolean;
   hideBottomTabs?: boolean;
   action?: React.ReactNode;
-  leftAction?: React.ReactNode; // Added leftAction prop
+  leftAction?: React.ReactNode;
   fullHeight?: boolean;
+  subtitle?: string; // Added subtitle prop
 }
 
 const MobileLayout: React.FC<MobileLayoutProps> = ({ 
@@ -19,8 +20,9 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
   showBackButton = false, 
   hideBottomTabs = false,
   action,
-  leftAction, // Added leftAction prop
-  fullHeight = false
+  leftAction,
+  fullHeight = false,
+  subtitle // Added subtitle prop
 }) => {
   const handleBack = () => {
     window.history.back();
@@ -33,7 +35,8 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
         showBackButton={showBackButton} 
         onBack={handleBack}
         action={action}
-        leftAction={leftAction} // Pass leftAction to TopNavBar
+        leftAction={leftAction}
+        subtitle={subtitle} // Pass subtitle to TopNavBar
       />
       
       <main 
