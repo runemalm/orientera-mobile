@@ -76,13 +76,13 @@ const CompetitionFilterPage = () => {
         </Button>
       }
     >
-      <div className="p-4 pb-24">
+      <div className="p-4 pb-32">
         <CalendarFilters
           filters={filters}
           onFiltersChange={setFilters}
         />
 
-        <div className="flex items-center gap-4 pt-6">
+        <div className="flex items-center gap-4 pt-6 fixed bottom-0 left-0 right-0 bg-white p-4 z-40 border-t border-gray-100 shadow-md">
           <Button 
             variant="outline" 
             className="flex-1"

@@ -278,7 +278,7 @@ const ManualFilterPage = () => {
         </Button>
       }
     >
-      <div className="p-4 pb-24">
+      <div className="p-4 pb-32">
         <div className="space-y-8">
           {/* Two-column layout for filters with proper height management */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -543,7 +543,8 @@ const ManualFilterPage = () => {
           </DialogContent>
         </Dialog>
 
-        <div className="flex items-center gap-4 pt-6 fixed bottom-0 left-0 right-0 bg-white p-4 shadow-lg">
+        {/* Modified the filter buttons to prevent white stripes */}
+        <div className="flex items-center gap-4 pt-6 fixed bottom-0 left-0 right-0 bg-white p-4 z-40 border-t border-gray-100 shadow-md">
           <Button 
             variant="outline" 
             className="flex-1"
