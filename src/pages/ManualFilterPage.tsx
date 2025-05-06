@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -19,11 +18,12 @@ import { sv } from 'date-fns/locale';
 import { format } from 'date-fns';
 import { 
   CalendarRange, 
-  Activity, 
+  FootPrints, 
   Globe, 
   Calendar as CalendarIcon,
   MapPin,
-  Navigation
+  Navigation,
+  Trophy
 } from 'lucide-react';
 import {
   Dialog,
@@ -290,7 +290,7 @@ const ManualFilterPage = () => {
               {/* Branch Section */}
               <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
                 <div className="flex items-center gap-2 text-forest mb-4">
-                  <Activity className="h-5 w-5" />
+                  <FootPrints className="h-5 w-5" />
                   <h2 className="font-semibold">Gren</h2>
                 </div>
                 
@@ -316,7 +316,7 @@ const ManualFilterPage = () => {
               {/* Discipline Section */}
               <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
                 <div className="flex items-center gap-2 text-forest mb-4">
-                  <Activity className="h-5 w-5" />
+                  <FootPrints className="h-5 w-5" />
                   <h2 className="font-semibold">Discipliner</h2>
                 </div>
                 
@@ -342,7 +342,7 @@ const ManualFilterPage = () => {
               {/* Competition Type Section */}
               <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
                 <div className="flex items-center gap-2 text-forest mb-4">
-                  <CalendarIcon className="h-5 w-5" />
+                  <Trophy className="h-5 w-5" />
                   <h2 className="font-semibold">Tävlingstyper</h2>
                 </div>
                 
