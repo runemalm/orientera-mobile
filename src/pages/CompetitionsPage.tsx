@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
-import { Loader2, Info } from 'lucide-react';
+import { Loader2, Info, Filter } from 'lucide-react';
 import { CompetitionSummary } from '../types';
 import { getNearbyCompetitions } from '../services/api';
 import { useLocalStorage } from '../hooks/useLocalStorage';
@@ -16,9 +16,20 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent
+} from "@/components/ui/popover";
 import { Link } from 'react-router-dom';
 
-interface Filter {
+interface FilterProps {
   useLocationFilter: boolean;
   maxDistanceKm: number;
   districts: string[];
@@ -31,7 +42,7 @@ interface Filter {
   };
 }
 
-const DEFAULT_FILTERS: Filter = {
+const DEFAULT_FILTERS: FilterProps = {
   useLocationFilter: false,
   maxDistanceKm: 100,
   districts: [],
@@ -49,8 +60,9 @@ const CompetitionsPage: React.FC = () => {
   const [competitions, setCompetitions] = useState<CompetitionSummary[]>([]);
   const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [filters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
+  const [filters] = useLocalStorage<FilterProps>('competitionFilters', DEFAULT_FILTERS);
   const [showInfo, setShowInfo] = useState(false);
+  const [showFilterOptions, setShowFilterOptions] = useState(false);
 
   // Force the calendar view by setting it directly in localStorage
   useEffect(() => {
@@ -114,6 +126,20 @@ const CompetitionsPage: React.FC = () => {
     fetchCompetitions();
   }, [fetchCompetitions]);
 
+  const handleFilterClick = () => {
+    setShowFilterOptions(true);
+  };
+
+  const handleAIFilterClick = () => {
+    setShowFilterOptions(false);
+    navigate('/assistant', { state: { initiateCompetitionSearch: true } });
+  };
+
+  const handleManualFilterClick = () => {
+    setShowFilterOptions(false);
+    navigate('/competition-filter');
+  };
+
   const renderContent = () => {
     if (isLoadingCompetitions && competitions.length === 0) {
       return (
@@ -160,6 +186,40 @@ const CompetitionsPage: React.FC = () => {
       <MobileLayout 
         title="Tävlingskalender" 
         fullHeight
+        action={
+          <Popover open={showFilterOptions} onOpenChange={setShowFilterOptions}>
+            <PopoverTrigger asChild>
+              <Button 
+                variant="ghost" 
+                size="icon"
+                onClick={handleFilterClick}
+                className="text-muted-foreground"
+              >
+                <Filter className="h-[1.2rem] w-[1.2rem]" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent align="end" className="w-56 p-0">
+              <div className="flex flex-col">
+                <Button 
+                  onClick={handleAIFilterClick}
+                  className="justify-start rounded-none px-4 py-6 bg-forest-light hover:bg-forest text-white"
+                >
+                  <div className="flex flex-col items-start">
+                    <span className="font-bold">Filter med AI</span>
+                    <span className="text-xs mt-1 opacity-90">Fråga på ditt sätt</span>
+                  </div>
+                </Button>
+                <Button 
+                  onClick={handleManualFilterClick}
+                  className="justify-start rounded-none px-4 py-3"
+                  variant="ghost"
+                >
+                  Filter manuellt
+                </Button>
+              </div>
+            </PopoverContent>
+          </Popover>
+        }
       >
         {renderContent()}
       </MobileLayout>
