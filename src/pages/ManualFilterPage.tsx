@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -20,15 +21,25 @@ import {
   CalendarRange, 
   Activity, 
   Globe, 
-  Calendar as CalendarIcon 
+  Calendar as CalendarIcon,
+  MapPin,
+  Navigation
 } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription
 } from "@/components/ui/dialog";
 import { formatSwedishDate } from '../utils/dateUtils';
+import { useUserLocation } from '../hooks/useUserLocation';
+import LocationInputForm from '../components/LocationInputForm';
+import { formatDistance } from '../utils/distanceUtils';
+import { Input } from '@/components/ui/input';
+import {
+  Slider
+} from "@/components/ui/slider";
 
 const DEFAULT_FILTERS: Filter = {
   useLocationFilter: false,
@@ -50,6 +61,8 @@ const ManualFilterPage = () => {
   const [filters, setFilters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [datePickerType, setDatePickerType] = useState<DatePickerType>(null);
+  const [locationDialogOpen, setLocationDialogOpen] = useState(false);
+  const { userLocation, updateUserLocation } = useUserLocation();
   
   const allBranches = Object.values(Branch);
   const allDistricts = Object.values(OrienteeringDistrict);
@@ -129,6 +142,33 @@ const ManualFilterPage = () => {
         competitionTypes: [...filters.competitionTypes, type]
       });
     }
+  };
+
+  const handleLocationSelect = (location: { city: string; latitude: number; longitude: number }) => {
+    updateUserLocation(location);
+    setLocationDialogOpen(false);
+    
+    // If selecting a location, also enable the location filter
+    if (!filters.useLocationFilter) {
+      setFilters({
+        ...filters,
+        useLocationFilter: true
+      });
+    }
+  };
+
+  const handleLocationFilterToggle = () => {
+    setFilters({
+      ...filters,
+      useLocationFilter: !filters.useLocationFilter
+    });
+  };
+
+  const handleDistanceChange = (value: number[]) => {
+    setFilters({
+      ...filters,
+      maxDistanceKm: value[0]
+    });
   };
 
   const handleApplyFilters = () => {
@@ -309,7 +349,7 @@ const ManualFilterPage = () => {
             </div>
           </div>
           
-          {/* Date Range Section at the bottom with new overlay implementation */}
+          {/* Date Range Section */}
           <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
             <div className="flex items-center gap-2 text-forest mb-4">
               <CalendarRange className="h-5 w-5" />
@@ -341,6 +381,78 @@ const ManualFilterPage = () => {
               </div>
             </div>
           </section>
+
+          {/* Location Filter Section - NEWLY ADDED */}
+          <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+            <div className="flex items-center gap-2 text-forest mb-4">
+              <MapPin className="h-5 w-5" />
+              <h2 className="font-semibold">Platsfiltrering</h2>
+            </div>
+
+            <div className="space-y-4">
+              {/* Location filter toggle */}
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="use-location-filter"
+                  checked={filters.useLocationFilter}
+                  onCheckedChange={handleLocationFilterToggle}
+                />
+                <label 
+                  htmlFor="use-location-filter"
+                  className="text-sm cursor-pointer"
+                >
+                  Filtrera tävlingar baserat på avstånd
+                </label>
+              </div>
+
+              {/* Selected location display and change button */}
+              <div className="space-y-2">
+                <Label className="block">Plats</Label>
+                <div className="flex items-center gap-2">
+                  <div className="border rounded-md p-2 flex-1 bg-gray-50">
+                    {userLocation ? (
+                      <div className="flex items-center gap-2">
+                        <MapPin className="h-4 w-4 text-forest flex-shrink-0" />
+                        <span>{userLocation.city}</span>
+                      </div>
+                    ) : (
+                      <div className="text-gray-500">Ingen plats vald</div>
+                    )}
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setLocationDialogOpen(true)}
+                    className="whitespace-nowrap"
+                  >
+                    {userLocation ? 'Ändra' : 'Välj plats'}
+                  </Button>
+                </div>
+              </div>
+
+              {/* Distance slider */}
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <Label>Maxavstånd</Label>
+                  <span className="text-sm font-medium">
+                    {formatDistance(filters.maxDistanceKm)}
+                  </span>
+                </div>
+                <Slider
+                  disabled={!filters.useLocationFilter}
+                  value={[filters.maxDistanceKm]}
+                  min={5}
+                  max={500}
+                  step={5}
+                  onValueChange={handleDistanceChange}
+                  className="py-2"
+                />
+                <div className="flex justify-between text-xs text-gray-500">
+                  <span>5 km</span>
+                  <span>500 km</span>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
 
         {/* Date picker dialog */}
@@ -350,6 +462,9 @@ const ManualFilterPage = () => {
               <DialogTitle>
                 {datePickerType === 'from' ? 'Välj startdatum' : 'Välj slutdatum'}
               </DialogTitle>
+              <DialogDescription>
+                Välj datum nedan
+              </DialogDescription>
             </DialogHeader>
             <Calendar
               mode="single"
@@ -365,6 +480,24 @@ const ManualFilterPage = () => {
               }
               locale={sv}
               className="mx-auto"
+            />
+          </DialogContent>
+        </Dialog>
+
+        {/* Location selection dialog */}
+        <Dialog open={locationDialogOpen} onOpenChange={setLocationDialogOpen}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>
+                Välj plats
+              </DialogTitle>
+              <DialogDescription>
+                Sök efter en stad eller plats för att filtrera tävlingar baserat på avstånd.
+              </DialogDescription>
+            </DialogHeader>
+            <LocationInputForm 
+              onLocationSelected={handleLocationSelect}
+              onCancel={() => setLocationDialogOpen(false)}
             />
           </DialogContent>
         </Dialog>
