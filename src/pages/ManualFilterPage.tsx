@@ -1,0 +1,338 @@
+
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import MobileLayout from '../components/layout/MobileLayout';
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from "@/components/ui/checkbox";
+import { toast } from 'sonner';
+import { useLocalStorage } from '../hooks/useLocalStorage';
+import { 
+  OrienteeringDistrict, 
+  Discipline, 
+  CompetitionType,
+  Branch,
+  Filter 
+} from '../types';
+import { sv } from 'date-fns/locale';
+import { 
+  CalendarRange, 
+  Activity, 
+  Globe, 
+  Calendar as CalendarIcon 
+} from 'lucide-react';
+
+const DEFAULT_FILTERS: Filter = {
+  useLocationFilter: false,
+  maxDistanceKm: 100,
+  districts: [],
+  disciplines: [],
+  competitionTypes: [],
+  branches: [],
+  dateRange: {
+    from: null,
+    to: null
+  }
+};
+
+const ManualFilterPage = () => {
+  const navigate = useNavigate();
+  const [filters, setFilters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
+  
+  const allBranches = Object.values(Branch);
+  const allDistricts = Object.values(OrienteeringDistrict);
+  const allDisciplines = Object.values(Discipline);
+  const allCompetitionTypes = Object.values(CompetitionType);
+
+  const handleDateRangeChange = (date: Date | undefined, type: 'from' | 'to') => {
+    const currentDateRange = filters?.dateRange || { from: null, to: null };
+    setFilters({
+      ...filters,
+      dateRange: {
+        ...currentDateRange,
+        [type]: date || null
+      }
+    });
+  };
+
+  const handleBranchToggle = (branch: Branch) => {
+    if (filters.branches.includes(branch)) {
+      setFilters({
+        ...filters,
+        branches: filters.branches.filter(b => b !== branch)
+      });
+    } else {
+      setFilters({
+        ...filters,
+        branches: [...filters.branches, branch]
+      });
+    }
+  };
+
+  const handleDistrictToggle = (district: OrienteeringDistrict) => {
+    if (filters.districts.includes(district)) {
+      setFilters({
+        ...filters,
+        districts: filters.districts.filter(d => d !== district)
+      });
+    } else {
+      setFilters({
+        ...filters,
+        districts: [...filters.districts, district]
+      });
+    }
+  };
+
+  const handleDisciplineToggle = (discipline: Discipline) => {
+    if (filters.disciplines.includes(discipline)) {
+      setFilters({
+        ...filters,
+        disciplines: filters.disciplines.filter(d => d !== discipline)
+      });
+    } else {
+      setFilters({
+        ...filters,
+        disciplines: [...filters.disciplines, discipline]
+      });
+    }
+  };
+
+  const handleCompetitionTypeToggle = (type: CompetitionType) => {
+    if (filters.competitionTypes.includes(type)) {
+      setFilters({
+        ...filters,
+        competitionTypes: filters.competitionTypes.filter(t => t !== type)
+      });
+    } else {
+      setFilters({
+        ...filters,
+        competitionTypes: [...filters.competitionTypes, type]
+      });
+    }
+  };
+
+  const handleApplyFilters = () => {
+    navigate('/competitions');
+    toast.success('Filter inställningar sparade', {
+      description: 'Dina filterinställningar har uppdaterats'
+    });
+  };
+
+  const handleResetFilters = () => {
+    setFilters(DEFAULT_FILTERS);
+    toast.info('Filtren har återställts');
+    
+    navigate('/competitions');
+  };
+
+  // Helper functions for translations
+  const getBranchTranslation = (branch: Branch) => {
+    const translations: Record<Branch, string> = {
+      [Branch.FootO]: 'Orienteringslöpning',
+      [Branch.PreO]: 'Precisionsorientering',
+      [Branch.MTBO]: 'Mountainbikeorientering',
+      [Branch.SkiO]: 'Skidorientering',
+      [Branch.TrailO]: 'Trail-O'
+    };
+    return translations[branch] || branch;
+  };
+
+  const getDistrictTranslation = (district: OrienteeringDistrict) => {
+    return district.replace(' OF', '');
+  };
+
+  const getDisciplineTranslation = (discipline: Discipline) => {
+    const translations: Record<Discipline, string> = {
+      [Discipline.Sprint]: 'Sprint',
+      [Discipline.Middle]: 'Medel',
+      [Discipline.Long]: 'Lång',
+      [Discipline.Night]: 'Natt',
+      [Discipline.Relay]: 'Stafett',
+      [Discipline.UltraLong]: 'Ultra-lång',
+      [Discipline.PreO]: 'PreO',
+      [Discipline.TempO]: 'TempO'
+    };
+    return translations[discipline] || discipline;
+  };
+
+  const getCompetitionTypeTranslation = (type: CompetitionType) => {
+    const translations: Record<CompetitionType, string> = {
+      [CompetitionType.Championship]: 'Mästerskap',
+      [CompetitionType.National]: 'Nationell tävling',
+      [CompetitionType.Regional]: 'Regional tävling',
+      [CompetitionType.Near]: 'Närtävling',
+      [CompetitionType.Club]: 'Klubbtävling',
+      [CompetitionType.Weekly]: 'Veckotävling'
+    };
+    return translations[type] || type;
+  };
+
+  return (
+    <MobileLayout 
+      title="Manuella filter" 
+      showBackButton={true}
+    >
+      <div className="p-4 pb-24">
+        <div className="space-y-8">
+          {/* Date Range Section */}
+          <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+            <div className="flex items-center gap-2 text-forest mb-4">
+              <CalendarRange className="h-5 w-5" />
+              <h2 className="font-semibold">Datumintervall</h2>
+            </div>
+            
+            <div className="space-y-6">
+              <div>
+                <Label className="mb-2 block">Från</Label>
+                <Calendar
+                  mode="single"
+                  selected={filters?.dateRange?.from || undefined}
+                  onSelect={(date) => handleDateRangeChange(date, 'from')}
+                  disabled={(date) => 
+                    filters?.dateRange?.to ? date > filters.dateRange.to : false
+                  }
+                  locale={sv}
+                />
+              </div>
+              <div>
+                <Label className="mb-2 block">Till</Label>
+                <Calendar
+                  mode="single"
+                  selected={filters?.dateRange?.to || undefined}
+                  onSelect={(date) => handleDateRangeChange(date, 'to')}
+                  disabled={(date) => 
+                    filters?.dateRange?.from ? date < filters.dateRange.from : false
+                  }
+                  locale={sv}
+                />
+              </div>
+            </div>
+          </section>
+
+          {/* Branch Section */}
+          <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+            <div className="flex items-center gap-2 text-forest mb-4">
+              <Activity className="h-5 w-5" />
+              <h2 className="font-semibold">Gren</h2>
+            </div>
+            
+            <div className="space-y-2">
+              {allBranches.map((branch) => (
+                <div key={branch} className="flex items-center space-x-2">
+                  <Checkbox 
+                    id={`branch-${branch}`} 
+                    checked={filters?.branches?.includes(branch)}
+                    onCheckedChange={() => handleBranchToggle(branch)}
+                  />
+                  <label 
+                    htmlFor={`branch-${branch}`}
+                    className="text-sm cursor-pointer"
+                  >
+                    {getBranchTranslation(branch)}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* District Section */}
+          <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+            <div className="flex items-center gap-2 text-forest mb-4">
+              <Globe className="h-5 w-5" />
+              <h2 className="font-semibold">Distrikt</h2>
+            </div>
+            
+            <div className="space-y-2">
+              {allDistricts.map((district) => (
+                <div key={district} className="flex items-center space-x-2">
+                  <Checkbox 
+                    id={`district-${district}`} 
+                    checked={filters?.districts?.includes(district)}
+                    onCheckedChange={() => handleDistrictToggle(district)}
+                  />
+                  <label 
+                    htmlFor={`district-${district}`}
+                    className="text-sm cursor-pointer"
+                  >
+                    {getDistrictTranslation(district)}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </section>
+          
+          {/* Discipline Section */}
+          <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+            <div className="flex items-center gap-2 text-forest mb-4">
+              <Activity className="h-5 w-5" />
+              <h2 className="font-semibold">Discipliner</h2>
+            </div>
+            
+            <div className="space-y-2">
+              {allDisciplines.map((discipline) => (
+                <div key={discipline} className="flex items-center space-x-2">
+                  <Checkbox 
+                    id={`discipline-${discipline}`} 
+                    checked={filters?.disciplines?.includes(discipline)}
+                    onCheckedChange={() => handleDisciplineToggle(discipline)}
+                  />
+                  <label 
+                    htmlFor={`discipline-${discipline}`}
+                    className="text-sm cursor-pointer"
+                  >
+                    {getDisciplineTranslation(discipline)}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </section>
+          
+          {/* Competition Type Section */}
+          <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+            <div className="flex items-center gap-2 text-forest mb-4">
+              <CalendarIcon className="h-5 w-5" />
+              <h2 className="font-semibold">Tävlingstyper</h2>
+            </div>
+            
+            <div className="space-y-2">
+              {allCompetitionTypes.map((type) => (
+                <div key={type} className="flex items-center space-x-2">
+                  <Checkbox 
+                    id={`type-${type}`} 
+                    checked={filters?.competitionTypes?.includes(type)}
+                    onCheckedChange={() => handleCompetitionTypeToggle(type)}
+                  />
+                  <label 
+                    htmlFor={`type-${type}`}
+                    className="text-sm cursor-pointer"
+                  >
+                    {getCompetitionTypeTranslation(type)}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
+
+        <div className="flex items-center gap-4 pt-6 fixed bottom-0 left-0 right-0 bg-white p-4 shadow-lg">
+          <Button 
+            variant="outline" 
+            className="flex-1"
+            onClick={handleResetFilters}
+          >
+            Återställ
+          </Button>
+          <Button 
+            className="flex-1 bg-forest hover:bg-forest-dark"
+            onClick={handleApplyFilters}
+          >
+            Tillämpa filter
+          </Button>
+        </div>
+      </div>
+    </MobileLayout>
+  );
+};
+
+export default ManualFilterPage;

@@ -18,6 +18,7 @@ import CompetitionFilterPage from './pages/CompetitionFilterPage';
 import ProfilePage from './pages/ProfilePage';
 import AssistantPage from './pages/AssistantPage';
 import AiFilteringPage from './pages/AiFilteringPage';
+import ManualFilterPage from './pages/ManualFilterPage';
 import { useVersionCheck } from './hooks/useVersionCheck';
 
 const App = () => {
@@ -42,6 +43,7 @@ const App = () => {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/assistant" element={<AssistantPage />} />
         <Route path="/ai-filtering" element={<AiFilteringPage />} />
+        <Route path="/manual-filtering" element={<ManualFilterPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>

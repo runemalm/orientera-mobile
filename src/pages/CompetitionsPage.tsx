@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -126,13 +125,12 @@ const CompetitionsPage: React.FC = () => {
 
   const handleAIFilterClick = () => {
     setShowFilterSheet(false);
-    // Navigate to the new AiFilteringPage instead of AssistantPage
     navigate('/ai-filtering');
   };
 
   const handleManualFilterClick = () => {
     setShowFilterSheet(false);
-    navigate('/competition-filter');
+    navigate('/manual-filtering');
   };
 
   const renderContent = () => {
