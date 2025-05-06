@@ -5,9 +5,8 @@ import MobileLayout from '../components/layout/MobileLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, WandSparkles, Send } from 'lucide-react';
+import { WandSparkles, Send } from 'lucide-react';
 import { toast } from 'sonner';
-import { useLocalStorage } from '../hooks/useLocalStorage';
 
 interface AiFilteringPageProps {}
 
@@ -27,10 +26,6 @@ const AiFilteringPage: React.FC<AiFilteringPageProps> = () => {
 
   const handlePromptChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPrompt(e.target.value);
-  };
-
-  const handleBack = () => {
-    navigate(-1);
   };
 
   const handleSuggestionClick = (suggestion: string) => {
@@ -64,7 +59,6 @@ const AiFilteringPage: React.FC<AiFilteringPageProps> = () => {
     <MobileLayout 
       title="AI-filter" 
       showBackButton={true}
-      onBack={handleBack}
     >
       <div className="flex flex-col h-full p-4 pb-8">
         <div className="flex items-center justify-center mb-8">
