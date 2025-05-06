@@ -1,11 +1,11 @@
-
 import React from 'react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Button } from '@/components/ui/button';
-import { Footprints, CalendarRange, Calendar as CalendarIcon, Globe, Trophy, Activity } from 'lucide-react';
+import { Footprints, CalendarRange, Calendar as CalendarIcon, Globe, Trophy, Activity, MapPin } from 'lucide-react';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Calendar } from '@/components/ui/calendar';
 import { Label } from '@/components/ui/label';
+import { Slider } from '@/components/ui/slider';
 import { 
   OrienteeringDistrict, 
   Discipline, 
@@ -15,6 +15,7 @@ import {
 } from '../../../types';
 import { format } from 'date-fns';
 import { sv } from 'date-fns/locale';
+import { formatDistance } from '../../../utils/distanceUtils';
 
 interface CalendarFiltersProps {
   filters: Filter;
@@ -30,6 +31,7 @@ const CalendarFilters: React.FC<CalendarFiltersProps> = ({
   const [districtCollapsibleOpen, setDistrictCollapsibleOpen] = React.useState(false);
   const [disciplineCollapsibleOpen, setDisciplineCollapsibleOpen] = React.useState(false);
   const [competitionTypeCollapsibleOpen, setCompetitionTypeCollapsibleOpen] = React.useState(false);
+  const [locationCollapsibleOpen, setLocationCollapsibleOpen] = React.useState(false);
 
   const allBranches = Object.values(Branch);
   const allDistricts = Object.values(OrienteeringDistrict);
@@ -37,6 +39,22 @@ const CalendarFilters: React.FC<CalendarFiltersProps> = ({
   const allCompetitionTypes = Object.values(CompetitionType);
 
   const hasDateFilter = Boolean(filters?.dateRange?.from || filters?.dateRange?.to);
+
+  // Handler for the distance slider
+  const handleDistanceChange = (value: number[]) => {
+    onFiltersChange({
+      ...filters,
+      maxDistanceKm: value[0]
+    });
+  };
+
+  // Handler for toggling the location filter
+  const handleLocationToggle = () => {
+    onFiltersChange({
+      ...filters,
+      useLocationFilter: !filters.useLocationFilter
+    });
+  };
 
   const handleDateRangeChange = (date: Date | undefined, type: 'from' | 'to') => {
     const currentDateRange = filters?.dateRange || { from: null, to: null };
@@ -189,6 +207,66 @@ const CalendarFilters: React.FC<CalendarFiltersProps> = ({
                   filters?.dateRange?.from ? date < filters.dateRange.from : false
                 }
               />
+            </div>
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
+
+      <Collapsible
+        open={locationCollapsibleOpen}
+        onOpenChange={setLocationCollapsibleOpen}
+        className="bg-white rounded-xl shadow-sm border border-gray-100"
+      >
+        <div className="flex items-center gap-2 text-forest p-4">
+          <MapPin className="h-5 w-5" />
+          <h2 className="font-semibold">Platsfiltrering</h2>
+          <div className="flex-grow"></div>
+          <CollapsibleTrigger asChild>
+            <Button variant="ghost" size="sm" className="p-1">
+              <span className="text-xs">
+                {filters.useLocationFilter ? 'Aktivt filter' : 'Inaktivt'}
+              </span>
+            </Button>
+          </CollapsibleTrigger>
+        </div>
+        
+        <CollapsibleContent className="px-4 pb-4">
+          <div className="space-y-4">
+            <div className="flex items-center space-x-2">
+              <Checkbox 
+                id="use-location-filter"
+                checked={filters.useLocationFilter}
+                onCheckedChange={handleLocationToggle}
+              />
+              <label 
+                htmlFor="use-location-filter"
+                className="text-sm cursor-pointer"
+              >
+                Filtrera tävlingar baserat på avstånd
+              </label>
+            </div>
+            
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <Label>Maxavstånd</Label>
+                <span className="text-sm font-medium">
+                  {formatDistance(filters.maxDistanceKm)}
+                </span>
+              </div>
+              <Slider
+                disabled={!filters.useLocationFilter}
+                defaultValue={[filters.maxDistanceKm]}
+                value={[filters.maxDistanceKm]}
+                min={5}
+                max={500}
+                step={5}
+                onValueChange={handleDistanceChange}
+                className="py-2"
+              />
+              <div className="flex justify-between text-xs text-gray-500">
+                <span>5 km</span>
+                <span>500 km</span>
+              </div>
             </div>
           </div>
         </CollapsibleContent>

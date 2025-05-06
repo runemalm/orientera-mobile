@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -32,7 +33,6 @@ const CompetitionFilterPage = () => {
     });
   };
 
-  // Update the reset filters function to keep location settings but disable the checkbox
   const handleResetFilters = () => {
     const currentLocationSettings = {
       maxDistanceKm: filters.maxDistanceKm,
@@ -42,10 +42,6 @@ const CompetitionFilterPage = () => {
     setFilters({
       ...DEFAULT_FILTERS,
       ...currentLocationSettings
-    });
-    
-    toast.info('Filtren har återställts', {
-      description: 'Alla filterval har rensats förutom platsinformation'
     });
   };
 
@@ -76,13 +72,13 @@ const CompetitionFilterPage = () => {
         </Button>
       }
     >
-      <div className="p-4 pb-24">
+      <div className="p-4">
         <CalendarFilters
           filters={filters}
           onFiltersChange={setFilters}
         />
 
-        <div className="flex items-center gap-4 pt-6">
+        <div className="flex items-center gap-4 pt-6 pb-4">
           <Button 
             variant="outline" 
             className="flex-1"
