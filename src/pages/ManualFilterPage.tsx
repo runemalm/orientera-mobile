@@ -99,10 +99,6 @@ const ManualFilterPage = () => {
       ...DEFAULT_FILTERS,
       ...currentLocationSettings
     });
-    
-    toast.info('Filtren har återställts', {
-      description: 'Alla filterval har rensats förutom platsinformation'
-    });
   };
 
   const handleOpenDatePicker = (type: DatePickerType) => {
@@ -216,8 +212,6 @@ const ManualFilterPage = () => {
 
   const handleResetFilters = () => {
     setFilters(DEFAULT_FILTERS);
-    toast.info('Filtren har återställts');
-    
     navigate('/competitions');
   };
 
@@ -476,7 +470,7 @@ const ManualFilterPage = () => {
                 </div>
               </div>
 
-              {/* Distance slider */}
+              {/* Distance slider - Fixed to ensure it works correctly */}
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
                   <Label>Maxavstånd</Label>
@@ -490,7 +484,7 @@ const ManualFilterPage = () => {
                   min={5}
                   max={500}
                   step={5}
-                  onValueChange={handleDistanceChange}
+                  onValueChange={(value) => handleDistanceChange(value)}
                   className="py-2"
                 />
                 <div className="flex justify-between text-xs text-gray-500">
