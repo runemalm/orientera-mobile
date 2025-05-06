@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -17,16 +16,10 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent
-} from "@/components/ui/popover";
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { Link } from 'react-router-dom';
 
 interface FilterProps {
@@ -62,7 +55,7 @@ const CompetitionsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [filters] = useLocalStorage<FilterProps>('competitionFilters', DEFAULT_FILTERS);
   const [showInfo, setShowInfo] = useState(false);
-  const [showFilterOptions, setShowFilterOptions] = useState(false);
+  const [showFilterSheet, setShowFilterSheet] = useState(false);
 
   // Force the calendar view by setting it directly in localStorage
   useEffect(() => {
@@ -127,16 +120,16 @@ const CompetitionsPage: React.FC = () => {
   }, [fetchCompetitions]);
 
   const handleFilterClick = () => {
-    setShowFilterOptions(true);
+    setShowFilterSheet(true);
   };
 
   const handleAIFilterClick = () => {
-    setShowFilterOptions(false);
+    setShowFilterSheet(false);
     navigate('/assistant', { state: { initiateCompetitionSearch: true } });
   };
 
   const handleManualFilterClick = () => {
-    setShowFilterOptions(false);
+    setShowFilterSheet(false);
     navigate('/competition-filter');
   };
 
@@ -187,42 +180,45 @@ const CompetitionsPage: React.FC = () => {
         title="Tävlingskalender" 
         fullHeight
         action={
-          <Popover open={showFilterOptions} onOpenChange={setShowFilterOptions}>
-            <PopoverTrigger asChild>
-              <Button 
-                variant="ghost" 
-                size="icon"
-                onClick={handleFilterClick}
-                className="text-muted-foreground"
-              >
-                <Filter className="h-[1.2rem] w-[1.2rem]" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent align="end" className="w-56 p-0">
-              <div className="flex flex-col">
-                <Button 
-                  onClick={handleAIFilterClick}
-                  className="justify-start rounded-none px-4 py-6 bg-forest-light hover:bg-forest text-white"
-                >
-                  <div className="flex flex-col items-start">
-                    <span className="font-bold">Filter med AI</span>
-                    <span className="text-xs mt-1 opacity-90">Fråga på ditt sätt</span>
-                  </div>
-                </Button>
-                <Button 
-                  onClick={handleManualFilterClick}
-                  className="justify-start rounded-none px-4 py-3"
-                  variant="ghost"
-                >
-                  Filter manuellt
-                </Button>
-              </div>
-            </PopoverContent>
-          </Popover>
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={handleFilterClick}
+            className="text-muted-foreground"
+          >
+            <Filter className="h-[1.2rem] w-[1.2rem]" />
+          </Button>
         }
       >
         {renderContent()}
       </MobileLayout>
+
+      <Sheet open={showFilterSheet} onOpenChange={setShowFilterSheet}>
+        <SheetContent side="bottom" className="h-auto max-h-[40vh] rounded-t-xl px-0 py-0">
+          <div className="flex flex-col w-full">
+            <div className="flex justify-center py-2">
+              <div className="w-12 h-1.5 bg-gray-300 rounded-full" />
+            </div>
+            <h3 className="text-lg font-medium px-6 mb-3">Välj filtermetod</h3>
+            <Button 
+              onClick={handleAIFilterClick}
+              className="justify-start rounded-none px-6 py-8 bg-forest-light hover:bg-forest text-white"
+            >
+              <div className="flex flex-col items-start">
+                <span className="font-bold">Filter med AI</span>
+                <span className="text-sm mt-1 opacity-90">Fråga på ditt sätt</span>
+              </div>
+            </Button>
+            <Button 
+              onClick={handleManualFilterClick}
+              className="justify-start rounded-none px-6 py-6"
+              variant="ghost"
+            >
+              Filter manuellt
+            </Button>
+          </div>
+        </SheetContent>
+      </Sheet>
 
       <Dialog open={showInfo} onOpenChange={setShowInfo}>
         <DialogContent>
