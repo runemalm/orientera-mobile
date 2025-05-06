@@ -126,7 +126,8 @@ const CompetitionsPage: React.FC = () => {
 
   const handleAIFilterClick = () => {
     setShowFilterSheet(false);
-    navigate('/assistant', { state: { initiateCompetitionSearch: true } });
+    // Navigate to the new AiFilteringPage instead of AssistantPage
+    navigate('/ai-filtering');
   };
 
   const handleManualFilterClick = () => {
