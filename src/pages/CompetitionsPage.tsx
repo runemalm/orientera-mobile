@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -15,11 +16,6 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import { Link } from 'react-router-dom';
 
 interface FilterProps {
@@ -55,7 +51,6 @@ const CompetitionsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [filters] = useLocalStorage<FilterProps>('competitionFilters', DEFAULT_FILTERS);
   const [showInfo, setShowInfo] = useState(false);
-  const [showFilterSheet, setShowFilterSheet] = useState(false);
 
   // Force the calendar view by setting it directly in localStorage
   useEffect(() => {
@@ -120,16 +115,7 @@ const CompetitionsPage: React.FC = () => {
   }, [fetchCompetitions]);
 
   const handleFilterClick = () => {
-    setShowFilterSheet(true);
-  };
-
-  const handleAIFilterClick = () => {
-    setShowFilterSheet(false);
-    navigate('/ai-filtering');
-  };
-
-  const handleManualFilterClick = () => {
-    setShowFilterSheet(false);
+    // Navigate directly to manual filtering page
     navigate('/manual-filtering');
   };
 
@@ -192,35 +178,6 @@ const CompetitionsPage: React.FC = () => {
       >
         {renderContent()}
       </MobileLayout>
-
-      <Sheet open={showFilterSheet} onOpenChange={setShowFilterSheet}>
-        <SheetContent 
-          side="bottom" 
-          className="p-0 border-0 rounded-t-2xl max-h-fit"
-          hideCloseButton
-        >
-          <div className="flex flex-col w-full bg-white rounded-t-2xl p-6">            
-            <div className="mb-4">
-              <Button 
-                onClick={handleAIFilterClick}
-                className="w-full justify-center py-8 bg-forest-light hover:bg-forest text-white rounded-xl flex items-center"
-              >
-                <span className="font-bold text-base">Filtrera med AI</span>
-              </Button>
-            </div>
-            
-            <div className="mb-6">
-              <Button 
-                onClick={handleManualFilterClick}
-                className="w-full justify-center py-8 rounded-xl"
-                variant="outline"
-              >
-                <span>Filtrera manuellt</span>
-              </Button>
-            </div>
-          </div>
-        </SheetContent>
-      </Sheet>
 
       <Dialog open={showInfo} onOpenChange={setShowInfo}>
         <DialogContent>
