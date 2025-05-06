@@ -175,16 +175,16 @@ const ManualFilterPage = () => {
     >
       <div className="p-4 pb-24">
         <div className="space-y-8">
-          {/* Two-column layout for filters */}
+          {/* Two-column layout for filters with proper height management */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Left column: District Section */}
+            {/* Left column: District Section - removed max-height constraint */}
             <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 h-full">
               <div className="flex items-center gap-2 text-forest mb-4">
                 <Globe className="h-5 w-5" />
                 <h2 className="font-semibold">Distrikt</h2>
               </div>
               
-              <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2">
+              <div className="space-y-2 overflow-y-visible">
                 {allDistricts.map((district) => (
                   <div key={district} className="flex items-center space-x-2">
                     <Checkbox 
