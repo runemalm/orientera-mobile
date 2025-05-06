@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -205,26 +204,19 @@ const CompetitionsPage: React.FC = () => {
               <div className="w-10 h-1 bg-gray-300 rounded-full" />
             </div>
             
-            <div className="px-4 mb-4">
-              <h3 className="text-lg font-semibold mb-2">Välj filtermetod</h3>
-            </div>
-            
             <div className="mb-2 px-4">
               <Button 
                 onClick={handleAIFilterClick}
-                className="w-full justify-start py-6 bg-forest-light hover:bg-forest text-white rounded-xl flex items-center"
+                className="w-full justify-center py-6 bg-forest-light hover:bg-forest text-white rounded-xl flex items-center"
               >
-                <div className="flex flex-col items-start">
-                  <span className="font-bold text-base">Filtrera med AI</span>
-                  <span className="text-sm mt-1 opacity-90">Fråga på ditt sätt</span>
-                </div>
+                <span className="font-bold text-base">Filtrera med AI</span>
               </Button>
             </div>
             
             <div className="px-4 mb-4">
               <Button 
                 onClick={handleManualFilterClick}
-                className="w-full justify-start py-5 rounded-xl"
+                className="w-full justify-center py-5 rounded-xl"
                 variant="outline"
               >
                 <span>Filtrera manuellt</span>
