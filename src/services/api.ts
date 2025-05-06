@@ -6,7 +6,7 @@ import { mockCompetitions, mockCompetitionDetails } from "../utils/mockData";
 const USE_MOCK_API = false; // Set to false to use real API
 
 // Base URL for the API
-const API_BASE_URL = 'https://orientera-backend.delightfulisland-78f87004.northeurope.azurecontainerapps.io/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 /**
  * Get nearby competitions based on filters

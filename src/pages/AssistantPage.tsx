@@ -97,7 +97,7 @@ const AssistantPage = () => {
 
   return (
     <MobileLayout 
-      title="Tävlingsassistenten"
+      title="Assistent"
       fullHeight
       action={<InfoButton />}
       leftAction={<ResetButton />}
