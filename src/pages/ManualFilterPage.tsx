@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Button } from '@/components/ui/button';
@@ -175,111 +175,117 @@ const ManualFilterPage = () => {
     >
       <div className="p-4 pb-24">
         <div className="space-y-8">
-          {/* Branch Section */}
-          <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-            <div className="flex items-center gap-2 text-forest mb-4">
-              <Activity className="h-5 w-5" />
-              <h2 className="font-semibold">Gren</h2>
-            </div>
-            
-            <div className="space-y-2">
-              {allBranches.map((branch) => (
-                <div key={branch} className="flex items-center space-x-2">
-                  <Checkbox 
-                    id={`branch-${branch}`} 
-                    checked={filters?.branches?.includes(branch)}
-                    onCheckedChange={() => handleBranchToggle(branch)}
-                  />
-                  <label 
-                    htmlFor={`branch-${branch}`}
-                    className="text-sm cursor-pointer"
-                  >
-                    {getBranchTranslation(branch)}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </section>
+          {/* Two-column layout for filters */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Left column: District Section */}
+            <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 h-full">
+              <div className="flex items-center gap-2 text-forest mb-4">
+                <Globe className="h-5 w-5" />
+                <h2 className="font-semibold">Distrikt</h2>
+              </div>
+              
+              <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2">
+                {allDistricts.map((district) => (
+                  <div key={district} className="flex items-center space-x-2">
+                    <Checkbox 
+                      id={`district-${district}`} 
+                      checked={filters?.districts?.includes(district)}
+                      onCheckedChange={() => handleDistrictToggle(district)}
+                    />
+                    <label 
+                      htmlFor={`district-${district}`}
+                      className="text-sm cursor-pointer"
+                    >
+                      {getDistrictTranslation(district)}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </section>
 
-          {/* District Section */}
-          <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-            <div className="flex items-center gap-2 text-forest mb-4">
-              <Globe className="h-5 w-5" />
-              <h2 className="font-semibold">Distrikt</h2>
-            </div>
-            
-            <div className="space-y-2">
-              {allDistricts.map((district) => (
-                <div key={district} className="flex items-center space-x-2">
-                  <Checkbox 
-                    id={`district-${district}`} 
-                    checked={filters?.districts?.includes(district)}
-                    onCheckedChange={() => handleDistrictToggle(district)}
-                  />
-                  <label 
-                    htmlFor={`district-${district}`}
-                    className="text-sm cursor-pointer"
-                  >
-                    {getDistrictTranslation(district)}
-                  </label>
+            {/* Right column: Stacked sections */}
+            <div className="space-y-4">
+              {/* Branch Section */}
+              <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+                <div className="flex items-center gap-2 text-forest mb-4">
+                  <Activity className="h-5 w-5" />
+                  <h2 className="font-semibold">Gren</h2>
                 </div>
-              ))}
-            </div>
-          </section>
-          
-          {/* Discipline Section */}
-          <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-            <div className="flex items-center gap-2 text-forest mb-4">
-              <Activity className="h-5 w-5" />
-              <h2 className="font-semibold">Discipliner</h2>
-            </div>
-            
-            <div className="space-y-2">
-              {allDisciplines.map((discipline) => (
-                <div key={discipline} className="flex items-center space-x-2">
-                  <Checkbox 
-                    id={`discipline-${discipline}`} 
-                    checked={filters?.disciplines?.includes(discipline)}
-                    onCheckedChange={() => handleDisciplineToggle(discipline)}
-                  />
-                  <label 
-                    htmlFor={`discipline-${discipline}`}
-                    className="text-sm cursor-pointer"
-                  >
-                    {getDisciplineTranslation(discipline)}
-                  </label>
+                
+                <div className="space-y-2">
+                  {allBranches.map((branch) => (
+                    <div key={branch} className="flex items-center space-x-2">
+                      <Checkbox 
+                        id={`branch-${branch}`} 
+                        checked={filters?.branches?.includes(branch)}
+                        onCheckedChange={() => handleBranchToggle(branch)}
+                      />
+                      <label 
+                        htmlFor={`branch-${branch}`}
+                        className="text-sm cursor-pointer"
+                      >
+                        {getBranchTranslation(branch)}
+                      </label>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </section>
-          
-          {/* Competition Type Section */}
-          <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-            <div className="flex items-center gap-2 text-forest mb-4">
-              <CalendarIcon className="h-5 w-5" />
-              <h2 className="font-semibold">Tävlingstyper</h2>
-            </div>
-            
-            <div className="space-y-2">
-              {allCompetitionTypes.map((type) => (
-                <div key={type} className="flex items-center space-x-2">
-                  <Checkbox 
-                    id={`type-${type}`} 
-                    checked={filters?.competitionTypes?.includes(type)}
-                    onCheckedChange={() => handleCompetitionTypeToggle(type)}
-                  />
-                  <label 
-                    htmlFor={`type-${type}`}
-                    className="text-sm cursor-pointer"
-                  >
-                    {getCompetitionTypeTranslation(type)}
-                  </label>
+              </section>
+              
+              {/* Discipline Section */}
+              <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+                <div className="flex items-center gap-2 text-forest mb-4">
+                  <Activity className="h-5 w-5" />
+                  <h2 className="font-semibold">Discipliner</h2>
                 </div>
-              ))}
+                
+                <div className="space-y-2">
+                  {allDisciplines.map((discipline) => (
+                    <div key={discipline} className="flex items-center space-x-2">
+                      <Checkbox 
+                        id={`discipline-${discipline}`} 
+                        checked={filters?.disciplines?.includes(discipline)}
+                        onCheckedChange={() => handleDisciplineToggle(discipline)}
+                      />
+                      <label 
+                        htmlFor={`discipline-${discipline}`}
+                        className="text-sm cursor-pointer"
+                      >
+                        {getDisciplineTranslation(discipline)}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </section>
+              
+              {/* Competition Type Section */}
+              <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+                <div className="flex items-center gap-2 text-forest mb-4">
+                  <CalendarIcon className="h-5 w-5" />
+                  <h2 className="font-semibold">Tävlingstyper</h2>
+                </div>
+                
+                <div className="space-y-2">
+                  {allCompetitionTypes.map((type) => (
+                    <div key={type} className="flex items-center space-x-2">
+                      <Checkbox 
+                        id={`type-${type}`} 
+                        checked={filters?.competitionTypes?.includes(type)}
+                        onCheckedChange={() => handleCompetitionTypeToggle(type)}
+                      />
+                      <label 
+                        htmlFor={`type-${type}`}
+                        className="text-sm cursor-pointer"
+                      >
+                        {getCompetitionTypeTranslation(type)}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </section>
             </div>
-          </section>
+          </div>
           
-          {/* Date Range Section - Moved to the end */}
+          {/* Date Range Section at the bottom */}
           <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
             <div className="flex items-center gap-2 text-forest mb-4">
               <CalendarRange className="h-5 w-5" />
