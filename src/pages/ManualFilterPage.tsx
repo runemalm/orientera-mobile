@@ -99,6 +99,10 @@ const ManualFilterPage = () => {
       ...DEFAULT_FILTERS,
       ...currentLocationSettings
     });
+    
+    toast.info('Filtren har återställts', {
+      description: 'Alla filterval har rensats förutom platsinformation'
+    });
   };
 
   const handleOpenDatePicker = (type: DatePickerType) => {
@@ -205,10 +209,14 @@ const ManualFilterPage = () => {
 
   const handleApplyFilters = () => {
     navigate('/competitions');
+    toast.success('Filter inställningar sparade', {
+      description: 'Dina filterinställningar har uppdaterats'
+    });
   };
 
   const handleResetFilters = () => {
     setFilters(DEFAULT_FILTERS);
+    toast.info('Filtren har återställts');
     
     navigate('/competitions');
   };
