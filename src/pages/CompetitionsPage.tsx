@@ -212,10 +212,10 @@ const CompetitionsPage: React.FC = () => {
             <div className="mb-2 px-4">
               <Button 
                 onClick={handleAIFilterClick}
-                className="w-full justify-start py-4 bg-forest-light hover:bg-forest text-white rounded-xl flex items-center"
+                className="w-full justify-start py-6 bg-forest-light hover:bg-forest text-white rounded-xl flex items-center"
               >
                 <div className="flex flex-col items-start">
-                  <span className="font-bold text-base">Filter med AI</span>
+                  <span className="font-bold text-base">Filtrera med AI</span>
                   <span className="text-sm mt-1 opacity-90">Fråga på ditt sätt</span>
                 </div>
               </Button>
@@ -224,18 +224,19 @@ const CompetitionsPage: React.FC = () => {
             <div className="px-4 mb-4">
               <Button 
                 onClick={handleManualFilterClick}
-                className="w-full justify-start py-3 rounded-xl"
+                className="w-full justify-start py-5 rounded-xl"
                 variant="outline"
               >
-                <span>Filter manuellt</span>
+                <span>Filtrera manuellt</span>
               </Button>
             </div>
             
             <div className="px-4 pb-8 pt-2">
               <Button
                 onClick={() => setShowFilterSheet(false)}
-                className="w-full rounded-xl"
+                className="w-full py-4 rounded-xl"
                 variant="secondary"
+                style={{ backgroundColor: '#ea384c', color: 'white' }}
               >
                 Avbryt
               </Button>
