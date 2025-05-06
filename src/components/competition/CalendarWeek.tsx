@@ -4,7 +4,6 @@ import { CompetitionSummary } from '../../types';
 import { format, isSameDay, isPast, isToday } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import CalendarDay from './CalendarDay';
-import CalendarWeekHeader from './CalendarWeekHeader';
 
 interface CalendarWeekProps {
   weekNumber: number;
@@ -22,12 +21,7 @@ const CalendarWeek: React.FC<CalendarWeekProps> = ({
   const todayDate = useMemo(() => new Date(), []);
   
   return (
-    <div className="mb-3 rounded-lg overflow-hidden shadow-sm">
-      <CalendarWeekHeader 
-        weekNumber={weekNumber} 
-        startDate={days.length > 0 ? days[0].date : undefined} 
-      />
-      
+    <div className="mb-3 rounded-lg overflow-hidden shadow-sm border border-gray-200">
       <div>
         {days.map((day, index) => {
           const isCurrentDay = isToday(day.date);
