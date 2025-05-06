@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -194,28 +195,51 @@ const CompetitionsPage: React.FC = () => {
       </MobileLayout>
 
       <Sheet open={showFilterSheet} onOpenChange={setShowFilterSheet}>
-        <SheetContent side="bottom" className="h-auto max-h-[40vh] rounded-t-xl px-0 py-0">
-          <div className="flex flex-col w-full">
-            <div className="flex justify-center py-2">
-              <div className="w-12 h-1.5 bg-gray-300 rounded-full" />
+        <SheetContent 
+          side="bottom" 
+          className="p-0 border-0 rounded-t-2xl max-h-fit"
+          hideCloseButton
+        >
+          <div className="flex flex-col w-full bg-white rounded-t-2xl">
+            <div className="flex justify-center py-3">
+              <div className="w-10 h-1 bg-gray-300 rounded-full" />
             </div>
-            <h3 className="text-lg font-medium px-6 mb-3">Välj filtermetod</h3>
-            <Button 
-              onClick={handleAIFilterClick}
-              className="justify-start rounded-none px-6 py-8 bg-forest-light hover:bg-forest text-white"
-            >
-              <div className="flex flex-col items-start">
-                <span className="font-bold">Filter med AI</span>
-                <span className="text-sm mt-1 opacity-90">Fråga på ditt sätt</span>
-              </div>
-            </Button>
-            <Button 
-              onClick={handleManualFilterClick}
-              className="justify-start rounded-none px-6 py-6"
-              variant="ghost"
-            >
-              Filter manuellt
-            </Button>
+            
+            <div className="px-4 mb-4">
+              <h3 className="text-lg font-semibold mb-2">Välj filtermetod</h3>
+            </div>
+            
+            <div className="mb-2 px-4">
+              <Button 
+                onClick={handleAIFilterClick}
+                className="w-full justify-start py-4 bg-forest-light hover:bg-forest text-white rounded-xl flex items-center"
+              >
+                <div className="flex flex-col items-start">
+                  <span className="font-bold text-base">Filter med AI</span>
+                  <span className="text-sm mt-1 opacity-90">Fråga på ditt sätt</span>
+                </div>
+              </Button>
+            </div>
+            
+            <div className="px-4 mb-4">
+              <Button 
+                onClick={handleManualFilterClick}
+                className="w-full justify-start py-3 rounded-xl"
+                variant="outline"
+              >
+                <span>Filter manuellt</span>
+              </Button>
+            </div>
+            
+            <div className="px-4 pb-8 pt-2">
+              <Button
+                onClick={() => setShowFilterSheet(false)}
+                className="w-full rounded-xl"
+                variant="secondary"
+              >
+                Avbryt
+              </Button>
+            </div>
           </div>
         </SheetContent>
       </Sheet>
