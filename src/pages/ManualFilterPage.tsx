@@ -175,41 +175,6 @@ const ManualFilterPage = () => {
     >
       <div className="p-4 pb-24">
         <div className="space-y-8">
-          {/* Date Range Section */}
-          <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-            <div className="flex items-center gap-2 text-forest mb-4">
-              <CalendarRange className="h-5 w-5" />
-              <h2 className="font-semibold">Datumintervall</h2>
-            </div>
-            
-            <div className="space-y-6">
-              <div>
-                <Label className="mb-2 block">Från</Label>
-                <Calendar
-                  mode="single"
-                  selected={filters?.dateRange?.from || undefined}
-                  onSelect={(date) => handleDateRangeChange(date, 'from')}
-                  disabled={(date) => 
-                    filters?.dateRange?.to ? date > filters.dateRange.to : false
-                  }
-                  locale={sv}
-                />
-              </div>
-              <div>
-                <Label className="mb-2 block">Till</Label>
-                <Calendar
-                  mode="single"
-                  selected={filters?.dateRange?.to || undefined}
-                  onSelect={(date) => handleDateRangeChange(date, 'to')}
-                  disabled={(date) => 
-                    filters?.dateRange?.from ? date < filters.dateRange.from : false
-                  }
-                  locale={sv}
-                />
-              </div>
-            </div>
-          </section>
-
           {/* Branch Section */}
           <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
             <div className="flex items-center gap-2 text-forest mb-4">
@@ -311,6 +276,41 @@ const ManualFilterPage = () => {
                   </label>
                 </div>
               ))}
+            </div>
+          </section>
+          
+          {/* Date Range Section - Moved to the end */}
+          <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+            <div className="flex items-center gap-2 text-forest mb-4">
+              <CalendarRange className="h-5 w-5" />
+              <h2 className="font-semibold">Datumintervall</h2>
+            </div>
+            
+            <div className="space-y-6">
+              <div>
+                <Label className="mb-2 block">Från</Label>
+                <Calendar
+                  mode="single"
+                  selected={filters?.dateRange?.from || undefined}
+                  onSelect={(date) => handleDateRangeChange(date, 'from')}
+                  disabled={(date) => 
+                    filters?.dateRange?.to ? date > filters.dateRange.to : false
+                  }
+                  locale={sv}
+                />
+              </div>
+              <div>
+                <Label className="mb-2 block">Till</Label>
+                <Calendar
+                  mode="single"
+                  selected={filters?.dateRange?.to || undefined}
+                  onSelect={(date) => handleDateRangeChange(date, 'to')}
+                  disabled={(date) => 
+                    filters?.dateRange?.from ? date < filters.dateRange.from : false
+                  }
+                  locale={sv}
+                />
+              </div>
             </div>
           </section>
         </div>
