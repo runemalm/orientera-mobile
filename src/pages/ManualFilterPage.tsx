@@ -23,8 +23,7 @@ import {
   MapPin,
   Navigation,
   Trophy,
-  Activity,
-  Trash
+  Activity
 } from 'lucide-react';
 import {
   Dialog,
@@ -207,8 +206,8 @@ const ManualFilterPage = () => {
   };
 
   const handleResetFilters = () => {
+    // Reset to default filters completely, not just navigate
     setFilters(DEFAULT_FILTERS);
-    navigate('/competitions');
   };
 
   // Helper functions for translations
@@ -263,16 +262,6 @@ const ManualFilterPage = () => {
       title="Filtrera" 
       showBackButton={true}
       subtitle={subtitle}
-      action={
-        <Button 
-          variant="ghost" 
-          size="icon"
-          onClick={clearFilters}
-          className="text-muted-foreground"
-        >
-          <Trash className="h-[1.2rem] w-[1.2rem]" />
-        </Button>
-      }
     >
       <div className="p-4 pb-32">
         <div className="space-y-8">
