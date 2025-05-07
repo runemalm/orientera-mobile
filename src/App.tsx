@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import CompetitionsPage from './pages/CompetitionsPage';
 import HomePage from './pages/HomePage';
 import LandingPage from './pages/LandingPage';
-// Removed LocationOnboarding import
 import { useLocalStorage } from './hooks/useLocalStorage';
 import CompetitionDetailsPage from './pages/CompetitionDetailsPage';
 import ParticipantsPage from './pages/ParticipantsPage';
@@ -14,7 +13,6 @@ import SettingsPage from './pages/SettingsPage';
 import CompetitionMapPage from './pages/CompetitionMapPage';
 import FavoritesPage from './pages/FavoritesPage';
 import NotFound from './pages/NotFound';
-import CompetitionFilterPage from './pages/CompetitionFilterPage';
 import ProfilePage from './pages/ProfilePage';
 import AssistantPage from './pages/AssistantPage';
 import AiFilteringPage from './pages/AiFilteringPage';
@@ -39,7 +37,6 @@ const App = () => {
         <Route path="/competition/:competitionId/carpooling" element={<CarpoolingPage />} />
         <Route path="/competition/:competitionId/map" element={<CompetitionMapPage />} />
         <Route path="/favorites" element={<FavoritesPage />} />
-        <Route path="/competitions/filter" element={<CompetitionFilterPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/assistant" element={<AssistantPage />} />
         <Route path="/ai-filtering" element={<AiFilteringPage />} />

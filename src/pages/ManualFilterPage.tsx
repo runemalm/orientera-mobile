@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from "@/components/ui/checkbox";
-import { toast } from 'sonner';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { 
   OrienteeringDistrict, 
@@ -205,9 +204,6 @@ const ManualFilterPage = () => {
 
   const handleApplyFilters = () => {
     navigate('/competitions');
-    toast.success('Filter inställningar sparade', {
-      description: 'Dina filterinställningar har uppdaterats'
-    });
   };
 
   const handleResetFilters = () => {
@@ -278,7 +274,7 @@ const ManualFilterPage = () => {
         </Button>
       }
     >
-      <div className="p-4 pb-24">
+      <div className="p-4 pb-32">
         <div className="space-y-8">
           {/* Two-column layout for filters with proper height management */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -543,7 +539,7 @@ const ManualFilterPage = () => {
           </DialogContent>
         </Dialog>
 
-        <div className="flex items-center gap-4 pt-6 fixed bottom-0 left-0 right-0 bg-white p-4 shadow-lg">
+        <div className="flex items-center gap-4 pt-6 fixed bottom-16 left-0 right-0 bg-white p-4 shadow-lg">
           <Button 
             variant="outline" 
             className="flex-1"
