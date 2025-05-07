@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -40,6 +41,7 @@ import { Input } from '@/components/ui/input';
 import {
   Slider
 } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
 
 const DEFAULT_FILTERS: Filter = {
   useLocationFilter: false,
@@ -416,30 +418,38 @@ const ManualFilterPage = () => {
             </div>
 
             <div className="space-y-4">
-              {/* Location filter toggle */}
-              <div className="flex items-center space-x-2">
-                <Checkbox 
+              {/* Location filter toggle - updated to use Switch instead of Checkbox */}
+              <div className="flex items-center justify-between">
+                <label 
+                  htmlFor="use-location-filter"
+                  className="text-sm"
+                >
+                  Filtrera tävlingar baserat på avstånd
+                </label>
+                <Switch 
                   id="use-location-filter"
                   checked={filters.useLocationFilter}
                   onCheckedChange={handleLocationFilterToggle}
                 />
-                <label 
-                  htmlFor="use-location-filter"
-                  className="text-sm cursor-pointer"
-                >
-                  Filtrera tävlingar baserat på avstånd
-                </label>
               </div>
 
               {/* Selected location display and change button */}
               <div className="space-y-2">
                 <Label className="block">Plats</Label>
                 <div className="flex items-center gap-2">
-                  <div className="border rounded-md p-2 flex-1 bg-gray-50">
+                  <div className={cn(
+                    "border rounded-md p-2 flex-1", 
+                    !filters.useLocationFilter ? "bg-gray-100" : "bg-gray-50"
+                  )}>
                     {userLocation ? (
                       <div className="flex items-center gap-2">
-                        <MapPin className="h-4 w-4 text-forest flex-shrink-0" />
-                        <span>{userLocation.city}</span>
+                        <MapPin className={cn(
+                          "h-4 w-4 flex-shrink-0", 
+                          filters.useLocationFilter ? "text-forest" : "text-gray-400"
+                        )} />
+                        <span className={!filters.useLocationFilter ? "text-gray-500" : ""}>
+                          {userLocation.city}
+                        </span>
                       </div>
                     ) : (
                       <div className="text-gray-500">Ingen plats vald</div>
@@ -455,11 +465,19 @@ const ManualFilterPage = () => {
                 </div>
               </div>
 
-              {/* Distance slider - Fixed to ensure it works correctly */}
-              <div className="space-y-4">
+              {/* Distance slider - Updated with better disabled state visualization */}
+              <div className={cn(
+                "space-y-4",
+                !filters.useLocationFilter && "opacity-75"
+              )}>
                 <div className="flex justify-between items-center">
-                  <Label>Maxavstånd</Label>
-                  <span className="text-sm font-medium">
+                  <Label className={!filters.useLocationFilter ? "text-gray-500" : ""}>
+                    Maxavstånd
+                  </Label>
+                  <span className={cn(
+                    "text-sm font-medium",
+                    !filters.useLocationFilter && "text-gray-500"
+                  )}>
                     {formatDistance(filters.maxDistanceKm)}
                   </span>
                 </div>
