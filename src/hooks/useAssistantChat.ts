@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { toast } from 'sonner';
 import { useLocalStorage } from './useLocalStorage';
@@ -81,6 +82,11 @@ const establishConnection = () => {
       isConnecting = false;
       connectionAttempts = 0;
       wsListeners.forEach(listener => listener({ type: 'connection', status: true }));
+      
+      // Request chat history when connection is established
+      if (globalWsConnection && globalWsConnection.readyState === WebSocket.OPEN) {
+        globalWsConnection.send(JSON.stringify({ action: "get_history" }));
+      }
     };
 
     globalWsConnection.onmessage = (event) => {
@@ -155,6 +161,7 @@ export const useAssistantChat = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
   const listenerIdRef = useRef<number>(Date.now());
+  const hasRequestedHistory = useRef<boolean>(false);
 
   // Register this component as a listener
   useEffect(() => {
@@ -163,6 +170,15 @@ export const useAssistantChat = () => {
     const handleWebSocketEvent = (event: any) => {
       if (event.type === 'connection') {
         setIsConnected(event.status);
+        
+        // If connected and we haven't requested history yet
+        if (event.status === true && !hasRequestedHistory.current) {
+          // If we have no messages, we need to request history
+          if (messages.length === 0 && globalWsConnection && globalWsConnection.readyState === WebSocket.OPEN) {
+            globalWsConnection.send(JSON.stringify({ action: "get_history" }));
+            hasRequestedHistory.current = true;
+          }
+        }
       } else if (event.type === 'message') {
         try {
           const parsed = JSON.parse(event.data);
@@ -213,6 +229,12 @@ export const useAssistantChat = () => {
     // Check connection status immediately
     if (isWebSocketConnected()) {
       setIsConnected(true);
+      
+      // If we have no messages, request history from the server
+      if (messages.length === 0 && !hasRequestedHistory.current) {
+        globalWsConnection?.send(JSON.stringify({ action: "get_history" }));
+        hasRequestedHistory.current = true;
+      }
     } else {
       setIsConnected(false);
       establishConnection();
@@ -225,7 +247,7 @@ export const useAssistantChat = () => {
       wsListeners = wsListeners.filter(listener => listener !== handleWebSocketEvent);
     };
 
-  }, [setMessages]);
+  }, [messages, setMessages]);
 
   const sendMessage = useCallback((message: string) => {
     if (!message.trim()) {
