@@ -11,7 +11,7 @@ interface MobileLayoutProps {
   action?: React.ReactNode;
   leftAction?: React.ReactNode;
   fullHeight?: boolean;
-  subtitle?: string;
+  subtitle?: string; // Added subtitle prop
 }
 
 const MobileLayout: React.FC<MobileLayoutProps> = ({ 
@@ -22,7 +22,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
   action,
   leftAction,
   fullHeight = false,
-  subtitle
+  subtitle // Added subtitle prop
 }) => {
   const handleBack = () => {
     window.history.back();
@@ -36,7 +36,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
         onBack={handleBack}
         action={action}
         leftAction={leftAction}
-        subtitle={subtitle}
+        subtitle={subtitle} // Pass subtitle to TopNavBar
       />
       
       <main 
@@ -45,7 +45,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
         }`}
         style={{
           paddingTop: '4rem', // Height of TopNavBar
-          paddingBottom: !hideBottomTabs ? 'calc(4rem + env(safe-area-inset-bottom, 1rem))' : 'env(safe-area-inset-bottom, 1rem)'
+          paddingBottom: !hideBottomTabs ? 'calc(4rem + var(--safe-area-inset-bottom))' : '1rem'
         }}
       >
         {children}
