@@ -11,7 +11,9 @@ const BottomTabBar: React.FC = () => {
 
   const isCompetitionRelated = 
     currentPath === '/competitions' || 
-    currentPath.startsWith('/competition/');
+    currentPath.startsWith('/competition/') ||
+    currentPath === '/manual-filtering' || 
+    currentPath === '/ai-filtering';
     
   const isHome = currentPath === '/home' || currentPath === '/';
 
