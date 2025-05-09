@@ -7,10 +7,12 @@ interface Message {
   isBot: boolean;
 }
 
-interface WebSocketMessage {
-  role: string;      // "user", "assistant", "info"
-  content: string;
-  date: string;
+interface AgentActivityMessage {
+  type: 'agent_activity';
+  chat_id: string;
+  text: string;
+  tool?: string;
+  status?: 'running' | 'done';
 }
 
 // Singleton WebSocket instance - shared across the entire app
@@ -32,6 +34,15 @@ const getUserId = () => {
     localStorage.setItem('chat_user_id', userId);
   }
   return userId;
+};
+
+const getAppSessionId = () => {
+  let appSessionId = localStorage.getItem('app_session_id');
+  if (!appSessionId) {
+    appSessionId = 'app_session_id_' + Math.random().toString(36).substring(2, 15);
+    localStorage.setItem('app_session_id', appSessionId);
+  }
+  return appSessionId;
 };
 
 // Last time we checked the connection status
@@ -58,7 +69,8 @@ const establishConnection = () => {
 
   isConnecting = true;
   const userId = getUserId();
-  const wsUrl = `${WEBSOCKET_BASE_URL}/${userId}`;
+  const appSessionId = getAppSessionId();
+  const wsUrl = `${WEBSOCKET_BASE_URL}?user_id=${userId}&app_session_id=${appSessionId}`;
   console.log('Connecting to WebSocket:', wsUrl);
 
   try {
@@ -131,13 +143,17 @@ if (typeof window !== 'undefined') {
 }
 
 export const useAssistantChat = () => {
-  // Use localStorage to persist messages instead of regular useState
+
+  const MIN_ACTIVITY_DURATION = 600; // in ms
+  const [agentActivityText, setAgentActivityText] = useState<string | null>(null);
+  const lastActivityShownAtRef = useRef<number>(0);
+  const clearActivityTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const [messages, setMessages] = useLocalStorage<Message[]>('assistant_chat_messages', []);
   const [infoMessage, setInfoMessage] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState('');
   const [isConnected, setIsConnected] = useState(false);
   const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
-  const [isThinking, setIsThinking] = useState(false);
   const listenerIdRef = useRef<number>(Date.now());
 
   // Register this component as a listener
@@ -149,32 +165,45 @@ export const useAssistantChat = () => {
         setIsConnected(event.status);
       } else if (event.type === 'message') {
         try {
-          const messagesFromServer: WebSocketMessage[] = JSON.parse(event.data);
+          const parsed = JSON.parse(event.data);
 
-          const info = messagesFromServer.find(m => m.role === 'info');
-          const chats = messagesFromServer.filter(m => m.role !== 'info');
+          if (parsed.type === 'chat_history') {
+            const formattedMessages: Message[] = parsed.messages.map(msg => ({
+              content: msg.content,
+              isBot: msg.role === 'ai'
+            }));
+            setMessages(formattedMessages);
+            setIsWaitingForResponse(false);
+          }
+          else if (parsed.type === 'agent_activity') {
+            const text = parsed.text || null;
 
-          if (info) {
-            setInfoMessage(info.content);
-          } else {
-            setInfoMessage(null);
+            if (text && text.trim() !== '') {
+              // New activity started — show immediately
+              setAgentActivityText(text);
+              lastActivityShownAtRef.current = Date.now();
+
+              // Cancel any pending clear timeout
+              if (clearActivityTimeoutRef.current) {
+                clearTimeout(clearActivityTimeoutRef.current);
+                clearActivityTimeoutRef.current = null;
+              }
+            } else {
+              // Activity is being cleared — enforce minimum display duration
+              const now = Date.now();
+              const elapsed = now - lastActivityShownAtRef.current;
+              const delay = Math.max(MIN_ACTIVITY_DURATION - elapsed, 0);
+
+              clearActivityTimeoutRef.current = setTimeout(() => {
+                setAgentActivityText(null);
+                clearActivityTimeoutRef.current = null;
+              }, delay);
+            }
           }
 
-          const formattedMessages: Message[] = chats.map(msg => ({
-            content: msg.content,
-            isBot: msg.role === 'assistant'
-          }));
-
-          // Just show the messages directly when we receive them
-          setMessages(formattedMessages);
-          
-          // Now that we have the response, stop showing the waiting indicators
-          setIsThinking(false);
-          setIsWaitingForResponse(false);
         } catch (error) {
           console.error('Error parsing message from server:', error);
           setIsWaitingForResponse(false);
-          setIsThinking(false);
         }
       }
     };
@@ -190,8 +219,12 @@ export const useAssistantChat = () => {
     }
 
     return () => {
+      if (clearActivityTimeoutRef.current) {
+        clearTimeout(clearActivityTimeoutRef.current);
+      }
       wsListeners = wsListeners.filter(listener => listener !== handleWebSocketEvent);
     };
+
   }, [setMessages]);
 
   const sendMessage = useCallback((message: string) => {
@@ -199,21 +232,12 @@ export const useAssistantChat = () => {
       return;
     }
 
-    // For normal messages, add to UI
-    if (message !== "__RESET__") {
-      // Add user message to UI immediately for better UX
-      setMessages((prev: Message[]) => [...prev, { content: message, isBot: false }]);
-      
-      // Set waiting state to true when sending message
-      setIsWaitingForResponse(true);
-      
-      // Show thinking state first for a random delay, then show typing indicator
-      setIsThinking(true);
-      simulateTypingDelay(() => {
-        setIsThinking(false);
-      });
-    }
-
+    // Add user message to UI immediately for better UX
+    setMessages((prev: Message[]) => [...prev, { content: message, isBot: false }]);
+    
+    // Set waiting state to true when sending message
+    setIsWaitingForResponse(true);
+    
     // Ensure connection exists
     if (!isWebSocketConnected()) {
       establishConnection();
@@ -222,9 +246,11 @@ export const useAssistantChat = () => {
     
     // Send message to server
     if (globalWsConnection) {
-      globalWsConnection.send(message);
+      globalWsConnection.send(JSON.stringify({ action: "question", content: message }));
     }
     setInputValue('');
+    setAgentActivityText(null);
+
   }, [setMessages]);
 
   // Add a dedicated reset function that sends __RESET__ without showing it in the chat
@@ -240,7 +266,7 @@ export const useAssistantChat = () => {
     
     // Send reset command to server
     if (globalWsConnection) {
-      globalWsConnection.send("__RESET__");
+      globalWsConnection.send(JSON.stringify({ action: "new_chat" }));
     }
   }, []);
 
@@ -253,6 +279,6 @@ export const useAssistantChat = () => {
     isConnected,
     infoMessage,
     isWaitingForResponse,
-    isThinking,
+    agentActivityText,
   };
 };

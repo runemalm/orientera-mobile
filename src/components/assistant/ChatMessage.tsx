@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { User } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
@@ -10,7 +9,6 @@ interface ChatMessageProps {
   avatar?: string;
 }
 
-// Adding a type for the code element props from ReactMarkdown
 interface CodeProps {
   node: any;
   inline?: boolean;
@@ -37,8 +35,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isBot, avatar }) => 
           </div>
         )}
       </div>
-      <div className={`flex-1 space-y-2 overflow-hidden rounded-lg p-3 ${
-        isBot ? 'bg-muted' : 'bg-primary text-primary-foreground'
+      <div className={`space-y-2 overflow-hidden rounded-lg p-3 ${
+        isBot ? 'bg-muted' : 'bg-primary text-primary-foreground self-end max-w-[75%]'
       }`}>
         <div className="leading-relaxed prose prose-sm max-w-none markdown-content">
           <ReactMarkdown

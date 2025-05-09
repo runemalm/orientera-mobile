@@ -22,7 +22,7 @@ const AssistantPage = () => {
     isConnected, 
     infoMessage,
     isWaitingForResponse,
-    isThinking
+    agentActivityText
   } = useAssistantChat();
   
   const SHOW_INFO_MESSAGE = false;
@@ -31,7 +31,7 @@ const AssistantPage = () => {
   // Auto-scroll to bottom when messages change or thinking/waiting status changes
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isWaitingForResponse, isThinking]);
+  }, [messages, isWaitingForResponse, agentActivityText]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,7 +55,6 @@ const AssistantPage = () => {
     }
     
     resetChat();
-    // Remove toast notification when resetting chat
   };
 
   // Reset button component to pass to MobileLayout as leftAction
@@ -64,7 +63,7 @@ const AssistantPage = () => {
       variant="ghost" 
       size="icon" 
       onClick={handleResetChat}
-      disabled={!isConnected || isWaitingForResponse}
+      disabled={!isConnected || isWaitingForResponse || agentActivityText !== null}
     >
       <SquarePen className="h-5 w-5" />
     </Button>
@@ -118,25 +117,10 @@ const AssistantPage = () => {
               avatar="/agents/nina/nina_small.png"
             />
           ))}
-          
-          {(isWaitingForResponse && !isThinking) && (
-            <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 mt-0.5">
-                <div className="h-8 w-8 rounded-full overflow-hidden">
-                  <img 
-                    src="/agents/nina/nina_small.png" 
-                    alt="Nina" 
-                    className="object-cover h-full w-full"
-                  />
-                </div>
-              </div>
-              <div className="flex-1 bg-muted rounded-lg p-3 min-w-[100px]">
-                <div className="flex items-center space-x-2">
-                  <div className="h-2 w-2 bg-primary rounded-full animate-pulse"></div>
-                  <div className="h-2 w-2 bg-primary rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-                  <div className="h-2 w-2 bg-primary rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
-                </div>
-              </div>
+
+          {agentActivityText && (
+            <div className="text-sm italic text-muted-foreground px-4 py-1">
+              {agentActivityText}
             </div>
           )}
           
@@ -164,7 +148,7 @@ const AssistantPage = () => {
               type="submit"
               size="icon"
               className="rounded-full shadow-sm"
-              disabled={!inputValue.trim() || !isConnected || isWaitingForResponse}
+              disabled={!inputValue.trim() || !isConnected || isWaitingForResponse || agentActivityText !== null}
             >
               {isWaitingForResponse ? (
                 <LoaderCircle className="h-4 w-4 animate-spin" />
