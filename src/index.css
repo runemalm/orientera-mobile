@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -201,7 +202,7 @@
   }
   
   .bottom-tabs {
-    @apply fixed bottom-0 left-0 right-0 z-10 bg-white shadow-lg border-t;
+    @apply fixed bottom-0 left-0 right-0 z-50 bg-white shadow-lg border-t;
     padding-bottom: var(--safe-area-inset-bottom);
     height: calc(4rem + var(--safe-area-inset-bottom));
   }
