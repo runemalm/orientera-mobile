@@ -547,7 +547,7 @@ const ManualFilterPage = () => {
         </Dialog>
 
         {/* Fixed bottom buttons - Fix the z-index and position to ensure visibility above tab bar */}
-        <div className="flex items-center gap-4 pt-6 fixed bottom-0 left-0 right-0 bg-white p-4 shadow-lg z-20">
+        <div className="flex items-center gap-4 pt-6 fixed bottom-0 left-0 right-0 bg-white p-4 shadow-lg z-20 mb-20">
           <Button 
             variant="outline" 
             className="flex-1"
