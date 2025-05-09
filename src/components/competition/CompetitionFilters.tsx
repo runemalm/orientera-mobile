@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { MapPin, X, CalendarRange } from 'lucide-react';
@@ -144,7 +143,7 @@ const CompetitionFilters: React.FC<CompetitionFiltersProps> = ({
               <X className="h-4 w-4" />
             </Button>
           </DrawerHeader>
-          <div className="p-4">
+          <div className="p-4 pb-safe">
             <LocationInputForm 
               onLocationSelected={handleLocationUpdate}
               onCancel={() => setShowLocationInput(false)}
@@ -170,7 +169,7 @@ const CompetitionFilters: React.FC<CompetitionFiltersProps> = ({
               <X className="h-4 w-4" />
             </Button>
           </DrawerHeader>
-          <div className="p-4">
+          <div className="p-4 pb-safe">
             <Calendar
               mode="range"
               selected={{
@@ -187,7 +186,7 @@ const CompetitionFilters: React.FC<CompetitionFiltersProps> = ({
               className="mx-auto pointer-events-auto"
             />
             
-            <div className="flex gap-2 mt-6">
+            <div className="flex gap-2 mt-6 mb-safe">
               <Button 
                 variant="outline" 
                 className="flex-1"
@@ -215,7 +214,7 @@ const CompetitionFilters: React.FC<CompetitionFiltersProps> = ({
           <DrawerTitle>Filter</DrawerTitle>
         </DrawerHeader>
         
-        <div className="p-4 space-y-4">
+        <div className="p-4 space-y-4 pb-safe">
           <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 space-y-4">
             <div className="flex items-center gap-2 text-forest">
               <CalendarRange className="h-5 w-5" />

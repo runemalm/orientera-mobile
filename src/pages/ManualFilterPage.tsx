@@ -546,8 +546,8 @@ const ManualFilterPage = () => {
           </DialogContent>
         </Dialog>
 
-        {/* Fixed bottom buttons - Updated with more bottom padding to avoid tab bar overlap */}
-        <div className="flex items-center gap-4 pt-6 fixed bottom-0 left-0 right-0 bg-white p-4 pb-20 shadow-lg z-10">
+        {/* Fixed bottom buttons - Updated with safe area handling */}
+        <div className="flex items-center gap-4 pt-6 fixed bottom-0 left-0 right-0 bg-white p-4 pb-safe shadow-lg z-10">
           <Button 
             variant="outline" 
             className="flex-1"
