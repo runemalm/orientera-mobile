@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { toast } from 'sonner';
 import { useLocalStorage } from './useLocalStorage';
@@ -155,6 +156,7 @@ export const useAssistantChat = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
   const listenerIdRef = useRef<number>(Date.now());
+  const firstLoadRef = useRef<boolean>(true);
 
   // Register this component as a listener
   useEffect(() => {
@@ -226,6 +228,19 @@ export const useAssistantChat = () => {
     };
 
   }, [setMessages]);
+
+  // Add welcome message for first-time users
+  useEffect(() => {
+    // Only run once when component mounts
+    if (firstLoadRef.current && messages.length === 0) {
+      firstLoadRef.current = false;
+      const welcomeMessage = {
+        content: "Hej! Jag är Nina, din personliga orienteringsassistent. Hur kan jag hjälpa dig idag?",
+        isBot: true
+      };
+      setMessages([welcomeMessage]);
+    }
+  }, [messages, setMessages]);
 
   const sendMessage = useCallback((message: string) => {
     if (!message.trim()) {
