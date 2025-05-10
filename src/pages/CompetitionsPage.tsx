@@ -9,6 +9,7 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 import { addMonths, startOfWeek, endOfWeek } from 'date-fns';
 import CompetitionLayout from '../components/competition/CompetitionLayout';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
   Dialog,
   DialogContent,
@@ -56,6 +57,22 @@ const CompetitionsPage: React.FC = () => {
   useEffect(() => {
     localStorage.setItem('competitionViewMode', 'calendar');
   }, []);
+
+  // Calculate active filters count
+  const getActiveFiltersCount = () => {
+    let count = 0;
+    
+    if (filters.districts.length > 0) count++;
+    if (filters.disciplines.length > 0) count++;
+    if (filters.competitionTypes.length > 0) count++;
+    if (filters.branches.length > 0) count++;
+    if (filters.dateRange.from || filters.dateRange.to) count++;
+    if (filters.useLocationFilter) count++;
+    
+    return count;
+  };
+
+  const activeFiltersCount = getActiveFiltersCount();
 
   const fetchCompetitions = useCallback(async () => {
     setIsLoadingCompetitions(true);
@@ -166,14 +183,24 @@ const CompetitionsPage: React.FC = () => {
         title="Tävlingskalender" 
         fullHeight
         action={
-          <Button 
-            variant="ghost" 
-            size="icon"
-            onClick={handleFilterClick}
-            className="text-muted-foreground"
-          >
-            <Filter className="h-[1.2rem] w-[1.2rem]" />
-          </Button>
+          <div className="relative">
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={handleFilterClick}
+              className="text-muted-foreground"
+            >
+              <Filter className="h-[1.2rem] w-[1.2rem]" />
+              {activeFiltersCount > 0 && (
+                <Badge 
+                  variant="default" 
+                  className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px] font-bold"
+                >
+                  {activeFiltersCount}
+                </Badge>
+              )}
+            </Button>
+          </div>
         }
       >
         {renderContent()}
