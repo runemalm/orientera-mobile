@@ -138,7 +138,11 @@ const AssistantPage = () => {
           </div>
         )}
         
-        <form onSubmit={handleSubmit} className="p-4 border-t bg-background shadow-sm">
+        <form onSubmit={handleSubmit} className="p-4 border-t bg-background shadow-sm" style={{
+          // Ensure the form stays above the bottom tab bar
+          position: 'relative',
+          zIndex: 40
+        }}>
           <div className="flex items-center gap-2 max-w-2xl mx-auto">
             <input
               type="text"

@@ -2,6 +2,7 @@
 import React from 'react';
 import TopNavBar from './TopNavBar';
 import BottomTabBar from './BottomTabBar';
+import { useIsMobile } from '../../hooks/use-mobile';
 
 interface MobileLayoutProps {
   children: React.ReactNode;
@@ -11,7 +12,7 @@ interface MobileLayoutProps {
   action?: React.ReactNode;
   leftAction?: React.ReactNode;
   fullHeight?: boolean;
-  subtitle?: string; // Added subtitle prop
+  subtitle?: string; 
 }
 
 const MobileLayout: React.FC<MobileLayoutProps> = ({ 
@@ -22,11 +23,13 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
   action,
   leftAction,
   fullHeight = false,
-  subtitle // Added subtitle prop
+  subtitle
 }) => {
   const handleBack = () => {
     window.history.back();
   };
+  
+  const isMobile = useIsMobile();
 
   return (
     <div className="flex flex-col fixed inset-0 bg-gray-50 overflow-hidden">
@@ -36,7 +39,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
         onBack={handleBack}
         action={action}
         leftAction={leftAction}
-        subtitle={subtitle} // Pass subtitle to TopNavBar
+        subtitle={subtitle}
       />
       
       <main 
@@ -45,7 +48,8 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
         }`}
         style={{
           paddingTop: '4rem', // Height of TopNavBar
-          paddingBottom: !hideBottomTabs ? '4rem' : '1rem' // Adjusted to remove excessive padding
+          // Use a safe bottom padding that accounts for the tab bar height and potential safe area insets
+          paddingBottom: !hideBottomTabs ? 'calc(4rem + var(--safe-area-inset-bottom, 0px))' : '1rem'
         }}
       >
         {children}
