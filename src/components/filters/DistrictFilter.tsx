@@ -27,11 +27,10 @@ const DistrictFilter = ({ selectedDistricts, onToggle }: DistrictFilterProps) =>
               id={`district-${district}`} 
               checked={selectedDistricts.includes(district)}
               onCheckedChange={() => onToggle(district)}
-              className="border-forest/50 data-[state=checked]:bg-forest data-[state=checked]:border-forest"
             />
             <label 
               htmlFor={`district-${district}`}
-              className="text-sm cursor-pointer hover:text-forest-dark"
+              className="text-sm cursor-pointer"
             >
               {getDistrictTranslation(district)}
             </label>

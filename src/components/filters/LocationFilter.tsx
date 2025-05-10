@@ -40,7 +40,6 @@ const LocationFilter = ({
             id="use-location-filter"
             checked={useLocationFilter}
             onCheckedChange={onLocationFilterToggle}
-            className="data-[state=checked]:bg-forest"
           />
         </div>
 
@@ -50,7 +49,7 @@ const LocationFilter = ({
           <div className="flex items-center gap-2">
             <div className={cn(
               "border rounded-md p-2 flex-1", 
-              !useLocationFilter ? "bg-gray-100" : "bg-forest-light/10"
+              !useLocationFilter ? "bg-gray-100" : "bg-gray-50"
             )}>
               {locationCity ? (
                 <div className="flex items-center gap-2">
@@ -58,7 +57,7 @@ const LocationFilter = ({
                     "h-4 w-4 flex-shrink-0", 
                     useLocationFilter ? "text-forest" : "text-gray-400"
                   )} />
-                  <span className={!useLocationFilter ? "text-gray-500" : "text-forest-dark"}>
+                  <span className={!useLocationFilter ? "text-gray-500" : ""}>
                     {locationCity}
                   </span>
                 </div>
@@ -69,7 +68,7 @@ const LocationFilter = ({
             <Button 
               variant="outline" 
               onClick={onOpenLocationDialog}
-              className="whitespace-nowrap border-forest/30 text-forest-dark hover:bg-forest-light/10"
+              className="whitespace-nowrap"
             >
               {locationCity ? 'Ändra' : 'Välj plats'}
             </Button>
@@ -87,7 +86,7 @@ const LocationFilter = ({
             </Label>
             <span className={cn(
               "text-sm font-medium",
-              !useLocationFilter ? "text-gray-500" : "text-forest-dark"
+              !useLocationFilter && "text-gray-500"
             )}>
               {formatDistance(maxDistanceKm)}
             </span>
@@ -101,7 +100,7 @@ const LocationFilter = ({
               max={500}
               step={5}
               onChange={(e) => onDistanceChange([parseInt(e.target.value)])}
-              className="w-full accent-forest"
+              className="w-full"
             />
           </div>
           <div className="flex justify-between text-xs text-gray-500">

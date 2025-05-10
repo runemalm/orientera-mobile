@@ -26,12 +26,10 @@ const DateRangeFilter = ({ from, to, onSelectDate }: DateRangeFilterProps) => {
           <Button
             variant="outline"
             onClick={() => onSelectDate('from')}
-            className="w-full justify-start text-left border-forest/30 hover:bg-forest-light/10"
+            className="w-full justify-start text-left"
           >
-            <CalendarIcon className="mr-2 h-4 w-4 text-forest" />
-            <span className={from ? "text-forest-dark" : "text-gray-500"}>
-              {getFormattedDate(from)}
-            </span>
+            <CalendarIcon className="mr-2 h-4 w-4" />
+            {getFormattedDate(from)}
           </Button>
         </div>
         <div>
@@ -39,12 +37,10 @@ const DateRangeFilter = ({ from, to, onSelectDate }: DateRangeFilterProps) => {
           <Button
             variant="outline"
             onClick={() => onSelectDate('to')}
-            className="w-full justify-start text-left border-forest/30 hover:bg-forest-light/10"
+            className="w-full justify-start text-left"
           >
-            <CalendarIcon className="mr-2 h-4 w-4 text-forest" />
-            <span className={to ? "text-forest-dark" : "text-gray-500"}>
-              {getFormattedDate(to)}
-            </span>
+            <CalendarIcon className="mr-2 h-4 w-4" />
+            {getFormattedDate(to)}
           </Button>
         </div>
       </div>

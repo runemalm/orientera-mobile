@@ -11,7 +11,7 @@ interface FilterSectionProps {
 
 const FilterSection = ({ icon: Icon, title, children, className = '' }: FilterSectionProps) => {
   return (
-    <section className={`bg-white rounded-xl shadow-sm border border-green-100 p-4 ${className}`}>
+    <section className={`bg-white rounded-xl shadow-sm border border-gray-100 p-4 ${className}`}>
       <div className="flex items-center gap-2 text-forest mb-4">
         <Icon className="h-5 w-5" />
         <h2 className="font-semibold">{title}</h2>
