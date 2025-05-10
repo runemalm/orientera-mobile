@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -276,7 +275,7 @@ const ManualFilterPage = () => {
     <Button 
       variant="ghost" 
       onClick={handleCancel}
-      className="text-blue-600 font-medium"
+      className="text-red-600 font-medium"
     >
       Avbryt
     </Button>
@@ -303,7 +302,7 @@ const ManualFilterPage = () => {
       leftAction={<CancelButton />}
       subtitle={subtitle}
     >
-      <div className="p-4 pb-32">
+      <div className="p-4 pb-16">
         <div className="space-y-8">
           {/* Two-column layout for filters with proper height management */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -539,8 +538,8 @@ const ManualFilterPage = () => {
             </div>
           </section>
           
-          {/* Clear filter button - Added at the bottom */}
-          <div className="mt-8 mb-16">
+          {/* Clear filter button - Added at the bottom with less margin */}
+          <div className="mt-8 mb-4">
             <Button 
               variant="outline" 
               onClick={clearFilters}
