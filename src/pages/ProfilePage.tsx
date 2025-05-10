@@ -69,7 +69,16 @@ const ProfilePage: React.FC = () => {
           <div onClick={() => navigateToComingSoon('Mina tävlingar')}>
             <LinkListItem 
               icon={CalendarRange} 
-              title={`Mina tävlingar${myCompetitionsCount > 0 ? ` (${myCompetitionsCount})` : ''}`}
+              title={
+                <div className="flex items-center gap-2">
+                  <span>Mina tävlingar</span>
+                  {myCompetitionsCount > 0 && (
+                    <Badge variant="secondary" className="ml-1 text-xs py-0 h-5">
+                      {myCompetitionsCount}
+                    </Badge>
+                  )}
+                </div>
+              }
               to="#" 
               iconClassName="text-primary" 
             />
@@ -77,7 +86,16 @@ const ProfilePage: React.FC = () => {
           <div onClick={() => navigate('/favorites')}>
             <LinkListItem 
               icon={Star} 
-              title={`Favoriter${favoriteCount > 0 ? ` (${favoriteCount})` : ''}`}
+              title={
+                <div className="flex items-center gap-2">
+                  <span>Favoriter</span>
+                  {favoriteCount > 0 && (
+                    <Badge variant="secondary" className="ml-1 text-xs py-0 h-5">
+                      {favoriteCount}
+                    </Badge>
+                  )}
+                </div>
+              }
               to="#" 
               iconClassName="text-secondary" 
             />

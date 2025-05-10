@@ -5,7 +5,7 @@ import { LucideIcon } from 'lucide-react';
 
 interface LinkListItemProps {
   icon: LucideIcon;
-  title: string;
+  title: React.ReactNode;
   to?: string;
   href?: string;
   rightText?: string;
