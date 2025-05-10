@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Loader2, Info, Filter } from 'lucide-react';
 import { CompetitionSummary } from '../types';
@@ -47,7 +47,6 @@ const DEFAULT_FILTERS: FilterProps = {
 
 const CompetitionsPage: React.FC = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const [competitions, setCompetitions] = useState<CompetitionSummary[]>([]);
   const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -58,22 +57,6 @@ const CompetitionsPage: React.FC = () => {
   useEffect(() => {
     localStorage.setItem('competitionViewMode', 'calendar');
   }, []);
-  
-  // Fix for stuck filter button - clear any stuck states when navigating back to this page
-  useEffect(() => {
-    // Reset any active/focus states on buttons when this page renders
-    const resetButtonStates = () => {
-      document.querySelectorAll('button').forEach(button => {
-        button.blur();
-      });
-    };
-    
-    // Run immediately and after a slight delay to ensure styles are reset
-    resetButtonStates();
-    const timer = setTimeout(resetButtonStates, 100);
-    
-    return () => clearTimeout(timer);
-  }, [location.key]);
 
   // Calculate active filters count
   const getActiveFiltersCount = () => {
@@ -149,8 +132,6 @@ const CompetitionsPage: React.FC = () => {
   }, [fetchCompetitions]);
 
   const handleFilterClick = () => {
-    // Force blur before navigation to prevent stuck states
-    document.activeElement instanceof HTMLElement && document.activeElement.blur();
     // Navigate directly to manual filtering page
     navigate('/manual-filtering');
   };
@@ -202,13 +183,12 @@ const CompetitionsPage: React.FC = () => {
         title="Tävlingskalender" 
         fullHeight
         action={
-          <div className="relative touch-manipulation">
+          <div className="relative">
             <Button 
               variant="ghost" 
               size="icon"
               onClick={handleFilterClick}
-              className="text-muted-foreground touch-manipulation"
-              onMouseUp={(e) => e.currentTarget.blur()}
+              className="text-muted-foreground"
             >
               <Filter className="h-[1.2rem] w-[1.2rem]" />
               {activeFiltersCount > 0 && (

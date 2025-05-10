@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -48,7 +48,6 @@ type DatePickerType = 'from' | 'to' | null;
 
 const ManualFilterPage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const [filters, setFilters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
   const [initialFilters, setInitialFilters] = useState<Filter>({} as Filter);
   const [datePickerOpen, setDatePickerOpen] = useState(false);
@@ -71,21 +70,6 @@ const ManualFilterPage = () => {
       setHasChanges(currentFiltersStr !== initialFiltersStr);
     }
   }, [filters, initialFilters]);
-  
-  // Reset button states when navigating away
-  useEffect(() => {
-    return () => {
-      // Force blur on any potentially focused elements
-      if (document.activeElement instanceof HTMLElement) {
-        document.activeElement.blur();
-      }
-      
-      // Reset any stuck button states
-      document.querySelectorAll('button').forEach(button => {
-        button.classList.remove('active', 'focus', 'hover');
-      });
-    };
-  }, []);
   
   // Calculate number of active filters for the subtitle
   const getActiveFiltersCount = () => {
@@ -117,11 +101,6 @@ const ManualFilterPage = () => {
   };
 
   const handleCancel = () => {
-    // Force blur to prevent stuck states
-    if (document.activeElement instanceof HTMLElement) {
-      document.activeElement.blur();
-    }
-    
     // Restore initial filters to localStorage directly
     localStorage.setItem('competitionFilters', JSON.stringify(initialFilters));
     
@@ -133,11 +112,6 @@ const ManualFilterPage = () => {
   };
 
   const handleSave = () => {
-    // Force blur to prevent stuck states
-    if (document.activeElement instanceof HTMLElement) {
-      document.activeElement.blur();
-    }
-    
     // Filters are already saved in localStorage via the useLocalStorage hook
     navigate('/competitions');
   };
@@ -249,8 +223,7 @@ const ManualFilterPage = () => {
     <Button 
       variant="ghost" 
       onClick={handleCancel}
-      className="text-red-600 font-medium touch-manipulation"
-      onMouseUp={(e) => e.currentTarget.blur()}
+      className="text-red-600 font-medium"
     >
       Avbryt
     </Button>
@@ -262,10 +235,9 @@ const ManualFilterPage = () => {
       onClick={handleSave}
       disabled={!hasChanges}
       className={cn(
-        "font-medium touch-manipulation",
+        "font-medium",
         hasChanges ? "text-blue-600" : "text-blue-300"
       )}
-      onMouseUp={(e) => e.currentTarget.blur()}
     >
       Spara
     </Button>

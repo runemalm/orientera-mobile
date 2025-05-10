@@ -44,7 +44,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button"
     
-    // Enhanced mobile touch handling
+    // Event handlers to fix stuck active states on mobile
     const touchStartRef = React.useRef(false);
     
     const handleTouchStart = (e: React.TouchEvent<HTMLButtonElement>) => {
@@ -57,22 +57,23 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const handleTouchEnd = (e: React.TouchEvent<HTMLButtonElement>) => {
       if (touchStartRef.current) {
         touchStartRef.current = false;
-        
         // Force blur to remove any stuck active/focus states
         if (e.currentTarget) {
           e.currentTarget.blur();
           
-          // Force immediate style reset
-          requestAnimationFrame(() => {
+          // Add a slight delay before removing any visual feedback
+          setTimeout(() => {
             if (e.currentTarget) {
-              // Reset all interactive states
-              e.currentTarget.style.backgroundColor = '';
-              e.currentTarget.classList.remove('active', 'focus', 'hover');
+              e.currentTarget.classList.remove('active', 'focus');
               
-              // Force style reflow
+              // Try to force style update
+              e.currentTarget.style.backgroundColor = '';
+              e.currentTarget.style.backgroundColor = null as any;
+              
+              // Trigger reflow
               void e.currentTarget.offsetHeight;
             }
-          });
+          }, 10);
         }
       }
       if (props.onTouchEnd) {
@@ -80,31 +81,18 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       }
     };
     
-    // Handle touch cancel events
+    // Also handle touch cancel events
     const handleTouchCancel = (e: React.TouchEvent<HTMLButtonElement>) => {
       touchStartRef.current = false;
       
       if (e.currentTarget) {
         e.currentTarget.blur();
-        // Reset any visual state
-        e.currentTarget.style.backgroundColor = '';
-        e.currentTarget.classList.remove('active', 'focus', 'hover');
       }
       
       if (props.onTouchCancel) {
         props.onTouchCancel(e);
       }
     };
-    
-    // Handle component unmount - cleanup any possible stuck states
-    React.useEffect(() => {
-      return () => {
-        // Clean up any potential stuck states when navigating away
-        document.querySelectorAll('.active, .focus, .hover').forEach(el => {
-          el.classList.remove('active', 'focus', 'hover');
-        });
-      };
-    }, []);
 
     return (
       <Comp
