@@ -1,15 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
-import { Settings, User, LogOut, HelpCircle, CalendarRange, Star } from 'lucide-react';
+import { Settings, User, HelpCircle, CalendarRange, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import FixedBottomButton from '../components/common/FixedBottomButton';
 import LinkListItem from '../components/competition/LinkListItem';
 import { Badge } from '@/components/ui/badge';
-import { toast } from "sonner";
 
 const ProfilePage: React.FC = () => {
   const navigate = useNavigate();
@@ -33,21 +31,13 @@ const ProfilePage: React.FC = () => {
     // This would typically be fetched from an API or localStorage
     setMyCompetitionsCount(0);
   }, []);
-  
-  const handleLogout = () => {
-    // Show a toast message for the logout action
-    toast.success("Utloggning simulerad", {
-      description: "I en riktig implementation skulle detta logga ut användaren"
-    });
-    console.log('Logout clicked');
-  };
 
   const navigateToComingSoon = (feature: string) => {
     navigate('/coming-soon', { state: { from: feature } });
   };
 
   return (
-    <MobileLayout title="Profil" hideBottomTabs={true}>
+    <MobileLayout title="Profil">
       <div className="flex flex-col h-full">
         {/* User Profile Card */}
         <Card className="mx-4 mb-6 mt-2 overflow-hidden">
@@ -127,22 +117,11 @@ const ProfilePage: React.FC = () => {
 
         {/* App Info */}
         <div className="flex-grow"></div>
-        <div className="text-center text-sm text-muted-foreground px-4 mb-24"> {/* Increased bottom margin to make room for button */}
+        <div className="text-center text-sm text-muted-foreground px-4 mb-6">
           <p>Orientera.com v1.0.0-alpha.1</p>
           <p>© 2025 Team Orientera.com</p>
         </div>
       </div>
-
-      {/* Logout Button */}
-      <FixedBottomButton
-        onClick={handleLogout}
-        className="bg-white text-primary border border-t border-gray-100 hover:bg-primary/5 font-medium"
-      >
-        <div className="flex items-center justify-center gap-2">
-          <LogOut size={18} />
-          <span>Logga ut</span>
-        </div>
-      </FixedBottomButton>
     </MobileLayout>
   );
 };
