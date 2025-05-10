@@ -25,9 +25,9 @@ const ProfilePage: React.FC = () => {
           <CardContent className="p-6">
             <div className="flex items-center gap-4">
               <Avatar className="h-16 w-16 border-2 border-primary">
-                <AvatarImage src="/placeholder.svg" alt="User" />
-                <AvatarFallback className="bg-primary/10 text-primary">
-                  <User size={24} />
+                <AvatarImage src="/user-avatar.svg" alt="User" />
+                <AvatarFallback className="bg-primary/20 h-16 w-16 rounded-full flex items-center justify-center">
+                  <User className="h-8 w-8 text-primary" />
                 </AvatarFallback>
               </Avatar>
               <div>
