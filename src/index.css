@@ -103,7 +103,10 @@
     -webkit-user-select: none;
     user-select: none;
     
-    /* Ensure active state is removed */
+    /* Reset tap highlight */
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    
+    /* Ensure states reset after interaction */
     &:active {
       opacity: 0.9;
       transition: opacity 0.1s;
@@ -114,9 +117,27 @@
       opacity: 1;
       transition: opacity 0.1s;
     }
+  }
+  
+  /* Special handling for touch devices */
+  @media (hover: none) {
+    /* Reset any stuck hover states immediately */
+    [data-touch-button="true"] {
+      &:hover, &:active, &:focus, &.active, &.focus {
+        transition: all 0.2s ease !important;
+      }
+      
+      &:not(:active):not(:focus) {
+        background-color: var(--current-background, initial) !important;
+        color: var(--current-color, initial) !important;
+      }
+    }
     
-    /* Prevent iOS highlighting */
-    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    /* Ensure buttons don't get stuck in hover state */
+    button:after, a:after, [role="button"]:after {
+      content: "";
+      display: none;
+    }
   }
   
   /* Force all focused elements to reset */
@@ -208,5 +229,28 @@
   
   .location-badge {
     @apply bg-location-light/20 text-location-dark px-2 py-1 rounded-full text-sm flex items-center gap-1;
+  }
+}
+
+/* Touch-specific overrides to prevent stuck button states */
+@media (pointer: coarse) {
+  button, a, [role="button"] {
+    /* Ensure visual feedback is brief and resets completely */
+    transition-duration: 0.1s !important;
+    
+    /* Prevent sticky hover states */
+    &:hover {
+      transition-duration: 0s !important;
+    }
+    
+    /* Force active state to be brief */
+    &:active {
+      transition-duration: 0.05s !important;
+    }
+    
+    /* Ensure state is fully reset after interaction */
+    &:not(:active) {
+      opacity: 1 !important;
+    }
   }
 }

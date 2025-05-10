@@ -52,10 +52,20 @@ const CompetitionsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [filters] = useLocalStorage<FilterProps>('competitionFilters', DEFAULT_FILTERS);
   const [showInfo, setShowInfo] = useState(false);
-
+  
+  // Reset button states when component mounts or unmounts
+  const filterButtonRef = React.useRef<HTMLButtonElement>(null);
+  
   // Force the calendar view by setting it directly in localStorage
   useEffect(() => {
     localStorage.setItem('competitionViewMode', 'calendar');
+    
+    // Reset any stuck button states when navigating to this page
+    return () => {
+      if (filterButtonRef.current) {
+        filterButtonRef.current.blur();
+      }
+    };
   }, []);
 
   // Calculate active filters count
@@ -189,6 +199,7 @@ const CompetitionsPage: React.FC = () => {
               size="icon"
               onClick={handleFilterClick}
               className="text-muted-foreground"
+              ref={filterButtonRef}
             >
               <Filter className="h-[1.2rem] w-[1.2rem]" />
               {activeFiltersCount > 0 && (

@@ -44,8 +44,32 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button"
     
-    // Event handlers to fix stuck active states on mobile
+    // Enhanced touch handling for mobile devices
     const touchStartRef = React.useRef(false);
+    const buttonRef = React.useRef<HTMLButtonElement | null>(null);
+    
+    // Combined ref handling
+    const handleRef = (el: HTMLButtonElement) => {
+      buttonRef.current = el;
+      if (typeof ref === 'function') {
+        ref(el);
+      } else if (ref) {
+        ref.current = el;
+      }
+    };
+    
+    // Reset any stuck states when the component mounts or unmounts
+    React.useEffect(() => {
+      const current = buttonRef.current;
+      
+      return () => {
+        // Clean up any potential stuck states on unmount
+        if (current) {
+          current.blur();
+          current.classList.remove('active', 'focus', 'hover');
+        }
+      };
+    }, []);
     
     const handleTouchStart = (e: React.TouchEvent<HTMLButtonElement>) => {
       touchStartRef.current = true;
@@ -57,50 +81,81 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const handleTouchEnd = (e: React.TouchEvent<HTMLButtonElement>) => {
       if (touchStartRef.current) {
         touchStartRef.current = false;
+        
         // Force blur to remove any stuck active/focus states
         if (e.currentTarget) {
-          e.currentTarget.blur();
-          
-          // Add a slight delay before removing any visual feedback
+          // Add a small timeout to ensure the tap is registered before removing the visual feedback
           setTimeout(() => {
             if (e.currentTarget) {
-              e.currentTarget.classList.remove('active', 'focus');
+              e.currentTarget.blur();
               
-              // Try to force style update
-              e.currentTarget.style.backgroundColor = '';
-              e.currentTarget.style.backgroundColor = null as any;
+              // Reset any stuck states
+              e.currentTarget.classList.remove('active', 'focus', 'hover');
+              
+              // Force style reset
+              const btn = e.currentTarget as HTMLElement;
+              const originalBg = window.getComputedStyle(btn).backgroundColor;
+              
+              // Use a style reset technique
+              btn.style.transition = 'none';
+              btn.style.backgroundColor = originalBg;
               
               // Trigger reflow
-              void e.currentTarget.offsetHeight;
+              void btn.offsetHeight;
+              
+              // Restore transition
+              requestAnimationFrame(() => {
+                if (btn) {
+                  btn.style.transition = '';
+                }
+              });
             }
-          }, 10);
+          }, 50);
         }
       }
+      
       if (props.onTouchEnd) {
         props.onTouchEnd(e);
       }
     };
     
-    // Also handle touch cancel events
+    // Handle touch cancel events
     const handleTouchCancel = (e: React.TouchEvent<HTMLButtonElement>) => {
       touchStartRef.current = false;
       
       if (e.currentTarget) {
         e.currentTarget.blur();
+        e.currentTarget.classList.remove('active', 'focus', 'hover');
       }
       
       if (props.onTouchCancel) {
         props.onTouchCancel(e);
       }
     };
+    
+    // Ensure proper cleanup on page navigation
+    React.useEffect(() => {
+      const handleBeforeUnload = () => {
+        if (buttonRef.current) {
+          buttonRef.current.blur();
+          buttonRef.current.classList.remove('active', 'focus', 'hover');
+        }
+      };
+      
+      window.addEventListener('beforeunload', handleBeforeUnload);
+      return () => {
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+      };
+    }, []);
 
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
-        ref={ref}
+        ref={handleRef}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
         onTouchCancel={handleTouchCancel}
+        data-touch-button="true"
         {...props}
       />
     )
