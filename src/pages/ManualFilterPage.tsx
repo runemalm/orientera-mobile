@@ -30,7 +30,6 @@ import DisciplineFilter from '../components/filters/DisciplineFilter';
 import CompetitionTypeFilter from '../components/filters/CompetitionTypeFilter';
 import DateRangeFilter from '../components/filters/DateRangeFilter';
 import LocationFilter from '../components/filters/LocationFilter';
-import FixedBottomButton from '../components/common/FixedBottomButton';
 
 const DEFAULT_FILTERS: Filter = {
   useLocationFilter: false,
@@ -251,8 +250,8 @@ const ManualFilterPage = () => {
       leftAction={<CancelButton />}
       subtitle={subtitle}
     >
-      <div className="p-4 pb-32">
-        <div className="space-y-8">
+      <div className="flex flex-col h-full">
+        <div className="flex-1 overflow-y-auto p-4 space-y-8">
           {/* Two-column layout for filters with proper height management */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Left column: District Section */}
@@ -299,6 +298,20 @@ const ManualFilterPage = () => {
             onOpenLocationDialog={() => setLocationDialogOpen(true)}
             onDistanceChange={handleDistanceChange}
           />
+        </div>
+        
+        {/* Clear Filter button - positioned like the form in the example */}
+        <div className="p-4 border-t bg-background shadow-sm" style={{
+          // Ensure the button stays above the bottom tab bar
+          position: 'relative',
+          zIndex: 40
+        }}>
+          <Button 
+            onClick={clearFilters}
+            className="w-full bg-white border border-dashed border-gray-300 text-gray-700 font-medium hover:bg-gray-50"
+          >
+            Rensa filtret
+          </Button>
         </div>
 
         {/* Date picker dialog */}
@@ -347,14 +360,6 @@ const ManualFilterPage = () => {
             />
           </DialogContent>
         </Dialog>
-        
-        {/* Sticky Clear Filter button */}
-        <FixedBottomButton 
-          onClick={clearFilters}
-          className="bg-white border border-dashed border-gray-300 text-gray-700 font-medium hover:bg-gray-50"
-        >
-          Rensa filtret
-        </FixedBottomButton>
       </div>
     </MobileLayout>
   );
