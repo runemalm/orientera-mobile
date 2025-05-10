@@ -53,7 +53,7 @@ const ProfilePage: React.FC = () => {
               iconClassName="text-primary" 
             />
           </div>
-          <div onClick={() => navigate('/favorites')}>
+          <div onClick={() => navigateToComingSoon('Favoriter')}>
             <LinkListItem 
               icon={Star} 
               title="Favoriter" 
@@ -72,7 +72,7 @@ const ProfilePage: React.FC = () => {
               iconClassName="text-gray-700" 
             />
           </div>
-          <div onClick={() => navigate('/assistant')}>
+          <div onClick={() => navigateToComingSoon('Hjälp & Support')}>
             <LinkListItem 
               icon={HelpCircle}
               title="Hjälp & Support" 
