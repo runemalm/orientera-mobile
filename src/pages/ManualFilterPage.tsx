@@ -309,7 +309,7 @@ const ManualFilterPage = () => {
       leftAction={<CancelButton />}
       subtitle={subtitle}
     >
-      <div className="p-4 pb-16">
+      <div className="p-4 pb-24"> {/* Increased bottom padding to make room for sticky button */}
         <div className="space-y-8">
           {/* Two-column layout for filters with proper height management */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -545,8 +545,12 @@ const ManualFilterPage = () => {
             </div>
           </section>
           
-          {/* Clear filter button - Added at the bottom with less margin */}
-          <div className="mt-8 mb-4">
+          {/* Clear filter button - Made sticky at the bottom */}
+          <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t shadow-sm" style={{
+            // Position above the bottom tab bar
+            paddingBottom: `calc(1rem + var(--safe-area-inset-bottom, 0px))`,
+            zIndex: 40
+          }}>
             <Button 
               variant="outline" 
               onClick={clearFilters}
