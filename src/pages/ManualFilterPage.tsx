@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -250,7 +251,7 @@ const ManualFilterPage = () => {
       leftAction={<CancelButton />}
       subtitle={subtitle}
     >
-      <div className="flex flex-col h-full">
+      <div className="flex flex-col h-full bg-gradient-to-b from-green-50/30 to-amber-50/20">
         <div className="flex-1 overflow-y-auto p-4 space-y-8">
           {/* Two-column layout for filters with proper height management */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -301,14 +302,14 @@ const ManualFilterPage = () => {
         </div>
         
         {/* Clear Filter button - positioned like the form in the example */}
-        <div className="p-4 border-t bg-background shadow-sm" style={{
+        <div className="p-4 border-t border-green-100/50 bg-white shadow-sm" style={{
           // Ensure the button stays above the bottom tab bar
           position: 'relative',
           zIndex: 40
         }}>
           <Button 
             onClick={clearFilters}
-            className="w-full bg-white border border-dashed border-gray-300 text-gray-700 font-medium hover:bg-gray-50"
+            className="w-full bg-gradient-to-r from-forest-light/10 to-secondary-light/10 border border-dashed border-forest/30 text-forest-dark font-medium hover:bg-gradient-to-r hover:from-forest-light/20 hover:to-secondary-light/20 transition-all"
           >
             Rensa filtret
           </Button>
