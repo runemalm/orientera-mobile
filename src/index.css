@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -127,6 +128,16 @@
         transition: all 0.2s ease !important;
       }
       
+      /* Ensure button color is applied correctly */
+      &.bg-primary {
+        background-color: #2E7D32 !important;
+      }
+      
+      &.text-primary-foreground {
+        color: #FFFFFF !important;
+      }
+      
+      /* Reset default styling for non-active buttons */
       &:not(:active):not(:focus) {
         background-color: var(--current-background, initial) !important;
         color: var(--current-color, initial) !important;
@@ -160,6 +171,23 @@
     /* Reset focus state immediately after touch */
     button:focus-visible, a:focus-visible, [role="button"]:focus-visible {
       outline: none;
+    }
+  }
+  
+  /* Ensure buttons with bg-primary class always display correctly on mobile */
+  @media (hover: none) {
+    .bg-primary {
+      background-color: #2E7D32 !important;
+    }
+    
+    button[class*="bg-primary"], 
+    a[class*="bg-primary"],
+    [role="button"][class*="bg-primary"] {
+      background-color: #2E7D32 !important;
+    }
+    
+    .text-primary-foreground {
+      color: #FFFFFF !important;
     }
   }
   
@@ -251,6 +279,15 @@
     /* Ensure state is fully reset after interaction */
     &:not(:active) {
       opacity: 1 !important;
+    }
+    
+    /* Ensure primary button colors always apply */
+    &.bg-primary {
+      background-color: #2E7D32 !important;
+    }
+    
+    &.text-primary-foreground {
+      color: #FFFFFF !important;
     }
   }
 }
