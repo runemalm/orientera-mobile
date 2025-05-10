@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Settings, User, LogOut, HelpCircle, CalendarRange, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -8,9 +8,30 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import FixedBottomButton from '../components/common/FixedBottomButton';
 import LinkListItem from '../components/competition/LinkListItem';
+import { Badge } from '@/components/ui/badge';
 
 const ProfilePage: React.FC = () => {
   const navigate = useNavigate();
+  const [favoriteCount, setFavoriteCount] = useState<number>(0);
+  const [myCompetitionsCount, setMyCompetitionsCount] = useState<number>(0);
+  
+  // Load favorites count from localStorage
+  useEffect(() => {
+    const storedFavoritesStr = window.localStorage.getItem('favoriteCompetitions');
+    if (storedFavoritesStr) {
+      try {
+        const parsed = JSON.parse(storedFavoritesStr);
+        setFavoriteCount(Array.isArray(parsed) ? parsed.length : 0);
+      } catch (error) {
+        console.error('Error parsing favorites:', error);
+        setFavoriteCount(0);
+      }
+    }
+    
+    // For now, we'll set myCompetitionsCount to 0
+    // This would typically be fetched from an API or localStorage
+    setMyCompetitionsCount(0);
+  }, []);
   
   const handleLogout = () => {
     // Placeholder for logout functionality
@@ -48,7 +69,7 @@ const ProfilePage: React.FC = () => {
           <div onClick={() => navigateToComingSoon('Mina tävlingar')}>
             <LinkListItem 
               icon={CalendarRange} 
-              title="Mina tävlingar" 
+              title={`Mina tävlingar${myCompetitionsCount > 0 ? ` (${myCompetitionsCount})` : ''}`}
               to="#" 
               iconClassName="text-primary" 
             />
@@ -56,7 +77,7 @@ const ProfilePage: React.FC = () => {
           <div onClick={() => navigate('/favorites')}>
             <LinkListItem 
               icon={Star} 
-              title="Favoriter" 
+              title={`Favoriter${favoriteCount > 0 ? ` (${favoriteCount})` : ''}`}
               to="#" 
               iconClassName="text-secondary" 
             />
