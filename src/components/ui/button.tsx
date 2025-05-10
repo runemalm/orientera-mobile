@@ -91,24 +91,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
               
               // Reset any stuck states
               e.currentTarget.classList.remove('active', 'focus', 'hover');
-              
-              // Force style reset
-              const btn = e.currentTarget as HTMLElement;
-              const originalBg = window.getComputedStyle(btn).backgroundColor;
-              
-              // Use a style reset technique
-              btn.style.transition = 'none';
-              btn.style.backgroundColor = originalBg;
-              
-              // Trigger reflow
-              void btn.offsetHeight;
-              
-              // Restore transition
-              requestAnimationFrame(() => {
-                if (btn) {
-                  btn.style.transition = '';
-                }
-              });
             }
           }, 50);
         }
