@@ -6,7 +6,7 @@ import FilterSection from './FilterSection';
 import { OrienteeringDistrict } from '@/types';
 
 interface DistrictFilterProps {
-  selectedDistricts: OrienteeringDistrict[];
+  selectedDistricts: string[];
   onToggle: (district: OrienteeringDistrict) => void;
 }
 

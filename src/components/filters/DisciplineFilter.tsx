@@ -6,7 +6,7 @@ import FilterSection from './FilterSection';
 import { Discipline } from '@/types';
 
 interface DisciplineFilterProps {
-  selectedDisciplines: Discipline[];
+  selectedDisciplines: string[];
   onToggle: (discipline: Discipline) => void;
 }
 

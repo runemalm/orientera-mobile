@@ -6,7 +6,7 @@ import FilterSection from './FilterSection';
 import { CompetitionType } from '@/types';
 
 interface CompetitionTypeFilterProps {
-  selectedTypes: CompetitionType[];
+  selectedTypes: string[];
   onToggle: (type: CompetitionType) => void;
 }
 

@@ -6,7 +6,7 @@ import FilterSection from './FilterSection';
 import { Branch } from '@/types';
 
 interface BranchFilterProps {
-  selectedBranches: Branch[];
+  selectedBranches: string[];
   onToggle: (branch: Branch) => void;
 }
 
