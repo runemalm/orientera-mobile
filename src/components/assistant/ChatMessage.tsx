@@ -7,6 +7,9 @@ interface ChatMessageProps {
   message: string;
   isBot: boolean;
   avatar?: string;
+  error?: { message: string };
+  isLast?: boolean;
+  onRetry?: () => void;
 }
 
 interface CodeProps {
@@ -16,29 +19,26 @@ interface CodeProps {
   children?: React.ReactNode;
 }
 
-const ChatMessage: React.FC<ChatMessageProps> = ({ message, isBot, avatar }) => {
+const ChatMessage: React.FC<ChatMessageProps> = ({ message, isBot, avatar, error, isLast, onRetry }) => {
   return (
     <div className={`flex gap-3 ${isBot ? 'items-start' : 'items-start flex-row-reverse'}`}>
       <div className="flex-shrink-0 mt-0.5">
         {isBot ? (
           <Avatar className="h-8 w-8">
-            <AvatarImage 
-              src={avatar || "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"} 
-              alt="Nina" 
-              className="object-cover"
-            />
-            <AvatarFallback>Nina</AvatarFallback>
+            <AvatarImage src={avatar || "/nina.png"} alt="Nina" className="object-cover" />
+            <AvatarFallback>N</AvatarFallback>
           </Avatar>
         ) : (
-          <div className="bg-primary h-8 w-8 rounded-full flex items-center justify-center">
-            <User className="h-5 w-5 text-primary-foreground" />
+          <div className="bg-primary/20 h-8 w-8 rounded-full flex items-center justify-center">
+            <User className="h-5 w-5 text-primary" />
           </div>
         )}
       </div>
-      <div className={`space-y-2 overflow-hidden rounded-lg p-3 ${
-        isBot ? 'bg-muted' : 'bg-primary text-primary-foreground self-end max-w-[75%]'
-      }`}>
-        <div className="leading-relaxed prose prose-sm max-w-none markdown-content">
+
+      <div className="flex flex-col space-y-1 max-w-[75%]">
+        <div className={`rounded-xl px-4 py-3 text-sm leading-relaxed ${
+          isBot ? 'bg-muted text-gray-800' : 'bg-primary/10 text-primary'
+        }`}>
           <ReactMarkdown
             components={{
               a: ({ node, ...props }) => (
@@ -85,6 +85,22 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isBot, avatar }) => 
           >
             {message}
           </ReactMarkdown>
+
+          {!isBot && error && (
+            <div className="mt-2 border-t border-gray-200 pt-2 text-sm text-red-700 flex flex-wrap items-center justify-between gap-2">
+              <span className="flex items-center gap-1">
+                <span className="text-yellow-500">⚠️</span> {error.message}
+              </span>
+              {isLast && onRetry && (
+                <button
+                  onClick={onRetry}
+                  className="text-blue-600 hover:underline text-sm"
+                >
+                  Försök igen
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>

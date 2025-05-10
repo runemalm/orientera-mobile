@@ -18,7 +18,8 @@ const AssistantPage = () => {
     inputValue, 
     setInputValue, 
     sendMessage,
-    resetChat, 
+    resetChat,
+    retryLastMessage,
     isConnected, 
     infoMessage,
     isWaitingForResponse,
@@ -102,21 +103,24 @@ const AssistantPage = () => {
       leftAction={<ResetButton />}
     >
       <div className="flex flex-col h-full">
-        {SHOW_INFO_MESSAGE && infoMessage && (
-          <div className="mx-4 mt-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 p-3 text-sm rounded">
-            {infoMessage}
-          </div>
-        )}
 
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          {messages.map((message, index) => (
-            <ChatMessage
-              key={index}
-              message={message.content}
-              isBot={message.isBot}
-              avatar="/agents/nina/nina_small.png"
-            />
-          ))}
+          {messages.map((message, index) => {
+            const isLast = index === messages.length - 1;
+            const showRetry = isLast && !message.isBot && message.error;
+
+            return (
+              <ChatMessage
+                key={index}
+                message={message.content}
+                isBot={message.isBot}
+                avatar={message.isBot ? '/agents/nina/nina_small.png' : '/user-avatar.svg'}
+                isLast={isLast}
+                error={message.error}
+                onRetry={retryLastMessage}
+              />
+            );
+          })}
 
           {agentActivityText && (
             <div className="text-sm italic text-muted-foreground px-4 py-1">

@@ -5,6 +5,11 @@ import { useLocalStorage } from './useLocalStorage';
 interface Message {
   content: string;
   isBot: boolean;
+  error?: {
+    message: string;
+    retry_count?: number;
+    timestamp?: string;
+  };
 }
 
 interface AgentActivityMessage {
@@ -170,7 +175,8 @@ export const useAssistantChat = () => {
           if (parsed.type === 'chat_history') {
             const formattedMessages: Message[] = parsed.messages.map(msg => ({
               content: msg.content,
-              isBot: msg.role === 'ai'
+              isBot: msg.role === 'ai',
+              error: msg.error ?? undefined
             }));
             setMessages(formattedMessages);
             setIsWaitingForResponse(false);
@@ -253,6 +259,26 @@ export const useAssistantChat = () => {
 
   }, [setMessages]);
 
+  const retryLastMessage = useCallback(() => {
+    setMessages(prev => {
+      const updated = [...prev];
+      const last = updated[updated.length - 1];
+      if (last && !last.isBot && (last as any).error) {
+        delete (last as any).error;
+      }
+      return updated;
+    });
+
+    if (!isWebSocketConnected()) {
+      establishConnection();
+      return;
+    }
+
+    if (globalWsConnection) {
+      globalWsConnection.send(JSON.stringify({ action: "retry" }));
+    }
+  }, [setMessages]);
+
   // Add a dedicated reset function that sends __RESET__ without showing it in the chat
   const resetChat = useCallback(() => {
     // Set waiting state, but don't show thinking animation
@@ -276,6 +302,7 @@ export const useAssistantChat = () => {
     setInputValue,
     sendMessage,
     resetChat,
+    retryLastMessage,
     isConnected,
     infoMessage,
     isWaitingForResponse,
