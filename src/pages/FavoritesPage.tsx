@@ -88,7 +88,7 @@ const FavoritesPage: React.FC = () => {
   // Show loading only if we have favorites and we're still loading
   if (isLoading && favorites.length > 0) {
     return (
-      <MobileLayout title="Favoriter" showBackButton={true} onBack={handleBack}>
+      <MobileLayout title="Favoriter" showBackButton={true}>
         <div className="flex flex-col justify-center items-center h-[70vh]">
           <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
           <p className="text-gray-600">Laddar...</p>
@@ -99,7 +99,7 @@ const FavoritesPage: React.FC = () => {
 
   if (error) {
     return (
-      <MobileLayout title="Favoriter" showBackButton={true} onBack={handleBack}>
+      <MobileLayout title="Favoriter" showBackButton={true}>
         <div className="text-center py-8">
           <p className="text-gray-500">{error}</p>
         </div>
@@ -109,7 +109,7 @@ const FavoritesPage: React.FC = () => {
 
   if (favorites.length === 0 || favoriteCompetitions.length === 0) {
     return (
-      <MobileLayout title="Favoriter" showBackButton={true} onBack={handleBack}>
+      <MobileLayout title="Favoriter" showBackButton={true}>
         <div className="text-center py-8">
           <div className="text-gray-400 mb-2">
             <Star className="w-12 h-12 mx-auto" />
@@ -121,7 +121,7 @@ const FavoritesPage: React.FC = () => {
   }
 
   return (
-    <MobileLayout title="Favoriter" showBackButton={true} onBack={handleBack}>
+    <MobileLayout title="Favoriter" showBackButton={true}>
       <div className="px-2 pt-4">
         <CompetitionList
           competitions={favoriteCompetitions}
