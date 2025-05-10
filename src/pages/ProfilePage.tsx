@@ -53,7 +53,7 @@ const ProfilePage: React.FC = () => {
               iconClassName="text-primary" 
             />
           </div>
-          <div onClick={() => navigateToComingSoon('Favoriter')}>
+          <div onClick={() => navigate('/favorites')}>
             <LinkListItem 
               icon={Star} 
               title="Favoriter" 

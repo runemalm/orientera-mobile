@@ -1,7 +1,7 @@
 
 import React, { useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { CalendarRange, Home, UserRound, Sparkles, Star } from 'lucide-react';
+import { CalendarRange, Home, UserRound, Sparkles } from 'lucide-react';
 import { TabName } from '../../types';
 
 const BottomTabBar: React.FC = () => {
@@ -18,8 +18,10 @@ const BottomTabBar: React.FC = () => {
   const isHome = currentPath === '/home' || currentPath === '/';
   
   // Consider coming-soon page as profile-related when navigating from profile
+  // Also consider favorites page as profile-related
   const isProfileRelated = 
     currentPath === '/profile' || 
+    currentPath === '/favorites' ||
     (currentPath === '/coming-soon' && location.state?.from);
 
   const tabs: { name: TabName; icon: React.ReactNode; label: string; path: string }[] = [
@@ -40,12 +42,6 @@ const BottomTabBar: React.FC = () => {
       icon: <CalendarRange size={24} />,
       label: 'Kalender',
       path: '/competitions'
-    },
-    {
-      name: 'favorites',
-      icon: <Star size={24} />,
-      label: 'Favoriter',
-      path: '/favorites'
     },
     {
       name: 'profile',
