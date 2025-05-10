@@ -35,7 +35,7 @@ const ProfilePage: React.FC = () => {
                 </AvatarFallback>
               </Avatar>
               <div>
-                <h2 className="text-xl font-semibold">Orienteringsapp</h2>
+                <h2 className="text-xl font-semibold">Orientera.com</h2>
                 <p className="text-muted-foreground">Gäst</p>
               </div>
             </div>
@@ -85,8 +85,8 @@ const ProfilePage: React.FC = () => {
         {/* App Info */}
         <div className="flex-grow"></div>
         <div className="text-center text-sm text-muted-foreground px-4 mb-20">
-          <p>Orienteringsapp v1.0.0</p>
-          <p>© 2025 Orienteringsteamet</p>
+          <p>Orientera.com v1.0.0-alpha.1</p>
+          <p>© 2025 Team Orientera.com</p>
         </div>
       </div>
 
