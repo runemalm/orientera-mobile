@@ -123,7 +123,7 @@ const ProfilePage: React.FC = () => {
 
         {/* App Info */}
         <div className="flex-grow"></div>
-        <div className="text-center text-sm text-muted-foreground px-4 mb-20">
+        <div className="text-center text-sm text-muted-foreground px-4 mb-6">
           <p>Orientera.com v1.0.0-alpha.1</p>
           <p>© 2025 Team Orientera.com</p>
         </div>
@@ -132,7 +132,7 @@ const ProfilePage: React.FC = () => {
       {/* Logout Button */}
       <FixedBottomButton
         onClick={handleLogout}
-        className="bg-white text-primary border border-primary hover:bg-primary/5"
+        className="bg-white text-primary border-0 border-t border-gray-100 hover:bg-primary/5"
       >
         <div className="flex items-center justify-center gap-2">
           <LogOut size={18} />
