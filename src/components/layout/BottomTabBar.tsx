@@ -16,6 +16,11 @@ const BottomTabBar: React.FC = () => {
     currentPath === '/ai-filtering';
     
   const isHome = currentPath === '/home' || currentPath === '/';
+  
+  // Consider coming-soon page as profile-related when navigating from profile
+  const isProfileRelated = 
+    currentPath === '/profile' || 
+    (currentPath === '/coming-soon' && location.state?.from);
 
   const tabs: { name: TabName; icon: React.ReactNode; label: string; path: string }[] = [
     {
@@ -64,7 +69,11 @@ const BottomTabBar: React.FC = () => {
           className={`flex flex-col items-center justify-center w-full py-2 ${
             (tab.name === 'competitions' && isCompetitionRelated) ||
             (tab.name === 'home' && isHome) ||
-            (tab.path === currentPath && tab.name !== 'home' && tab.name !== 'competitions')
+            (tab.name === 'profile' && isProfileRelated) ||
+            (tab.path === currentPath && 
+              tab.name !== 'home' && 
+              tab.name !== 'competitions' &&
+              tab.name !== 'profile')
               ? 'text-primary font-medium'
               : 'text-gray-500'
           }`}

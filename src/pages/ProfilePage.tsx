@@ -17,6 +17,10 @@ const ProfilePage: React.FC = () => {
     console.log('Logout clicked');
   };
 
+  const navigateToComingSoon = (feature: string) => {
+    navigate('/coming-soon', { state: { from: feature } });
+  };
+
   return (
     <MobileLayout title="Profil">
       <div className="flex flex-col h-full">
@@ -41,33 +45,41 @@ const ProfilePage: React.FC = () => {
         {/* Menu Items */}
         <div className="bg-white rounded-lg mx-4 mb-6 overflow-hidden shadow-sm">
           <h3 className="font-medium text-muted-foreground px-4 pt-4 pb-2 text-sm">Mina sidor</h3>
-          <LinkListItem 
-            icon={CalendarRange} 
-            title="Mina tävlingar" 
-            to="/competitions" 
-            iconClassName="text-primary" 
-          />
-          <LinkListItem 
-            icon={Star} 
-            title="Favoriter" 
-            to="/favorites" 
-            iconClassName="text-secondary" 
-          />
+          <div onClick={() => navigateToComingSoon('Mina tävlingar')}>
+            <LinkListItem 
+              icon={CalendarRange} 
+              title="Mina tävlingar" 
+              to="#" 
+              iconClassName="text-primary" 
+            />
+          </div>
+          <div onClick={() => navigate('/favorites')}>
+            <LinkListItem 
+              icon={Star} 
+              title="Favoriter" 
+              to="#" 
+              iconClassName="text-secondary" 
+            />
+          </div>
           <Separator />
           
           <h3 className="font-medium text-muted-foreground px-4 pt-4 pb-2 text-sm">Inställningar</h3>
-          <LinkListItem 
-            icon={Settings} 
-            title="Appinställningar" 
-            to="/settings" 
-            iconClassName="text-gray-700" 
-          />
-          <LinkListItem 
-            icon={HelpCircle}
-            title="Hjälp & Support" 
-            to="/assistant" 
-            iconClassName="text-gray-700"
-          />
+          <div onClick={() => navigateToComingSoon('Appinställningar')}>
+            <LinkListItem 
+              icon={Settings} 
+              title="Appinställningar" 
+              to="#" 
+              iconClassName="text-gray-700" 
+            />
+          </div>
+          <div onClick={() => navigate('/assistant')}>
+            <LinkListItem 
+              icon={HelpCircle}
+              title="Hjälp & Support" 
+              to="#" 
+              iconClassName="text-gray-700"
+            />
+          </div>
         </div>
 
         {/* App Info */}
