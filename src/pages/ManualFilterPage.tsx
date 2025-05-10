@@ -64,6 +64,7 @@ const ManualFilterPage = () => {
   
   // Store initial filter state when component mounts
   useEffect(() => {
+    // Create a deep copy of filters to avoid reference issues
     setInitialFilters(JSON.parse(JSON.stringify(filters)));
   }, []);
   
@@ -111,8 +112,14 @@ const ManualFilterPage = () => {
   };
 
   const handleCancel = () => {
-    // Restore initial filters
+    // Restore initial filters to localStorage directly
+    // This ensures the filters are reset even after navigating away
+    localStorage.setItem('competitionFilters', JSON.stringify(initialFilters));
+    
+    // Update the current state as well
     setFilters(initialFilters);
+    
+    // Navigate back
     navigate('/competitions');
   };
 
