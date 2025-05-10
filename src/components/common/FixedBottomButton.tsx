@@ -14,14 +14,14 @@ const FixedBottomButton: React.FC<FixedBottomButtonProps> = ({
 }) => {
   return (
     <div 
-      className="fixed bottom-0 left-0 right-0 p-4 bg-gray-50 z-10"
+      className="fixed bottom-0 left-0 right-0 p-4 bg-gray-50 z-50" // Increased z-index to ensure visibility
       style={{ 
-        paddingBottom: 'calc(1rem + var(--safe-area-inset-bottom, 0px))'
+        paddingBottom: 'calc(1rem + env(safe-area-inset-bottom, 0px))'
       }}
     >
       <button 
         onClick={onClick}
-        className={`w-full py-2 px-4 rounded-md ${className}`}
+        className={`w-full py-3 px-4 rounded-md shadow-sm ${className}`} // Added shadow and increased padding
       >
         {children}
       </button>

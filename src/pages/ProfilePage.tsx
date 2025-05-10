@@ -9,6 +9,7 @@ import { Separator } from '@/components/ui/separator';
 import FixedBottomButton from '../components/common/FixedBottomButton';
 import LinkListItem from '../components/competition/LinkListItem';
 import { Badge } from '@/components/ui/badge';
+import { toast } from "sonner";
 
 const ProfilePage: React.FC = () => {
   const navigate = useNavigate();
@@ -34,7 +35,10 @@ const ProfilePage: React.FC = () => {
   }, []);
   
   const handleLogout = () => {
-    // Placeholder for logout functionality
+    // Show a toast message for the logout action
+    toast.success("Utloggning simulerad", {
+      description: "I en riktig implementation skulle detta logga ut användaren"
+    });
     console.log('Logout clicked');
   };
 
@@ -43,7 +47,7 @@ const ProfilePage: React.FC = () => {
   };
 
   return (
-    <MobileLayout title="Profil">
+    <MobileLayout title="Profil" hideBottomTabs={true}>
       <div className="flex flex-col h-full">
         {/* User Profile Card */}
         <Card className="mx-4 mb-6 mt-2 overflow-hidden">
@@ -123,7 +127,7 @@ const ProfilePage: React.FC = () => {
 
         {/* App Info */}
         <div className="flex-grow"></div>
-        <div className="text-center text-sm text-muted-foreground px-4 mb-6">
+        <div className="text-center text-sm text-muted-foreground px-4 mb-24"> {/* Increased bottom margin to make room for button */}
           <p>Orientera.com v1.0.0-alpha.1</p>
           <p>© 2025 Team Orientera.com</p>
         </div>
@@ -132,7 +136,7 @@ const ProfilePage: React.FC = () => {
       {/* Logout Button */}
       <FixedBottomButton
         onClick={handleLogout}
-        className="bg-white text-primary border-0 border-t border-gray-100 hover:bg-primary/5"
+        className="bg-white text-primary border border-t border-gray-100 hover:bg-primary/5 font-medium"
       >
         <div className="flex items-center justify-center gap-2">
           <LogOut size={18} />
