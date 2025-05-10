@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -31,7 +30,7 @@ import DisciplineFilter from '../components/filters/DisciplineFilter';
 import CompetitionTypeFilter from '../components/filters/CompetitionTypeFilter';
 import DateRangeFilter from '../components/filters/DateRangeFilter';
 import LocationFilter from '../components/filters/LocationFilter';
-import FixedBottomButton from '../components/filters/FixedBottomButton';
+import FixedBottomButton from '../components/common/FixedBottomButton';
 
 const DEFAULT_FILTERS: Filter = {
   useLocationFilter: false,
