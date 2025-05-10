@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -104,10 +103,7 @@
     -webkit-user-select: none;
     user-select: none;
     
-    /* Reset tap highlight */
-    -webkit-tap-highlight-color: rgba(0,0,0,0);
-    
-    /* Ensure states reset after interaction */
+    /* Ensure active state is removed */
     &:active {
       opacity: 0.9;
       transition: opacity 0.1s;
@@ -118,37 +114,9 @@
       opacity: 1;
       transition: opacity 0.1s;
     }
-  }
-  
-  /* Special handling for touch devices */
-  @media (hover: none) {
-    /* Reset any stuck hover states immediately */
-    [data-touch-button="true"] {
-      &:hover, &:active, &:focus, &.active, &.focus {
-        transition: all 0.2s ease !important;
-      }
-      
-      /* Ensure button color is applied correctly */
-      &.bg-primary {
-        background-color: #2E7D32 !important;
-      }
-      
-      &.text-primary-foreground {
-        color: #FFFFFF !important;
-      }
-      
-      /* Reset default styling for non-active buttons */
-      &:not(:active):not(:focus) {
-        background-color: var(--current-background, initial) !important;
-        color: var(--current-color, initial) !important;
-      }
-    }
     
-    /* Ensure buttons don't get stuck in hover state */
-    button:after, a:after, [role="button"]:after {
-      content: "";
-      display: none;
-    }
+    /* Prevent iOS highlighting */
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
   }
   
   /* Force all focused elements to reset */
@@ -171,23 +139,6 @@
     /* Reset focus state immediately after touch */
     button:focus-visible, a:focus-visible, [role="button"]:focus-visible {
       outline: none;
-    }
-  }
-  
-  /* Ensure buttons with bg-primary class always display correctly on mobile */
-  @media (hover: none) {
-    .bg-primary {
-      background-color: #2E7D32 !important;
-    }
-    
-    button[class*="bg-primary"], 
-    a[class*="bg-primary"],
-    [role="button"][class*="bg-primary"] {
-      background-color: #2E7D32 !important;
-    }
-    
-    .text-primary-foreground {
-      color: #FFFFFF !important;
     }
   }
   
@@ -257,37 +208,5 @@
   
   .location-badge {
     @apply bg-location-light/20 text-location-dark px-2 py-1 rounded-full text-sm flex items-center gap-1;
-  }
-}
-
-/* Touch-specific overrides to prevent stuck button states */
-@media (pointer: coarse) {
-  button, a, [role="button"] {
-    /* Ensure visual feedback is brief and resets completely */
-    transition-duration: 0.1s !important;
-    
-    /* Prevent sticky hover states */
-    &:hover {
-      transition-duration: 0s !important;
-    }
-    
-    /* Force active state to be brief */
-    &:active {
-      transition-duration: 0.05s !important;
-    }
-    
-    /* Ensure state is fully reset after interaction */
-    &:not(:active) {
-      opacity: 1 !important;
-    }
-    
-    /* Ensure primary button colors always apply */
-    &.bg-primary {
-      background-color: #2E7D32 !important;
-    }
-    
-    &.text-primary-foreground {
-      color: #FFFFFF !important;
-    }
   }
 }

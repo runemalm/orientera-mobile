@@ -24,9 +24,8 @@ const ProfilePage: React.FC = () => {
           </div>
           
           <Button 
-            className="w-full text-lg py-6 shadow-md bg-primary text-primary-foreground" 
+            className="w-full text-lg py-6 shadow-md" 
             size="lg"
-            variant="default"
             onClick={() => setShowLoginDialog(true)}
           >
             <LogIn className="mr-2" />

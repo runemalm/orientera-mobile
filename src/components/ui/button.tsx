@@ -44,32 +44,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button"
     
-    // Enhanced touch handling for mobile devices
+    // Event handlers to fix stuck active states on mobile
     const touchStartRef = React.useRef(false);
-    const buttonRef = React.useRef<HTMLButtonElement | null>(null);
-    
-    // Combined ref handling
-    const handleRef = (el: HTMLButtonElement) => {
-      buttonRef.current = el;
-      if (typeof ref === 'function') {
-        ref(el);
-      } else if (ref) {
-        ref.current = el;
-      }
-    };
-    
-    // Reset any stuck states when the component mounts or unmounts
-    React.useEffect(() => {
-      const current = buttonRef.current;
-      
-      return () => {
-        // Clean up any potential stuck states on unmount
-        if (current) {
-          current.blur();
-          current.classList.remove('active', 'focus', 'hover');
-        }
-      };
-    }, []);
     
     const handleTouchStart = (e: React.TouchEvent<HTMLButtonElement>) => {
       touchStartRef.current = true;
@@ -81,63 +57,50 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const handleTouchEnd = (e: React.TouchEvent<HTMLButtonElement>) => {
       if (touchStartRef.current) {
         touchStartRef.current = false;
-        
         // Force blur to remove any stuck active/focus states
         if (e.currentTarget) {
-          // Add a small timeout to ensure the tap is registered before removing the visual feedback
+          e.currentTarget.blur();
+          
+          // Add a slight delay before removing any visual feedback
           setTimeout(() => {
             if (e.currentTarget) {
-              e.currentTarget.blur();
+              e.currentTarget.classList.remove('active', 'focus');
               
-              // Reset any stuck states
-              e.currentTarget.classList.remove('active', 'focus', 'hover');
+              // Try to force style update
+              e.currentTarget.style.backgroundColor = '';
+              e.currentTarget.style.backgroundColor = null as any;
+              
+              // Trigger reflow
+              void e.currentTarget.offsetHeight;
             }
-          }, 50);
+          }, 10);
         }
       }
-      
       if (props.onTouchEnd) {
         props.onTouchEnd(e);
       }
     };
     
-    // Handle touch cancel events
+    // Also handle touch cancel events
     const handleTouchCancel = (e: React.TouchEvent<HTMLButtonElement>) => {
       touchStartRef.current = false;
       
       if (e.currentTarget) {
         e.currentTarget.blur();
-        e.currentTarget.classList.remove('active', 'focus', 'hover');
       }
       
       if (props.onTouchCancel) {
         props.onTouchCancel(e);
       }
     };
-    
-    // Ensure proper cleanup on page navigation
-    React.useEffect(() => {
-      const handleBeforeUnload = () => {
-        if (buttonRef.current) {
-          buttonRef.current.blur();
-          buttonRef.current.classList.remove('active', 'focus', 'hover');
-        }
-      };
-      
-      window.addEventListener('beforeunload', handleBeforeUnload);
-      return () => {
-        window.removeEventListener('beforeunload', handleBeforeUnload);
-      };
-    }, []);
 
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
-        ref={handleRef}
+        ref={ref}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
         onTouchCancel={handleTouchCancel}
-        data-touch-button="true"
         {...props}
       />
     )
