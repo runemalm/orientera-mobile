@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Button } from '@/components/ui/button';
@@ -14,14 +15,12 @@ import {
   Filter 
 } from '../types';
 import { sv } from 'date-fns/locale';
-import { format } from 'date-fns';
 import { 
   CalendarRange, 
   Footprints, 
   Globe, 
   Calendar as CalendarIcon,
   MapPin,
-  Navigation,
   Trophy,
   Activity
 } from 'lucide-react';
@@ -36,10 +35,6 @@ import { formatSwedishDate } from '../utils/dateUtils';
 import { useUserLocation } from '../hooks/useUserLocation';
 import LocationInputForm from '../components/LocationInputForm';
 import { formatDistance } from '../utils/distanceUtils';
-import { Input } from '@/components/ui/input';
-import {
-  Slider
-} from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 
@@ -61,10 +56,26 @@ type DatePickerType = 'from' | 'to' | null;
 const ManualFilterPage = () => {
   const navigate = useNavigate();
   const [filters, setFilters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
+  const [initialFilters, setInitialFilters] = useState<Filter>({} as Filter);
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [datePickerType, setDatePickerType] = useState<DatePickerType>(null);
   const [locationDialogOpen, setLocationDialogOpen] = useState(false);
   const { userLocation, updateUserLocation } = useUserLocation();
+  const [hasChanges, setHasChanges] = useState(false);
+  
+  // Store initial filter state when component mounts
+  useEffect(() => {
+    setInitialFilters(JSON.parse(JSON.stringify(filters)));
+  }, []);
+  
+  // Check for changes whenever filters change
+  useEffect(() => {
+    if (Object.keys(initialFilters).length > 0) {
+      const currentFiltersStr = JSON.stringify(filters);
+      const initialFiltersStr = JSON.stringify(initialFilters);
+      setHasChanges(currentFiltersStr !== initialFiltersStr);
+    }
+  }, [filters, initialFilters]);
   
   // Calculate number of active filters for the subtitle
   const getActiveFiltersCount = () => {
@@ -88,7 +99,6 @@ const ManualFilterPage = () => {
   const allDisciplines = Object.values(Discipline);
   const allCompetitionTypes = Object.values(CompetitionType);
 
-  // Add a new clearFilters function that keeps location data but disables the filter
   const clearFilters = () => {
     const currentLocationSettings = {
       maxDistanceKm: filters.maxDistanceKm,
@@ -99,6 +109,17 @@ const ManualFilterPage = () => {
       ...DEFAULT_FILTERS,
       ...currentLocationSettings
     });
+  };
+
+  const handleCancel = () => {
+    // Restore initial filters
+    setFilters(initialFilters);
+    navigate('/competitions');
+  };
+
+  const handleSave = () => {
+    // Filters are already saved in localStorage via the useLocalStorage hook
+    navigate('/competitions');
   };
 
   const handleOpenDatePicker = (type: DatePickerType) => {
@@ -203,15 +224,6 @@ const ManualFilterPage = () => {
     });
   };
 
-  const handleApplyFilters = () => {
-    navigate('/competitions');
-  };
-
-  const handleResetFilters = () => {
-    // Reset to default filters completely, not just navigate
-    setFilters(DEFAULT_FILTERS);
-  };
-
   // Helper functions for translations
   const getBranchTranslation = (branch: Branch) => {
     const translations: Record<Branch, string> = {
@@ -259,10 +271,36 @@ const ManualFilterPage = () => {
     return formatSwedishDate(date, 'PPP');
   };
 
+  // Custom action buttons for the iOS-style navigation bar
+  const CancelButton = () => (
+    <Button 
+      variant="ghost" 
+      onClick={handleCancel}
+      className="text-blue-600 font-medium"
+    >
+      Avbryt
+    </Button>
+  );
+
+  const SaveButton = () => (
+    <Button 
+      variant="ghost" 
+      onClick={handleSave}
+      disabled={!hasChanges}
+      className={cn(
+        "font-medium",
+        hasChanges ? "text-blue-600" : "text-blue-300"
+      )}
+    >
+      Spara
+    </Button>
+  );
+
   return (
     <MobileLayout 
       title="Filtrera" 
-      showBackButton={true}
+      action={<SaveButton />}
+      leftAction={<CancelButton />}
       subtitle={subtitle}
     >
       <div className="p-4 pb-32">
@@ -481,15 +519,18 @@ const ManualFilterPage = () => {
                     {formatDistance(filters.maxDistanceKm)}
                   </span>
                 </div>
-                <Slider
-                  disabled={!filters.useLocationFilter}
-                  value={[filters.maxDistanceKm]}
-                  min={5}
-                  max={500}
-                  step={5}
-                  onValueChange={(value) => handleDistanceChange(value)}
-                  className="py-2"
-                />
+                <div className="py-2">
+                  <input
+                    type="range"
+                    disabled={!filters.useLocationFilter}
+                    value={filters.maxDistanceKm}
+                    min={5}
+                    max={500}
+                    step={5}
+                    onChange={(e) => handleDistanceChange([parseInt(e.target.value)])}
+                    className="w-full"
+                  />
+                </div>
                 <div className="flex justify-between text-xs text-gray-500">
                   <span>5 km</span>
                   <span>500 km</span>
@@ -497,6 +538,17 @@ const ManualFilterPage = () => {
               </div>
             </div>
           </section>
+          
+          {/* Clear filter button - Added at the bottom */}
+          <div className="mt-8 mb-16">
+            <Button 
+              variant="outline" 
+              onClick={clearFilters}
+              className="w-full border-dashed border-gray-300"
+            >
+              Rensa filtret
+            </Button>
+          </div>
         </div>
 
         {/* Date picker dialog */}
@@ -545,23 +597,6 @@ const ManualFilterPage = () => {
             />
           </DialogContent>
         </Dialog>
-
-        {/* Fixed bottom buttons - Updated with more bottom padding to avoid tab bar overlap */}
-        <div className="flex items-center gap-4 pt-6 fixed bottom-0 left-0 right-0 bg-white p-4 pb-20 shadow-lg z-10">
-          <Button 
-            variant="outline" 
-            className="flex-1"
-            onClick={handleResetFilters}
-          >
-            Återställ
-          </Button>
-          <Button 
-            className="flex-1 bg-forest hover:bg-forest-dark"
-            onClick={handleApplyFilters}
-          >
-            Tillämpa filter
-          </Button>
-        </div>
       </div>
     </MobileLayout>
   );
