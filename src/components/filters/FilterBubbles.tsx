@@ -89,13 +89,13 @@ const FilterBubbles: React.FC<FilterBubblesProps> = ({ filters, onRemoveFilter }
   }
 
   return (
-    <div className="px-4 py-2 flex flex-wrap gap-2">
+    <div className="px-4 pt-3 pb-2 flex flex-wrap gap-1.5">
       {/* District bubbles */}
       {filters.districts.map(district => (
         <Badge 
           key={`district-${district}`}
           variant="outline"
-          className="bg-white flex items-center gap-1 py-1 px-2 rounded-full text-xs font-medium text-gray-700 border-gray-200"
+          className="bg-white flex items-center gap-1 py-1 px-2.5 rounded-full text-xs font-medium text-gray-700 border-gray-200"
         >
           {getFilterDisplayName('districts', district)}
           <X 
@@ -110,7 +110,7 @@ const FilterBubbles: React.FC<FilterBubblesProps> = ({ filters, onRemoveFilter }
         <Badge 
           key={`branch-${branch}`}
           variant="outline"
-          className="bg-white flex items-center gap-1 py-1 px-2 rounded-full text-xs font-medium text-gray-700 border-gray-200"
+          className="bg-white flex items-center gap-1 py-1 px-2.5 rounded-full text-xs font-medium text-gray-700 border-gray-200"
         >
           {getFilterDisplayName('branches', branch)}
           <X 
@@ -125,7 +125,7 @@ const FilterBubbles: React.FC<FilterBubblesProps> = ({ filters, onRemoveFilter }
         <Badge 
           key={`discipline-${discipline}`}
           variant="outline"
-          className="bg-white flex items-center gap-1 py-1 px-2 rounded-full text-xs font-medium text-gray-700 border-gray-200"
+          className="bg-white flex items-center gap-1 py-1 px-2.5 rounded-full text-xs font-medium text-gray-700 border-gray-200"
         >
           {getFilterDisplayName('disciplines', discipline)}
           <X 
@@ -140,7 +140,7 @@ const FilterBubbles: React.FC<FilterBubblesProps> = ({ filters, onRemoveFilter }
         <Badge 
           key={`type-${type}`}
           variant="outline"
-          className="bg-white flex items-center gap-1 py-1 px-2 rounded-full text-xs font-medium text-gray-700 border-gray-200"
+          className="bg-white flex items-center gap-1 py-1 px-2.5 rounded-full text-xs font-medium text-gray-700 border-gray-200"
         >
           {getFilterDisplayName('competitionTypes', type)}
           <X 
@@ -154,7 +154,7 @@ const FilterBubbles: React.FC<FilterBubblesProps> = ({ filters, onRemoveFilter }
       {(filters.dateRange.from || filters.dateRange.to) && (
         <Badge 
           variant="outline"
-          className="bg-white flex items-center gap-1 py-1 px-2 rounded-full text-xs font-medium text-gray-700 border-gray-200"
+          className="bg-white flex items-center gap-1 py-1 px-2.5 rounded-full text-xs font-medium text-gray-700 border-gray-200"
         >
           {filters.dateRange.from && filters.dateRange.to 
             ? `${formatDateShort(filters.dateRange.from)} - ${formatDateShort(filters.dateRange.to)}`
@@ -173,7 +173,7 @@ const FilterBubbles: React.FC<FilterBubblesProps> = ({ filters, onRemoveFilter }
       {filters.useLocationFilter && filters.location && (
         <Badge 
           variant="outline"
-          className="bg-white flex items-center gap-1 py-1 px-2 rounded-full text-xs font-medium text-gray-700 border-gray-200"
+          className="bg-white flex items-center gap-1 py-1 px-2.5 rounded-full text-xs font-medium text-gray-700 border-gray-200"
         >
           {`${filters.location.city} (${filters.maxDistanceKm} km)`}
           <X 

@@ -210,52 +210,52 @@ const CompetitionsPage: React.FC = () => {
     })();
 
     return (
-      <>
+      <div className="flex flex-col h-full">
         {/* Add filter bubbles above the competition list */}
         <FilterBubbles 
           filters={filters} 
           onRemoveFilter={handleRemoveFilter} 
         />
         
-        <CompetitionLayout
-          competitions={competitions}
-          fromDate={fromDate}
-          toDate={toDate}
-          hideTabBar={true} // Hide the tabs
-        />
-      </>
+        <div className={`flex-1 ${activeFiltersCount > 0 ? 'pt-1' : 'pt-2'}`}>
+          <CompetitionLayout
+            competitions={competitions}
+            fromDate={fromDate}
+            toDate={toDate}
+            hideTabBar={true} // Hide the tabs
+          />
+        </div>
+      </div>
     );
   };
 
   return (
-    <>
-      <MobileLayout 
-        title="Tävlingar" 
-        fullHeight
-        action={
-          <div className="relative">
-            <Button 
-              variant="ghost" 
-              size="icon"
-              onClick={handleFilterClick}
-              className="text-muted-foreground"
-            >
-              <FilterIcon className="h-[1.2rem] w-[1.2rem]" />
-              {activeFiltersCount > 0 && (
-                <Badge 
-                  variant="default" 
-                  className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px] font-bold"
-                >
-                  {activeFiltersCount}
-                </Badge>
-              )}
-            </Button>
-          </div>
-        }
-      >
-        {renderContent()}
-      </MobileLayout>
-    </>
+    <MobileLayout 
+      title="Tävlingar" 
+      fullHeight
+      action={
+        <div className="relative">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={handleFilterClick}
+            className="text-muted-foreground"
+          >
+            <FilterIcon className="h-[1.2rem] w-[1.2rem]" />
+            {activeFiltersCount > 0 && (
+              <Badge 
+                variant="default" 
+                className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px] font-bold"
+              >
+                {activeFiltersCount}
+              </Badge>
+            )}
+          </Button>
+        </div>
+      }
+    >
+      {renderContent()}
+    </MobileLayout>
   );
 };
 
