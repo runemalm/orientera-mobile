@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -97,27 +96,23 @@ const CompetitionsPage: React.FC = () => {
         maxDistanceKm: safeFilters.useLocationFilter ? safeFilters.maxDistanceKm : undefined
       });
 
-      // Determine if we should use location in the API call
-      let lat = 0;
-      let lng = 0;
-      
-      if (safeFilters.useLocationFilter && userLocation) {
-        lat = userLocation.latitude;
-        lng = userLocation.longitude;
-      }
+      // Determine location parameters
+      const lat = safeFilters.useLocationFilter && userLocation ? userLocation.latitude : undefined;
+      const lng = safeFilters.useLocationFilter && userLocation ? userLocation.longitude : undefined;
+      const maxDistance = safeFilters.useLocationFilter ? safeFilters.maxDistanceKm : undefined;
 
+      // Use updated API call with direct parameters
       const result = await getNearbyCompetitions(
+        startDate,
+        endDate,
         lat,
         lng,
-        {
-          from: startDate,
-          to: endDate,
-          districts: safeFilters.districts.length > 0 ? safeFilters.districts : undefined,
-          disciplines: safeFilters.disciplines.length > 0 ? safeFilters.disciplines : undefined,
-          competitionTypes: safeFilters.competitionTypes.length > 0 ? safeFilters.competitionTypes : undefined,
-          branches: safeFilters.branches.length > 0 ? safeFilters.branches : undefined,
-          maxDistanceKm: safeFilters.useLocationFilter ? safeFilters.maxDistanceKm : undefined
-        }
+        maxDistance,
+        undefined, // limit
+        safeFilters.branches.length > 0 ? safeFilters.branches : undefined,
+        safeFilters.disciplines.length > 0 ? safeFilters.disciplines : undefined,
+        safeFilters.competitionTypes.length > 0 ? safeFilters.competitionTypes : undefined,
+        safeFilters.districts.length > 0 ? safeFilters.districts : undefined
       );
       
       console.log('Competitions fetched:', result.length);

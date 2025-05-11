@@ -51,14 +51,14 @@ const FavoritesPage: React.FC = () => {
       toDate.setMonth(toDate.getMonth() + 3);
       
       try {
+        // Updated API call using the direct parameter approach
         const result = await getNearbyCompetitions(
-          0, // Pass 0 as coordinates to not filter by location
-          0,
-          {
-            from: fromDate,
-            to: toDate,
-            limit: 100
-          }
+          fromDate,
+          toDate,
+          undefined,  // lat
+          undefined,  // lng
+          undefined,  // maxDistanceKm
+          100         // limit
         );
         
         setCompetitions(result);
