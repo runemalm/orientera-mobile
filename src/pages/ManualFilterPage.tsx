@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -341,11 +340,13 @@ const ManualFilterPage = () => {
                 : filters?.dateRange?.to || undefined
               }
               onSelect={handleDateSelect}
-              disabled={(date) => 
-                datePickerType === 'from'
-                  ? filters?.dateRange?.to ? date > filters.dateRange.to : false
-                  : filters?.dateRange?.from ? date < filters.dateRange.from : false
-              }
+              disabled={(date) => {
+                if (datePickerType === 'from') {
+                  return filters?.dateRange?.to ? date > (filters.dateRange.to as Date) : false;
+                } else {
+                  return filters?.dateRange?.from ? date < (filters.dateRange.from as Date) : false;
+                }
+              }}
               locale={sv}
               className="mx-auto"
             />

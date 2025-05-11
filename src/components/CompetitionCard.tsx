@@ -11,10 +11,13 @@ import { calculateDistance, formatDistance } from '../utils/distanceUtils';
 
 interface CompetitionCardProps {
   competition: CompetitionSummary;
-  userLocation: { latitude: number | null; longitude: number | null };
+  userLocation?: { latitude: number | null; longitude: number | null };
 }
 
-const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition, userLocation }) => {
+const CompetitionCard: React.FC<CompetitionCardProps> = ({ 
+  competition, 
+  userLocation 
+}) => {
   const navigate = useNavigate();
   const [isFavorite, setIsFavorite] = useState(false);
   
@@ -78,12 +81,14 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition, userLoca
   };
 
   const daysRemaining = getDaysRemaining(competition.date);
-  const distance = calculateDistance(
-    userLocation?.latitude || null,
-    userLocation?.longitude || null,
+  
+  // Handle distance calculation differently if userLocation is not provided
+  const distance = userLocation ? calculateDistance(
+    userLocation.latitude || null,
+    userLocation.longitude || null,
     competition.latitude,
     competition.longitude
-  );
+  ) : null;
 
   const getStatusInfo = () => {
     if (daysRemaining > 7) {
@@ -132,10 +137,12 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({ competition, userLoca
             </Badge>
             
             <div className="flex items-center gap-2">
-              <Badge variant="outline" className="bg-forest-light/20 text-forest-dark px-3 py-1 gap-1 font-medium border-0">
-                <Navigation size={14} />
-                {formatDistance(distance)}
-              </Badge>
+              {distance !== null && (
+                <Badge variant="outline" className="bg-forest-light/20 text-forest-dark px-3 py-1 gap-1 font-medium border-0">
+                  <Navigation size={14} />
+                  {formatDistance(distance)}
+                </Badge>
+              )}
 
               <button 
                 onClick={toggleFavorite}

@@ -1,7 +1,6 @@
 
 import React, { useRef, useEffect } from 'react';
 import { CompetitionSummary } from '../../types';
-import { UserLocation } from '../../hooks/useUserLocation';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../ui/tabs';
 import CalendarList from './CalendarList';
 import CompetitionPageFavorites from './CompetitionPageFavorites';
@@ -11,7 +10,6 @@ import { useNavigate } from 'react-router-dom';
 
 interface CompetitionLayoutProps {
   competitions: CompetitionSummary[];
-  userLocation?: UserLocation | null;
   fromDate: Date;
   toDate: Date;
   hideTabBar?: boolean;
@@ -19,7 +17,6 @@ interface CompetitionLayoutProps {
 
 const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
   competitions,
-  userLocation,
   fromDate,
   toDate,
   hideTabBar = false
@@ -82,7 +79,6 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
           <div className="px-2 pt-0 pb-8">
             <CalendarList
               competitions={competitions}
-              userLocation={userLocation}
               fromDate={fromDate}
               toDate={toDate}
             />

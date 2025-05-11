@@ -1,16 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
-import { useUserLocation } from '../hooks/useUserLocation';
 import CompetitionList from '../components/competition/CompetitionList';
 import { Star } from 'lucide-react';
 import { CompetitionSummary } from '../types';
 import { useNavigate } from 'react-router-dom';
-import { useLocalStorage } from '../hooks/useLocalStorage';
 
 const FavoritesPage: React.FC = () => {
   const navigate = useNavigate();
-  const { userLocation } = useUserLocation();
   const [favorites, setFavorites] = useState<string[]>([]);
   const [favoriteCompetitions, setFavoriteCompetitions] = useState<CompetitionSummary[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -91,7 +88,6 @@ const FavoritesPage: React.FC = () => {
       <div className="px-2 pt-4">
         <CompetitionList
           competitions={favoriteCompetitions}
-          userLocation={userLocation}
           showFavorites={false}
         />
       </div>
