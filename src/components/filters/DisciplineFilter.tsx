@@ -23,7 +23,8 @@ const DisciplineFilter = ({ selectedDisciplines, onToggle }: DisciplineFilterPro
       [Discipline.Relay]: 'Stafett',
       [Discipline.UltraLong]: 'Ultra-lång',
       [Discipline.PreO]: 'PreO',
-      [Discipline.TempO]: 'TempO'
+      [Discipline.TempO]: 'TempO',
+      [Discipline.Unknown]: 'Okänd' // Added the missing translation for Unknown discipline
     };
     return translations[discipline] || discipline;
   };
