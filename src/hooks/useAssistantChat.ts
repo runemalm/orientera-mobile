@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { toast } from 'sonner';
 import { useLocalStorage } from './useLocalStorage';
@@ -27,6 +28,7 @@ let isConnecting = false;
 let connectionAttempts = 0;
 const MAX_RECONNECT_ATTEMPTS = 5;
 const RECONNECT_DELAY = 2000; // 2 seconds
+let hasRequestedHistory = false; // Flag to track if we've requested history
 
 // Simplified WebSocket configuration
 const WEBSOCKET_BASE_URL = import.meta.env.VITE_WEBSOCKET_BASE_URL || 'https://orientera-mas.delightfulisland-78f87004.northeurope.azurecontainerapps.io/ws';
@@ -86,6 +88,17 @@ const establishConnection = () => {
       isConnecting = false;
       connectionAttempts = 0;
       wsListeners.forEach(listener => listener({ type: 'connection', status: true }));
+      
+      // Request chat history after connection is established and a small delay
+      if (!hasRequestedHistory) {
+        setTimeout(() => {
+          if (globalWsConnection && globalWsConnection.readyState === WebSocket.OPEN) {
+            console.log('Requesting chat history from server');
+            globalWsConnection.send(JSON.stringify({ action: "get-history" }));
+            hasRequestedHistory = true;
+          }
+        }, 500);
+      }
     };
 
     globalWsConnection.onmessage = (event) => {
@@ -103,6 +116,7 @@ const establishConnection = () => {
       globalWsConnection = null;
       isConnecting = false;
       wsListeners.forEach(listener => listener({ type: 'connection', status: false }));
+      hasRequestedHistory = false; // Reset flag when connection closes
 
       // Attempt to reconnect with exponential backoff
       if (connectionAttempts < MAX_RECONNECT_ATTEMPTS) {
