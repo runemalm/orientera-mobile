@@ -1,3 +1,4 @@
+
 // Enums to match backend C# models
 export enum Branch {
   FootO = 'FootO',    // Orienteringslöpning
@@ -24,32 +25,47 @@ export enum Discipline {
   Relay = 'Relay',
   UltraLong = 'UltraLong',
   PreO = 'PreO',
-  TempO = 'TempO'
+  TempO = 'TempO',
+  Unknown = 'Unknown'
 }
 
+// Updated to match the API spec's District enum
 export enum OrienteeringDistrict {
-  Blekinge = 'Blekinge OF',
-  Bohuslan = 'Bohuslän-Dals OF',
-  Dalarna = 'Dalarnas OF',
-  Gotland = 'Gotlands OF',
-  Gavleborg = 'Gävleborgs OF',
-  Halland = 'Hallands OF',
-  Haninge = 'Haninge SOK',
-  Jamtland = 'Jämtland-Härjedalens OF',
-  Jonkoping = 'Jönköpings läns OF',
-  Norrbotten = 'Norrbottens OF',
-  Skane = 'Skånes OF',
-  Smaland = 'SmålandsOF',  // Updated to match API format (no space)
-  Stockholm = 'Stockholms OF',
-  Sodermanland = 'Södermanlands OF',
-  Uppland = 'Upplands OF',
-  Varmland = 'Värmlands OF',
-  Vasterbotten = 'Västerbottens OF',
-  Vastergotland = 'Västergötlands OF',
-  Vasternorrland = 'Västernorrlands OF',
-  Vastmanland = 'Västmanlands OF',
-  Orebro = 'Örebro Läns OF',
-  Ostergotland = 'Östergötlands OF'
+  Blekinge = 'Blekinge',
+  Bohuslan = 'Bohuslan',
+  Dalarna = 'Dalarna',
+  Gotland = 'Gotland',
+  Gastrikland = 'Gastrikland',
+  Goteborg = 'Goteborg',
+  Halland = 'Halland',
+  Halsingland = 'Halsingland',
+  JamtlandHarjedalen = 'JamtlandHarjedalen',
+  Medelpad = 'Medelpad',
+  Norrbotten = 'Norrbotten',
+  Skane = 'Skane',
+  Smaland = 'Smaland',
+  Stockholm = 'Stockholm',
+  Sodermanland = 'Sodermanland',
+  Uppland = 'Uppland',
+  Varmland = 'Varmland',
+  Vasterbotten = 'Vasterbotten',
+  Vastergotland = 'Vastergotland',
+  Vastmanland = 'Vastmanland',
+  Angermanland = 'Angermanland',
+  OrebroLan = 'OrebroLan',
+  Ostergotland = 'Ostergotland',
+  Unknown = 'Unknown'
+}
+
+// Add new enums from the API spec
+export enum CompetitionOrderBy {
+  Date = 'Date',
+  Distance = 'Distance'
+}
+
+export enum OrderDirection {
+  Ascending = 'Ascending',
+  Descending = 'Descending'
 }
 
 export enum ResourceType {
@@ -103,12 +119,12 @@ export interface CompetitionSummary {
   discipline: Discipline;
   competitionType: CompetitionType;
   district: OrienteeringDistrict;
-  branch: Branch; // Added the branch property to fix the error
-  latitude: number | null; // Updated to allow null
-  longitude: number | null; // Updated to allow null
+  branch: Branch;
+  latitude: number | null;
+  longitude: number | null;
   isFavorite?: boolean;
-  participantCount?: number; // Added to match Competition interface
-  clubParticipantCount?: number; // Added to match Competition interface
+  participantCount?: number;
+  clubParticipantCount?: number;
 }
 
 // Competition class to match the backend C# model
@@ -124,16 +140,16 @@ export interface Competition {
   competitionType: CompetitionType;
   district: OrienteeringDistrict;
   branch: Branch;
-  latitude: number | null; // Updated to allow null
-  longitude: number | null; // Updated to allow null
-  registrationDeadline: string | null; // Updated to allow null
-  startTime: string | null; // Updated to allow null
+  latitude: number | null;
+  longitude: number | null;
+  registrationDeadline: string | null;
+  startTime: string | null;
   contact: string;
-  eventorLink?: string | null; // Updated to allow null
-  liveloxLink?: string | null; // Updated to allow null
+  eventorLink?: string | null;
+  liveloxLink?: string | null;
   resources: Resource[];
-  participantCount?: number; // Added property
-  clubParticipantCount?: number; // Added property
+  participantCount?: number;
+  clubParticipantCount?: number;
 }
 
 // Resource interface matching backend C# model
@@ -145,7 +161,7 @@ export interface Resource {
   format: ResourceFormat;
   url: string;
   uploadDate: string;
-  count?: number; // Added count property as optional
+  count?: number;
 }
 
 // Add new interface for favorites

@@ -1,5 +1,5 @@
 
-import { Competition, CompetitionSummary } from "../types";
+import { Competition, CompetitionSummary, CompetitionOrderBy, OrderDirection } from "../types";
 import { mockCompetitions, mockCompetitionDetails } from "../utils/mockData";
 
 // Configuration to determine whether to use mock data or real API
@@ -21,7 +21,11 @@ export const getNearbyCompetitions = async (
     districts?: string[],
     disciplines?: string[],
     competitionTypes?: string[],
-    branches?: string[]
+    branches?: string[],
+    maxDistanceKm?: number,
+    clubs?: string[],
+    orderBy?: CompetitionOrderBy,
+    orderDirection?: OrderDirection
   }
 ): Promise<CompetitionSummary[]> => {
   console.log('API getNearbyCompetitions called with options:', options);
@@ -112,6 +116,19 @@ export const getNearbyCompetitions = async (
       params.append('limit', options.limit.toString());
     }
     
+    // Add location-based filters
+    if (latitude !== 0) {
+      params.append('lat', latitude.toString());
+    }
+    
+    if (longitude !== 0) {
+      params.append('lng', longitude.toString());
+    }
+    
+    if (options?.maxDistanceKm && options.maxDistanceKm > 0) {
+      params.append('maxDistanceKm', options.maxDistanceKm.toString());
+    }
+    
     // Add filter parameters
     if (options?.districts && options.districts.length > 0) {
       options.districts.forEach(district => {
@@ -135,6 +152,22 @@ export const getNearbyCompetitions = async (
       options.branches.forEach(branch => {
         params.append('branches', branch);
       });
+    }
+    
+    // Add clubs filter parameter
+    if (options?.clubs && options.clubs.length > 0) {
+      options.clubs.forEach(club => {
+        params.append('clubs', club);
+      });
+    }
+    
+    // Add sorting parameters
+    if (options?.orderBy) {
+      params.append('orderBy', options.orderBy);
+    }
+    
+    if (options?.orderDirection) {
+      params.append('orderDirection', options.orderDirection);
     }
     
     const apiUrl = `${API_BASE_URL}/competitions/get-competition-summaries?${params.toString()}`;

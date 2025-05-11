@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
-import { Loader2, Info, Filter } from 'lucide-react';
+import { Loader2, Filter } from 'lucide-react';
 import { CompetitionSummary } from '../types';
 import { getNearbyCompetitions } from '../services/api';
 import { useLocalStorage } from '../hooks/useLocalStorage';
@@ -10,14 +10,7 @@ import { addMonths, startOfWeek, endOfWeek } from 'date-fns';
 import CompetitionLayout from '../components/competition/CompetitionLayout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
-import { Link } from 'react-router-dom';
+import { useUserLocation } from '../hooks/useUserLocation';
 
 interface FilterProps {
   useLocationFilter: boolean;
@@ -51,7 +44,7 @@ const CompetitionsPage: React.FC = () => {
   const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filters] = useLocalStorage<FilterProps>('competitionFilters', DEFAULT_FILTERS);
-  const [showInfo, setShowInfo] = useState(false);
+  const { userLocation } = useUserLocation();
 
   // Force the calendar view by setting it directly in localStorage
   useEffect(() => {
@@ -100,19 +93,30 @@ const CompetitionsPage: React.FC = () => {
         districts: safeFilters.districts,
         disciplines: safeFilters.disciplines,
         competitionTypes: safeFilters.competitionTypes,
-        branches: safeFilters.branches
+        branches: safeFilters.branches,
+        maxDistanceKm: safeFilters.useLocationFilter ? safeFilters.maxDistanceKm : undefined
       });
 
+      // Determine if we should use location in the API call
+      let lat = 0;
+      let lng = 0;
+      
+      if (safeFilters.useLocationFilter && userLocation) {
+        lat = userLocation.latitude;
+        lng = userLocation.longitude;
+      }
+
       const result = await getNearbyCompetitions(
-        0, // Default latitude
-        0, // Default longitude
+        lat,
+        lng,
         {
           from: startDate,
           to: endDate,
           districts: safeFilters.districts.length > 0 ? safeFilters.districts : undefined,
           disciplines: safeFilters.disciplines.length > 0 ? safeFilters.disciplines : undefined,
           competitionTypes: safeFilters.competitionTypes.length > 0 ? safeFilters.competitionTypes : undefined,
-          branches: safeFilters.branches.length > 0 ? safeFilters.branches : undefined
+          branches: safeFilters.branches.length > 0 ? safeFilters.branches : undefined,
+          maxDistanceKm: safeFilters.useLocationFilter ? safeFilters.maxDistanceKm : undefined
         }
       );
       
@@ -124,7 +128,7 @@ const CompetitionsPage: React.FC = () => {
     } finally {
       setIsLoadingCompetitions(false);
     }
-  }, [filters]);
+  }, [filters, userLocation]);
 
   useEffect(() => {
     console.log('Initial fetch triggered');
@@ -205,39 +209,6 @@ const CompetitionsPage: React.FC = () => {
       >
         {renderContent()}
       </MobileLayout>
-
-      <Dialog open={showInfo} onOpenChange={setShowInfo}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Om tävlingsvisning</DialogTitle>
-            <DialogDescription className="space-y-3 pt-3">
-              <p>
-                Här kan du se kommande orienteringstävlingar som är relevanta för dig.
-              </p>
-              <p>
-                Du kan använda vår smarta assistent för att hitta specifika tävlingar. 
-              </p>
-              <ul className="list-disc pl-4 space-y-2">
-                <li>"Visa tävlingar i Skåne"</li>
-                <li>"Hitta stafetter i juni"</li>
-                <li>"Visa medeldistanstävlingar nära Göteborg"</li>
-              </ul>
-              <p>
-                Använd filtreringsalternativen för att anpassa dina sökresultat ännu mer.
-              </p>
-              <div className="mt-4 text-center">
-                <Link 
-                  to="/assistant" 
-                  className="text-primary hover:underline font-semibold"
-                  onClick={() => setShowInfo(false)}
-                >
-                  Öppna tävlingsassistenten
-                </Link>
-              </div>
-            </DialogDescription>
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
     </>
   );
 };
