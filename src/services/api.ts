@@ -1,3 +1,4 @@
+
 import { Competition, CompetitionSummary, CompetitionOrderBy, OrderDirection } from "../types";
 import { mockCompetitions, mockCompetitionDetails } from "../utils/mockData";
 
@@ -49,7 +50,7 @@ export const getNearbyCompetitions = async (
     
     if (disciplines && disciplines.length > 0) {
       filteredData = filteredData.filter(comp => 
-        comp.disciplines.some(d => disciplines.includes(d))
+        disciplines.includes(comp.discipline)
       );
     }
     
@@ -73,7 +74,7 @@ export const getNearbyCompetitions = async (
     
     if (clubs && clubs.length > 0) {
       filteredData = filteredData.filter(comp => 
-        clubs.includes(comp.organizingClub)
+        clubs.includes(comp.club)
       );
     }
     
