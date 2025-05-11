@@ -28,7 +28,6 @@ let isConnecting = false;
 let connectionAttempts = 0;
 const MAX_RECONNECT_ATTEMPTS = 5;
 const RECONNECT_DELAY = 2000; // 2 seconds
-let hasRequestedHistory = false; // Flag to track if we've requested history
 
 // Simplified WebSocket configuration
 const WEBSOCKET_BASE_URL = import.meta.env.VITE_WEBSOCKET_BASE_URL || 'https://orientera-mas.delightfulisland-78f87004.northeurope.azurecontainerapps.io/ws';
@@ -55,6 +54,16 @@ const getAppSessionId = () => {
 // Last time we checked the connection status
 let lastConnectionCheck = 0;
 const CONNECTION_CHECK_THROTTLE = 2000; // Don't check more often than every 2 seconds
+
+// Function to check if we've already requested history in this session
+const hasRequestedHistoryBefore = () => {
+  return localStorage.getItem('chat_history_requested') === 'true';
+};
+
+// Function to mark history as requested
+const markHistoryAsRequested = () => {
+  localStorage.setItem('chat_history_requested', 'true');
+};
 
 // Function to establish WebSocket connection
 const establishConnection = () => {
@@ -90,12 +99,13 @@ const establishConnection = () => {
       wsListeners.forEach(listener => listener({ type: 'connection', status: true }));
       
       // Request chat history after connection is established and a small delay
-      if (!hasRequestedHistory) {
+      // but only if we haven't already requested it in this session
+      if (!hasRequestedHistoryBefore()) {
         setTimeout(() => {
           if (globalWsConnection && globalWsConnection.readyState === WebSocket.OPEN) {
             console.log('Requesting chat history from server');
-            globalWsConnection.send(JSON.stringify({ action: "get-history" }));
-            hasRequestedHistory = true;
+            globalWsConnection.send(JSON.stringify({ action: "get_history" }));
+            markHistoryAsRequested();
           }
         }, 500);
       }
@@ -116,7 +126,6 @@ const establishConnection = () => {
       globalWsConnection = null;
       isConnecting = false;
       wsListeners.forEach(listener => listener({ type: 'connection', status: false }));
-      hasRequestedHistory = false; // Reset flag when connection closes
 
       // Attempt to reconnect with exponential backoff
       if (connectionAttempts < MAX_RECONNECT_ATTEMPTS) {
