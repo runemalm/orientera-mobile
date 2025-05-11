@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -118,9 +117,6 @@ const CompetitionsPage: React.FC = () => {
       
       console.log('Competitions fetched:', result.length);
       setCompetitions(result);
-      
-      // Store fetched competitions in localStorage to make them available for favorites
-      localStorage.setItem('savedCompetitions', JSON.stringify(result));
       
     } catch (err) {
       console.error('Error fetching competitions:', err);
