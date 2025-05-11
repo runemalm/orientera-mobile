@@ -215,7 +215,7 @@ export const getCompetitionById = async (id: string): Promise<Competition | null
   // Real API call implementation
   try {
     const response = await fetch(
-      `${API_BASE_URL}/competitions/search-competitions?id=${id}`,
+      `${API_BASE_URL}/competitions/get-competition?id=${id}`,
       {
         headers: {
           'Content-Type': 'application/json',
