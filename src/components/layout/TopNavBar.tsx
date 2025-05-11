@@ -33,8 +33,6 @@ const TopNavBar: React.FC<TopNavBarProps> = ({
     } else {
       setTapCount(prev => {
         if (prev + 1 === 5) {
-          // Make sure to remove chat history requested flag before reload
-          localStorage.removeItem('chat_history_requested');
           window.location.reload();
           return 0;
         }

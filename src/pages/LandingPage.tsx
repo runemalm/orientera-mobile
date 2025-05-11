@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Compass, MapPin, Calendar, Navigation, FileText, RefreshCw, ArrowRight, Smartphone } from 'lucide-react';
@@ -29,8 +30,6 @@ const LandingPage: React.FC = () => {
       // Check for activation only on exact count of 5
       const newCount = timeSinceLastTap <= 1500 ? tapCount + 1 : 1;
       if (newCount === 5) {
-        // Make sure to remove the chat history requested flag before reload
-        localStorage.removeItem('chat_history_requested');
         window.location.reload();
         // Reset counter after activation
         setTapCount(0);
