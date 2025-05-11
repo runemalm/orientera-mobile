@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { toast } from 'sonner';
 import { useLocalStorage } from './useLocalStorage';
@@ -161,7 +160,6 @@ export const useAssistantChat = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
   const listenerIdRef = useRef<number>(Date.now());
-  const hasRequestedHistoryRef = useRef<boolean>(false);
 
   // Register this component as a listener
   useEffect(() => {
@@ -170,12 +168,6 @@ export const useAssistantChat = () => {
     const handleWebSocketEvent = (event: any) => {
       if (event.type === 'connection') {
         setIsConnected(event.status);
-        
-        // If we just connected and have no messages, request chat history
-        if (event.status && messages.length === 0 && !hasRequestedHistoryRef.current) {
-          requestChatHistory();
-          hasRequestedHistoryRef.current = true;
-        }
       } else if (event.type === 'message') {
         try {
           const parsed = JSON.parse(event.data);
@@ -227,12 +219,6 @@ export const useAssistantChat = () => {
     // Check connection status immediately
     if (isWebSocketConnected()) {
       setIsConnected(true);
-      
-      // If we're connected but have no messages, request chat history
-      if (messages.length === 0 && !hasRequestedHistoryRef.current) {
-        requestChatHistory();
-        hasRequestedHistoryRef.current = true;
-      }
     } else {
       setIsConnected(false);
       establishConnection();
@@ -245,21 +231,7 @@ export const useAssistantChat = () => {
       wsListeners = wsListeners.filter(listener => listener !== handleWebSocketEvent);
     };
 
-  }, [setMessages, messages.length]);
-
-  // Function to explicitly request chat history from the server
-  const requestChatHistory = useCallback(() => {
-    console.log('Requesting chat history from server');
-    if (!isWebSocketConnected()) {
-      establishConnection();
-      return;
-    }
-    
-    if (globalWsConnection) {
-      globalWsConnection.send(JSON.stringify({ action: "get-history" }));
-      setIsWaitingForResponse(true);
-    }
-  }, []);
+  }, [setMessages]);
 
   const sendMessage = useCallback((message: string) => {
     if (!message.trim()) {
@@ -322,9 +294,6 @@ export const useAssistantChat = () => {
     if (globalWsConnection) {
       globalWsConnection.send(JSON.stringify({ action: "new_chat" }));
     }
-    
-    // Reset the history request flag
-    hasRequestedHistoryRef.current = false;
   }, []);
 
   return {
@@ -338,6 +307,5 @@ export const useAssistantChat = () => {
     infoMessage,
     isWaitingForResponse,
     agentActivityText,
-    requestChatHistory,
   };
 };

@@ -23,31 +23,16 @@ const AssistantPage = () => {
     isConnected, 
     infoMessage,
     isWaitingForResponse,
-    agentActivityText,
-    requestChatHistory
+    agentActivityText
   } = useAssistantChat();
   
   const SHOW_INFO_MESSAGE = false;
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const hasCheckedForEmptyMessages = useRef<boolean>(false);
 
   // Auto-scroll to bottom when messages change or thinking/waiting status changes
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isWaitingForResponse, agentActivityText]);
-
-  // Check if we need to request history
-  useEffect(() => {
-    // Only do this check once per component mount
-    if (!hasCheckedForEmptyMessages.current && isConnected) {
-      // If we have no messages and we're connected, request the history
-      if (messages.length === 0) {
-        console.log("No messages found, requesting chat history from server");
-        requestChatHistory();
-      }
-      hasCheckedForEmptyMessages.current = true;
-    }
-  }, [messages.length, isConnected, requestChatHistory]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,7 +56,6 @@ const AssistantPage = () => {
     }
     
     resetChat();
-    hasCheckedForEmptyMessages.current = false;
   };
 
   // Reset button component to pass to MobileLayout as leftAction
