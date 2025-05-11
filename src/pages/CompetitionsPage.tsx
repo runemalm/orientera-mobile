@@ -1,10 +1,9 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Loader2, Filter as FilterIcon } from 'lucide-react';
 import { CompetitionSummary, Filter, OrienteeringDistrict, Discipline, CompetitionType, Branch } from '../types';
-import { getNearbyCompetitions } from '../services/api';
+import { searchCompetitions } from '../services/api';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { addMonths, startOfWeek, endOfWeek } from 'date-fns';
 import CompetitionLayout from '../components/competition/CompetitionLayout';
@@ -94,7 +93,7 @@ const CompetitionsPage: React.FC = () => {
       });
 
       // Make a single API call with all appropriate filter parameters
-      const result = await getNearbyCompetitions(
+      const result = await searchCompetitions(
         startDate,
         endDate,
         lat,

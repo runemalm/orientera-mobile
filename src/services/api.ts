@@ -8,9 +8,9 @@ const USE_MOCK_API = false; // Set to false to use real API
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 /**
- * Get competition summaries based on provided filters
+ * Search competitions based on provided filters
  */
-export const getNearbyCompetitions = async (
+export const searchCompetitions = async (
   from?: Date,
   to?: Date,
   lat?: number,
@@ -25,7 +25,7 @@ export const getNearbyCompetitions = async (
   orderBy?: CompetitionOrderBy,
   orderDirection?: OrderDirection
 ): Promise<CompetitionSummary[]> => {
-  console.log('API getNearbyCompetitions called with params:', { 
+  console.log('API searchCompetitions called with params:', { 
     from, to, lat, lng, maxDistanceKm, limit, 
     branches, disciplines, competitionTypes, districts, 
     clubs, orderBy, orderDirection
@@ -197,7 +197,7 @@ export const getNearbyCompetitions = async (
     console.log(`Received ${data.length} competitions from API`);
     return data;
   } catch (error) {
-    console.error('Failed to fetch nearby competitions:', error);
+    console.error('Failed to fetch competitions:', error);
     throw error;
   }
 };
