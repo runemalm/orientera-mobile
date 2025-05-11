@@ -190,7 +190,7 @@ const CompetitionsPage: React.FC = () => {
   return (
     <>
       <MobileLayout 
-        title="Tävlingskalender" 
+        title="Tävlingar" 
         fullHeight
         action={
           <div className="relative">
