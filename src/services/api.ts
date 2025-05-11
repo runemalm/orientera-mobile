@@ -1,4 +1,3 @@
-
 import { Competition, CompetitionSummary, CompetitionOrderBy, OrderDirection } from "../types";
 import { mockCompetitions, mockCompetitionDetails } from "../utils/mockData";
 
@@ -180,7 +179,7 @@ export const getNearbyCompetitions = async (
       params.append('orderDirection', orderDirection);
     }
     
-    const apiUrl = `${API_BASE_URL}/competitions/get-competition-summaries?${params.toString()}`;
+    const apiUrl = `${API_BASE_URL}/competitions/search-competition-summaries?${params.toString()}`;
     console.log('API URL:', apiUrl);
     
     const response = await fetch(apiUrl, {
@@ -216,7 +215,7 @@ export const getCompetitionById = async (id: string): Promise<Competition | null
   // Real API call implementation
   try {
     const response = await fetch(
-      `${API_BASE_URL}/competitions/get-competition?id=${id}`,
+      `${API_BASE_URL}/competitions/search-competitions?id=${id}`,
       {
         headers: {
           'Content-Type': 'application/json',
