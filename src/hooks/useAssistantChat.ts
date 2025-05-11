@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { toast } from 'sonner';
 import { useLocalStorage } from './useLocalStorage';
@@ -55,16 +54,6 @@ const getAppSessionId = () => {
 let lastConnectionCheck = 0;
 const CONNECTION_CHECK_THROTTLE = 2000; // Don't check more often than every 2 seconds
 
-// Function to check if we've already requested history in this session
-const hasRequestedHistoryBefore = () => {
-  return localStorage.getItem('chat_history_requested') === 'true';
-};
-
-// Function to mark history as requested
-const markHistoryAsRequested = () => {
-  localStorage.setItem('chat_history_requested', 'true');
-};
-
 // Function to establish WebSocket connection
 const establishConnection = () => {
   // Only proceed if we don't already have a connection and we're not already connecting
@@ -97,18 +86,6 @@ const establishConnection = () => {
       isConnecting = false;
       connectionAttempts = 0;
       wsListeners.forEach(listener => listener({ type: 'connection', status: true }));
-      
-      // Request chat history after connection is established and a small delay
-      // but only if we haven't already requested it in this session
-      if (!hasRequestedHistoryBefore()) {
-        setTimeout(() => {
-          if (globalWsConnection && globalWsConnection.readyState === WebSocket.OPEN) {
-            console.log('Requesting chat history from server');
-            globalWsConnection.send(JSON.stringify({ action: "get_history" }));
-            markHistoryAsRequested();
-          }
-        }, 1500);
-      }
     };
 
     globalWsConnection.onmessage = (event) => {
