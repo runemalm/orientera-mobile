@@ -28,7 +28,7 @@ export const getNearbyCompetitions = async (
   console.log('API getNearbyCompetitions called with params:', { 
     from, to, lat, lng, maxDistanceKm, limit, 
     branches, disciplines, competitionTypes, districts, 
-    clubs, orderBy, orderDirection 
+    clubs, orderBy, orderDirection
   });
   
   if (USE_MOCK_API) {
@@ -36,8 +36,73 @@ export const getNearbyCompetitions = async (
     await new Promise(resolve => setTimeout(resolve, 800));
     console.log('Using mock data for competitions');
     
-    // Return mock data (no local filtering since we want to match API behavior)
-    return mockCompetitions;
+    // When using mock data, apply local filtering
+    let filteredData = [...mockCompetitions];
+    
+    if (from) {
+      filteredData = filteredData.filter(comp => new Date(comp.date) >= from);
+    }
+    
+    if (to) {
+      filteredData = filteredData.filter(comp => new Date(comp.date) <= to);
+    }
+    
+    if (disciplines && disciplines.length > 0) {
+      filteredData = filteredData.filter(comp => 
+        comp.disciplines.some(d => disciplines.includes(d))
+      );
+    }
+    
+    if (branches && branches.length > 0) {
+      filteredData = filteredData.filter(comp => 
+        branches.includes(comp.branch)
+      );
+    }
+    
+    if (competitionTypes && competitionTypes.length > 0) {
+      filteredData = filteredData.filter(comp => 
+        competitionTypes.includes(comp.competitionType)
+      );
+    }
+    
+    if (districts && districts.length > 0) {
+      filteredData = filteredData.filter(comp => 
+        districts.includes(comp.district)
+      );
+    }
+    
+    if (clubs && clubs.length > 0) {
+      filteredData = filteredData.filter(comp => 
+        clubs.includes(comp.organizingClub)
+      );
+    }
+    
+    // Apply distance filtering if location is provided
+    if (lat !== undefined && lng !== undefined && maxDistanceKm !== undefined) {
+      filteredData = filteredData.filter(comp => {
+        if (!comp.latitude || !comp.longitude) return false;
+        
+        // Calculate distance between competition and provided coordinates
+        const R = 6371; // Earth's radius in km
+        const dLat = (comp.latitude - lat) * Math.PI / 180;
+        const dLon = (comp.longitude - lng) * Math.PI / 180;
+        const a = 
+          Math.sin(dLat/2) * Math.sin(dLat/2) +
+          Math.cos(lat * Math.PI / 180) * Math.cos(comp.latitude * Math.PI / 180) * 
+          Math.sin(dLon/2) * Math.sin(dLon/2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        const distance = R * c;
+        
+        return distance <= maxDistanceKm;
+      });
+    }
+    
+    // Apply limit if provided
+    if (limit !== undefined && limit > 0) {
+      filteredData = filteredData.slice(0, limit);
+    }
+    
+    return filteredData;
   }
   
   // Real API implementation
