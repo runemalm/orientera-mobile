@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Compass } from 'lucide-react';
 
@@ -32,6 +33,10 @@ const Hero: React.FC = () => {
       if (chatUserId) localStorage.setItem('chat_user_id', chatUserId);
       if (appVersionHash) localStorage.setItem('app-version-hash', appVersionHash);
       if (lastVersionCheck) localStorage.setItem('last-version-check', lastVersionCheck);
+      
+      // Reset the chat history requested flag - it will be requested again next time
+      // This ensures the assistant will send history request again
+      localStorage.removeItem('chat_history_requested');
       
       // Reload the page
       window.location.reload();
