@@ -2,8 +2,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
-import { Loader2, Filter } from 'lucide-react';
-import { CompetitionSummary } from '../types';
+import { Loader2, Filter as FilterIcon } from 'lucide-react';
+import { CompetitionSummary, Filter, OrienteeringDistrict, Discipline, CompetitionType, Branch } from '../types';
 import { getNearbyCompetitions } from '../services/api';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { addMonths, startOfWeek, endOfWeek } from 'date-fns';
@@ -12,25 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import FilterBubbles from '../components/filters/FilterBubbles';
 
-interface FilterProps {
-  useLocationFilter: boolean;
-  maxDistanceKm: number;
-  districts: string[];
-  disciplines: string[];
-  competitionTypes: string[];
-  branches: string[];
-  dateRange: {
-    from: Date | null;
-    to: Date | null;
-  };
-  location?: {
-    city: string;
-    latitude: number;
-    longitude: number;
-  };
-}
-
-const DEFAULT_FILTERS: FilterProps = {
+const DEFAULT_FILTERS: Filter = {
   useLocationFilter: false,
   maxDistanceKm: 100,
   districts: [],
@@ -48,7 +30,7 @@ const CompetitionsPage: React.FC = () => {
   const [competitions, setCompetitions] = useState<CompetitionSummary[]>([]);
   const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [filters, setFilters] = useLocalStorage<FilterProps>('competitionFilters', DEFAULT_FILTERS);
+  const [filters, setFilters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
 
   // Force the calendar view by setting it directly in localStorage
   useEffect(() => {
@@ -258,7 +240,7 @@ const CompetitionsPage: React.FC = () => {
               onClick={handleFilterClick}
               className="text-muted-foreground"
             >
-              <Filter className="h-[1.2rem] w-[1.2rem]" />
+              <FilterIcon className="h-[1.2rem] w-[1.2rem]" />
               {activeFiltersCount > 0 && (
                 <Badge 
                   variant="default" 

@@ -22,6 +22,16 @@ export const formatSwedishDate = (date: Date | string | null, formatStr: string 
 };
 
 /**
+ * Format a date in a shorter format (dd MMM)
+ * @param date Date to format
+ * @returns Formatted date string in short format
+ */
+export const formatDateShort = (date: Date | string | null): string => {
+  if (!date) return '';
+  return formatSwedishDate(date, 'd MMM');
+};
+
+/**
  * Convert a date to Swedish timezone
  * @param date Date to convert
  * @returns Date object in Swedish timezone
@@ -83,4 +93,3 @@ export const getDaysRemaining = (date: Date | string): number => {
   const diffTime = zonedDateDay.getTime() - zonedNowDay.getTime();
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 };
-
