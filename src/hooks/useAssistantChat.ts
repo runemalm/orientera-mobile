@@ -107,7 +107,7 @@ const establishConnection = () => {
             globalWsConnection.send(JSON.stringify({ action: "get_history" }));
             markHistoryAsRequested();
           }
-        }, 500);
+        }, 1500);
       }
     };
 
