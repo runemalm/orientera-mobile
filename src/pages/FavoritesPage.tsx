@@ -3,26 +3,29 @@ import React, { useState, useEffect } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { useUserLocation } from '../hooks/useUserLocation';
 import CompetitionList from '../components/competition/CompetitionList';
-import { Star, Loader2 } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { CompetitionSummary } from '../types';
-import { getNearbyCompetitions } from '../services/api';
 import { useNavigate } from 'react-router-dom';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
 const FavoritesPage: React.FC = () => {
   const navigate = useNavigate();
   const { userLocation } = useUserLocation();
   const [favorites, setFavorites] = useState<string[]>([]);
-  const [competitions, setCompetitions] = useState<CompetitionSummary[]>([]);
+  const [favoriteCompetitions, setFavoriteCompetitions] = useState<CompetitionSummary[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
 
-  // Load favorites directly from localStorage
+  // Load favorites and favorite competition data directly from localStorage
   useEffect(() => {
+    // Get favorite IDs
     const storedFavoritesStr = window.localStorage.getItem('favoriteCompetitions');
+    let favoritesArray: string[] = [];
+    
     if (storedFavoritesStr) {
       try {
         const parsed = JSON.parse(storedFavoritesStr);
-        setFavorites(Array.isArray(parsed) ? parsed : []);
+        favoritesArray = Array.isArray(parsed) ? parsed : [];
+        setFavorites(favoritesArray);
       } catch (error) {
         console.error('Error parsing favorites:', error);
         setFavorites([]);
@@ -30,78 +33,41 @@ const FavoritesPage: React.FC = () => {
     } else {
       setFavorites([]);
     }
+
+    // Get saved competition data from localStorage
+    const savedCompetitionsStr = window.localStorage.getItem('savedCompetitions');
+    if (savedCompetitionsStr && favoritesArray.length > 0) {
+      try {
+        const allSavedCompetitions: CompetitionSummary[] = JSON.parse(savedCompetitionsStr);
+        // Filter out only favorites
+        const favorites = allSavedCompetitions.filter(comp => 
+          favoritesArray.includes(comp.id)
+        );
+        setFavoriteCompetitions(favorites);
+      } catch (error) {
+        console.error('Error parsing saved competitions:', error);
+        setFavoriteCompetitions([]);
+      }
+    } else {
+      setFavoriteCompetitions([]);
+    }
+    
+    setIsLoading(false);
   }, []);
 
-  // Fetch competitions when favorites change
-  useEffect(() => {
-    const fetchCompetitions = async () => {
-      if (favorites.length === 0) {
-        // If no favorites, stop loading
-        setIsLoading(false);
-        return;
-      }
-      
-      setIsLoading(true);
-      setError(null);
-      
-      const fromDate = new Date();
-      fromDate.setDate(fromDate.getDate() - 20);
-      
-      const toDate = new Date();
-      toDate.setMonth(toDate.getMonth() + 3);
-      
-      try {
-        // Updated API call using the direct parameter approach
-        const result = await getNearbyCompetitions(
-          fromDate,
-          toDate,
-          undefined,  // lat
-          undefined,  // lng
-          undefined,  // maxDistanceKm
-          100         // limit
-        );
-        
-        setCompetitions(result);
-      } catch (err) {
-        console.error('Error fetching competitions for favorites:', err);
-        setError('Det gick inte att hämta tävlingar. Försök igen senare.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchCompetitions();
-  }, [favorites]); // Only depend on favorites changing
-
-  const favoriteCompetitions = competitions.filter(comp => 
-    favorites.includes(comp.id)
-  );
-
   console.log('FavoritesPage - Favorites IDs:', favorites);
-  console.log('FavoritesPage - All competitions count:', competitions.length);
   console.log('FavoritesPage - Filtered favorites count:', favoriteCompetitions.length);
 
   const handleBack = () => {
     navigate('/profile');
   };
 
-  // Show loading only if we have favorites and we're still loading
-  if (isLoading && favorites.length > 0) {
+  // Show loading while fetching from localStorage (very brief)
+  if (isLoading) {
     return (
       <MobileLayout title="Favoriter" showBackButton={true}>
         <div className="flex flex-col justify-center items-center h-[70vh]">
-          <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
           <p className="text-gray-600">Laddar...</p>
-        </div>
-      </MobileLayout>
-    );
-  }
-
-  if (error) {
-    return (
-      <MobileLayout title="Favoriter" showBackButton={true}>
-        <div className="text-center py-8">
-          <p className="text-gray-500">{error}</p>
         </div>
       </MobileLayout>
     );
