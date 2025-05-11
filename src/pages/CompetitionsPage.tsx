@@ -43,7 +43,8 @@ const CompetitionsPage: React.FC = () => {
   const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filters] = useLocalStorage<FilterProps>('competitionFilters', DEFAULT_FILTERS);
-  const { userLocation } = useUserLocation();
+  const { userLocation, isLoading: isLoadingLocation } = useUserLocation();
+  const [hasInitialFetch, setHasInitialFetch] = useState(false);
 
   // Force the calendar view by setting it directly in localStorage
   useEffect(() => {
@@ -86,6 +87,14 @@ const CompetitionsPage: React.FC = () => {
     const endDate = endOfWeek(sixMonthsFromNow, { weekStartsOn: 1 });
     
     try {
+      // Determine if we should include location parameters
+      const shouldUseLocation = safeFilters.useLocationFilter && userLocation !== null;
+      
+      // Only include location parameters if location filtering is enabled AND we have location data
+      const lat = shouldUseLocation ? userLocation?.latitude : undefined;
+      const lng = shouldUseLocation ? userLocation?.longitude : undefined;
+      const maxDistance = shouldUseLocation ? safeFilters.maxDistanceKm : undefined;
+      
       console.log('Fetching competitions with filters:', {
         from: startDate,
         to: endDate,
@@ -93,13 +102,10 @@ const CompetitionsPage: React.FC = () => {
         disciplines: safeFilters.disciplines,
         competitionTypes: safeFilters.competitionTypes,
         branches: safeFilters.branches,
-        maxDistanceKm: safeFilters.useLocationFilter ? safeFilters.maxDistanceKm : undefined
+        lat: lat,
+        lng: lng,
+        maxDistanceKm: maxDistance
       });
-
-      // Only include location parameters if location filtering is enabled
-      const lat = safeFilters.useLocationFilter && userLocation ? userLocation.latitude : undefined;
-      const lng = safeFilters.useLocationFilter && userLocation ? userLocation.longitude : undefined;
-      const maxDistance = safeFilters.useLocationFilter ? safeFilters.maxDistanceKm : undefined;
 
       // Make a single API call with all appropriate filter parameters
       const result = await getNearbyCompetitions(
@@ -126,10 +132,29 @@ const CompetitionsPage: React.FC = () => {
     }
   }, [filters, userLocation]);
 
+  // Wait for both filter data and location data to be available before fetching
   useEffect(() => {
-    console.log('Initial fetch triggered');
+    // Skip the effect if we've already done the initial fetch
+    if (hasInitialFetch) return;
+    
+    // If we're waiting for location data and the filter requires location, keep waiting
+    if (isLoadingLocation && filters?.useLocationFilter) {
+      return;
+    }
+    
+    // Now we can do our fetch - we either have location data if needed, or we don't need it
+    console.log('Initial fetch triggered, useLocationFilter:', filters?.useLocationFilter, 'userLocation:', userLocation);
     fetchCompetitions();
-  }, [fetchCompetitions]);
+    setHasInitialFetch(true);
+  }, [fetchCompetitions, filters, userLocation, isLoadingLocation, hasInitialFetch]);
+
+  // If filters change after initial load, we need to refetch
+  useEffect(() => {
+    if (hasInitialFetch) {
+      console.log('Filters changed, refetching...');
+      fetchCompetitions();
+    }
+  }, [filters, fetchCompetitions, hasInitialFetch]);
 
   const handleFilterClick = () => {
     // Navigate directly to manual filtering page
