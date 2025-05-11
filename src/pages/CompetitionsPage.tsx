@@ -10,6 +10,7 @@ import { addMonths, startOfWeek, endOfWeek } from 'date-fns';
 import CompetitionLayout from '../components/competition/CompetitionLayout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import FilterBubbles from '../components/filters/FilterBubbles';
 
 interface FilterProps {
   useLocationFilter: boolean;
@@ -47,7 +48,7 @@ const CompetitionsPage: React.FC = () => {
   const [competitions, setCompetitions] = useState<CompetitionSummary[]>([]);
   const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [filters] = useLocalStorage<FilterProps>('competitionFilters', DEFAULT_FILTERS);
+  const [filters, setFilters] = useLocalStorage<FilterProps>('competitionFilters', DEFAULT_FILTERS);
 
   // Force the calendar view by setting it directly in localStorage
   useEffect(() => {
@@ -146,6 +147,55 @@ const CompetitionsPage: React.FC = () => {
     navigate('/manual-filtering');
   };
 
+  // Handle removing a filter
+  const handleRemoveFilter = (filterType: string, value?: string) => {
+    // Create a copy of current filters
+    const updatedFilters = { ...filters };
+    
+    // Handle removing different types of filters
+    switch (filterType) {
+      case 'districts':
+        if (value) {
+          updatedFilters.districts = filters.districts.filter(item => item !== value);
+        } else {
+          updatedFilters.districts = [];
+        }
+        break;
+      case 'disciplines':
+        if (value) {
+          updatedFilters.disciplines = filters.disciplines.filter(item => item !== value);
+        } else {
+          updatedFilters.disciplines = [];
+        }
+        break;
+      case 'competitionTypes':
+        if (value) {
+          updatedFilters.competitionTypes = filters.competitionTypes.filter(item => item !== value);
+        } else {
+          updatedFilters.competitionTypes = [];
+        }
+        break;
+      case 'branches':
+        if (value) {
+          updatedFilters.branches = filters.branches.filter(item => item !== value);
+        } else {
+          updatedFilters.branches = [];
+        }
+        break;
+      case 'dateRange':
+        updatedFilters.dateRange = { from: null, to: null };
+        break;
+      case 'location':
+        updatedFilters.useLocationFilter = false;
+        break;
+      default:
+        break;
+    }
+    
+    // Update filters
+    setFilters(updatedFilters);
+  };
+
   const renderContent = () => {
     if (isLoadingCompetitions && competitions.length === 0) {
       return (
@@ -178,12 +228,20 @@ const CompetitionsPage: React.FC = () => {
     })();
 
     return (
-      <CompetitionLayout
-        competitions={competitions}
-        fromDate={fromDate}
-        toDate={toDate}
-        hideTabBar={true} // Hide the tabs
-      />
+      <>
+        {/* Add filter bubbles above the competition list */}
+        <FilterBubbles 
+          filters={filters} 
+          onRemoveFilter={handleRemoveFilter} 
+        />
+        
+        <CompetitionLayout
+          competitions={competitions}
+          fromDate={fromDate}
+          toDate={toDate}
+          hideTabBar={true} // Hide the tabs
+        />
+      </>
     );
   };
 
