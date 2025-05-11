@@ -4,10 +4,8 @@ import MobileLayout from '../components/layout/MobileLayout';
 import CompetitionList from '../components/competition/CompetitionList';
 import { Star } from 'lucide-react';
 import { CompetitionSummary } from '../types';
-import { useNavigate } from 'react-router-dom';
 
 const FavoritesPage: React.FC = () => {
-  const navigate = useNavigate();
   const [favorites, setFavorites] = useState<string[]>([]);
   const [favoriteCompetitions, setFavoriteCompetitions] = useState<CompetitionSummary[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -52,17 +50,10 @@ const FavoritesPage: React.FC = () => {
     setIsLoading(false);
   }, []);
 
-  console.log('FavoritesPage - Favorites IDs:', favorites);
-  console.log('FavoritesPage - Filtered favorites count:', favoriteCompetitions.length);
-
-  const handleBack = () => {
-    navigate('/profile');
-  };
-
   // Show loading while fetching from localStorage (very brief)
   if (isLoading) {
     return (
-      <MobileLayout title="Favoriter" showBackButton={true}>
+      <MobileLayout title="Favoriter">
         <div className="flex flex-col justify-center items-center h-[70vh]">
           <p className="text-gray-600">Laddar...</p>
         </div>
@@ -72,8 +63,8 @@ const FavoritesPage: React.FC = () => {
 
   if (favorites.length === 0 || favoriteCompetitions.length === 0) {
     return (
-      <MobileLayout title="Favoriter" showBackButton={true}>
-        <div className="text-center py-8">
+      <MobileLayout title="Favoriter">
+        <div className="text-center py-8 bg-white rounded-lg shadow-sm border border-gray-100 mx-4 mt-4">
           <div className="text-gray-400 mb-2">
             <Star className="w-12 h-12 mx-auto" />
           </div>
@@ -84,8 +75,8 @@ const FavoritesPage: React.FC = () => {
   }
 
   return (
-    <MobileLayout title="Favoriter" showBackButton={true}>
-      <div className="px-2 pt-4">
+    <MobileLayout title="Favoriter">
+      <div className="px-4 pt-4">
         <CompetitionList
           competitions={favoriteCompetitions}
           showFavorites={false}

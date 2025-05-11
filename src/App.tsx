@@ -12,7 +12,7 @@ import CarpoolingPage from './pages/CarpoolingPage';
 import SettingsPage from './pages/SettingsPage';
 import CompetitionMapPage from './pages/CompetitionMapPage';
 import NotFound from './pages/NotFound';
-import ProfilePage from './pages/ProfilePage';
+import FavoritesPage from './pages/FavoritesPage';
 import AssistantPage from './pages/AssistantPage';
 import AiFilteringPage from './pages/AiFilteringPage';
 import ManualFilterPage from './pages/ManualFilterPage';
@@ -36,7 +36,7 @@ const App = () => {
         <Route path="/competition/:competitionId/club-participants" element={<ClubParticipantsPage />} />
         <Route path="/competition/:competitionId/carpooling" element={<CarpoolingPage />} />
         <Route path="/competition/:competitionId/map" element={<CompetitionMapPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/favorites" element={<FavoritesPage />} />
         <Route path="/assistant" element={<AssistantPage />} />
         <Route path="/ai-filtering" element={<AiFilteringPage />} />
         <Route path="/manual-filtering" element={<ManualFilterPage />} />

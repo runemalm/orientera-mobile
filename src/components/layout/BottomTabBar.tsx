@@ -1,6 +1,7 @@
+
 import React, { useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { CalendarRange, Home, UserRound, Sparkles } from 'lucide-react';
+import { CalendarRange, Home, Star, Sparkles } from 'lucide-react';
 import { TabName } from '../../types';
 
 const BottomTabBar: React.FC = () => {
@@ -15,12 +16,10 @@ const BottomTabBar: React.FC = () => {
     currentPath === '/ai-filtering';
     
   const isHome = currentPath === '/home' || currentPath === '/';
-  
-  // Consider coming-soon page as profile-related when navigating from profile
-  const isProfileRelated = 
-    currentPath === '/profile' ||
-    (currentPath === '/coming-soon' && location.state?.from);
 
+  // Include favorites page in the list of paths
+  const isFavoritesRelated = currentPath === '/favorites';
+  
   const tabs: { name: TabName; icon: React.ReactNode; label: string; path: string }[] = [
     {
       name: 'home',
@@ -41,10 +40,10 @@ const BottomTabBar: React.FC = () => {
       path: '/competitions'
     },
     {
-      name: 'profile',
-      icon: <UserRound size={24} />,
-      label: 'Profil',
-      path: '/profile'
+      name: 'favorites',
+      icon: <Star size={24} />,
+      label: 'Favoriter',
+      path: '/favorites'
     }
   ];
 
@@ -62,11 +61,11 @@ const BottomTabBar: React.FC = () => {
           className={`flex flex-col items-center justify-center w-full py-2 ${
             (tab.name === 'competitions' && isCompetitionRelated) ||
             (tab.name === 'home' && isHome) ||
-            (tab.name === 'profile' && isProfileRelated) ||
+            (tab.name === 'favorites' && isFavoritesRelated) ||
             (tab.path === currentPath && 
               tab.name !== 'home' && 
               tab.name !== 'competitions' &&
-              tab.name !== 'profile')
+              tab.name !== 'favorites')
               ? 'text-primary font-medium'
               : 'text-gray-500'
           }`}
