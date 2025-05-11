@@ -1,4 +1,3 @@
-
 import React, { useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { CalendarRange, Home, UserRound, Sparkles } from 'lucide-react';
@@ -18,10 +17,8 @@ const BottomTabBar: React.FC = () => {
   const isHome = currentPath === '/home' || currentPath === '/';
   
   // Consider coming-soon page as profile-related when navigating from profile
-  // Also consider favorites page as profile-related
   const isProfileRelated = 
-    currentPath === '/profile' || 
-    currentPath === '/favorites' ||
+    currentPath === '/profile' ||
     (currentPath === '/coming-soon' && location.state?.from);
 
   const tabs: { name: TabName; icon: React.ReactNode; label: string; path: string }[] = [
