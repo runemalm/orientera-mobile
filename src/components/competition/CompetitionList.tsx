@@ -3,17 +3,14 @@ import React, { useState, useEffect } from 'react';
 import { Star, Calendar } from 'lucide-react';
 import { CompetitionSummary } from '../../types';
 import CompetitionCard from '../CompetitionCard';
-import { UserLocation } from '../../hooks/useUserLocation';
 
 interface CompetitionListProps {
   competitions: CompetitionSummary[];
-  userLocation: UserLocation;
   showFavorites?: boolean;
 }
 
 const CompetitionList: React.FC<CompetitionListProps> = ({ 
   competitions, 
-  userLocation,
   showFavorites = false 
 }) => {
   const [favorites, setFavorites] = useState<string[]>([]);
@@ -65,7 +62,6 @@ const CompetitionList: React.FC<CompetitionListProps> = ({
         <CompetitionCard 
           key={competition.id} 
           competition={competition}
-          userLocation={userLocation}
         />
       ))}
     </div>

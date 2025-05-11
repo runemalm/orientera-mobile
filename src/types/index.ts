@@ -95,13 +95,18 @@ export type TabName = 'home' | 'competitions' | 'favorites' | 'profile' | 'setti
 export interface Filter {
   useLocationFilter: boolean;
   maxDistanceKm: number;
-  districts: string[];
-  disciplines: string[];
-  competitionTypes: string[];
-  branches: string[];
+  districts: OrienteeringDistrict[];
+  disciplines: Discipline[];
+  competitionTypes: CompetitionType[];
+  branches: Branch[];
   dateRange: {
     from: Date | null;
-    to: Date | null;
+    to: null;
+  };
+  location?: {
+    city: string;
+    latitude: number;
+    longitude: number;
   };
 }
 

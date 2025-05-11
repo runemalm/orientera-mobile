@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -9,7 +10,6 @@ import { addMonths, startOfWeek, endOfWeek } from 'date-fns';
 import CompetitionLayout from '../components/competition/CompetitionLayout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { useUserLocation } from '../hooks/useUserLocation';
 
 interface FilterProps {
   useLocationFilter: boolean;
@@ -21,6 +21,11 @@ interface FilterProps {
   dateRange: {
     from: Date | null;
     to: Date | null;
+  };
+  location?: {
+    city: string;
+    latitude: number;
+    longitude: number;
   };
 }
 
@@ -43,8 +48,6 @@ const CompetitionsPage: React.FC = () => {
   const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filters] = useLocalStorage<FilterProps>('competitionFilters', DEFAULT_FILTERS);
-  const { userLocation, isLoading: isLoadingLocation } = useUserLocation();
-  const [hasInitialFetch, setHasInitialFetch] = useState(false);
 
   // Force the calendar view by setting it directly in localStorage
   useEffect(() => {
@@ -88,11 +91,11 @@ const CompetitionsPage: React.FC = () => {
     
     try {
       // Determine if we should include location parameters
-      const shouldUseLocation = safeFilters.useLocationFilter && userLocation !== null;
+      const shouldUseLocation = safeFilters.useLocationFilter && safeFilters.location !== undefined;
       
       // Only include location parameters if location filtering is enabled AND we have location data
-      const lat = shouldUseLocation ? userLocation?.latitude : undefined;
-      const lng = shouldUseLocation ? userLocation?.longitude : undefined;
+      const lat = shouldUseLocation ? safeFilters.location?.latitude : undefined;
+      const lng = shouldUseLocation ? safeFilters.location?.longitude : undefined;
       const maxDistance = shouldUseLocation ? safeFilters.maxDistanceKm : undefined;
       
       console.log('Fetching competitions with filters:', {
@@ -130,31 +133,13 @@ const CompetitionsPage: React.FC = () => {
     } finally {
       setIsLoadingCompetitions(false);
     }
-  }, [filters, userLocation]);
+  }, [filters]);
 
-  // Wait for both filter data and location data to be available before fetching
+  // Fetch competitions when the component mounts or filters change
   useEffect(() => {
-    // Skip the effect if we've already done the initial fetch
-    if (hasInitialFetch) return;
-    
-    // If we're waiting for location data and the filter requires location, keep waiting
-    if (isLoadingLocation && filters?.useLocationFilter) {
-      return;
-    }
-    
-    // Now we can do our fetch - we either have location data if needed, or we don't need it
-    console.log('Initial fetch triggered, useLocationFilter:', filters?.useLocationFilter, 'userLocation:', userLocation);
+    console.log('Fetching competitions due to filter change');
     fetchCompetitions();
-    setHasInitialFetch(true);
-  }, [fetchCompetitions, filters, userLocation, isLoadingLocation, hasInitialFetch]);
-
-  // If filters change after initial load, we need to refetch
-  useEffect(() => {
-    if (hasInitialFetch) {
-      console.log('Filters changed, refetching...');
-      fetchCompetitions();
-    }
-  }, [filters, fetchCompetitions, hasInitialFetch]);
+  }, [fetchCompetitions]);
 
   const handleFilterClick = () => {
     // Navigate directly to manual filtering page

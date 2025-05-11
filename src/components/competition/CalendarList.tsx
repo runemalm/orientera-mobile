@@ -1,7 +1,6 @@
 
 import React, { useMemo } from 'react';
 import { CompetitionSummary } from '../../types';
-import { UserLocation } from '../../hooks/useUserLocation';
 import { 
   startOfWeek,
   endOfWeek, 
@@ -19,14 +18,12 @@ import CalendarFlow from './CalendarFlow';
 
 interface CalendarListProps {
   competitions: CompetitionSummary[];
-  userLocation?: UserLocation | null;
   fromDate: Date;
   toDate: Date;
 }
 
 const CalendarList: React.FC<CalendarListProps> = ({
   competitions,
-  userLocation,
   fromDate,
   toDate
 }) => {

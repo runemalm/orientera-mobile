@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -41,7 +42,8 @@ const DEFAULT_FILTERS: Filter = {
   dateRange: {
     from: null,
     to: null
-  }
+  },
+  location: undefined
 };
 
 type DatePickerType = 'from' | 'to' | null;
@@ -53,7 +55,7 @@ const ManualFilterPage = () => {
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [datePickerType, setDatePickerType] = useState<DatePickerType>(null);
   const [locationDialogOpen, setLocationDialogOpen] = useState(false);
-  const { userLocation, updateUserLocation } = useUserLocation();
+  const { userLocation } = useUserLocation();
   const [hasChanges, setHasChanges] = useState(false);
   
   // Store initial filter state when component mounts
@@ -91,7 +93,8 @@ const ManualFilterPage = () => {
   const clearFilters = () => {
     const currentLocationSettings = {
       maxDistanceKm: filters.maxDistanceKm,
-      useLocationFilter: false // Disable the location filter
+      useLocationFilter: false, // Disable the location filter
+      location: filters.location // Keep the location but don't use it
     };
     
     setFilters({
@@ -192,15 +195,21 @@ const ManualFilterPage = () => {
   };
 
   const handleLocationSelect = (location: { city: string; latitude: number; longitude: number }) => {
-    updateUserLocation(location);
+    // Update the location directly in the filters
+    setFilters({
+      ...filters,
+      location: location
+    });
+    
     setLocationDialogOpen(false);
     
     // If selecting a location, also enable the location filter
     if (!filters.useLocationFilter) {
-      setFilters({
-        ...filters,
-        useLocationFilter: true
-      });
+      setFilters(prevFilters => ({
+        ...prevFilters,
+        useLocationFilter: true,
+        location: location
+      }));
     }
   };
 
@@ -292,7 +301,7 @@ const ManualFilterPage = () => {
           {/* Location Filter Section */}
           <LocationFilter 
             useLocationFilter={filters.useLocationFilter}
-            locationCity={userLocation?.city}
+            locationCity={filters.location?.city}
             maxDistanceKm={filters.maxDistanceKm}
             onLocationFilterToggle={handleLocationFilterToggle}
             onOpenLocationDialog={() => setLocationDialogOpen(true)}

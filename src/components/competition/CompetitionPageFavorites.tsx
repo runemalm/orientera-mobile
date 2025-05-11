@@ -2,7 +2,6 @@
 import React from 'react';
 import { CompetitionSummary } from '@/types';
 import CompetitionList from './CompetitionList';
-import { useUserLocation } from '@/hooks/useUserLocation';
 import { Star } from 'lucide-react';
 
 interface CompetitionPageFavoritesProps {
@@ -10,7 +9,6 @@ interface CompetitionPageFavoritesProps {
 }
 
 const CompetitionPageFavorites: React.FC<CompetitionPageFavoritesProps> = ({ competitions }) => {
-  const { userLocation } = useUserLocation();
   const [favorites, setFavorites] = React.useState<string[]>([]);
   
   React.useEffect(() => {
@@ -45,7 +43,6 @@ const CompetitionPageFavorites: React.FC<CompetitionPageFavoritesProps> = ({ com
     <div className="px-0">
       <CompetitionList
         competitions={favoriteCompetitions}
-        userLocation={userLocation}
         showFavorites={false}
       />
     </div>
