@@ -236,3 +236,64 @@ export const getCompetitionById = async (id: string): Promise<Competition | null
     throw error;
   }
 };
+
+/**
+ * Get multiple competitions by their IDs
+ * @param ids Array of competition IDs to fetch
+ * @param returnSummaries If true, returns CompetitionSummary objects instead of full Competition objects
+ */
+export const getCompetitionsByIds = async (
+  ids: string[], 
+  returnSummaries: boolean = false
+): Promise<CompetitionSummary[] | Competition[]> => {
+  if (!ids.length) return [];
+  
+  if (USE_MOCK_API) {
+    // Simulate API latency
+    await new Promise(resolve => setTimeout(resolve, 800));
+    console.log('Using mock data for competitions by IDs');
+    
+    if (returnSummaries) {
+      // Return summary data from mockCompetitions
+      return mockCompetitions.filter(comp => ids.includes(comp.id));
+    } else {
+      // Return detailed data from mockCompetitionDetails
+      return ids.map(id => mockCompetitionDetails[id]).filter(Boolean);
+    }
+  }
+  
+  // Real API implementation
+  try {
+    console.log('Making real API request for competitions by IDs');
+    const params = new URLSearchParams();
+    
+    // Add IDs to params
+    ids.forEach(id => {
+      params.append('ids', id);
+    });
+    
+    // Add returnSummaries parameter
+    params.append('returnSummaries', returnSummaries.toString());
+    
+    const apiUrl = `${API_BASE_URL}/competitions/get-competitions?${params.toString()}`;
+    console.log('API URL:', apiUrl);
+    
+    const response = await fetch(apiUrl, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    if (!response.ok) {
+      console.error('API error:', response.status);
+      throw new Error(`API error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    console.log(`Received ${data.length} competitions from API by IDs`);
+    return data;
+  } catch (error) {
+    console.error('Failed to fetch competitions by IDs:', error);
+    throw error;
+  }
+};
