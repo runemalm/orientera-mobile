@@ -1,4 +1,3 @@
-
 // Enums to match backend C# models
 export enum Branch {
   FootO = 'FootO',    // Orienteringslöpning
@@ -25,8 +24,7 @@ export enum Discipline {
   Relay = 'Relay',
   UltraLong = 'UltraLong',
   PreO = 'PreO',
-  TempO = 'TempO',
-  Unknown = 'Unknown'
+  TempO = 'TempO'
 }
 
 // Updated to match the API spec's District enum
@@ -53,8 +51,7 @@ export enum OrienteeringDistrict {
   Vastmanland = 'Vastmanland',
   Angermanland = 'Angermanland',
   OrebroLan = 'OrebroLan',
-  Ostergotland = 'Ostergotland',
-  Unknown = 'Unknown'
+  Ostergotland = 'Ostergotland'
 }
 
 // Add new enums from the API spec
