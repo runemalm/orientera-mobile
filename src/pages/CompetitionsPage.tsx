@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -96,12 +97,12 @@ const CompetitionsPage: React.FC = () => {
         maxDistanceKm: safeFilters.useLocationFilter ? safeFilters.maxDistanceKm : undefined
       });
 
-      // Determine location parameters
+      // Only include location parameters if location filtering is enabled
       const lat = safeFilters.useLocationFilter && userLocation ? userLocation.latitude : undefined;
       const lng = safeFilters.useLocationFilter && userLocation ? userLocation.longitude : undefined;
       const maxDistance = safeFilters.useLocationFilter ? safeFilters.maxDistanceKm : undefined;
 
-      // Use updated API call with direct parameters
+      // Make a single API call with all appropriate filter parameters
       const result = await getNearbyCompetitions(
         startDate,
         endDate,
@@ -117,6 +118,10 @@ const CompetitionsPage: React.FC = () => {
       
       console.log('Competitions fetched:', result.length);
       setCompetitions(result);
+      
+      // Store fetched competitions in localStorage to make them available for favorites
+      localStorage.setItem('savedCompetitions', JSON.stringify(result));
+      
     } catch (err) {
       console.error('Error fetching competitions:', err);
       setError('Det gick inte att hämta tävlingar. Försök igen senare.');
