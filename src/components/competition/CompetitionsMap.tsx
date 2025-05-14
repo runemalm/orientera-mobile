@@ -61,13 +61,13 @@ const CompetitionsMap: React.FC<CompetitionsMapProps> = ({
     const customMarkerIcon = createOrienteeringMarkerIcon();
     
     // Create bounds array to hold coordinates for fitting
-    const boundsArray: [number, number][] = [];
+    const boundsCoords: L.LatLngExpression[] = [];
     
     // Add markers for each competition with coordinates
     competitions.forEach(competition => {
       if (competition.latitude && competition.longitude) {
         // Add point to bounds array
-        boundsArray.push([competition.latitude, competition.longitude]);
+        boundsCoords.push([competition.latitude, competition.longitude]);
         
         // Create marker
         const marker = L.marker(
@@ -99,14 +99,14 @@ const CompetitionsMap: React.FC<CompetitionsMapProps> = ({
       }
     });
     
-    // Style all orienteering markers
+    // Apply styling to all marker icons
     document.querySelectorAll('.checkpoint-icon-container').forEach(container => {
       styleOrienteeringMarker(container);
     });
     
     // Fit map to bounds with some padding if we have points
-    if (boundsArray.length > 0) {
-      const bounds = L.latLngBounds(boundsArray);
+    if (boundsCoords.length > 0) {
+      const bounds = L.latLngBounds(boundsCoords);
       map.fitBounds(bounds, { padding: [50, 50] });
     } else {
       // Fallback to Sweden's center if no competitions found

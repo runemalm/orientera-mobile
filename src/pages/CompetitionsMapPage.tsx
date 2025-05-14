@@ -42,6 +42,18 @@ const CompetitionsMapPage: React.FC = () => {
       const lng = shouldUseLocation ? filters.location?.longitude : undefined;
       const maxDistance = shouldUseLocation ? filters.maxDistanceKm : undefined;
       
+      console.log('Fetching map competitions with filters:', {
+        from: startDate, 
+        to: endDate,
+        lat, 
+        lng, 
+        maxDistance,
+        branches: filters.branches,
+        disciplines: filters.disciplines,
+        competitionTypes: filters.competitionTypes,
+        districts: filters.districts
+      });
+      
       // Make API call with all appropriate filter parameters
       return searchCompetitions(
         startDate,
@@ -72,7 +84,7 @@ const CompetitionsMapPage: React.FC = () => {
     return (
       <MobileLayout title="Laddar..." showBackButton>
         <div className="flex flex-col justify-center items-center h-64 mt-4 space-y-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+          <Loader2 className="h-12 w-12 text-primary animate-spin" />
           <p className="text-gray-500">Hämtar tävlingar...</p>
         </div>
       </MobileLayout>
