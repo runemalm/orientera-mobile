@@ -1,4 +1,3 @@
-
 import React, { useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { CalendarRange, Home, Star, Sparkles } from 'lucide-react';
@@ -13,7 +12,8 @@ const BottomTabBar: React.FC = () => {
     currentPath === '/competitions' || 
     currentPath.startsWith('/competition/') ||
     currentPath === '/manual-filtering' || 
-    currentPath === '/ai-filtering';
+    currentPath === '/ai-filtering' ||
+    currentPath === '/competitions/map';
     
   const isHome = currentPath === '/home' || currentPath === '/';
 
