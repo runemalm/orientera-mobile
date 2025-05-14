@@ -55,7 +55,7 @@ const CompetitionsMapPage: React.FC = () => {
       });
       
       // Make API call with all appropriate filter parameters
-      return searchCompetitions(
+      const result = await searchCompetitions(
         startDate,
         endDate,
         lat,
@@ -67,6 +67,12 @@ const CompetitionsMapPage: React.FC = () => {
         filters.competitionTypes.length > 0 ? filters.competitionTypes : undefined,
         filters.districts.length > 0 ? filters.districts : undefined
       );
+      
+      console.log(`Fetched ${result.length} competitions, checking how many have coordinates...`);
+      const withCoords = result.filter(comp => comp.latitude && comp.longitude);
+      console.log(`${withCoords.length} competitions have coordinates`);
+      
+      return result;
     },
   });
 
@@ -74,6 +80,8 @@ const CompetitionsMapPage: React.FC = () => {
   const competitionsWithCoordinates = competitions?.filter(
     comp => comp.latitude && comp.longitude
   ) || [];
+
+  console.log(`CompetitionsMapPage: ${competitionsWithCoordinates.length} competitions with coordinates out of ${competitions?.length || 0} total`);
 
   // Calculate the number of competitions without coordinates
   const missingCoordinatesCount = competitions ? 

@@ -57,19 +57,22 @@ const CompetitionsMap: React.FC<CompetitionsMapProps> = ({
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    // Create a custom icon for the markers
-    const customMarkerIcon = createOrienteeringMarkerIcon();
+    console.log(`Adding ${competitions.length} competition markers to map...`);
     
     // Create bounds array to hold coordinates for fitting
     const boundsCoords: L.LatLngExpression[] = [];
     
     // Add markers for each competition with coordinates
-    competitions.forEach(competition => {
+    competitions.forEach((competition, index) => {
       if (competition.latitude && competition.longitude) {
+        console.log(`Adding marker ${index+1}:`, competition.name, competition.latitude, competition.longitude);
+        
         // Add point to bounds array
         boundsCoords.push([competition.latitude, competition.longitude]);
         
-        // Create marker
+        // Create marker with custom icon
+        const customMarkerIcon = createOrienteeringMarkerIcon();
+        
         const marker = L.marker(
           [competition.latitude, competition.longitude], 
           { icon: customMarkerIcon }
@@ -99,17 +102,23 @@ const CompetitionsMap: React.FC<CompetitionsMapProps> = ({
       }
     });
     
-    // Apply styling to all marker icons
-    document.querySelectorAll('.checkpoint-icon-container').forEach(container => {
-      styleOrienteeringMarker(container);
-    });
+    // Important: Style all marker icons AFTER they've been added to the map
+    setTimeout(() => {
+      console.log('Styling markers...');
+      document.querySelectorAll('.checkpoint-icon-container').forEach((container, index) => {
+        console.log(`Styling marker ${index+1}`);
+        styleOrienteeringMarker(container);
+      });
+    }, 100);
     
     // Fit map to bounds with some padding if we have points
     if (boundsCoords.length > 0) {
+      console.log(`Fitting map to ${boundsCoords.length} points`);
       const bounds = L.latLngBounds(boundsCoords);
       map.fitBounds(bounds, { padding: [50, 50] });
     } else {
       // Fallback to Sweden's center if no competitions found
+      console.log('No coordinates to fit, centering on Sweden');
       map.setView([62.0, 15.0], 5);
     }
     
@@ -136,6 +145,10 @@ const CompetitionsMap: React.FC<CompetitionsMapProps> = ({
       }
       .popup-button:hover {
         background-color: #ea580c;
+      }
+      .custom-orienteering-marker {
+        background: transparent;
+        border: none;
       }
     `;
     document.head.appendChild(style);

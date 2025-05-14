@@ -8,6 +8,7 @@ import L from 'leaflet';
  */
 export const styleOrienteeringMarker = (iconContainer: Element): void => {
   if (iconContainer) {
+    // Clear any existing content
     iconContainer.innerHTML = `
       <div style="position: relative; width: 24px; height: 24px;">
         <div style="position: absolute; inset: 0; border: 2px solid #666; border-radius: 2px; transform: rotate(45deg);"></div>
@@ -27,9 +28,9 @@ export const styleOrienteeringMarker = (iconContainer: Element): void => {
 export const createOrienteeringMarkerIcon = (): L.DivIcon => {
   return L.divIcon({
     className: 'custom-orienteering-marker',
-    html: '<div class="checkpoint-icon-container"></div>',
-    iconSize: [32, 32],
-    iconAnchor: [16, 32],
+    html: '<div class="checkpoint-icon-container" style="width:30px;height:30px;"></div>',
+    iconSize: [30, 30],
+    iconAnchor: [15, 30], 
     popupAnchor: [0, -30]
   });
 };
