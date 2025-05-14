@@ -60,14 +60,14 @@ const CompetitionsMap: React.FC<CompetitionsMapProps> = ({
     // Create a custom icon for the markers
     const customMarkerIcon = createOrienteeringMarkerIcon();
     
-    // Bounds to fit all markers
-    const bounds = L.latLngBounds([]);
+    // Create bounds array to hold coordinates for fitting
+    const boundsArray: [number, number][] = [];
     
     // Add markers for each competition with coordinates
     competitions.forEach(competition => {
       if (competition.latitude && competition.longitude) {
-        // Add point to bounds
-        bounds.extend([competition.latitude, competition.longitude]);
+        // Add point to bounds array
+        boundsArray.push([competition.latitude, competition.longitude]);
         
         // Create marker
         const marker = L.marker(
@@ -104,8 +104,9 @@ const CompetitionsMap: React.FC<CompetitionsMapProps> = ({
       styleOrienteeringMarker(container);
     });
     
-    // Fit map to bounds with some padding
-    if (!bounds.isEmpty()) {
+    // Fit map to bounds with some padding if we have points
+    if (boundsArray.length > 0) {
+      const bounds = L.latLngBounds(boundsArray);
       map.fitBounds(bounds, { padding: [50, 50] });
     } else {
       // Fallback to Sweden's center if no competitions found
