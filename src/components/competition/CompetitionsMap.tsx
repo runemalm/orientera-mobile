@@ -176,8 +176,8 @@ const CompetitionsMap: React.FC<CompetitionsMapProps> = ({
         <span role="complementary">© OpenStreetMap</span>
       </div>
       
-      {/* Competition count */}
-      <div className="absolute top-2 left-2 z-[40]">
+      {/* Competition count - Centered horizontally at the top */}
+      <div className="absolute top-2 left-1/2 transform -translate-x-1/2 z-[40]">
         <div className="bg-white/90 px-3 py-1.5 rounded-lg text-sm font-medium shadow-sm">
           Visar {competitions.length} tävlingar
         </div>
