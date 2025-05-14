@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -234,20 +233,25 @@ const CompetitionsPage: React.FC = () => {
     );
   };
 
+  // Create left action with map button
+  const leftAction = (
+    <Button 
+      variant="ghost" 
+      size="icon"
+      onClick={handleMapViewClick}
+      className="text-muted-foreground"
+    >
+      <Map className="h-[1.2rem] w-[1.2rem]" />
+    </Button>
+  );
+
   return (
     <MobileLayout 
       title="Tävlingar" 
       fullHeight
+      leftAction={leftAction}
       action={
         <div className="flex items-center space-x-1">
-          <Button 
-            variant="ghost" 
-            size="icon"
-            onClick={handleMapViewClick}
-            className="text-muted-foreground"
-          >
-            <Map className="h-[1.2rem] w-[1.2rem]" />
-          </Button>
           <Button 
             variant="ghost" 
             size="icon"
