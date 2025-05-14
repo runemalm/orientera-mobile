@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -256,7 +257,7 @@ const CompetitionsPage: React.FC = () => {
             variant="ghost" 
             size="icon"
             onClick={handleFilterClick}
-            className="text-muted-foreground"
+            className="text-muted-foreground relative"
           >
             <FilterIcon className="h-[1.2rem] w-[1.2rem]" />
             {activeFiltersCount > 0 && (
