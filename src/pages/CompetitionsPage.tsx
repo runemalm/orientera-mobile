@@ -1,7 +1,8 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
-import { Loader2, Filter as FilterIcon } from 'lucide-react';
+import { Loader2, Filter as FilterIcon, Map } from 'lucide-react';
 import { CompetitionSummary, Filter, OrienteeringDistrict, Discipline, CompetitionType, Branch } from '../types';
 import { searchCompetitions } from '../services/api';
 import { useLocalStorage } from '../hooks/useLocalStorage';
@@ -128,6 +129,11 @@ const CompetitionsPage: React.FC = () => {
     navigate('/manual-filtering');
   };
 
+  const handleMapViewClick = () => {
+    // Navigate to the map view page
+    navigate('/competitions/map');
+  };
+
   // Handle removing a filter
   const handleRemoveFilter = (filterType: string, value?: string) => {
     // Create a copy of current filters
@@ -233,7 +239,15 @@ const CompetitionsPage: React.FC = () => {
       title="Tävlingar" 
       fullHeight
       action={
-        <div className="relative">
+        <div className="flex items-center space-x-1">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={handleMapViewClick}
+            className="text-muted-foreground"
+          >
+            <Map className="h-[1.2rem] w-[1.2rem]" />
+          </Button>
           <Button 
             variant="ghost" 
             size="icon"

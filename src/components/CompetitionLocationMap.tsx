@@ -3,6 +3,7 @@ import React, { useRef, useEffect } from 'react';
 import 'leaflet/dist/leaflet.css';
 import { cn } from '@/lib/utils';
 import L from 'leaflet';
+import { createOrienteeringMarkerIcon, styleOrienteeringMarker } from '../utils/mapUtils';
 
 // Fix for default marker icons in Leaflet
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -58,12 +59,7 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
     }).addTo(map);
     
     // Create a custom icon for the marker
-    const customMarkerIcon = L.divIcon({
-      className: 'custom-orienteering-marker',
-      html: '<div class="checkpoint-icon-container"></div>',
-      iconSize: [32, 32],
-      iconAnchor: [16, 16],
-    });
+    const customMarkerIcon = createOrienteeringMarkerIcon();
     
     // Add a marker at the specified coordinates
     const marker = L.marker([coordinates.lat, coordinates.lng], { 
@@ -76,18 +72,11 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
       map.setView([coordinates.lat, coordinates.lng], 13);
     }, 100);
     
-    // After the marker is added, we can render our React component into the container
+    // After the marker is added, we can style our React component into the container
     if (document.querySelector('.checkpoint-icon-container')) {
       const iconContainer = document.querySelector('.checkpoint-icon-container');
       if (iconContainer) {
-        iconContainer.innerHTML = `
-          <div style="position: relative; width: 20px; height: 20px;">
-            <div style="position: absolute; inset: 0; border: 2px solid #666; border-radius: 2px;"></div>
-            <div style="position: absolute; inset: 0; clip-path: polygon(0 0, 100% 0, 0 100%); background-color: #FFFFFF;"></div>
-            <div style="position: absolute; inset: 0; clip-path: polygon(100% 0, 0 100%, 100% 100%); background-color: #F97316;"></div>
-          </div>
-          <div style="position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 20px; height: 6px; border-radius: 50%; background-color: rgba(0,0,0,0.2); z-index: 1;"></div>
-        `;
+        styleOrienteeringMarker(iconContainer);
       }
     }
     
@@ -124,4 +113,3 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
 };
 
 export default CompetitionLocationMap;
-

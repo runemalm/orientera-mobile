@@ -11,6 +11,7 @@ import ClubParticipantsPage from './pages/ClubParticipantsPage';
 import CarpoolingPage from './pages/CarpoolingPage';
 import SettingsPage from './pages/SettingsPage';
 import CompetitionMapPage from './pages/CompetitionMapPage';
+import CompetitionsMapPage from './pages/CompetitionsMapPage';
 import NotFound from './pages/NotFound';
 import FavoritesPage from './pages/FavoritesPage';
 import AssistantPage from './pages/AssistantPage';
@@ -30,6 +31,7 @@ const App = () => {
         <Route path="/home" element={<HomePage />} />
         <Route path="/landing" element={<LandingPage />} />
         <Route path="/competitions" element={<CompetitionsPage />} />
+        <Route path="/competitions/map" element={<CompetitionsMapPage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/competition/:competitionId" element={<CompetitionDetailsPage />} />
         <Route path="/competition/:competitionId/participants" element={<ParticipantsPage />} />
