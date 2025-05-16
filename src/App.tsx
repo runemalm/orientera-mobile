@@ -18,6 +18,7 @@ import AssistantPage from './pages/AssistantPage';
 import AiFilteringPage from './pages/AiFilteringPage';
 import ManualFilterPage from './pages/ManualFilterPage';
 import ComingSoonPage from './pages/ComingSoonPage';
+import ProfilePage from './pages/ProfilePage';
 import { useVersionCheck } from './hooks/useVersionCheck';
 
 const App = () => {
@@ -43,6 +44,7 @@ const App = () => {
         <Route path="/ai-filtering" element={<AiFilteringPage />} />
         <Route path="/manual-filtering" element={<ManualFilterPage />} />
         <Route path="/coming-soon" element={<ComingSoonPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
