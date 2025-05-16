@@ -6,6 +6,7 @@ const USE_MOCK_API = false; // Set to false to use real API
 
 // Base URL for the API
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+export { API_BASE_URL }; // Export for use in other files
 
 /**
  * Search competitions based on provided filters
