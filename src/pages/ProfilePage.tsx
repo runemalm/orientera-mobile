@@ -118,11 +118,6 @@ const ProfilePage: React.FC = () => {
     setPreviousResults([]);
   };
 
-  const handleSaveSettings = (updatedData: any) => {
-    console.log("Sparar inställningar:", updatedData);
-    setShowSettings(false);
-  };
-
   return (
     <MobileLayout 
       title="Profil"
@@ -143,7 +138,6 @@ const ProfilePage: React.FC = () => {
         ) : showSettings ? (
           <ProfileSettings 
             userData={userData}
-            onSave={handleSaveSettings}
             onCancel={() => setShowSettings(false)}
           />
         ) : isLoggedIn ? (
