@@ -60,7 +60,7 @@ const Hero: React.FC = () => {
             Framtidens app för svensk orientering
           </h1>
           <p className="text-muted-foreground text-lg">
-            Din assistent för svensk orientering
+            För orienterare - av orienterare
           </p>
         </div>
       </div>
