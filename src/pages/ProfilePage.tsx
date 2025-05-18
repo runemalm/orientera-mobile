@@ -10,7 +10,7 @@ import LoginWaitlistDialog from '@/components/profile/LoginWaitlistDialog';
 import ProfileSettings from '@/components/profile/ProfileSettings';
 import LinkListItem from '@/components/competition/LinkListItem';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
-import { CompetitionSummary } from '@/types';
+import { CompetitionSummary, Discipline, CompetitionType, OrienteeringDistrict, Branch } from '@/types';
 import { getCompetitionsByIds } from '@/services/api';
 
 const ProfilePage: React.FC = () => {
@@ -35,15 +35,22 @@ const ProfilePage: React.FC = () => {
     }
   };
 
-  // Mock data for upcoming competitions
-  const mockUpcomingCompetitions = [
+  // Mock data for upcoming competitions - updating to match CompetitionSummary type
+  const mockUpcomingCompetitions: CompetitionSummary[] = [
     {
       id: "8f935fac-bcdf-4f8d-82de-d7c48348aa41",
       name: "Hellas KM, medel",
       date: "2025-05-20",
       location: "Hellasgården",
       club: "Hellas Orientering",
-      startTime: "10:30"
+      description: "Klubbmästerskap medeldistans",
+      discipline: Discipline.Middle,
+      competitionType: CompetitionType.Club,
+      district: OrienteeringDistrict.Stockholm,
+      branch: Branch.FootO,
+      latitude: 59.2856,
+      longitude: 18.1627,
+      startTime: "10:30" // We'll handle this custom property when rendering
     },
     {
       id: "mock-id-2",
@@ -51,7 +58,14 @@ const ProfilePage: React.FC = () => {
       date: "2025-06-15",
       location: "Södermalm",
       club: "Stockholms OK",
-      startTime: null
+      description: "Sommarsprinten i stadsområde",
+      discipline: Discipline.Sprint,
+      competitionType: CompetitionType.Regional,
+      district: OrienteeringDistrict.Stockholm,
+      branch: Branch.FootO,
+      latitude: 59.3127,
+      longitude: 18.0649,
+      startTime: null // We'll handle this custom property when rendering
     }
   ];
   
@@ -171,9 +185,10 @@ const ProfilePage: React.FC = () => {
                               <div className="text-sm text-muted-foreground flex items-center gap-2">
                                 <Calendar className="h-3.5 w-3.5" /> {comp.date}
                               </div>
-                              {comp.startTime && (
+                              {/* Use optional chaining to safely access startTime */}
+                              {(comp as any).startTime && (
                                 <div className="text-sm text-muted-foreground flex items-center gap-2">
-                                  <Clock className="h-3.5 w-3.5" /> Starttid: {comp.startTime}
+                                  <Clock className="h-3.5 w-3.5" /> Starttid: {(comp as any).startTime}
                                 </div>
                               )}
                             </div>
