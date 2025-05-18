@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -49,8 +48,7 @@ const ProfilePage: React.FC = () => {
       district: OrienteeringDistrict.Stockholm,
       branch: Branch.FootO,
       latitude: 59.2856,
-      longitude: 18.1627,
-      startTime: "10:30" // We'll handle this custom property when rendering
+      longitude: 18.1627
     },
     {
       id: "mock-id-2",
@@ -64,10 +62,15 @@ const ProfilePage: React.FC = () => {
       district: OrienteeringDistrict.Stockholm,
       branch: Branch.FootO,
       latitude: 59.3127,
-      longitude: 18.0649,
-      startTime: null // We'll handle this custom property when rendering
+      longitude: 18.0649
     }
   ];
+  
+  // Store start times in a separate object using competition ID as key
+  const competitionStartTimes: Record<string, string | null> = {
+    "8f935fac-bcdf-4f8d-82de-d7c48348aa41": "10:30",
+    "mock-id-2": null
+  };
   
   // Mock data for previous results
   const mockPreviousResults = [
@@ -185,10 +188,9 @@ const ProfilePage: React.FC = () => {
                               <div className="text-sm text-muted-foreground flex items-center gap-2">
                                 <Calendar className="h-3.5 w-3.5" /> {comp.date}
                               </div>
-                              {/* Use optional chaining to safely access startTime */}
-                              {(comp as any).startTime && (
+                              {competitionStartTimes[comp.id] && (
                                 <div className="text-sm text-muted-foreground flex items-center gap-2">
-                                  <Clock className="h-3.5 w-3.5" /> Starttid: {(comp as any).startTime}
+                                  <Clock className="h-3.5 w-3.5" /> Starttid: {competitionStartTimes[comp.id]}
                                 </div>
                               )}
                             </div>
@@ -247,11 +249,11 @@ const ProfilePage: React.FC = () => {
               </CardContent>
             </Card>
             
-            {/* Stats Card */}
+            {/* Stats Card - Updated year from 2024 to 2025 */}
             <Card className="w-full bg-primary/5 border-primary/10">
               <CardContent className="p-6">
                 <div className="space-y-4">
-                  <h3 className="text-center font-medium">Statistik 2024</h3>
+                  <h3 className="text-center font-medium">Statistik 2025</h3>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="text-center">
                       <p className="text-2xl font-bold">{userData.stats.competitions}</p>
