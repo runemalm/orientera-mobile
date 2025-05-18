@@ -214,20 +214,26 @@ const CompetitionsPage: React.FC = () => {
       return date;
     })();
 
+    const hasActiveFilters = activeFiltersCount > 0;
+
     return (
       <div className="flex flex-col h-full">
-        {/* Add filter bubbles above the competition list */}
-        <FilterBubbles 
-          filters={filters} 
-          onRemoveFilter={handleRemoveFilter} 
-        />
+        {/* Filter bubbles section with conditional margin/padding */}
+        {hasActiveFilters && (
+          <div className="mb-2">
+            <FilterBubbles 
+              filters={filters} 
+              onRemoveFilter={handleRemoveFilter} 
+            />
+          </div>
+        )}
         
-        <div className={`flex-1 ${activeFiltersCount > 0 ? 'pt-0' : 'pt-2'}`}>
+        {/* Competition layout with appropriate spacing */}
+        <div className="flex-1">
           <CompetitionLayout
             competitions={competitions}
             fromDate={fromDate}
             toDate={toDate}
-            // Removed the hideTabBar prop to show the tab bar
           />
         </div>
       </div>
