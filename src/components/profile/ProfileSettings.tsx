@@ -2,8 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { ChevronDown, ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 interface ProfileSettingsProps {
   userData: {
@@ -59,34 +58,6 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ userData, onCancel })
           </div>
         </CardContent>
       </Card>
-      
-      <Collapsible className="w-full">
-        <Card>
-          <CardHeader className="pb-2">
-            <CollapsibleTrigger className="flex w-full items-center justify-between">
-              <h2 className="text-lg font-medium">Avancerade inställningar</h2>
-              <ChevronDown className="h-5 w-5" />
-            </CollapsibleTrigger>
-          </CardHeader>
-          <CollapsibleContent>
-            <CardContent>
-              <div className="space-y-4">
-                <Button variant="outline" className="w-full">
-                  Exportera mina data
-                </Button>
-                
-                <Button variant="destructive" className="w-full">
-                  Logga ut
-                </Button>
-
-                <Button variant="outline" className="w-full border-destructive text-destructive">
-                  Ta bort mitt konto
-                </Button>
-              </div>
-            </CardContent>
-          </CollapsibleContent>
-        </Card>
-      </Collapsible>
     </div>
   );
 };
