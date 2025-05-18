@@ -4,13 +4,31 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { User, Calendar, MapPin, Trophy, Clock, Settings, ExternalLink, Heart } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import SkeletonProfile from '@/components/profile/SkeletonProfile';
 import LoginWaitlistDialog from '@/components/profile/LoginWaitlistDialog';
 import ProfileSettings from '@/components/profile/ProfileSettings';
-import LinkListItem from '@/components/competition/LinkListItem';
-import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
-import { CompetitionSummary, Discipline, CompetitionType, OrienteeringDistrict, Branch } from '@/types';
-import { getCompetitionsByIds } from '@/services/api';
+import { CompetitionSummary } from '@/types';
+
+// InfoItem component moved from ProfileSettings to here since we're using it in this file now
+interface InfoItemProps {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  isLast?: boolean;
+}
+
+const InfoItem: React.FC<InfoItemProps> = ({ icon, label, value, isLast = false }) => {
+  return (
+    <div className={cn("px-6 py-4 flex items-start", !isLast && "border-b border-border/40")}>
+      <div className="mr-3 mt-0.5">{icon}</div>
+      <div className="flex-1">
+        <p className="text-sm font-medium text-muted-foreground">{label}</p>
+        <p className="text-base font-medium">{value}</p>
+      </div>
+    </div>
+  );
+};
 
 const ProfilePage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -165,103 +183,41 @@ const ProfilePage: React.FC = () => {
               </CardContent>
             </Card>
             
-            {/* Upcoming Competitions Card */}
-            <Card className="w-full">
-              <CardHeader className="pb-2 pt-4">
-                <h3 className="font-medium">Kommande tävlingar</h3>
+            {/* Personal Information Card - Moved from ProfileSettings */}
+            <Card className="border-primary/20 overflow-hidden">
+              <CardHeader className="pb-2 bg-primary/5">
+                <h2 className="text-lg font-medium">Personlig information</h2>
               </CardHeader>
-              <CardContent className="pt-0 pb-2">
-                {upcomingCompetitions.length > 0 ? (
-                  <Table>
-                    <TableBody>
-                      {upcomingCompetitions.map((comp) => (
-                        <TableRow key={comp.id} className="hover:bg-primary/5">
-                          <TableCell className="py-3 px-2">
-                            <div className="space-y-1">
-                              <div className="font-medium">{comp.name}</div>
-                              <div className="text-sm text-muted-foreground flex items-center gap-2">
-                                <Calendar className="h-3.5 w-3.5" /> {comp.date}
-                              </div>
-                              {competitionStartTimes[comp.id] && (
-                                <div className="text-sm text-muted-foreground flex items-center gap-2">
-                                  <Clock className="h-3.5 w-3.5" /> Starttid: {competitionStartTimes[comp.id]}
-                                </div>
-                              )}
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                ) : (
-                  <div className="text-center py-6 text-muted-foreground">
-                    <p>Inga kommande tävlingar</p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-            
-            {/* Previous Results Card */}
-            <Card className="w-full">
-              <CardHeader className="pb-2 pt-4">
-                <h3 className="font-medium">Mina senaste resultat</h3>
-              </CardHeader>
-              <CardContent className="pt-0 pb-2">
-                {previousResults.length > 0 ? (
-                  <Table>
-                    <TableBody>
-                      {previousResults.map((result) => (
-                        <TableRow key={result.id} className="hover:bg-primary/5">
-                          <TableCell className="py-3 px-2">
-                            <div className="space-y-1">
-                              <div className="font-medium">{result.competition}</div>
-                              <div className="text-sm text-muted-foreground flex items-center gap-2">
-                                <Calendar className="h-3.5 w-3.5" /> {result.date}
-                              </div>
-                              <div className="flex items-center gap-3">
-                                <div className="flex items-center gap-1 text-sm">
-                                  <Trophy className="h-3.5 w-3.5 text-amber-500" /> 
-                                  <span className="font-medium">Plac {result.place}</span>
-                                </div>
-                                <div className="flex items-center gap-1 text-sm">
-                                  <Clock className="h-3.5 w-3.5" /> 
-                                  <span>{result.time}</span>
-                                </div>
-                                <div className="text-sm text-muted-foreground">{result.class}</div>
-                              </div>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                ) : (
-                  <div className="text-center py-6 text-muted-foreground">
-                    <p>Inga tidigare resultat</p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-            
-            {/* Stats Card - Updated year from 2024 to 2025 */}
-            <Card className="w-full bg-primary/5 border-primary/10">
-              <CardContent className="p-6">
-                <div className="space-y-4">
-                  <h3 className="text-center font-medium">Statistik 2025</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="text-center">
-                      <p className="text-2xl font-bold">{userData.stats.competitions}</p>
-                      <p className="text-sm text-muted-foreground">Tävlingar</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-2xl font-bold">{userData.stats.distance}</p>
-                      <p className="text-sm text-muted-foreground">Total sträcka</p>
-                    </div>
-                  </div>
+              <CardContent className="p-0">
+                <div className="divide-y">
+                  <InfoItem 
+                    icon={<User className="h-4 w-4 text-primary/70" />}
+                    label="Namn"
+                    value={userData.name}
+                  />
+                  
+                  <InfoItem 
+                    icon={<Mail className="h-4 w-4 text-primary/70" />}
+                    label="E-postadress"
+                    value={userData.email}
+                  />
+                  
+                  <InfoItem 
+                    icon={<Home className="h-4 w-4 text-primary/70" />}
+                    label="Klubb"
+                    value={userData.club}
+                  />
+                  
+                  <InfoItem 
+                    icon={<Flag className="h-4 w-4 text-primary/70" />}
+                    label="Föredragen klass"
+                    value={userData.preferredClass || "-"}
+                    isLast
+                  />
                 </div>
               </CardContent>
             </Card>
-
+            
             {/* Logout Button */}
             <Card className="w-full">
               <CardContent className="p-4">
