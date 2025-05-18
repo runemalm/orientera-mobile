@@ -61,7 +61,7 @@ const ProfilePage: React.FC = () => {
     name: "Anna Karlsson",
     email: "anna.karlsson@gmail.com",
     club: "Orienteringsklubben Linné",
-    preferredClass: "d21",
+    preferredClass: "D21",
     profileImage: "/placeholder.svg",
     joinedDate: "Mars 2024",
     stats: {
