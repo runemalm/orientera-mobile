@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -10,6 +11,7 @@ import CompetitionLayout from '../components/competition/CompetitionLayout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import FilterBubbles from '../components/filters/FilterBubbles';
+import { useQuery } from '@tanstack/react-query';
 
 const DEFAULT_FILTERS: Filter = {
   useLocationFilter: false,
@@ -30,6 +32,7 @@ const CompetitionsPage: React.FC = () => {
   const [isLoadingCompetitions, setIsLoadingCompetitions] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useLocalStorage<Filter>('competitionFilters', DEFAULT_FILTERS);
+  const [totalCompetitionsCount, setTotalCompetitionsCount] = useState<number | null>(null);
 
   // Force the calendar view by setting it directly in localStorage
   useEffect(() => {
@@ -52,12 +55,8 @@ const CompetitionsPage: React.FC = () => {
 
   const activeFiltersCount = getActiveFiltersCount();
 
-  const fetchCompetitions = useCallback(async () => {
-    setIsLoadingCompetitions(true);
-    setError(null);
-    
-    const safeFilters = filters || DEFAULT_FILTERS;
-    
+  // Get date range for competitions
+  const getDateRange = useCallback(() => {
     const now = new Date();
     const currentDay = now.getDay();
     
@@ -70,6 +69,17 @@ const CompetitionsPage: React.FC = () => {
     
     const sixMonthsFromNow = addMonths(now, 6);
     const endDate = endOfWeek(sixMonthsFromNow, { weekStartsOn: 1 });
+
+    return { startDate, endDate };
+  }, []);
+
+  // Fetch competitions with active filters
+  const fetchCompetitions = useCallback(async () => {
+    setIsLoadingCompetitions(true);
+    setError(null);
+    
+    const safeFilters = filters || DEFAULT_FILTERS;
+    const { startDate, endDate } = getDateRange();
     
     try {
       // Determine if we should include location parameters
@@ -109,19 +119,64 @@ const CompetitionsPage: React.FC = () => {
       console.log('Competitions fetched:', result.length);
       setCompetitions(result);
       
+      // If we have filters and don't have total count yet, fetch the total
+      if (getActiveFiltersCount() > 0 && totalCompetitionsCount === null) {
+        fetchTotalCompetitions();
+      }
+      
     } catch (err) {
       console.error('Error fetching competitions:', err);
       setError('Det gick inte att hämta tävlingar. Försök igen senare.');
     } finally {
       setIsLoadingCompetitions(false);
     }
-  }, [filters]);
+  }, [filters, totalCompetitionsCount]);
+
+  // Fetch total competitions without filters
+  const fetchTotalCompetitions = useCallback(async () => {
+    if (getActiveFiltersCount() === 0) {
+      setTotalCompetitionsCount(null);
+      return;
+    }
+    
+    try {
+      const { startDate, endDate } = getDateRange();
+      
+      const result = await searchCompetitions(
+        startDate,
+        endDate,
+        undefined, // lat
+        undefined, // lng
+        undefined, // maxDistance
+        undefined  // limit
+      );
+      
+      console.log('Total competitions fetched:', result.length);
+      setTotalCompetitionsCount(result.length);
+      
+    } catch (err) {
+      console.error('Error fetching total competitions:', err);
+    }
+  }, [getDateRange]);
 
   // Fetch competitions when the component mounts or filters change
   useEffect(() => {
     console.log('Fetching competitions due to filter change');
     fetchCompetitions();
   }, [fetchCompetitions]);
+
+  // Generate subtitle text
+  const getSubtitle = () => {
+    if (activeFiltersCount === 0) {
+      return undefined;
+    }
+
+    if (totalCompetitionsCount === null) {
+      return `${competitions.length} tävlingar`;
+    }
+
+    return `${competitions.length} av ${totalCompetitionsCount} tävlingar`;
+  };
 
   const handleFilterClick = () => {
     // Navigate directly to manual filtering page
@@ -180,6 +235,9 @@ const CompetitionsPage: React.FC = () => {
     
     // Update filters
     setFilters(updatedFilters);
+    
+    // Reset total competitions count to trigger a new fetch
+    setTotalCompetitionsCount(null);
   };
 
   const renderContent = () => {
@@ -249,6 +307,7 @@ const CompetitionsPage: React.FC = () => {
       title="Tävlingar" 
       fullHeight
       leftAction={leftAction}
+      subtitle={getSubtitle()}
       action={
         <div className="flex items-center space-x-1">
           <Button 
