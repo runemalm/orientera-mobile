@@ -222,7 +222,7 @@ const CompetitionsPage: React.FC = () => {
           onRemoveFilter={handleRemoveFilter} 
         />
         
-        <div className={`flex-1 ${activeFiltersCount > 0 ? 'pt-1' : 'pt-2'}`}>
+        <div className={`flex-1 ${activeFiltersCount > 0 ? 'pt-0' : 'pt-2'}`}>
           <CompetitionLayout
             competitions={competitions}
             fromDate={fromDate}

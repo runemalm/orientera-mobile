@@ -89,7 +89,7 @@ const FilterBubbles: React.FC<FilterBubblesProps> = ({ filters, onRemoveFilter }
   }
 
   return (
-    <div className="px-4 pt-3 pb-2 flex flex-wrap gap-1.5">
+    <div className="px-4 pt-3 pb-0 flex flex-wrap gap-1.5">
       {/* District bubbles */}
       {filters.districts.map(district => (
         <Badge 
