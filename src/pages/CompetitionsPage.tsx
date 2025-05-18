@@ -227,7 +227,7 @@ const CompetitionsPage: React.FC = () => {
             competitions={competitions}
             fromDate={fromDate}
             toDate={toDate}
-            hideTabBar={true} // Hide the tabs
+            // Removed the hideTabBar prop to show the tab bar
           />
         </div>
       </div>
