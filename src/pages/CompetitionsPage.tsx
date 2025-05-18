@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../components/layout/MobileLayout';
@@ -227,7 +226,6 @@ const CompetitionsPage: React.FC = () => {
             competitions={competitions}
             fromDate={fromDate}
             toDate={toDate}
-            // Removed the hideTabBar prop to show the tab bar
           />
         </div>
       </div>
