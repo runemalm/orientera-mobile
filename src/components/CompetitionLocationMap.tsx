@@ -39,7 +39,7 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
     const map = L.map(mapRef.current, {
       center: [coordinates.lat, coordinates.lng],
       zoom: 13,
-      zoomControl: false, // Disable default zoom control
+      zoomControl: false, // Disable zoom control overlay
       attributionControl: false, // Disable attribution completely
       doubleClickZoom: true,
       scrollWheelZoom: true, // Enable mouse wheel zoom
@@ -56,11 +56,6 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
     // Add the OpenStreetMap tile layer without attribution
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '' // Empty attribution
-    }).addTo(map);
-    
-    // Add zoom control to the bottom-left corner
-    L.control.zoom({
-      position: 'bottomleft'
     }).addTo(map);
     
     // Create a custom icon for the marker
@@ -85,26 +80,7 @@ const CompetitionLocationMap: React.FC<CompetitionLocationMapProps> = ({
       }
     }
     
-    // Add CSS for styling the zoom controls
-    const style = document.createElement('style');
-    style.innerHTML = `
-      .leaflet-bottom.leaflet-left .leaflet-control-zoom {
-        margin-bottom: 15px;
-        margin-left: 15px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        border-radius: 8px;
-        overflow: hidden;
-      }
-      .leaflet-control-zoom a {
-        line-height: 26px !important;
-        height: 26px !important;
-        width: 26px !important;
-      }
-    `;
-    document.head.appendChild(style);
-    
     return () => {
-      document.head.removeChild(style);
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;

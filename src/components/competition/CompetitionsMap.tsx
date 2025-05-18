@@ -36,14 +36,14 @@ const CompetitionsMap: React.FC<CompetitionsMapProps> = ({
   useEffect(() => {
     if (!mapRef.current || competitions.length === 0) return;
     
-    // Create a map instance
+    // Create a map instance without zoom controls
     const map = L.map(mapRef.current, {
-      zoomControl: false,  // Disable default zoom control so we can reposition it
+      zoomControl: false,  // Disable zoom control completely
       attributionControl: false,  // Disable attribution completely
       doubleClickZoom: true,
-      scrollWheelZoom: true,
+      scrollWheelZoom: true, // Keep scroll wheel zoom enabled
       boxZoom: true,
-      touchZoom: true,
+      touchZoom: true, // Keep pinch-to-zoom on mobile enabled
       dragging: true,
       keyboard: true,
       tap: true
@@ -55,11 +55,6 @@ const CompetitionsMap: React.FC<CompetitionsMapProps> = ({
     // Add the OpenStreetMap tile layer without attribution
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: ''  // Empty attribution
-    }).addTo(map);
-
-    // Add zoom control to the bottom-left corner
-    L.control.zoom({
-      position: 'bottomleft'
     }).addTo(map);
 
     console.log(`Adding ${competitions.length} competition markers to map...`);
@@ -127,7 +122,7 @@ const CompetitionsMap: React.FC<CompetitionsMapProps> = ({
       map.setView([62.0, 15.0], 5);
     }
     
-    // Add map CSS
+    // Add map CSS for popups only
     const style = document.createElement('style');
     style.innerHTML = `
       .competition-popup h3 {
@@ -154,19 +149,6 @@ const CompetitionsMap: React.FC<CompetitionsMapProps> = ({
       .custom-orienteering-marker {
         background: transparent;
         border: none;
-      }
-      /* Custom styles for zoom controls in the bottom-left */
-      .leaflet-bottom.leaflet-left .leaflet-control-zoom {
-        margin-bottom: 15px;
-        margin-left: 15px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        border-radius: 8px;
-        overflow: hidden;
-      }
-      .leaflet-control-zoom a {
-        line-height: 26px !important;
-        height: 26px !important;
-        width: 26px !important;
       }
     `;
     document.head.appendChild(style);
