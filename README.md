@@ -1,6 +1,7 @@
+
 # Orientera.com
 
-**Framtidens app för svensk orientering**
+**Ett digitalt verktyg - för oss som orienterar**
 
 Orientera.com gör det enklare än någonsin att upptäcka och hålla koll på orienteringstävlingar i Sverige. Med en mobilvänlig design, smart kalender och AI-assistenten *Nina* får du alltid rätt information – var du än är.
 

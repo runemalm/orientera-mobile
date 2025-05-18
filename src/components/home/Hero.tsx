@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Compass } from 'lucide-react';
 
@@ -56,7 +57,7 @@ const Hero: React.FC = () => {
 
         <div className="text-center space-y-4">
           <h1 className="text-3xl font-bold tracking-tight">
-            Framtidens app för svensk orientering
+            Ett digitalt verktyg - för oss som orienterar
           </h1>
           <p className="text-muted-foreground text-lg">
             Ett smidigare sätt att upptäcka och hålla koll på orienteringssäsongen
