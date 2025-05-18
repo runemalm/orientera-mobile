@@ -3,12 +3,30 @@ import MobileLayout from '../components/layout/MobileLayout';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { User, Calendar, MapPin, Trophy, Clock, Settings, ExternalLink, Heart } from 'lucide-react';
+import { 
+  User, 
+  Calendar, 
+  MapPin, 
+  Trophy, 
+  Clock, 
+  Settings, 
+  ExternalLink, 
+  Heart, 
+  Mail, 
+  Home, 
+  Flag 
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import SkeletonProfile from '@/components/profile/SkeletonProfile';
 import LoginWaitlistDialog from '@/components/profile/LoginWaitlistDialog';
 import ProfileSettings from '@/components/profile/ProfileSettings';
-import { CompetitionSummary } from '@/types';
+import { 
+  CompetitionSummary, 
+  Discipline, 
+  CompetitionType, 
+  OrienteeringDistrict, 
+  Branch 
+} from '@/types';
 
 // InfoItem component moved from ProfileSettings to here since we're using it in this file now
 interface InfoItemProps {
