@@ -38,8 +38,8 @@ const CompetitionsMap: React.FC<CompetitionsMapProps> = ({
     
     // Create a map instance
     const map = L.map(mapRef.current, {
-      zoomControl: true,
-      attributionControl: true,
+      zoomControl: false,  // Disable default zoom control so we can reposition it
+      attributionControl: false,  // Disable attribution completely
       doubleClickZoom: true,
       scrollWheelZoom: true,
       boxZoom: true,
@@ -52,9 +52,14 @@ const CompetitionsMap: React.FC<CompetitionsMapProps> = ({
     // Save the map instance for cleanup
     mapInstanceRef.current = map;
     
-    // Add the OpenStreetMap tile layer
+    // Add the OpenStreetMap tile layer without attribution
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      attribution: ''  // Empty attribution
+    }).addTo(map);
+
+    // Add zoom control to the bottom-left corner
+    L.control.zoom({
+      position: 'bottomleft'
     }).addTo(map);
 
     console.log(`Adding ${competitions.length} competition markers to map...`);
@@ -150,6 +155,19 @@ const CompetitionsMap: React.FC<CompetitionsMapProps> = ({
         background: transparent;
         border: none;
       }
+      /* Custom styles for zoom controls in the bottom-left */
+      .leaflet-bottom.leaflet-left .leaflet-control-zoom {
+        margin-bottom: 15px;
+        margin-left: 15px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .leaflet-control-zoom a {
+        line-height: 26px !important;
+        height: 26px !important;
+        width: 26px !important;
+      }
     `;
     document.head.appendChild(style);
     
@@ -170,11 +188,6 @@ const CompetitionsMap: React.FC<CompetitionsMapProps> = ({
   return (
     <div className={cn("relative w-full h-full", className)}>
       <div ref={mapRef} className="h-full w-full z-10"></div>
-      
-      {/* Map UI elements */}
-      <div className="absolute bottom-2 right-2 text-gray-500 text-xs bg-white/80 px-2 py-0.5 rounded-full z-[40]">
-        <span role="complementary">© OpenStreetMap</span>
-      </div>
     </div>
   );
 };
