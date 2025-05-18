@@ -60,9 +60,9 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
   }, [viewMode, calendarScrollPosition, favoritesScrollPosition]);
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full mt-4">
       {!hideTabBar && (
-        <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 pb-2">
+        <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 pt-2 pb-2 px-2">
           <Tabs value={viewMode} onValueChange={handleTabChange} className="w-full">
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="calendar">Kalender</TabsTrigger>
@@ -78,7 +78,7 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
           className={`absolute inset-0 ${viewMode === 'calendar' ? 'block' : 'hidden'} overflow-auto`}
           ref={calendarScrollRef}
         >
-          <div className="px-2 pb-8">
+          <div className="px-2 pt-0 pb-8">
             <CalendarList
               competitions={competitions}
               fromDate={fromDate}
@@ -97,7 +97,7 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
           className={`absolute inset-0 ${viewMode === 'favorites' ? 'block' : 'hidden'} overflow-auto`}
           ref={favoritesScrollRef}
         >
-          <div className="px-2 pb-8">
+          <div className="px-2 pt-0 pb-4">
             <CompetitionPageFavorites competitions={competitions} />
           </div>
         </div>

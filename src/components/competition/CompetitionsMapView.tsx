@@ -36,16 +36,16 @@ const CompetitionsMapView: React.FC<CompetitionsMapViewProps> = ({ competitions 
 
   // If there are competitions with coordinates, show the map
   return (
-    <div className="h-full w-full px-2 pb-2">
+    <div className="h-full w-full px-2">
       {competitionsWithCoordinates.length < competitions.length && (
-        <div className="bg-yellow-50 px-3 py-2 text-sm mb-2 rounded">
+        <div className="bg-yellow-50 px-4 py-2 text-sm mb-2">
           <p>
             Visar {competitionsWithCoordinates.length} av {competitions.length} tävlingar på kartan.
             {competitions.length - competitionsWithCoordinates.length} tävlingar saknar koordinater och visas inte.
           </p>
         </div>
       )}
-      <div className="h-[calc(100%-2px)] relative rounded overflow-hidden">
+      <div className="h-[calc(100%-2px)] relative">
         <CompetitionsMap competitions={competitionsWithCoordinates} />
       </div>
     </div>
