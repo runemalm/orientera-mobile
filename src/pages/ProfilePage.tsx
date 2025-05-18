@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -27,6 +28,9 @@ import {
   OrienteeringDistrict, 
   Branch 
 } from '@/types';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { format } from 'date-fns';
+import { sv } from 'date-fns/locale';
 
 // InfoItem component moved from ProfileSettings to here since we're using it in this file now
 interface InfoItemProps {
@@ -45,6 +49,77 @@ const InfoItem: React.FC<InfoItemProps> = ({ icon, label, value, isLast = false 
         <p className="text-base font-medium">{value}</p>
       </div>
     </div>
+  );
+};
+
+// Competition item for upcoming competitions
+interface CompetitionItemProps {
+  competition: CompetitionSummary;
+  startTime: string | null;
+}
+
+const CompetitionItem: React.FC<CompetitionItemProps> = ({ competition, startTime }) => {
+  const formattedDate = format(new Date(competition.date), 'd MMM', { locale: sv });
+  
+  return (
+    <div className="flex items-center justify-between py-3 px-4 border-b border-border/40 last:border-b-0">
+      <div className="flex-1">
+        <p className="font-medium">{competition.name}</p>
+        <div className="flex items-center text-sm text-muted-foreground gap-1">
+          <Calendar className="h-3.5 w-3.5" />
+          <span>{formattedDate}</span>
+          {startTime && (
+            <>
+              <span className="mx-1">•</span>
+              <Clock className="h-3.5 w-3.5" />
+              <span>{startTime}</span>
+            </>
+          )}
+        </div>
+      </div>
+      <Button variant="ghost" size="icon" className="rounded-full">
+        <ExternalLink className="h-4 w-4" />
+      </Button>
+    </div>
+  );
+};
+
+// Result item for previous results
+interface ResultItemProps {
+  result: {
+    id: string;
+    competition: string;
+    date: string;
+    place: number;
+    time: string;
+    class: string;
+  };
+}
+
+const ResultItem: React.FC<ResultItemProps> = ({ result }) => {
+  const formattedDate = format(new Date(result.date), 'd MMM', { locale: sv });
+  
+  return (
+    <TableRow>
+      <TableCell className="py-2.5">
+        <div className="font-medium">{result.competition}</div>
+        <div className="text-xs text-muted-foreground">{formattedDate}</div>
+      </TableCell>
+      <TableCell className="py-2.5 text-center">
+        <div className={cn(
+          "font-medium",
+          result.place === 1 && "text-yellow-500",
+          result.place === 2 && "text-gray-400",
+          result.place === 3 && "text-amber-700"
+        )}>
+          {result.place}
+        </div>
+      </TableCell>
+      <TableCell className="py-2.5 text-right">
+        <div className="font-medium">{result.time}</div>
+        <div className="text-xs text-muted-foreground">{result.class}</div>
+      </TableCell>
+    </TableRow>
   );
 };
 
@@ -191,38 +266,56 @@ const ProfilePage: React.FC = () => {
               </CardContent>
             </Card>
             
-            {/* Personal Information Card - Moved from ProfileSettings */}
+            {/* Upcoming Competitions Card */}
             <Card className="border-primary/20 overflow-hidden">
               <CardHeader className="pb-2 bg-primary/5">
-                <h2 className="text-lg font-medium">Personlig information</h2>
+                <h2 className="text-lg font-medium">Kommande tävlingar</h2>
               </CardHeader>
               <CardContent className="p-0">
-                <div className="divide-y">
-                  <InfoItem 
-                    icon={<User className="h-4 w-4 text-primary/70" />}
-                    label="Namn"
-                    value={userData.name}
-                  />
-                  
-                  <InfoItem 
-                    icon={<Mail className="h-4 w-4 text-primary/70" />}
-                    label="E-postadress"
-                    value={userData.email}
-                  />
-                  
-                  <InfoItem 
-                    icon={<Home className="h-4 w-4 text-primary/70" />}
-                    label="Klubb"
-                    value={userData.club}
-                  />
-                  
-                  <InfoItem 
-                    icon={<Flag className="h-4 w-4 text-primary/70" />}
-                    label="Föredragen klass"
-                    value={userData.preferredClass || "-"}
-                    isLast
-                  />
-                </div>
+                {upcomingCompetitions.length > 0 ? (
+                  <div className="divide-y">
+                    {upcomingCompetitions.map(competition => (
+                      <CompetitionItem 
+                        key={competition.id} 
+                        competition={competition}
+                        startTime={competitionStartTimes[competition.id]}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="py-6 text-center text-muted-foreground">
+                    <p>Inga kommande tävlingar</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+            
+            {/* Previous Results Card */}
+            <Card className="border-primary/20 overflow-hidden">
+              <CardHeader className="pb-2 bg-primary/5">
+                <h2 className="text-lg font-medium">Senaste resultat</h2>
+              </CardHeader>
+              <CardContent className="p-4">
+                {previousResults.length > 0 ? (
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="w-[50%]">Tävling</TableHead>
+                        <TableHead className="text-center w-[20%]">Plac</TableHead>
+                        <TableHead className="text-right w-[30%]">Tid</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {previousResults.map(result => (
+                        <ResultItem key={result.id} result={result} />
+                      ))}
+                    </TableBody>
+                  </Table>
+                ) : (
+                  <div className="py-4 text-center text-muted-foreground">
+                    <p>Inga tidigare resultat</p>
+                  </div>
+                )}
               </CardContent>
             </Card>
             
