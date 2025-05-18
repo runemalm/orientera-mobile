@@ -1,7 +1,7 @@
 
 import React, { useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Trophy, Home, Star, Sparkles, UserRound } from 'lucide-react';
+import { Search, Home, Star, Sparkles, UserRound } from 'lucide-react';
 import { TabName } from '../../types';
 
 const BottomTabBar: React.FC = () => {
@@ -39,7 +39,7 @@ const BottomTabBar: React.FC = () => {
     },
     {
       name: 'competitions',
-      icon: <Trophy size={24} />,
+      icon: <Search size={24} />,
       label: 'Tävlingar',
       path: '/competitions'
     },
