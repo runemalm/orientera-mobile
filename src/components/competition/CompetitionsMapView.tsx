@@ -36,7 +36,7 @@ const CompetitionsMapView: React.FC<CompetitionsMapViewProps> = ({ competitions 
 
   // If there are competitions with coordinates, show the map
   return (
-    <div className="h-full w-full px-0">
+    <div className="h-full w-full px-2">
       {competitionsWithCoordinates.length < competitions.length && (
         <div className="bg-yellow-50 px-4 py-2 text-sm mb-2">
           <p>
@@ -45,7 +45,7 @@ const CompetitionsMapView: React.FC<CompetitionsMapViewProps> = ({ competitions 
           </p>
         </div>
       )}
-      <div className="h-[calc(100%-2px)] -mx-2 relative">
+      <div className="h-[calc(100%-2px)] relative">
         <CompetitionsMap competitions={competitionsWithCoordinates} />
       </div>
     </div>
