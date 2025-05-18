@@ -4,7 +4,7 @@ import MobileLayout from '../components/layout/MobileLayout';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { User, Calendar, MapPin, Trophy, Clock, Settings, ExternalLink } from 'lucide-react';
+import { User, Calendar, MapPin, Trophy, Clock, Settings, ExternalLink, Heart } from 'lucide-react';
 import SkeletonProfile from '@/components/profile/SkeletonProfile';
 import LoginWaitlistDialog from '@/components/profile/LoginWaitlistDialog';
 import ProfileSettings from '@/components/profile/ProfileSettings';
@@ -243,11 +243,11 @@ const ProfilePage: React.FC = () => {
                   
                   <div className="flex items-start gap-3 opacity-60">
                     <div className="rounded-full bg-primary/10 p-2 mt-0.5">
-                      <MapPin className="h-4 w-4 text-primary" />
+                      <Heart className="h-4 w-4 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-medium">Klubbhantering</h3>
-                      <p className="text-sm text-muted-foreground">Hantera din klubb och deltagare</p>
+                      <h3 className="font-medium">Mina favoriter</h3>
+                      <p className="text-sm text-muted-foreground">Spara och organisera dina favorittävlingar</p>
                     </div>
                   </div>
                 </div>
