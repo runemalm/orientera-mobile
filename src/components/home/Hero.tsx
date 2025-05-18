@@ -60,7 +60,7 @@ const Hero: React.FC = () => {
             Ett enklare verktyg för svensk orientering
           </h1>
           <p className="text-muted-foreground text-lg">
-            Ett smidigare sätt att upptäcka och hålla koll på orienteringssäsongen
+            Din assistent för svensk orientering
           </p>
         </div>
       </div>
