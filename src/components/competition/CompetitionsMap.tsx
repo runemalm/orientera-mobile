@@ -175,19 +175,6 @@ const CompetitionsMap: React.FC<CompetitionsMapProps> = ({
       <div className="absolute bottom-2 right-2 text-gray-500 text-xs bg-white/80 px-2 py-0.5 rounded-full z-[40]">
         <span role="complementary">© OpenStreetMap</span>
       </div>
-      
-      {/* Competition count - Centered horizontally at the top */}
-      <div className="absolute top-2 left-1/2 transform -translate-x-1/2 z-[40]">
-        <div className="bg-white/90 px-3 py-1.5 rounded-lg text-sm font-medium shadow-sm">
-          Visar {competitions.length} tävlingar
-        </div>
-      </div>
-      
-      {/* North Indicator */}
-      <div className="absolute top-2 right-2 flex flex-col items-center bg-white/80 p-1 rounded-full shadow-sm z-[40]">
-        <div className="text-xs font-bold text-gray-700">N</div>
-        <div className="h-4 w-[2px] bg-gray-700"></div>
-      </div>
     </div>
   );
 };
