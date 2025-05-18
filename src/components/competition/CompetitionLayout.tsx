@@ -60,7 +60,7 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
   }, [viewMode, calendarScrollPosition, favoritesScrollPosition]);
 
   return (
-    <div className="flex flex-col h-full mt-4">
+    <div className="flex flex-col h-full mt-1">
       {!hideTabBar && (
         <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 pt-2 pb-2 px-2">
           <Tabs value={viewMode} onValueChange={handleTabChange} className="w-full">
