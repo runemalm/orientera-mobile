@@ -57,10 +57,10 @@ const Hero: React.FC = () => {
 
         <div className="text-center space-y-4">
           <h1 className="text-3xl font-bold tracking-tight">
-            Ett enklare verktyg för svensk orientering
+            Framtidens app för svensk orientering
           </h1>
           <p className="text-muted-foreground text-lg">
-            Ett smidigare sätt att upptäcka och hålla koll på orienteringssäsongen
+            Din assistent för svensk orientering
           </p>
         </div>
       </div>
