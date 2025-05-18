@@ -1,8 +1,10 @@
+
 import React, { useState } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
   User, 
   Calendar, 
@@ -168,16 +170,15 @@ const ProfilePage: React.FC = () => {
           />
         ) : isLoggedIn ? (
           <>
-            {/* Profile Card */}
-            <Card className="w-full border-primary/20">
-              <CardHeader className="pb-2 flex justify-between items-center">
-                <h2 className="text-lg font-medium text-center mx-auto">Min profil</h2>
-              </CardHeader>
-              <CardContent className="pb-6">
+            {/* Profile Card with improved styling */}
+            <Card className="w-full border-primary/20 overflow-hidden">
+              <div className="bg-gradient-to-r from-forest-light/20 to-forest/10 pt-6 pb-4">
                 <div className="flex flex-col items-center gap-4">
-                  <div className="h-24 w-24 rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center overflow-hidden">
-                    <User className="h-12 w-12 text-primary/70" />
-                  </div>
+                  <Avatar className="h-24 w-24 border-2 border-primary/30">
+                    <AvatarFallback className="bg-primary/10 text-primary">
+                      <User className="h-12 w-12" />
+                    </AvatarFallback>
+                  </Avatar>
                   
                   <div className="text-center space-y-1">
                     <h3 className="text-xl font-semibold">{userData.name}</h3>
@@ -188,10 +189,25 @@ const ProfilePage: React.FC = () => {
                     </div>
                   </div>
                 </div>
-              </CardContent>
+              </div>
+              
+              <div className="flex justify-around py-3 border-t border-border/30 bg-primary/5">
+                <div className="text-center">
+                  <p className="text-sm text-muted-foreground">Tävlingar</p>
+                  <p className="font-semibold">{userData.stats.competitions}</p>
+                </div>
+                <div className="text-center border-l border-r border-border/30 px-6">
+                  <p className="text-sm text-muted-foreground">Distans</p>
+                  <p className="font-semibold">{userData.stats.distance}</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-sm text-muted-foreground">Medaljer</p>
+                  <p className="font-semibold">4</p>
+                </div>
+              </div>
             </Card>
             
-            {/* Personal Information Card - Moved from ProfileSettings */}
+            {/* Personal Information Card */}
             <Card className="border-primary/20 overflow-hidden">
               <CardHeader className="pb-2 bg-primary/5">
                 <h2 className="text-lg font-medium">Personlig information</h2>
@@ -227,11 +243,11 @@ const ProfilePage: React.FC = () => {
             </Card>
             
             {/* Logout Button */}
-            <Card className="w-full">
+            <Card className="w-full border-primary/20">
               <CardContent className="p-4">
                 <Button 
                   variant="outline" 
-                  className="w-full" 
+                  className="w-full border-primary/30 hover:bg-primary/5" 
                   onClick={handleLogout}
                 >
                   Logga ut
@@ -253,13 +269,13 @@ const ProfilePage: React.FC = () => {
                     Logga in med ditt Eventor-konto för att se dina tävlingar, resultat och mycket mer.
                   </p>
                 </div>
-                <Button onClick={handleLoginWithEventor} className="w-full">
+                <Button onClick={handleLoginWithEventor} className="w-full transition-all duration-200 hover:scale-[1.02]">
                   Logga in med Eventor
                 </Button>
               </CardContent>
             </Card>
             
-            <Card className="w-full">
+            <Card className="w-full border-primary/20">
               <CardHeader className="pb-2">
                 <h2 className="text-lg font-medium">Funktioner för inloggade</h2>
               </CardHeader>
