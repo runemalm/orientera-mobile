@@ -8,14 +8,15 @@
  * @returns Distance in kilometers
  */
 export function calculateDistance(
-  lat1: number | null, 
-  lon1: number | null, 
-  lat2: number | null, 
-  lon2: number | null
-): number {
+  lat1: number | null | undefined, 
+  lon1: number | null | undefined, 
+  lat2: number | null | undefined, 
+  lon2: number | null | undefined
+): number | null {
   // If any coordinate is null, return a default value
-  if (lat1 === null || lon1 === null || lat2 === null || lon2 === null) {
-    return 0;
+  if (lat1 === null || lon1 === null || lat2 === null || lon2 === null || 
+      lat1 === undefined || lon1 === undefined || lat2 === undefined || lon2 === undefined) {
+    return null;
   }
   
   // Earth's radius in kilometers
@@ -42,7 +43,9 @@ export function calculateDistance(
  * @param distance Distance in kilometers
  * @returns Formatted distance string
  */
-export function formatDistance(distance: number): string {
+export function formatDistance(distance: number | null): string {
+  if (distance === null) return "";
+  
   if (distance < 1) {
     return `${(distance * 1000).toFixed(0)} m`;
   }

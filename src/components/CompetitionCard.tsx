@@ -11,7 +11,7 @@ import { calculateDistance, formatDistance } from '../utils/distanceUtils';
 
 interface CompetitionCardProps {
   competition: CompetitionSummary;
-  userLocation?: { latitude: number | null; longitude: number | null };
+  userLocation?: { latitude: number; longitude: number };
 }
 
 const CompetitionCard: React.FC<CompetitionCardProps> = ({ 
@@ -82,10 +82,10 @@ const CompetitionCard: React.FC<CompetitionCardProps> = ({
 
   const daysRemaining = getDaysRemaining(competition.date);
   
-  // Handle distance calculation differently if userLocation is not provided
+  // Calculate distance if we have userLocation
   const distance = userLocation ? calculateDistance(
-    userLocation.latitude || null,
-    userLocation.longitude || null,
+    userLocation.latitude,
+    userLocation.longitude,
     competition.latitude,
     competition.longitude
   ) : null;
