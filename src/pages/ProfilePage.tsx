@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -8,6 +7,7 @@ import { User, Calendar, MapPin, Trophy, Clock, Settings, ExternalLink, Heart } 
 import SkeletonProfile from '@/components/profile/SkeletonProfile';
 import LoginWaitlistDialog from '@/components/profile/LoginWaitlistDialog';
 import ProfileSettings from '@/components/profile/ProfileSettings';
+import LinkListItem from '@/components/competition/LinkListItem';
 
 const ProfilePage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -95,45 +95,27 @@ const ProfilePage: React.FC = () => {
               </CardContent>
             </Card>
             
-            {/* Features Card */}
+            {/* Direct Actions Card */}
             <Card className="w-full">
-              <CardHeader className="pb-2">
-                <h2 className="text-lg font-medium">Tävlingar och resultat</h2>
-              </CardHeader>
-              <CardContent className="pb-6">
-                <div className="grid grid-cols-1 gap-4">
-                  {/* Feature Item 1 */}
-                  <div className="flex items-start gap-3">
-                    <div className="rounded-full bg-primary/10 p-2 mt-0.5">
-                      <Calendar className="h-4 w-4 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="font-medium">Mina tävlingar</h3>
-                      <p className="text-sm text-muted-foreground">Se dina anmälda och kommande tävlingar</p>
-                    </div>
-                  </div>
+              <CardContent className="py-4 px-2">
+                <div className="flex flex-col">
+                  <LinkListItem 
+                    icon={Calendar}
+                    title="Mina tävlingar"
+                    to="/competitions?filter=my" 
+                  />
                   
-                  {/* Feature Item 2 */}
-                  <div className="flex items-start gap-3">
-                    <div className="rounded-full bg-primary/10 p-2 mt-0.5">
-                      <Trophy className="h-4 w-4 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="font-medium">Mina resultat</h3>
-                      <p className="text-sm text-muted-foreground">Kolla dina tidigare resultat och statistik</p>
-                    </div>
-                  </div>
+                  <LinkListItem 
+                    icon={Trophy}
+                    title="Mina resultat"
+                    to="/results" 
+                  />
                   
-                  {/* Feature Item 3 */}
-                  <div className="flex items-start gap-3">
-                    <div className="rounded-full bg-primary/10 p-2 mt-0.5">
-                      <Clock className="h-4 w-4 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="font-medium">Mina starttider</h3>
-                      <p className="text-sm text-muted-foreground">Se dina kommande starttider</p>
-                    </div>
-                  </div>
+                  <LinkListItem 
+                    icon={Heart}
+                    title="Mina favoriter"
+                    to="/favorites"
+                  />
                 </div>
               </CardContent>
             </Card>
@@ -142,7 +124,7 @@ const ProfilePage: React.FC = () => {
             <Card className="w-full bg-primary/5 border-primary/10">
               <CardContent className="p-6">
                 <div className="space-y-4">
-                  <h3 className="text-center font-medium">Din statistik</h3>
+                  <h3 className="text-center font-medium">Statistik 2024</h3>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="text-center">
                       <p className="text-2xl font-bold">{userData.stats.competitions}</p>
@@ -154,27 +136,6 @@ const ProfilePage: React.FC = () => {
                     </div>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-            
-            {/* Club Account Link */}
-            <Card className="w-full overflow-hidden">
-              <CardContent className="p-0">
-                <Button 
-                  variant="link" 
-                  className="w-full h-auto p-4 justify-between items-center flex"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="rounded-full bg-primary/10 p-2">
-                      <MapPin className="h-4 w-4 text-primary" />
-                    </div>
-                    <div className="text-left">
-                      <h3 className="font-medium">Klubbkonto</h3>
-                      <p className="text-sm text-muted-foreground">Hantera klubbinställningar</p>
-                    </div>
-                  </div>
-                  <ExternalLink className="h-4 w-4" />
-                </Button>
               </CardContent>
             </Card>
 
