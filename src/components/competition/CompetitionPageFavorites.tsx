@@ -1,12 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
 import { CompetitionSummary } from '@/types';
 import CompetitionList from './CompetitionList';
 import { Star, Loader2 } from 'lucide-react';
 import { getCompetitionsByIds } from '@/services/api';
 import { toast } from 'sonner';
-import { useLocalStorage } from '../../hooks/useLocalStorage';
-import { Filter } from '@/types';
 
 interface CompetitionPageFavoritesProps {
   competitions: CompetitionSummary[];
@@ -16,18 +13,6 @@ const CompetitionPageFavorites: React.FC<CompetitionPageFavoritesProps> = ({ com
   const [favorites, setFavorites] = useState<string[]>([]);
   const [favoriteCompetitions, setFavoriteCompetitions] = useState<CompetitionSummary[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [filters] = useLocalStorage<Filter>('competitionFilters', {
-    useLocationFilter: false,
-    maxDistanceKm: 100,
-    districts: [],
-    disciplines: [],
-    competitionTypes: [],
-    branches: [],
-    dateRange: {
-      from: null,
-      to: null
-    }
-  });
   
   useEffect(() => {
     const fetchFavorites = async () => {
@@ -75,12 +60,6 @@ const CompetitionPageFavorites: React.FC<CompetitionPageFavoritesProps> = ({ com
     fetchFavorites();
   }, [competitions]);
 
-  // Get location from filters for distance calculation
-  const userLocation = filters.useLocationFilter && filters.location ? {
-    latitude: filters.location.latitude,
-    longitude: filters.location.longitude
-  } : undefined;
-
   if (isLoading) {
     return (
       <div className="flex flex-col justify-center items-center py-8">
@@ -106,7 +85,6 @@ const CompetitionPageFavorites: React.FC<CompetitionPageFavoritesProps> = ({ com
       <CompetitionList
         competitions={favoriteCompetitions}
         showFavorites={false}
-        userLocation={userLocation}
       />
     </div>
   );

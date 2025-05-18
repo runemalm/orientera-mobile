@@ -7,13 +7,11 @@ import CompetitionCard from '../CompetitionCard';
 interface CompetitionListProps {
   competitions: CompetitionSummary[];
   showFavorites?: boolean;
-  userLocation?: { latitude: number; longitude: number };
 }
 
 const CompetitionList: React.FC<CompetitionListProps> = ({ 
   competitions, 
-  showFavorites = false,
-  userLocation
+  showFavorites = false 
 }) => {
   const [favorites, setFavorites] = useState<string[]>([]);
   
@@ -64,7 +62,6 @@ const CompetitionList: React.FC<CompetitionListProps> = ({
         <CompetitionCard 
           key={competition.id} 
           competition={competition}
-          userLocation={userLocation}
         />
       ))}
     </div>

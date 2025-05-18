@@ -6,25 +6,11 @@ import { Star, Loader2 } from 'lucide-react';
 import { CompetitionSummary } from '../types';
 import { getCompetitionsByIds } from '../services/api';
 import { toast } from 'sonner';
-import { useLocalStorage } from '../hooks/useLocalStorage';
-import { Filter } from '../types';
 
 const FavoritesPage: React.FC = () => {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [favoriteCompetitions, setFavoriteCompetitions] = useState<CompetitionSummary[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [filters] = useLocalStorage<Filter>('competitionFilters', {
-    useLocationFilter: false,
-    maxDistanceKm: 100,
-    districts: [],
-    disciplines: [],
-    competitionTypes: [],
-    branches: [],
-    dateRange: {
-      from: null,
-      to: null
-    }
-  });
 
   useEffect(() => {
     const fetchFavorites = async () => {
@@ -82,12 +68,6 @@ const FavoritesPage: React.FC = () => {
     fetchFavorites();
   }, []);
 
-  // Get location from filters for distance calculation
-  const userLocation = filters.useLocationFilter && filters.location ? {
-    latitude: filters.location.latitude,
-    longitude: filters.location.longitude
-  } : undefined;
-
   // Show loading while fetching
   if (isLoading) {
     return (
@@ -119,7 +99,6 @@ const FavoritesPage: React.FC = () => {
         <CompetitionList
           competitions={favoriteCompetitions}
           showFavorites={false}
-          userLocation={userLocation}
         />
       </div>
     </MobileLayout>
