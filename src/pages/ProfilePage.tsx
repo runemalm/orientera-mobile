@@ -157,16 +157,6 @@ const ProfilePage: React.FC = () => {
   return (
     <MobileLayout 
       title="Profil"
-      action={isLoggedIn ? (
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          onClick={() => setShowSettings(true)}
-          className="text-primary"
-        >
-          <Settings className="h-5 w-5" />
-        </Button>
-      ) : undefined}
     >
       <div className="px-4 pt-2 pb-20 space-y-5">
         {isLoading ? (
