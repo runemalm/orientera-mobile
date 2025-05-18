@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import MobileLayout from '../components/layout/MobileLayout';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -8,12 +9,17 @@ import SkeletonProfile from '@/components/profile/SkeletonProfile';
 import LoginWaitlistDialog from '@/components/profile/LoginWaitlistDialog';
 import ProfileSettings from '@/components/profile/ProfileSettings';
 import LinkListItem from '@/components/competition/LinkListItem';
+import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
+import { CompetitionSummary } from '@/types';
+import { getCompetitionsByIds } from '@/services/api';
 
 const ProfilePage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showLoginDialog, setShowLoginDialog] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [upcomingCompetitions, setUpcomingCompetitions] = useState<CompetitionSummary[]>([]);
+  const [previousResults, setPreviousResults] = useState<any[]>([]);
   
   // Mock user data - in a real app, this would come from authentication
   const userData = {
@@ -29,17 +35,70 @@ const ProfilePage: React.FC = () => {
     }
   };
 
+  // Mock data for upcoming competitions
+  const mockUpcomingCompetitions = [
+    {
+      id: "8f935fac-bcdf-4f8d-82de-d7c48348aa41",
+      name: "Hellas KM, medel",
+      date: "2025-05-20",
+      location: "Hellasgården",
+      club: "Hellas Orientering",
+      startTime: "10:30"
+    },
+    {
+      id: "mock-id-2",
+      name: "Sommarsprinten",
+      date: "2025-06-15",
+      location: "Södermalm",
+      club: "Stockholms OK",
+      startTime: null
+    }
+  ];
+  
+  // Mock data for previous results
+  const mockPreviousResults = [
+    {
+      id: "mock-result-1",
+      competition: "Vårsprint",
+      date: "2025-04-10",
+      place: 3,
+      time: "34:22",
+      class: "D21"
+    },
+    {
+      id: "mock-result-2",
+      competition: "Nattorientering",
+      date: "2025-03-15",
+      place: 5,
+      time: "45:17",
+      class: "D21"
+    },
+    {
+      id: "mock-result-3",
+      competition: "Vinterserien",
+      date: "2025-02-20",
+      place: 1,
+      time: "28:45",
+      class: "D21"
+    }
+  ];
+
   const handleLoginWithEventor = () => {
     setIsLoading(true);
     // Simulera inloggning
     setTimeout(() => {
       setIsLoggedIn(true);
       setIsLoading(false);
+      // Load mock data for upcoming competitions and previous results
+      setUpcomingCompetitions(mockUpcomingCompetitions);
+      setPreviousResults(mockPreviousResults);
     }, 1000);
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
+    setUpcomingCompetitions([]);
+    setPreviousResults([]);
   };
 
   const handleSaveSettings = (updatedData: any) => {
@@ -95,28 +154,81 @@ const ProfilePage: React.FC = () => {
               </CardContent>
             </Card>
             
-            {/* Direct Actions Card */}
+            {/* Upcoming Competitions Card */}
             <Card className="w-full">
-              <CardContent className="py-4 px-2">
-                <div className="flex flex-col">
-                  <LinkListItem 
-                    icon={Calendar}
-                    title="Mina tävlingar"
-                    to="/competitions?filter=my" 
-                  />
-                  
-                  <LinkListItem 
-                    icon={Trophy}
-                    title="Mina resultat"
-                    to="/results" 
-                  />
-                  
-                  <LinkListItem 
-                    icon={Heart}
-                    title="Mina favoriter"
-                    to="/favorites"
-                  />
-                </div>
+              <CardHeader className="pb-2 pt-4">
+                <h3 className="font-medium">Kommande tävlingar</h3>
+              </CardHeader>
+              <CardContent className="pt-0 pb-2">
+                {upcomingCompetitions.length > 0 ? (
+                  <Table>
+                    <TableBody>
+                      {upcomingCompetitions.map((comp) => (
+                        <TableRow key={comp.id} className="hover:bg-primary/5">
+                          <TableCell className="py-3 px-2">
+                            <div className="space-y-1">
+                              <div className="font-medium">{comp.name}</div>
+                              <div className="text-sm text-muted-foreground flex items-center gap-2">
+                                <Calendar className="h-3.5 w-3.5" /> {comp.date}
+                              </div>
+                              {comp.startTime && (
+                                <div className="text-sm text-muted-foreground flex items-center gap-2">
+                                  <Clock className="h-3.5 w-3.5" /> Starttid: {comp.startTime}
+                                </div>
+                              )}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                ) : (
+                  <div className="text-center py-6 text-muted-foreground">
+                    <p>Inga kommande tävlingar</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+            
+            {/* Previous Results Card */}
+            <Card className="w-full">
+              <CardHeader className="pb-2 pt-4">
+                <h3 className="font-medium">Mina senaste resultat</h3>
+              </CardHeader>
+              <CardContent className="pt-0 pb-2">
+                {previousResults.length > 0 ? (
+                  <Table>
+                    <TableBody>
+                      {previousResults.map((result) => (
+                        <TableRow key={result.id} className="hover:bg-primary/5">
+                          <TableCell className="py-3 px-2">
+                            <div className="space-y-1">
+                              <div className="font-medium">{result.competition}</div>
+                              <div className="text-sm text-muted-foreground flex items-center gap-2">
+                                <Calendar className="h-3.5 w-3.5" /> {result.date}
+                              </div>
+                              <div className="flex items-center gap-3">
+                                <div className="flex items-center gap-1 text-sm">
+                                  <Trophy className="h-3.5 w-3.5 text-amber-500" /> 
+                                  <span className="font-medium">Plac {result.place}</span>
+                                </div>
+                                <div className="flex items-center gap-1 text-sm">
+                                  <Clock className="h-3.5 w-3.5" /> 
+                                  <span>{result.time}</span>
+                                </div>
+                                <div className="text-sm text-muted-foreground">{result.class}</div>
+                              </div>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                ) : (
+                  <div className="text-center py-6 text-muted-foreground">
+                    <p>Inga tidigare resultat</p>
+                  </div>
+                )}
               </CardContent>
             </Card>
             
