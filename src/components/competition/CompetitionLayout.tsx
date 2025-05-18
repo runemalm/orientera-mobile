@@ -66,8 +66,8 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
           <Tabs value={viewMode} onValueChange={handleTabChange} className="w-full">
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="calendar">Kalender</TabsTrigger>
-              <TabsTrigger value="favorites">Favoriter</TabsTrigger>
               <TabsTrigger value="map">Karta</TabsTrigger>
+              <TabsTrigger value="favorites">Favoriter</TabsTrigger>
             </TabsList>
           </Tabs>
         </div>
@@ -88,18 +88,18 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
         </div>
         
         <div 
+          className={`absolute inset-0 ${viewMode === 'map' ? 'block' : 'hidden'}`}
+        >
+          <CompetitionsMapView competitions={competitions} />
+        </div>
+        
+        <div 
           className={`absolute inset-0 ${viewMode === 'favorites' ? 'block' : 'hidden'} overflow-auto`}
           ref={favoritesScrollRef}
         >
           <div className="px-2 pt-0 pb-4">
             <CompetitionPageFavorites competitions={competitions} />
           </div>
-        </div>
-        
-        <div 
-          className={`absolute inset-0 ${viewMode === 'map' ? 'block' : 'hidden'}`}
-        >
-          <CompetitionsMapView competitions={competitions} />
         </div>
       </div>
     </div>
