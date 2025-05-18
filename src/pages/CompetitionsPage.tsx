@@ -246,7 +246,7 @@ const CompetitionsPage: React.FC = () => {
 
   return (
     <MobileLayout 
-      title="Kalender" 
+      title="Tävlingar" 
       fullHeight
       leftAction={leftAction}
       action={

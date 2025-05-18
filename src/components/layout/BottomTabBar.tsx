@@ -40,7 +40,7 @@ const BottomTabBar: React.FC = () => {
     {
       name: 'competitions',
       icon: <CalendarRange size={24} />,
-      label: 'Kalender',
+      label: 'Tävlingar',
       path: '/competitions'
     },
     {
