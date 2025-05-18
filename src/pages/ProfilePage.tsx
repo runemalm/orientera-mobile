@@ -7,16 +7,20 @@ import { Separator } from '@/components/ui/separator';
 import { User, Calendar, MapPin, Trophy, Clock, Settings, ExternalLink } from 'lucide-react';
 import SkeletonProfile from '@/components/profile/SkeletonProfile';
 import LoginWaitlistDialog from '@/components/profile/LoginWaitlistDialog';
+import ProfileSettings from '@/components/profile/ProfileSettings';
 
 const ProfilePage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showLoginDialog, setShowLoginDialog] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   
   // Mock user data - in a real app, this would come from authentication
   const userData = {
     name: "Anna Karlsson",
+    email: "anna.karlsson@gmail.com",
     club: "Orienteringsklubben Linné",
+    preferredClass: "d21",
     profileImage: "/placeholder.svg",
     joinedDate: "Mars 2024",
     stats: {
@@ -25,24 +29,53 @@ const ProfilePage: React.FC = () => {
     }
   };
 
-  const handleLoginClick = () => {
-    setShowLoginDialog(true);
+  const handleLoginWithEventor = () => {
+    setIsLoading(true);
+    // Simulera inloggning
+    setTimeout(() => {
+      setIsLoggedIn(true);
+      setIsLoading(false);
+    }, 1000);
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+  };
+
+  const handleSaveSettings = (updatedData: any) => {
+    console.log("Sparar inställningar:", updatedData);
+    setShowSettings(false);
   };
 
   return (
-    <MobileLayout title="Profil">
+    <MobileLayout 
+      title="Profil"
+      action={isLoggedIn ? (
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={() => setShowSettings(true)}
+          className="text-primary"
+        >
+          <Settings className="h-5 w-5" />
+        </Button>
+      ) : undefined}
+    >
       <div className="px-4 pt-2 pb-20 space-y-5">
         {isLoading ? (
           <SkeletonProfile />
+        ) : showSettings ? (
+          <ProfileSettings 
+            userData={userData}
+            onSave={handleSaveSettings}
+            onCancel={() => setShowSettings(false)}
+          />
         ) : isLoggedIn ? (
           <>
             {/* Profile Card */}
             <Card className="w-full border-primary/20">
               <CardHeader className="pb-2 flex justify-between items-center">
                 <h2 className="text-lg font-medium text-center mx-auto">Min profil</h2>
-                <Button variant="ghost" size="icon" className="absolute right-4 top-4">
-                  <Settings className="h-5 w-5" />
-                </Button>
               </CardHeader>
               <CardContent className="pb-6">
                 <div className="flex flex-col items-center gap-4">
@@ -144,6 +177,19 @@ const ProfilePage: React.FC = () => {
                 </Button>
               </CardContent>
             </Card>
+
+            {/* Logout Button */}
+            <Card className="w-full">
+              <CardContent className="p-4">
+                <Button 
+                  variant="outline" 
+                  className="w-full" 
+                  onClick={handleLogout}
+                >
+                  Logga ut
+                </Button>
+              </CardContent>
+            </Card>
           </>
         ) : (
           /* Not logged in state */
@@ -154,13 +200,13 @@ const ProfilePage: React.FC = () => {
                   <User className="h-12 w-12 text-primary/40" />
                 </div>
                 <div className="text-center space-y-2">
-                  <h2 className="text-xl font-semibold">Inloggning kommer snart!</h2>
+                  <h2 className="text-xl font-semibold">Logga in med Eventor</h2>
                   <p className="text-muted-foreground">
-                    Snart kommer du kunna logga in för att se dina tävlingar, resultat och mycket mer.
+                    Logga in med ditt Eventor-konto för att se dina tävlingar, resultat och mycket mer.
                   </p>
                 </div>
-                <Button onClick={handleLoginClick} className="w-full">
-                  Gå med i väntelistan
+                <Button onClick={handleLoginWithEventor} className="w-full">
+                  Logga in med Eventor
                 </Button>
               </CardContent>
             </Card>
@@ -211,7 +257,7 @@ const ProfilePage: React.FC = () => {
         )}
       </div>
       
-      {/* Login Waitlist Dialog */}
+      {/* Login Waitlist Dialog - behålls för bakåtkompatibilitet */}
       <LoginWaitlistDialog 
         isOpen={showLoginDialog} 
         onClose={() => setShowLoginDialog(false)}
