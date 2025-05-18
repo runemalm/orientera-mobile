@@ -7,6 +7,7 @@ import CompetitionPageFavorites from './CompetitionPageFavorites';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { ScrollArea } from '../ui/scroll-area';
 import { useNavigate } from 'react-router-dom';
+import CompetitionsMapView from './CompetitionsMapView';
 
 interface CompetitionLayoutProps {
   competitions: CompetitionSummary[];
@@ -21,7 +22,7 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
   toDate,
   hideTabBar = false
 }) => {
-  const [viewMode, setViewMode] = useLocalStorage<'calendar' | 'favorites'>('competitionViewMode', 'calendar');
+  const [viewMode, setViewMode] = useLocalStorage<'calendar' | 'favorites' | 'map'>('competitionViewMode', 'calendar');
   const [calendarScrollPosition, setCalendarScrollPosition] = useLocalStorage<number>('calendarScrollPosition', 0);
   const [favoritesScrollPosition, setFavoritesScrollPosition] = useLocalStorage<number>('favoritesScrollPosition', 0);
   
@@ -40,7 +41,7 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
 
   const handleTabChange = (value: string) => {
     saveScrollPosition();
-    setViewMode(value as 'calendar' | 'favorites');
+    setViewMode(value as 'calendar' | 'favorites' | 'map');
   };
 
   useEffect(() => {
@@ -63,9 +64,10 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
       {!hideTabBar && (
         <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 pt-2 pb-2 px-2">
           <Tabs value={viewMode} onValueChange={handleTabChange} className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="calendar">Kalender</TabsTrigger>
               <TabsTrigger value="favorites">Favoriter</TabsTrigger>
+              <TabsTrigger value="map">Karta</TabsTrigger>
             </TabsList>
           </Tabs>
         </div>
@@ -92,6 +94,12 @@ const CompetitionLayout: React.FC<CompetitionLayoutProps> = ({
           <div className="px-2 pt-0 pb-4">
             <CompetitionPageFavorites competitions={competitions} />
           </div>
+        </div>
+        
+        <div 
+          className={`absolute inset-0 ${viewMode === 'map' ? 'block' : 'hidden'}`}
+        >
+          <CompetitionsMapView competitions={competitions} />
         </div>
       </div>
     </div>
