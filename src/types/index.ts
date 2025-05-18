@@ -170,29 +170,3 @@ export interface Resource {
 export interface UserFavorites {
   competitions: string[]; // Array of competition IDs
 }
-
-// User authentication types
-export interface LoginCommand {
-  username: string;
-  password: string;
-}
-
-export interface LoginResultDto {
-  success: boolean;
-  userId: string | null;
-  token: string | null;
-  error: string | null;
-}
-
-export interface UserDTO {
-  id: string;
-  firstName: string | null;
-  lastName: string | null;
-}
-
-export interface UserSession {
-  userId: string;
-  token: string;
-  firstName?: string | null;
-  lastName?: string | null;
-}
