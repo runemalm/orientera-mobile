@@ -19,7 +19,7 @@ const CallToAction: React.FC<CallToActionProps> = ({ onAction }) => {
       </Button>
       
       <p className="text-center text-sm text-muted-foreground px-6">
-        Moderna verktyg för den moderna orienteraren. Enkel åtkomst till all information var du än befinner dig.
+        Enkel anmälan och snabb åtkomst till alla svenska orienteringstävlingar.
       </p>
     </div>
   );
