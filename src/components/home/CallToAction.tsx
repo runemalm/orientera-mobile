@@ -19,7 +19,7 @@ const CallToAction: React.FC<CallToActionProps> = ({ onAction }) => {
       </Button>
       
       <p className="text-center text-sm text-muted-foreground px-6">
-        Enkel anmälan och snabb åtkomst till alla svenska orienteringstävlingar.
+        Hitta, filtrera och anmäl dig till tävlingar – direkt i mobilen
       </p>
     </div>
   );
